@@ -1,0 +1,76 @@
+.fw-boundary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+.fw-boundary-group{min-width:0;border:1px solid var(--fw-line);border-radius:12px;background:#fff;overflow:hidden}
+.research-framework .fw-reference-trigger{width:100%;height:auto;min-height:64px;padding:21px;justify-content:space-between;gap:18px;white-space:normal;text-align:left;border-radius:0;color:var(--fw-ink)}
+.fw-reference-trigger>span{min-width:0}
+.fw-reference-label{display:flex;align-items:center;gap:9px;line-height:1.8}
+.fw-reference-label strong{font-size:15px;font-weight:600}
+.fw-reference-label [data-slot=badge]{font-size:11px;font-weight:400;flex-shrink:0;color:#627867}
+.fw-reference-summary{display:block;font-size:13px;font-weight:400;line-height:1.9;color:var(--fw-muted);margin-top:9px}
+.fw-reference-trigger>svg{transition:transform .2s}
+.fw-reference-trigger[data-state=open]>svg{transform:rotate(180deg)}
+.fw-prohibition-list{margin:0 21px 22px;padding:18px 0 0 26px;border-top:1px solid var(--fw-line);font-size:14px;line-height:1.9;color:var(--fw-muted);display:grid;gap:11px}
+.fw-prohibition-list li{padding-left:4px;overflow-wrap:anywhere}
+.fw-prohibition-list li::marker{color:#75917d;font-size:12px;font-variant-numeric:tabular-nums}
+.fw-principle-panel{background:#edf3ed;border:1px solid #d6e3d5;border-radius:15px;padding:29px 31px}
+.fw-principle-label{font-size:12px;color:#62816b}
+.fw-principle-question{font-size:clamp(20px,2vw,25px);line-height:1.85;font-weight:550;max-width:890px;margin-top:12px!important}
+.fw-dividend-principle{margin-top:23px;border-left:2px solid #99b39d;padding-left:17px}
+.fw-dividend-principle>span{font-size:12px;color:#5d7964}
+.fw-dividend-principle p{font-size:14px;line-height:2;color:#536e5b;margin-top:5px!important}
+.fw-principle-chain{display:flex;flex-wrap:wrap;gap:11px 9px;border-top:1px solid #d3e0d1;margin:24px 0 0;padding:21px 0 0;list-style:none}
+.fw-principle-chain li{display:flex;align-items:center;gap:9px;font-size:12px;line-height:1.9;color:#577460}
+.fw-principle-chain svg{color:#90a68e}
+.fw-glossary{gap:0;min-width:0}
+.research-framework .fw-glossary-tabs{display:flex;justify-content:flex-start;max-width:100%;width:max-content;height:auto;overflow-x:auto;padding:5px;gap:4px;background:#eaf0e9;border:1px solid #dae4d7;border-radius:10px}
+.research-framework .fw-glossary-tabs>[data-slot=tabs-trigger]{flex:0 0 auto;min-height:43px;padding:10px 15px;font-size:14px;gap:9px;color:#506e59}
+.fw-glossary-tabs [data-slot=tabs-trigger]>span{font-size:11px;color:#788b77;font-variant-numeric:tabular-nums}
+.fw-glossary [data-slot=tabs-content]{margin:20px 0 0;min-width:0}
+.fw-term-list{margin:0;padding:0;border:1px solid var(--fw-line);border-radius:12px;background:#fff;overflow:hidden}
+.fw-term-item{min-width:0;border-bottom:1px solid var(--fw-line);overflow-wrap:anywhere}
+.fw-term-item:last-child{border-bottom:0}
+.fw-term-item[data-state=open]{background:#f8faf7}
+.fw-term-list dt{margin:0}
+.research-framework .fw-term-trigger{width:100%;height:auto;min-height:60px;justify-content:space-between;gap:18px;padding:17px 22px;border-radius:0;white-space:normal;text-align:left;font-size:15px;line-height:1.8;font-weight:500;color:var(--fw-ink)}
+.fw-term-trigger>svg{transition:transform .2s;color:#68806e}
+.fw-term-trigger[data-state=open]>svg{transform:rotate(180deg)}
+.research-framework .fw-term-trigger:focus-visible{outline-offset:-3px}
+.fw-term-list dd{max-width:900px;margin:0;padding:0 22px 23px;font-size:14px;line-height:1.95;color:var(--fw-muted)}
+.fw-term-definition{color:#47664f}
+.fw-term-explanation{margin-top:12px!important}
+.fw-term-example{margin-top:16px;padding:13px 15px;border:1px solid #dfe8dd;border-radius:9px;background:#edf3ed}
+.fw-term-example>span{display:block;margin-bottom:5px;font-size:12px;color:#658069}
+.fw-term-example code{display:block;margin-top:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;line-height:1.9;white-space:normal;overflow-wrap:anywhere;color:#315b42}
+.fw-term-note{margin-top:13px!important;font-size:13px;line-height:1.95}
+.fw-term-note>span{margin-right:8px;font-size:12px;font-weight:600;color:#526e59}
+.fw-boundary-preview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:23px;list-style:none;padding:22px 0 0;margin:23px 0 0;border-top:1px solid #d3e0d1}
+.fw-boundary-preview h3{font-size:14px;line-height:1.8;font-weight:600}
+.fw-boundary-preview p{font-size:13px;line-height:1.9;color:#5a7562;margin-top:7px!important}
+.fw-reference-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}
+.fw-reference-links>[data-slot=button]{font-size:13px;min-height:42px}
+.sidebar-reference{margin-top:18px;padding-top:13px;border-top:1px solid #e0e7df}
+.research-handbook{max-width:1100px}
+.handbook-heading{padding:14px 0 30px}
+.handbook-heading h1{font-size:34px;font-weight:600;line-height:1.6;letter-spacing:-.7px;margin:8px 0!important}
+.handbook-heading p{font-size:15px;line-height:1.9;color:var(--fw-muted)}
+.handbook-tabs{gap:0}
+.research-framework .handbook-tabs>[data-slot=tabs-list]{position:sticky;top:0;z-index:20;width:100%;justify-content:flex-start;height:auto;gap:7px;padding:10px 0;border-block:1px solid var(--fw-line);border-radius:0;background:var(--background,#f4f6f6)}
+.research-framework .handbook-tabs>[data-slot=tabs-list]>[data-slot=tabs-trigger]{flex:0 0 auto;gap:8px;min-height:44px;padding:10px 18px;font-size:14px}
+.handbook-tabs>[data-slot=tabs-content]{margin:0;min-width:0}
+.handbook-tabs>[data-slot=tabs-content]>.fw-section:first-child{margin-top:30px}
+.research-handbook .fw-standards .fw-discipline-grid{align-items:start}
+.research-handbook .fw-standards .fw-discipline-copy>h3{font-size:20px;line-height:1.7;margin-bottom:12px!important}
+.research-handbook .fw-standards .fw-score-heading h3{font-size:19px;line-height:1.6}
+.research-handbook .fw-section+.fw-section{padding-top:30px;border-top:1px solid var(--fw-line);margin-top:36px}
+.fw-data-sources{margin:0;padding:0;border:1px solid var(--fw-line);border-radius:12px;background:#fff;overflow:hidden}
+.fw-data-sources>div{display:grid;grid-template-columns:170px minmax(0,1fr);gap:24px;padding:19px 22px}
+.fw-data-sources>div+div{border-top:1px solid var(--fw-line)}
+.fw-data-sources dt{font-size:14px;line-height:1.9;font-weight:600;color:var(--fw-ink)}
+.fw-data-sources dd{margin:0;font-size:14px;line-height:1.95;color:var(--fw-muted);overflow-wrap:anywhere}
+.fw-data-boundaries{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:20px;padding:22px;border:1px solid #dce6da;border-radius:12px;background:#edf3ed}
+.fw-data-boundaries h3{font-size:14px;line-height:1.8;font-weight:600}
+.fw-data-boundaries p{font-size:13px;line-height:1.95;color:var(--fw-muted);margin-top:7px!important}
+@media(max-width:760px){.fw-data-sources>div{grid-template-columns:135px minmax(0,1fr);gap:17px}.fw-data-boundaries{grid-template-columns:minmax(0,1fr);gap:18px}}
+@media(max-width:639px){.fw-data-sources>div{grid-template-columns:minmax(0,1fr);gap:7px;padding:17px 16px}.fw-data-boundaries{padding:18px 16px}}
+@media(max-width:760px){.fw-boundary-grid{grid-template-columns:minmax(0,1fr)}.fw-principle-panel{padding:24px}}
+@media(max-width:639px){.research-framework .fw-reference-trigger{padding:18px 16px;gap:12px}.fw-reference-label{gap:7px}.fw-reference-label strong{font-size:14px}.fw-prohibition-list{margin-inline:16px;padding-left:23px}.fw-principle-panel{padding:21px 18px}.fw-principle-question{font-size:20px}.fw-dividend-principle{padding-left:13px}.fw-principle-chain{gap:9px 7px}.research-framework .fw-glossary-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;overflow:visible}.research-framework .fw-glossary-tabs>[data-slot=tabs-trigger]{min-width:0;min-height:44px;white-space:normal;font-size:12px;line-height:1.6;padding:8px 5px;gap:5px}.research-framework .fw-term-trigger{padding:16px;min-height:58px;font-size:14px}.fw-term-list dd{padding:0 16px 19px}.fw-term-example{padding:12px}.research-handbook .fw-section+.fw-section{padding-top:24px;margin-top:28px}}
+@media(max-width:639px){.fw-boundary-preview{grid-template-columns:minmax(0,1fr);gap:17px}.fw-boundary-preview p{margin-top:3px!important}.fw-reference-links{gap:8px}.fw-reference-links>[data-slot=button]{width:100%}.handbook-heading{padding-top:8px;padding-bottom:23px}.handbook-heading h1{font-size:29px}.handbook-heading p{font-size:14px;padding-right:0}.handbook-tabs>[data-slot=tabs-content]>.fw-section:first-child{margin-top:24px}}

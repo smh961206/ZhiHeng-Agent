@@ -20,12 +20,14 @@ import ResearchProgress from './ResearchProgress';
 import ResearchDecision from './ResearchDecision';
 import {modes} from '../../shared/research-framework.mjs';
 import {reportPreview} from '../../shared/report-preview.mjs';
+import {researchApproachMarkdown} from '../../shared/research-export.mjs';
+import {modeOf} from '../lib/research-mode';
 
 const statusLabels = {
   queued: '等待中', running: '研究中', completed: '已完成', failed: '失败', cancelled: '已取消',
 };
 const depthLabels = {Quick: '简明研究', Standard: '标准研究', Deep: '深入研究'};
-const tabLabels = {report: '研究报告', audit: '审计记录', sources: '证据来源'};
+const tabLabels = {report: '研究报告', approach:'研究思路', audit: '审计记录', sources: '证据来源'};
 const isActive = status => status === 'queued' || status === 'running';
 
 function formatDate(value, timeOnly = false) {
@@ -103,17 +105,19 @@ function ReportDocument({text, prefix, draft = false, onOutline}) {
   return <article ref={article} className={`rd-markdown${draft ? ' rd-draft' : ''}`} aria-label={draft ? '实时报告草稿，尚未完成审计' : '报告正文'}>{markdown}</article>;
 }
 
-function ReportPanel({job, prefix, preview, onRetry, retrying, onReuse, onOutline, onUpdate}) {
-  if (job.result?.report?.trim()) return <><ResearchDecision job={job} onUpdate={onUpdate}/><ReportDocument text={job.result.report} prefix={prefix} onOutline={onOutline}/></>;
+function ReportPanel({job, prefix, preview, onRetry, retrying, onReuse, onOutline, onUpdate, onDeepen,onApproach}) {
+  const quick=modeOf(job)==='A';
+  if (job.result?.report?.trim()) return <><ResearchDecision job={job} onUpdate={onUpdate} onDeepen={onDeepen}/><ReportDocument text={job.result.report} prefix={prefix} onOutline={onOutline}/></>;
   const active = isActive(job.status);
   if (!job.result && active && preview.trim()) return <>
     <div className="rd-notice rd-draft-notice" role="status"><LoaderCircle size={17} className="rd-spin" aria-hidden="true"/>
       <div><strong>{job.liveReport.phase === 'audit' ? '草稿已生成，正在审计' : '实时草稿 · 尚未审计'}</strong>
-        <p>内容可能继续调整，请以最终报告为准。正式报告生成后方可导出。</p></div>
+        <p>{quick?'筛选判断仍在形成，数据缺口与解释可能调整；复核后的报告可连同研究思路和调用记录导出。':'内容可能继续调整，请以最终报告为准。正式报告生成后方可导出。'}</p></div>
     </div>
     <ReportDocument text={preview} prefix={prefix} onOutline={onOutline} draft/>
   </>;
-  const state = job.status === 'queued'
+  const screenState=quick?quickScreenProgress(job,false):null;
+  const state = screenState?[screenState.title,screenState.text,active?LoaderCircle:job.status==='failed'?CircleAlert:job.status==='cancelled'?Square:FileText]:job.status === 'queued'
     ? ['任务已排队', '等待研究引擎开始执行，阶段进展和执行轨迹将在这里更新。', Clock3]
     : job.status === 'running'
       ? job.liveReport?.phase==='audit'
@@ -128,7 +132,7 @@ function ReportPanel({job, prefix, preview, onRetry, retrying, onReuse, onOutlin
           : ['暂无可用报告', '这条研究记录未包含正式报告正文，可查看审计、来源与执行轨迹，或载入输入重新研究。', FileText];
   const actions=onRetry?<div className="rd-retry-actions"><RetryButton onRetry={onRetry} retrying={retrying}/>{onReuse&&<Button type="button" variant="ghost" onClick={onReuse} disabled={retrying}>修改研究输入</Button>}</div>
     :onReuse?<Button type="button" variant="outline" onClick={onReuse}><RotateCcw size={15}/>复用研究输入</Button>:null;
-  return <EmptyState title={state[0]} icon={state[2]} active={job.status === 'running'} actions={!active?actions:null}>{state[1]}</EmptyState>;
+  return <EmptyState title={state[0]} icon={state[2]} active={job.status === 'running'} actions={active&&quick&&job.plan?.researchApproach?<Button type="button" variant="outline" onClick={onApproach}><BookOpen size={15}/>查看本次研究计划</Button>:!active?actions:null}>{state[1]}</EmptyState>;
 }
 
 function AuditPanel({job, prefix, onOutline}) {
@@ -149,6 +153,16 @@ function AuditPanel({job, prefix, onOutline}) {
       {isActive(job.status) ? '正式审计结果将在研究完成后显示；实时草稿不代表审计结论。' : '本次记录没有正式审计正文，可查看执行轨迹了解研究过程。'}
     </EmptyState>}
   </>;
+}
+
+function ApproachPanel({job,prefix}){
+ const rules=job.result?.framework?.knowledge??job.plan?.knowledge??[];
+ return <>
+  {rules.length>0&&<Collapsible className="rd-rule-manifest"><CollapsibleTrigger asChild><Button type="button" variant="ghost"><BookOpen size={15}/>本次研究规则 · {rules.length} 份<ChevronDown size={14}/></Button></CollapsibleTrigger><CollapsibleContent>
+   {rules.map(rule=><div key={rule.path}><strong>{rule.role||rule.path} · {rule.version}</strong><p>{rule.path}</p><small>文件指纹用于核对本次使用的版本</small><code>{rule.sha256}</code></div>)}
+  </CollapsibleContent></Collapsible>}
+  <ReportDocument text={researchApproachMarkdown(job,{includeRules:false})} prefix={prefix}/>
+ </>;
 }
 
 function sourceHref(value) {
@@ -203,15 +217,22 @@ function SourcesPanel({sources, status}) {
     <div className="rd-source-list">{filtered.map(({source, key}) => <Collapsible key={key} className="rd-source" open={expanded.has(key)} onOpenChange={open=>setSourceOpen(key,open)}>
       <CollapsibleTrigger asChild><Button variant="ghost" className="rd-source-trigger"><span className="rd-source-icon"><FileText size={18} aria-hidden="true"/></span>
         <span className="rd-source-heading"><strong><span className="rd-source-id">[{source.id || '未编号'}]</span> {source.title || '未命名来源'}</strong>
-          <small>{source.provider || '历史资料'} · {source.date || '日期未提供'}</small></span>
+          <small>{source.provider || '历史资料'} · {source.dateBasis==='latest-report-period'?'报告期 ':source.dateBasis==='latest-observation'?'观测日 ':source.dateBasis==='latest-event'?'记录日期 ':''}{source.date || '日期未提供'}</small></span>
         <ChevronDown size={16} aria-hidden="true"/>
       </Button></CollapsibleTrigger>
       <CollapsibleContent className="rd-source-body">
-        <div className="rd-source-tags"><Badge variant="secondary">{source.official ? '官方披露' : '行情数据'}</Badge>{source.fromCache && <Badge variant="outline">财报缓存</Badge>}</div>
-        <div className="rd-source-links"><SourceLink url={source.url}>原始来源</SourceLink><SourceLink url={source.filingUrl}>美国证监会申报原件</SourceLink></div>
+        <div className="rd-source-tags"><Badge variant="secondary">{source.official ? '官方披露' : source.type==='web-evidence'?'网页原文（补充）':source.type==='vendor-financials'?'结构化财务（数据商）':source.type==='shareholder-data'?'股东回报（数据商）':source.type==='valuation-history'?'历史估值（数据商）':source.type==='data-check'?'数据覆盖检查':'行情数据'}</Badge>{source.fromCache && <Badge variant="outline">已保存资料</Badge>}{source.stale && <Badge variant="destructive">旧数据 · 待更新</Badge>}</div>
+        {(source.url||source.filingUrl)&&<div className="rd-source-links"><SourceLink url={source.url}>{['vendor-financials','shareholder-data','valuation-history'].includes(source.type)?'数据接口说明':'原始来源'}</SourceLink><SourceLink url={source.filingUrl}>美国证监会申报原件</SourceLink></div>}
         {source.url && <p className="rd-source-url">{source.url}</p>}
         {source.fetchedAt && <p>抓取于 {formatDate(source.fetchedAt)}</p>}
-        {source.coverage && <p>{source.coverage}</p>}
+        {source.type==='web-evidence' && <>
+          <p>发布日期：{source.publishedAt||'原文未明确'} · 资料期间：{source.reportPeriod||'待核对'}</p>
+          <p>{source.authorityVerified?'来源机构域名已确认，内容仍需核验。':'发布者身份待核验。'} 本页为已读取的原始正文，搜索摘要不作为证据。</p>
+          {source.metadataWarnings?.length>0 && <p>{source.metadataWarnings.join('；')}</p>}
+        </>}
+          {source.coverage && <p>{source.coverage}</p>}
+          {source.cacheWarning && <p>{source.cacheWarning}</p>}
+          {source.stale && <p>这是保留的旧数据，请核对披露日和抓取时间；尚未确认最新披露。</p>}
         {source.text ? <pre tabIndex={0} role="region" aria-label={`${source.id || '来源'} 正文预览`}>{source.text}</pre> : <p className="rd-source-no-text">这份来源未提供正文预览，可打开原始来源查阅。</p>}
         {source.previewTruncated && <p className="rd-source-footnote">仅预览前 12,000 字符；研究引擎可检索已提取正文。</p>}
       </CollapsibleContent>
@@ -269,7 +290,7 @@ function ResearchActions({reading,setReading,active,hasReport,cancelling,onCance
   return <Card className="rd-action-panel" role="group" aria-label="研究操作"><CardContent>
     <Button variant="outline" className="rd-reading-toggle" aria-pressed={reading} onClick={()=>perform(()=>setReading(value=>!value))}><BookOpen size={17}/>{reading?'退出阅读模式':'阅读模式'}</Button>
     {!active&&(onRetry?<RetryButton onRetry={()=>perform(onRetry)} retrying={retrying}/>:onReuse&&<Button variant="outline" onClick={()=>perform(onReuse)}><RotateCcw size={17}/>复用研究输入</Button>)}
-    <Button className="rd-export" disabled={!hasReport||!onDownload} title={hasReport?'导出正式报告、审计记录和来源目录（Markdown）':'正式报告生成后可导出'} onClick={()=>perform(onDownload)}><Download size={17}/>导出报告</Button>
+    <Button className="rd-export" disabled={!hasReport||!onDownload} title={hasReport?'导出研究思路、实际工具调用、完整报告与来源（Markdown）':'正式报告生成后可导出'} onClick={()=>perform(onDownload)}><Download size={17}/>导出报告</Button>
     {active&&<Button variant="outline" className="rd-cancel" disabled={cancelling||!onCancel} aria-busy={Boolean(cancelling)} onClick={()=>{if(!cancelling)perform(onCancel);}}>{cancelling?<LoaderCircle size={16} className="rd-spin"/>:<Square size={16}/>} {cancelling?'正在取消…':'取消任务'}</Button>}
   </CardContent></Card>;
 }
@@ -281,7 +302,18 @@ function ReportDirectory({compact,open,onOpenChange,items,activeId,onNavigate,on
  :<Popover open={open} onOpenChange={onOpenChange}><PopoverTrigger asChild>{trigger}</PopoverTrigger><PopoverContent align="end" collisionPadding={16} className="research-detail rd-directory-popover" aria-label="报告目录" onCloseAutoFocus={onCloseAutoFocus}>{outline}</PopoverContent></Popover>;
 }
 
-function DetailView({job, tab, onTabChange, streamConnection, onRetry, retrying, retryError, onReuse, onUpdate, onDownload, onCancel, cancelling}) {
+function quickScreenProgress(job,hasReport){
+ const stage=job.liveReport?.phase==='audit'?'review':job.workflow?.stages?.find(item=>item.status==='running')?.id;
+ const progress={task:['正在明确筛选问题','按本次问题确定研究范围和需要验证的事项。'],evidence:['正在读取研究资料','汇集可得财务数据与披露原文，记录时点、读取范围和缺口。'],research:['正在查证变化与红旗','核对财务趋势与近期变化，同时寻找解释和反证。'],calculation:['正在核对关键计算','按行业和数据口径计算适用指标，缺值与冲突会单独记录。'],review:['正在复核筛选判断','核对依据、数据缺口与下一步验证条件，通过后显示筛选报告。']};
+ if(job.status==='queued')return {title:'快速筛选已排队',text:'等待开始读取研究资料，可先查看本次研究计划。'};
+ if(job.status==='running'){const [title,text]=progress[stage]||['快速筛选正在进行','先查已有资料，再按缺口查证。实际耗时取决于资料获取与核对，可稍后回来查看。'];return {title,text};}
+ if(job.status==='completed'&&hasReport){const d=job.result?.decision;return {title:'快速筛选已完成',text:d?`本次判断为「${d.action}」。${d.missingData?.length?`仍有 ${d.missingData.length} 项资料待核实，建议先阅读判断依据。`:'结合证据、审计与验证条件阅读本次判断。'}`:'可以查阅筛选报告，并导出研究思路、实际调用记录及来源。'};}
+ if(job.status==='failed')return {title:'快速筛选未完成',text:'尚未形成可交付的筛选判断。已保留输入与执行记录，重试将重新执行筛选流程。'};
+ if(job.status==='cancelled')return {title:'快速筛选已取消',text:'本次未交付筛选判断。输入与执行记录已保留，可沿用输入重试。'};
+ return {title:'未找到筛选报告',text:'可查看已有资料、审计与执行记录；未保存的判断不会补写。'};
+}
+
+function DetailView({job, tab, onTabChange, streamConnection, onRetry, retrying, retryError, onReuse, onUpdate,onDeepen, onDownload, onCancel, cancelling}) {
   const [reading,setReading]=useState(false);
   const [outline,setOutline]=useState({prefix:'',items:[]});
   const [activeHeading,setActiveHeading]=useState('');
@@ -297,6 +329,7 @@ function DetailView({job, tab, onTabChange, streamConnection, onRetry, retrying,
   const events=Array.isArray(job.events)?job.events:[];
   const warnings=Array.isArray(job.result?.warnings)?job.result.warnings:[];
   const active=isActive(job.status),hasReport=Boolean(job.result?.report?.trim());
+  const quick=modeOf(job)==='A',screenState=quick?quickScreenProgress(job,hasReport):null;
   const preview=useMemo(()=>reportPreview(job.liveReport?.text,job.plan),[job.liveReport?.text,job.plan]);
   const currentTab=Object.hasOwn(tabLabels,tab)?tab:'report';
   const outlineItems=outline.prefix===prefix+'-report'?outline.items:[];
@@ -365,7 +398,7 @@ function DetailView({job, tab, onTabChange, streamConnection, onRetry, retrying,
     </header>
     <dl className="rd-meta">
       <div><dt>研究路径</dt><dd>{modes[job.mode]?.name||(job.mode==='auto'?'智能路由':job.plan?.name||'研究路径未记录')}</dd></div>
-      {job.input?.depth&&<div><dt>报告深度</dt><dd>{depthLabels[job.input.depth]||job.input.depth}</dd></div>}
+      {job.input?.depth&&<div><dt>{quick?'研究目标':'报告深度'}</dt><dd>{quick?'判断是否继续研究':depthLabels[job.input.depth]||job.input.depth}</dd></div>}
       {(job.plan?.historyYears||job.input?.historyYears)&&<div><dt>财报范围</dt><dd>近 {job.plan?.historyYears||job.input.historyYears} 年</dd></div>}
       <div><dt>创建时间</dt><dd>{formatDate(job.createdAt)}</dd></div>
       {job.lastRetriedAt&&<div><dt>最近重试</dt><dd>{formatDate(job.lastRetriedAt)}</dd></div>}
@@ -376,7 +409,7 @@ function DetailView({job, tab, onTabChange, streamConnection, onRetry, retrying,
       <div className="rd-main-column">
         <section className={'rd-overview rd-overview-'+job.status} aria-label="研究进展">
           <span className="rd-overview-icon">{active?(job.status==='queued'?<Clock3 size={20}/>:<LoaderCircle size={20} className="rd-spin"/>):job.status==='failed'?<CircleAlert size={20}/>:job.status==='completed'?<Check size={20}/>:<Square size={18}/>}</span>
-          <div className="rd-overview-copy"><strong>{overview}</strong><p>{overviewCopy}</p></div>
+          <div className="rd-overview-copy"><strong>{screenState?.title||overview}</strong><p>{screenState?.text||overviewCopy}</p>{quick&&job.error&&<p className="rd-screen-error">{job.error}</p>}</div>
           <div className="rd-overview-counts"><span><strong>{sources.length}</strong> 份资料</span><span><strong>{events.length}</strong> 条轨迹</span></div>
         </section>
         {streamConnection&&<p className="rd-connection" role="status"><Activity size={15} aria-hidden="true"/>{streamConnection}</p>}
@@ -385,13 +418,15 @@ function DetailView({job, tab, onTabChange, streamConnection, onRetry, retrying,
           <Tabs value={currentTab} onValueChange={onTabChange} className="rd-tabs">
             <div ref={toolbar} className="rd-content-toolbar"><TabsList className="rd-tab-list" aria-label="研究详情内容">
               <TabsTrigger value="report"><FileText size={16}/>研究报告</TabsTrigger>
+              <TabsTrigger value="approach"><BookOpen size={16}/>研究思路</TabsTrigger>
               <TabsTrigger value="audit"><ShieldCheck size={16}/>审计记录</TabsTrigger>
               <TabsTrigger value="sources"><Globe size={16}/>证据来源<Badge variant="secondary" className="rd-source-count">{sources.length}</Badge></TabsTrigger>
             </TabsList>
             <ReportDirectory compact={compact} open={directoryOpen} onOpenChange={setDirectoryOpen} items={outlineItems} activeId={activeHeading} onNavigate={navigateOutline} onCloseAutoFocus={finishDirectoryClose} reportHref={'/research/'+encodeURIComponent(job.id)}/></div>
             {warnings.length>0&&<section className="rd-warnings" aria-label="报告使用提示"><CircleAlert size={17} aria-hidden="true"/><div><strong>阅读提示</strong><ul>{warnings.map((warning,index)=><li key={index}>{warning}</li>)}</ul></div></section>}
-            <TabsContent value="report" className="rd-panel" forceMount hidden={currentTab!=='report'}><ReportPanel job={job} prefix={prefix+'-report'} preview={preview} onRetry={onRetry} retrying={retrying} onReuse={onReuse} onUpdate={job.status==='completed'?onUpdate:undefined} onOutline={updateOutline}/></TabsContent>
+            <TabsContent value="report" className="rd-panel" forceMount hidden={currentTab!=='report'}><ReportPanel job={job} prefix={prefix+'-report'} preview={preview} onRetry={onRetry} retrying={retrying} onReuse={onReuse} onUpdate={job.status==='completed'?onUpdate:undefined} onDeepen={job.status==='completed'?onDeepen:undefined} onApproach={()=>onTabChange('approach')} onOutline={updateOutline}/></TabsContent>
             <TabsContent value="audit" className="rd-panel"><AuditPanel job={job} prefix={prefix+'-audit'}/></TabsContent>
+            <TabsContent value="approach" className="rd-panel"><ApproachPanel job={job} prefix={prefix+'-approach'}/></TabsContent>
             <TabsContent value="sources" className="rd-panel" forceMount hidden={currentTab!=='sources'}><SourcesPanel key={job.retryCount??0} sources={sources} status={job.status}/></TabsContent>
           </Tabs>
         </Card>
@@ -402,7 +437,7 @@ function DetailView({job, tab, onTabChange, streamConnection, onRetry, retrying,
 }
 
 /**
- * Controlled tab: 'report' | 'audit' | 'sources'; onTabChange(nextTab) stays in
+ * Controlled tab: 'report' | 'approach' | 'audit' | 'sources'; onTabChange(nextTab) stays in
  * the parent so its URL/query parameters remain authoritative. Action callbacks
  * take no arguments; the parent owns requests, download content and errors.
  * onRetry restarts this record in place; onReuse only loads the workbench inputs.

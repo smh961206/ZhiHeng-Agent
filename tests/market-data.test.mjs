@@ -29,7 +29,7 @@ test('美股交易时间夏令时和冬令时转换，非法日期拒绝',()=>{
 });
 test('报告选择保留最新披露和按年度去重的年报',()=>{
  const docs=[{title:'2025 年报',annual:true,date:'2026-04-01',url:'1'},{title:'2025 年报（修订）',annual:true,date:'2026-05-01',url:'2'},{title:'2024 年报',annual:true,date:'2025-04-01',url:'3'},{title:'2026 中期',annual:false,date:'2026-08-01',url:'4'}];
- const selected=selectReports(docs,3,'A');assert.ok(selected.some(x=>x.url==='4'));assert.ok(selected.some(x=>x.url==='2'));assert.ok(!selected.some(x=>x.url==='3'));
+ const selected=selectReports(docs,3,'A');assert.ok(selected.some(x=>x.url==='4'));assert.ok(selected.some(x=>x.url==='2'));assert.ok(selected.some(x=>x.url==='3'));assert.ok(!selected.some(x=>x.url==='1'));
 });
 test('外部请求只允许固定公开数据域名，403不重试绕过',async()=>{
  await assert.rejects(remote('http://127.0.0.1/admin'),/允许列表/);
@@ -39,5 +39,5 @@ test('外部请求只允许固定公开数据域名，403不重试绕过',async(
 });
 test('行情和财报失败均保留原因，不伪造来源，取消停止后续请求',async()=>{
  const old=global.fetch;global.fetch=async()=>new Response('',{status:503});
- try{const r=await collectMarketData([{market:'CN',symbol:'600519'}]);assert.equal(r.sources.length,0);assert.equal(r.coverage[0].read,0);assert.equal(r.warnings.length,2);const c=new AbortController();c.abort();await assert.rejects(collectMarketData([{market:'US',symbol:'AAPL'}],{signal:c.signal}));}finally{global.fetch=old;}
+ try{const fail=async()=>{throw new Error('source offline');};const r=await collectMarketData([{market:'CN',symbol:'600519'}],{quotes:fail,listReports:fail});assert.equal(r.sources.length,0);assert.equal(r.coverage[0].read,0);assert.equal(r.warnings.length,2);const c=new AbortController();c.abort();await assert.rejects(collectMarketData([{market:'US',symbol:'AAPL'}],{signal:c.signal}));}finally{global.fetch=old;}
 });

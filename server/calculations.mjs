@@ -40,6 +40,21 @@ export function calculationBasis(basis,sources){
  for(const [key,label] of [['currency','币种'],['period','期间'],['shareBasis','股本口径'],['assumptions','假设与正常化依据']]){
   if(typeof basis[key]!=='string'||!basis[key].trim()||basis[key].length>4000)throw new Error('计算缺少有效的'+label);
  }
- if(!Array.isArray(basis.sourceIds)||!basis.sourceIds.length||basis.sourceIds.some(id=>!sources.some(source=>source.id===id&&source.type!=='filing-index')))throw new Error('计算参数须关联实际资料ID，披露目录不能代替正文证据');
- return {currency:basis.currency,period:basis.period,shareBasis:basis.shareBasis,assumptions:basis.assumptions,sourceIds:[...new Set(basis.sourceIds)]};
+ if(!Array.isArray(basis.sourceIds)||!basis.sourceIds.length||basis.sourceIds.some(id=>!sources.some(source=>source.id===id&&!['filing-index','data-check','search-result','search-summary'].includes(source.type))))throw new Error('计算参数须关联实际资料ID，搜索摘要、披露目录与覆盖检查不能代替正文证据');
+ const evidence=sources.filter(source=>basis.sourceIds.includes(source.id));
+ const references=basis.evidenceBlocks||[];
+ if(!Array.isArray(references)||references.length>30)throw new Error('计算证据块清单格式无效');
+ const referencedBlocks=references.map(reference=>{
+  const source=evidence.find(source=>source.id===reference?.sourceId),block=source?.documentBlocks?.find(block=>block.id===reference?.blockId);
+  if(!block)throw new Error('计算引用的原文证据块不存在或不属于所选资料');
+  return {source,block};
+ });
+ const nativeReference=referencedBlocks.some(({source,block})=>source.official===true&&source.type==='official-report'&&block.method!=='ocr'&&!block.needsReview&&!block.truncated);
+ if(evidence.some(source=>source.qualitySummary?.ocrPages)&&!nativeReference&&!evidence.some(source=>source.official===true&&(source.type==='official-xbrl'&&source.factsCount>0||source.type==='official-report'&&!source.qualitySummary?.ocrPages&&!source.truncated&&!source.emptyPages&&!source.legacyParser)))throw new Error('OCR识别数字仍待核对，须关联非OCR的官方XBRL/原文；混合PDF请用evidenceBlocks明确引用已检索的非OCR正文块');
+ if(new Set(evidence.map(source=>source.security).filter(Boolean)).size>1)throw new Error('单标的估值不能混用不同证券或不同股类的资料');
+ if(evidence.some(source=>source.type==='web-evidence'&&(!source.documentRead||!source.authorityVerified||!source.publishedAt)))throw new Error('网页财务数值须已读取正文、确认来源机构并取得原文发布日期；未知身份、日期或摘要不能用于计算');
+ if(evidence.some(source=>['vendor-financials','shareholder-data','valuation-history','web-evidence'].includes(source.type))&&!evidence.some(source=>source.official===true&&['official-report','official-xbrl'].includes(source.type)))throw new Error('补充财务及股东回报数据须关联已读取的官方披露，核对币种、单位、期间和股本后计算');
+ if(evidence.some(source=>source.stale)&&!/历史|过期|旧|截至|stale|historical|as.of/i.test(basis.assumptions+' '+basis.period))throw new Error('来源含旧数据，须在期间或假设中明确其截止日期和历史性质，不能声称是当前估值');
+ if(evidence.some(source=>source.type==='quote'&&source.currency&&source.currency!==basis.currency.trim()))throw new Error('估值币种与引用行情币种不一致，须先核对换算和股类口径');
+ return {currency:basis.currency,period:basis.period,shareBasis:basis.shareBasis,assumptions:basis.assumptions,sourceIds:[...new Set(basis.sourceIds)],...(references.length?{evidenceBlocks:references}:{})};
 }

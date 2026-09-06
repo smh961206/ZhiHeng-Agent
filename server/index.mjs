@@ -13,6 +13,8 @@ import {runAgent} from './agent.mjs';
 import {modes,route,validateInput} from './router.mjs';
 import {validateSecurities,fetchQuote} from './market-data.mjs';
 import {resolveSecurities} from './security-resolver.mjs';
+import {providerStatus} from './data-provider-config.mjs';
+import {webSearchStatus} from './web-search-provider.mjs';
 import {getStorage} from './storage.mjs';
 import {migrateLegacy} from './migrate.mjs';
 import {createAccessPolicy} from './access.mjs';
@@ -45,7 +47,7 @@ const server=http.createServer(async(req,res)=>{
  try{
   const url=new URL(req.url,'http://localhost');
   if(!allowRequest(req))return send(res,403,{error:'访问地址或请求来源未获允许'});
-  if(url.pathname==='/api/config')return send(res,200,{configured:!!(process.env.LLM_API_KEY&&process.env.LLM_MODEL),model:process.env.LLM_MODEL||null,modes,knowledgeVersion:frameworkVersion,knowledge:knowledgeManifest,researchStages,dataProvider:'A股/港股：东方财富+巨潮；美股：Yahoo/腾讯+SEC',markets:['CN','HK','US'],secUserAgentConfigured:!!process.env.SEC_USER_AGENT});
+  if(url.pathname==='/api/config')return send(res,200,{configured:!!(process.env.LLM_API_KEY&&process.env.LLM_MODEL),model:process.env.LLM_MODEL||null,modes,knowledgeVersion:frameworkVersion,knowledge:knowledgeManifest,researchStages,dataProvider:'行情与股本：长桥优先，多源备用；官方财报与公告：巨潮、港交所、SEC正文/XBRL；三市场结构化财务：Tushare；历史估值与股东回报：Tushare及长桥基本面；原文归档与缺口核验；网页补充：先查资料、按缺口定位原始正文',dataProviders:providerStatus(),webSearch:webSearchStatus(),markets:['CN','HK','US'],secUserAgentConfigured:!!process.env.SEC_USER_AGENT});
   if(url.pathname==='/api/research/plan'&&req.method==='POST'){let input=validateInput(await body(req));const mode=route(input);input=await attachResearchBaseline(input,mode,id=>storage.getJob(id));return send(res,200,{...createResearchPlan(input,mode),knowledge:knowledgeManifest});}
   if(url.pathname==='/api/securities/resolve'&&req.method==='POST'){
    const {question}=await body(req);const control=new AbortController();

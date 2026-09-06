@@ -1,4 +1,5 @@
-import {remote,securityCatalog} from './market-data.mjs';
+import {securityCatalog} from './market-data.mjs';
+import {lookupSECCompanies} from './sec-directory.mjs';
 // Search aliases only; security IDs are always resolved against live official directories.
 const aliases={茅台:{name:'贵州茅台'},平安:{name:'平安'},腾讯:{name:'腾讯控股'},騰訊:{name:'腾讯控股'},宁德:{name:'宁德时代'},寧德:{name:'宁德时代'},苹果:{us:'Apple Inc.'},蘋果:{us:'Apple Inc.'},微软:{us:'Microsoft'},微軟:{us:'Microsoft'},英伟达:{us:'NVIDIA'},英偉達:{us:'NVIDIA'},英伟達:{us:'NVIDIA'},特斯拉:{us:'Tesla'},亚马逊:{us:'Amazon'},亞馬遜:{us:'Amazon'},谷歌:{us:'Alphabet'},奈飞:{us:'Netflix'},奈飛:{us:'Netflix'},阿里巴巴:{name:'阿里巴巴',us:'Alibaba Group'},阿里:{name:'阿里巴巴',us:'Alibaba Group'},百度:{name:'百度',us:'Baidu'},京东:{name:'京东',us:'JD.com'},京東:{name:'京东',us:'JD.com'},拼多多:{us:'PDD Holdings'},美团:{name:'美团'},美團:{name:'美团'},小米:{name:'小米'},比亞迪:{name:'比亚迪'},台积电:{us:'Taiwan Semiconductor'},台積電:{us:'Taiwan Semiconductor'}};
 const ignored=new Set('A B C D E F CN HK US SH SZ BJ SEC ROE ROIC PE PB P2 DCF DPS EPS FCF FCFE FCFF TTM FY USD HKD CNY RMB CEO API EBITDA EV WACC ADR ETF AI JSON PDF YOY CAGR IPO IRR NAV GDP HTTP HTTPS'.split(' '));
@@ -51,18 +52,8 @@ export function localMentions(question,catalogs){
   return {...m,preferred,candidates:preferred?m.candidates.filter(s=>s.market===preferred):m.candidates,usQuery:preferred&&preferred!=='US'?undefined:m.usQuery};
  });
 }
-const secCache=new Map();
 async function searchUS(query,signal){
- const cached=secCache.get(query);if(cached&&Date.now()-cached.at<86400000)return cached.items;
- const raw=await remote(`https://efts.sec.gov/LATEST/search-index?keysTyped=${encodeURIComponent(query)}&narrow=true`,{signal});
- const data=JSON.parse(raw.toString('utf8'));
- const hits=(data.hits?.hits??[]).filter(h=>h._source?.tickers);
- const normalized=s=>s.toUpperCase().replaceAll('.','-');
- const tickerMatch=hits.filter(h=>String(h._source.tickers).split(/[,;\s]+/).some(t=>normalized(t)===normalized(query)));
- const nameMatch=hits.filter(h=>h._source.entity.toLowerCase().startsWith(query.toLowerCase()));
- const selected=tickerMatch.length?tickerMatch:nameMatch;
- const items=unique(selected.flatMap(h=>String(h._source.tickers).split(/[,;\s]+/).filter(t=>/^[A-Za-z][A-Za-z0-9.-]{0,11}$/.test(t)).map(t=>({market:'US',symbol:t.toUpperCase(),name:h._source.entity.replace(/\s*\([^)]*\)\s*$/,''),verifiedBy:'SEC官方公司索引'}))));
- secCache.set(query,{at:Date.now(),items});return items;
+ return unique((await lookupSECCompanies(query,signal)).map(({cik,...item})=>item));
 }
 export async function resolveSecurities(question,{signal,loadCatalog=securityCatalog,lookupUS=searchUS}={}){
  if(typeof question!=='string'||question.length>10000)throw new Error('问题格式无效，最多10000字');

@@ -55,8 +55,9 @@ export async function createStorage({uri=process.env.MONGODB_URI||'mongodb://127
     }
    },
    async getCachedReport(key){const entry=await cache.findOne({_id:key,expiresAt:{$gt:new Date()}});return entry?.source??null;},
-   async saveCachedReport(key,source){
-    const expiresAt=new Date(Date.parse(source.fetchedAt)+7*86400000);
+   async saveCachedReport(key,source,{retainMs=7*86400000}={}){
+    if(!Number.isFinite(retainMs)||retainMs<=0||retainMs>3650*86400000)throw new Error('数据保留时间无效');
+    const expiresAt=new Date(Date.parse(source.fetchedAt)+retainMs);
     if(!Number.isFinite(expiresAt.getTime()))throw new Error('财报缓存时间无效');
     await cache.replaceOne({_id:key},{_id:key,source,expiresAt},{upsert:true});
    },

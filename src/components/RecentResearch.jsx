@@ -2,6 +2,7 @@ import {Link} from 'react-router';
 import {Check, ChevronRight, CircleAlert, Clock3, LoaderCircle, Minus} from 'lucide-react';
 import {Button} from './ui/button';
 import {Badge} from './ui/badge';
+import {modeOf, modeLabel} from '../lib/research-mode';
 
 const statuses = {
   queued: {label: '等待中', Icon: Clock3},
@@ -49,6 +50,7 @@ export default function RecentResearch({jobs = [], currentId, onNavigate}) {
         const title = job.question || job.input?.question || '未命名研究';
         return <li key={job.id}><Button asChild variant="ghost"><Link className="rr-link" to={'/research/' + encodeURIComponent(job.id)} title={title} aria-current={currentId === job.id ? 'page' : undefined} onClick={afterNavigation}>
           <span className="rr-title-row"><span className="rr-title">{title}</span><ChevronRight className="rr-open-icon" size={15} aria-hidden="true"/></span>
+          <span className="rr-mode-row"><span>研究模式</span><Badge variant="outline" className="rr-mode" data-mode={modeOf(job)}>{modeLabel(job)}</Badge></span>
           <span className="rr-meta"><Badge variant="outline" className="rr-status" data-status={job.status}><Icon size={13} className={job.status === 'running' ? 'rr-spin' : undefined} aria-hidden="true"/>{label}</Badge>{job.researchOutcome?.action&&<span className="rr-outcome" title={'研究判断 · 置信度 '+job.researchOutcome.confidence}>{job.researchOutcome.action}</span>}<time dateTime={validDate ? created.toISOString() : undefined} title={validDate ? '创建于 ' + fullDate.format(created) : undefined}>{validDate ? readableDate(created, now) : '时间未记录'}</time></span>
         </Link></Button></li>;
       })}

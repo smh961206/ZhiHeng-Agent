@@ -14,6 +14,8 @@ bash deploy.sh up
 
 填写 LLM_API_KEY、LLM_BASE_URL、LLM_MODEL。无配置文件时脚本会生成模板并退出，不会猜测密钥。项目不需要在服务器安装 Node.js；镜像构建包含前端编译和生产依赖安装。首次构建需要访问容器镜像与 npm 仓库。
 
+可选数据源在 `.env.production` 配置 `TUSHARE_TOKEN` 与长桥的 `LONGBRIDGE_APP_KEY`、`LONGBRIDGE_APP_SECRET`、`LONGBRIDGE_ACCESS_TOKEN`。长桥凭证完整时优先为适用标的提供行情与股本，并按权限补充港美股基本面；Tushare 提供三市场结构化财务及A股股东回报、股本和历史估值。官方披露仍由巨潮、港交所和SEC读取，网页正文按已配置的搜索服务与资料缺口补充；具体覆盖取决于任务及账户权限。Compose 已通过 `env_file` 注入这些变量。长桥 SDK 含原生模块，沿用项目的 Debian/glibc 镜像；不要直接改用 Alpine。配置和验证说明见 [README 的可选数据源章节](README.md#可选接入长桥行情基本面与-tushare-财务数据)。修改凭证后需重建应用容器使新环境生效。
+
 默认仅绑定服务器 127.0.0.1:3001。电脑端运行 `ssh -L 3001:127.0.0.1:3001 user@server` 后打开 http://127.0.0.1:3001。提供域名访问时，在外层配置带认证的 HTTPS 反向代理，转发到 127.0.0.1:3001，保留 Host，并把浏览器地址写入 `PUBLIC_ORIGINS=https://research.example.com`。该变量是访问来源白名单，不是用户认证。应用没有多用户鉴权，数据库不映射宿主机端口。仅在受控内网且已有访问控制时修改 BIND_ADDRESS。
 
 生产 Compose 独立于本地开发 compose.yaml，固定项目名 zhiheng-production；持久化卷为 zhiheng-production_mongodb_data 和 zhiheng-production_mongodb_config。生产数据库名固定 zhiheng_agent。首次部署不会自动复制本机 MongoDB；如需搬迁现有数据，停本机写入后用 mongodump / mongorestore 导入生产库再启动应用。
@@ -56,6 +58,10 @@ bash deploy.sh rollback backups/实际文件名.archive.gz --confirm-data-loss
 参考：[Compose 启动顺序](https://docs.docker.com/compose/how-tos/startup-order/)、[MongoDB 备份与恢复](https://www.mongodb.com/docs/manual/tutorial/backup-and-restore-tools/)。
 
 ## 开发验证
+
+财报解析依赖随镜像安装的 PDF.js CMap/字体/WASM、`@napi-rs/canvas` 和 Tesseract 中英文模型包，部署时不要移除这些生产依赖。OCR仅在后端本地运行，不需新增密钥或运行时下载语言模型；容器需保留可写临时目录供本地识别使用。默认每份PDF最多识别4页，超过预算保留缺口。解析版本变化会重新读取并归档原件，网络失败时回退旧版文本并明确限制，不要删除现有缓存来强行刷新。
+
+主动网页补充使用 `.env.production` 中的 `TAVILY_API_KEY`，`BRAVE_SEARCH_API_KEY` 为可选备用；`WEB_SEARCH_ENABLED=false` 可关闭。密钥不放进前端变量，更新后按正常升级流程重启应用。`GET /api/config` 的 `webSearch` 只返回配置状态和预算，不返回密钥。公司官网身份绑定可设置 `WEB_RESEARCH_ISSUER_DOMAINS`，具体流程、归档期限和联网验证见 README 的“主动网页补充”。搜索失败会保留缺口，不替代固定行情或官方报告采集。
 
 `pnpm test` 验证业务和域名访问限制；`pnpm test:mongodb` 在随机临时库验证数据保存、迁移幂等、迁移锁、失败重试及禁止结构降级。Linux 上运行 `bash tests/deploy.integration.sh` 会创建独立 Compose 项目，演练首次部署、升级保留数据、备份与回滚、新集合清理、构建失败和迁移失败；结束后只删除该测试项目的容器及数据卷。
 

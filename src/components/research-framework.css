@@ -9,7 +9,7 @@
 .fw-heading p{font-size:14px;color:var(--fw-muted);margin-top:6px!important;line-height:1.8}
 .fw-heading>[data-slot=badge]{padding:6px 10px;color:#466650;font-weight:400}
 .fw-hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:center;gap:45px;padding:40px 0 38px}
-.fw-eyebrow{font-size:13px;letter-spacing:2px;color:#526f5c}
+
 .fw-hero h2{font-size:clamp(32px,3.5vw,49px);font-weight:650;line-height:1.45;letter-spacing:-1.3px;margin:16px 0 22px!important}
 .fw-hero-copy>p{font-size:16px;line-height:2;max-width:530px;color:var(--fw-muted)}
 .fw-hero-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:28px 0 20px}
@@ -45,10 +45,11 @@
 .fw-scene-tabs>[data-slot=tabs-trigger]>svg:last-child{margin-left:auto;width:13px;opacity:0}
 .fw-scene-tabs>[data-state=active]{background:#fff!important;color:#174c34!important;box-shadow:0 2px 6px #183c3410!important}
 .fw-scene-tabs>[data-state=active]>svg:last-child{opacity:1}
-/* All panels share one grid cell, reserving the tallest scene at each viewport width. */
+/* Reserve the tallest scene on larger screens; mobile uses only the active panel. */
 .research-framework .fw-scene-panels{display:grid;min-width:0}
 .research-framework .fw-scene-panel{grid-area:1 / 1;display:flex;flex-direction:column;padding:28px 30px;min-width:0;margin:0}
 .research-framework .fw-scene-panel[data-state=inactive]{visibility:hidden;pointer-events:none}
+@media(max-width:639px){.research-framework .fw-scene-panel[data-state=inactive]{display:none}}
 .research-framework .fw-scene-panel>[data-slot=button]{margin-top:auto;align-self:flex-start}
 .fw-scene-heading{display:flex;align-items:center;gap:12px;margin-bottom:17px}
 .fw-scene-heading>[data-slot=badge]{font-weight:400}
@@ -108,36 +109,9 @@
 .fw-cta [data-slot=button]{flex-shrink:0}
 @media(max-width:1279px){.fw-benefits{grid-template-columns:repeat(2,minmax(0,1fr))}.fw-hero{gap:25px}.fw-hero h2{font-size:36px}.fw-scene-details{gap:18px}.fw-discipline-grid{gap:22px}.fw-score-heading{flex-wrap:wrap}}
 @media(max-width:900px){.fw-hero{grid-template-columns:minmax(0,1fr) minmax(0,.95fr);gap:22px}.fw-question-card>[data-slot=card-content]{padding:21px}.fw-question{gap:11px}.fw-question h3{font-size:16px}.research-framework .fw-scenes{grid-template-columns:185px minmax(0,1fr)}.research-framework .fw-scene-panel{padding:23px}.fw-scene-details{grid-template-columns:1fr}.research-framework .fw-flow-panel{gap:23px;padding:24px}.fw-score-list>div{grid-template-columns:103px minmax(0,1fr) 34px;gap:8px}.fw-score>[data-slot=card-content]{padding:21px}}
-@media(max-width:639px){.fw-heading{align-items:flex-start;gap:10px}.fw-heading h1{font-size:27px}.fw-heading>[data-slot=badge]{font-size:10px;white-space:nowrap;padding:4px 7px;margin-top:8px}.fw-heading p{font-size:13px}.fw-hero{grid-template-columns:minmax(0,1fr);padding:16px 0 28px;gap:28px}.fw-hero h2{font-size:36px;margin:13px 0 17px!important}.fw-hero-copy>p{font-size:15px}.fw-hero-note{font-size:11px}.fw-eyebrow{font-size:12px}.fw-hero-actions{margin:23px 0 16px;gap:6px}.fw-hero-actions>[data-slot=button]{font-size:13px;padding-inline:11px}.fw-question-card>[data-slot=card-content]{padding:22px}.fw-question{padding:17px 0}.fw-section-nav{gap:0;margin-inline:-2px}.fw-section-nav [data-slot=button]{font-size:12px;min-height:42px;padding-inline:10px}.fw-section{margin-top:36px;scroll-margin-top:85px}.fw-section-heading{margin-bottom:18px}.fw-section-heading h2{font-size:23px}.fw-benefits{grid-template-columns:1fr;gap:12px}.fw-benefit>[data-slot=card-content]{padding:21px}.fw-benefit h3{font-size:18px;margin:14px 0 7px!important}.research-framework .fw-scenes{display:block}.research-framework .fw-scene-tabs{flex-direction:row;overflow-x:auto;justify-content:flex-start;gap:5px;padding:8px;border-right:0;border-bottom:1px solid var(--fw-line)}.research-framework .fw-scene-tabs>[data-slot=tabs-trigger]{flex:0 0 auto;width:auto;min-height:46px;padding:9px 12px;gap:7px}.fw-scene-tabs small,.fw-scene-tabs>[data-slot=tabs-trigger]>svg:last-child{display:none}.fw-scene-tabs>[data-slot=tabs-trigger]>span{font-size:13px}.research-framework .fw-scene-panel{padding:22px 18px}.fw-scene-panel>h3{font-size:22px}.fw-scene-panel>button{width:100%;min-height:44px}.fw-scene-details{gap:20px}.research-framework .fw-flow-tabs>[data-slot=tabs-trigger]{font-size:13px;min-height:44px;padding:10px;gap:6px}.research-framework .fw-flow-panel{grid-template-columns:1fr;padding:22px 18px;gap:20px}.fw-flow-panel h3{font-size:21px}.fw-flow-example>[data-slot=card-content]{padding:20px}.fw-discipline-grid{grid-template-columns:1fr;gap:27px}.fw-score-heading h3{font-size:19px}.fw-discipline-copy>h3{font-size:22px}.fw-faq [data-slot=collapsible-trigger]{font-size:14px;line-height:1.8;padding-block:17px;gap:12px}.fw-faq [data-slot=collapsible-content]{padding-right:12px;font-size:14px}.fw-cta>[data-slot=card-content]{padding:23px 20px;flex-direction:column;align-items:stretch;gap:19px}.fw-cta h2{font-size:21px}.fw-cta [data-slot=button]{min-height:44px}}
+@media(max-width:639px){.fw-heading{align-items:flex-start;gap:10px}.fw-heading h1{font-size:27px}.fw-heading>[data-slot=badge]{font-size:10px;white-space:nowrap;padding:4px 7px;margin-top:8px}.fw-heading p{font-size:13px}.fw-hero{grid-template-columns:minmax(0,1fr);padding:16px 0 28px;gap:28px}.fw-hero h2{font-size:36px;margin:13px 0 17px!important}.fw-hero-copy>p{font-size:15px}.fw-hero-note{font-size:11px}.fw-hero-actions{margin:23px 0 16px;gap:6px}.fw-hero-actions>[data-slot=button]{font-size:13px;padding-inline:11px}.fw-question-card>[data-slot=card-content]{padding:22px}.fw-question{padding:17px 0}.fw-section-nav{gap:0;margin-inline:-2px}.fw-section-nav [data-slot=button]{font-size:12px;min-height:42px;padding-inline:10px}.fw-section{margin-top:36px;scroll-margin-top:85px}.fw-section-heading{margin-bottom:18px}.fw-section-heading h2{font-size:23px}.fw-benefits{grid-template-columns:1fr;gap:12px}.fw-benefit>[data-slot=card-content]{padding:21px}.fw-benefit h3{font-size:18px;margin:14px 0 7px!important}.research-framework .fw-scenes{display:block}.research-framework .fw-scene-tabs{flex-direction:row;overflow-x:auto;justify-content:flex-start;gap:5px;padding:8px;border-right:0;border-bottom:1px solid var(--fw-line)}.research-framework .fw-scene-tabs>[data-slot=tabs-trigger]{flex:0 0 auto;width:auto;min-height:46px;padding:9px 12px;gap:7px}.fw-scene-tabs small,.fw-scene-tabs>[data-slot=tabs-trigger]>svg:last-child{display:none}.fw-scene-tabs>[data-slot=tabs-trigger]>span{font-size:13px}.research-framework .fw-scene-panel{padding:22px 18px}.fw-scene-panel>h3{font-size:22px}.fw-scene-panel>button{width:100%;min-height:44px}.fw-scene-details{gap:20px}.research-framework .fw-flow-tabs>[data-slot=tabs-trigger]{font-size:13px;min-height:44px;padding:10px;gap:6px}.research-framework .fw-flow-panel{grid-template-columns:1fr;padding:22px 18px;gap:20px}.fw-flow-panel h3{font-size:21px}.fw-flow-example>[data-slot=card-content]{padding:20px}.fw-discipline-grid{grid-template-columns:1fr;gap:27px}.fw-score-heading h3{font-size:19px}.fw-discipline-copy>h3{font-size:22px}.fw-faq [data-slot=collapsible-trigger]{font-size:14px;line-height:1.8;padding-block:17px;gap:12px}.fw-faq [data-slot=collapsible-content]{padding-right:12px;font-size:14px}.fw-cta>[data-slot=card-content]{padding:23px 20px;flex-direction:column;align-items:stretch;gap:19px}.fw-cta h2{font-size:21px}.fw-cta [data-slot=button]{min-height:44px}}
 @media(prefers-reduced-motion:reduce){.research-framework *{transition:none!important;scroll-behavior:auto!important}}
 .research-framework .fw-flow-tabs{justify-content:flex-start}
-.fw-valuation-explainer{display:grid;gap:20px;min-width:0;padding-top:4px}
-.fw-valuation-explainer strong{color:var(--fw-ink);font-weight:600}
-.fw-formula-symbols{display:flex;flex-wrap:wrap;gap:10px 22px;padding:15px 17px;margin:0;background:#f0f4ee;border-radius:9px}
-.fw-formula-symbols>div{display:flex;align-items:baseline;gap:8px;min-width:0}
-.fw-formula-symbols dt{flex-shrink:0}
-.fw-formula-symbols dd{margin:0;font-size:13px}
-.fw-formula-symbols [data-slot=badge]{font-size:12px;font-weight:500;background:#fff}
-.fw-formula-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;min-width:0}
-.research-framework .fw-formula-card{min-width:0;padding:0;gap:0;background:#fff;border:1px solid var(--fw-line);border-radius:11px;box-shadow:none}
-.fw-formula-card>[data-slot=card-content]{display:flex;flex-direction:column;gap:16px;padding:20px;min-width:0;height:100%}
-.fw-formula-heading{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-.fw-formula-heading h3{font-size:16px;font-weight:600;color:var(--fw-ink)}
-.fw-formula-heading [data-slot=badge]{font-size:12px;background:#eaf1e7;color:#3f6549}
-.fw-formula-equation{display:grid;gap:4px;padding:12px 13px;background:#f4f7f2;border-radius:7px;color:#244e37}
-.fw-formula-equation>span{font-size:12px}
-.fw-valuation-explainer code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;white-space:normal;overflow-wrap:anywhere}
-.fw-formula-equation code{font-size:15px;line-height:1.9}
-.fw-formula-card p{font-size:13px;line-height:1.9}
-.fw-formula-example{margin-top:auto;padding-top:14px;border-top:1px solid var(--fw-line)}
-.fw-formula-example>strong{display:block;font-size:12px;margin-bottom:6px}
-.fw-formula-example>code{display:block;margin-top:5px;font-size:12px;line-height:1.9;color:#42624b}
-.fw-valuation-explainer .fw-formula-caption{font-size:13px;color:#637560}
-.fw-valuation-notes{display:grid;gap:17px}
-.fw-valuation-notes h3{font-size:15px;font-weight:600;color:var(--fw-ink);margin-bottom:7px!important}
-.fw-valuation-notes code{color:#315b42}
-@media(max-width:900px){.fw-formula-grid{grid-template-columns:minmax(0,1fr)}.fw-formula-card>[data-slot=card-content]{gap:13px}.fw-formula-card p{font-size:14px}.fw-formula-example>code{font-size:13px}}
-@media(max-width:639px){.fw-formula-symbols{display:grid;gap:10px;padding:13px}.fw-formula-symbols>div{align-items:flex-start}.fw-formula-card>[data-slot=card-content]{padding:16px}.fw-formula-equation{padding:11px}.fw-valuation-explainer{gap:16px}}
 .fw-flow-panels{display:grid;min-width:0}
 .research-framework .fw-flow-panel{grid-area:1 / 1;min-width:0}
 .research-framework .fw-flow-panel[data-state=inactive]{visibility:hidden;pointer-events:none}

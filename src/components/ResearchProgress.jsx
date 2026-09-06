@@ -3,8 +3,10 @@ import {Card} from './ui/card';
 import {Button} from './ui/button';
 import {Badge} from './ui/badge';
 import {Collapsible,CollapsibleTrigger,CollapsibleContent} from './ui/collapsible';
+import {modeOf} from '../lib/research-mode';
 
 const labels = {pending: '待执行', running: '进行中', completed: '已完成', skipped: '未使用', failed: '未通过', cancelled: '已取消', stopped: '未执行'};
+const screenStages={task:'明确筛选问题',evidence:'读取研究资料',research:'查证变化与红旗',calculation:'核对关键计算',review:'复核筛选判断'};
 
 export default function ResearchProgress({job}) {
   const stages = Array.isArray(job?.workflow?.stages) ? job.workflow.stages : [];
@@ -19,7 +21,7 @@ export default function ResearchProgress({job}) {
         : status === 'failed' ? CircleAlert : status === 'cancelled' ? Square : ['skipped', 'stopped'].includes(status) ? Minus : null;
       return <li key={stage.id || index} className={`stage-${status}`} aria-current={status === 'running' ? 'step' : undefined}>
         <span aria-hidden="true">{Icon ? <Icon size={15} className={status === 'running' ? 'animate-spin' : undefined}/> : index + 1}</span>
-        <div><strong>{stage.label}</strong><small>{labels[status] || '状态未记录'}</small></div>
+        <div><strong>{modeOf(job)==='A'?screenStages[stage.id]||stage.label:stage.label}</strong><small>{labels[status] || '状态未记录'}</small></div>
       </li>;
     })}</ol> : <p className="legacy-progress">{active ? '等待执行阶段更新…' : '此历史研究未记录结构化阶段，可在执行轨迹中回看过程。'}</p>}
     {job?.plan && <Collapsible className="research-scope"><CollapsibleTrigger asChild><Button variant="ghost">本次研究范围<ChevronDown size={15} aria-hidden="true"/></Button></CollapsibleTrigger><CollapsibleContent>

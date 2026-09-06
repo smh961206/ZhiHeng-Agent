@@ -14,6 +14,8 @@
 .history-page.research-history .rh-search > button { position: absolute; inset: 2px 2px 2px auto; display: grid; place-items: center; width: 40px; border-radius: 7px; color: var(--rh-muted); }
 .history-page.research-history .rh-search > button:hover { background: #e8efe9; }
 .history-page.research-history .rh-tools { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.history-page.research-history .rh-mode-filter { min-width: 148px; height: 44px; border-radius: 9px; color: #3c5849; box-shadow: none; }
+.history-page.research-history .rh-mode-filter[data-active=true] { border-color: #b7cfbf; background: #f0f6f1; color: #24543b; }
 .history-page.research-history .rh-sort { min-width: 158px; height: 44px; border-radius: 9px; color: #3c5849; box-shadow: none; }
 .history-page.research-history .rh-refresh { height: 44px; border-radius: 9px; color: #3c5849; box-shadow: none; }
 .history-page.research-history .rh-filters { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 24px 18px; border-bottom: 1px solid var(--rh-line); }
@@ -43,7 +45,8 @@
 .history-page.research-history mark { background: #e4edd0; color: inherit; border-radius: 2px; padding-block: 1px; }
 .history-page.research-history .rh-source-total { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .history-page.research-history .rh-created { display: flex; flex-direction: column; gap: 5px; color: var(--rh-muted); font-size: 12px; }
-.history-page.research-history .rh-mode { padding: 1px 7px; border: 1px solid #e3e9e3; border-radius: 5px; background: #f6f8f5; color: #49634f; }
+.history-page.research-history .rh-mode-row, .recent-research .rr-mode-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 8px; color: #596e63; font-size: 12px; font-weight: 400; line-height: 1.7; }
+.history-page.research-history .rh-mode, .recent-research .rr-mode { display: inline-flex; gap: 0; max-width: 100%; padding: 3px 8px; border: 1px solid #c4d9cb; border-radius: 5px; background: #eaf2ec; color: #24543b; font-size: 12px; font-weight: 500; }
 .history-page.research-history .rh-securities { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .history-page.research-history .rh-time { display: block; margin: 0; color: #4d6657; font-size: 12px; line-height: 1.8; font-variant-numeric: tabular-nums; }
 .history-page.research-history .rh-row-state { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; flex-shrink: 0; }
@@ -110,6 +113,12 @@
 .recent-research a:focus-visible { outline: 2px solid #6b917c; outline-offset: 2px; }
 @keyframes research-history-spin { to { transform: rotate(360deg); } }
 
+@media (max-width: 1199px) {
+  .history-page.research-history .rh-toolbar { flex-wrap: wrap; }
+  .history-page.research-history .rh-search { flex-basis: 100%; max-width: none; }
+  .history-page.research-history .rh-tools { width: 100%; }
+  .history-page.research-history .rh-mode-filter { flex: 1; min-width: 0; }
+}
 @media (max-width: 900px) {
   .history-page.research-history .rh-open { grid-template-columns: minmax(0,1fr) 84px; gap: 8px 18px; }
   .history-page.research-history .rh-row-copy { grid-column: 1; }
@@ -127,8 +136,9 @@
   .history-page.research-history .rh-toolbar { flex-wrap: wrap; gap: 8px; padding: 14px 14px 12px; }
   .history-page.research-history .rh-search { flex-basis: 100%; max-width: none; }
   .history-page.research-history .rh-search input { font-size: 16px; }
-  .history-page.research-history .rh-tools { width: 100%; justify-content: flex-end; }
-  .history-page.research-history .rh-sort { flex: 1; }
+  .history-page.research-history .rh-tools { display: grid; grid-template-columns: minmax(0,1fr) auto; width: 100%; }
+  .history-page.research-history .rh-mode-filter { grid-column: 1 / -1; width: 100%; }
+  .history-page.research-history .rh-sort { min-width: 0; width: 100%; }
   .history-page.research-history .rh-filters { flex-wrap: nowrap; gap: 5px; padding: 0 12px 10px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: #c8d8cd transparent; }
   .history-page.research-history .rh-filters button { flex-shrink: 0; min-height: 42px; padding: 6px 9px; gap: 6px; }
   .history-page.research-history .rh-results-heading { padding: 14px 14px 8px; gap: 5px; }

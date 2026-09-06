@@ -1,7 +1,7 @@
 import {useRef, useState} from 'react';
 import {Link, useSearchParams} from 'react-router';
 import {AlertCircle, ArrowRight, CheckCheck, ChevronLeft, ChevronRight, FileText, History, LoaderCircle, Plus, RefreshCw, Search, X} from 'lucide-react';
-import {modes} from '../../shared/research-framework.mjs';
+import {modeLabels, modeOf, modeLabel} from '../lib/research-mode';
 import {Button} from './ui/button';
 import {Badge} from './ui/badge';
 import {Card} from './ui/card';
@@ -15,8 +15,6 @@ const statusLabels = {queued: '等待中', running: '研究中', completed: '已
 const dateFormatter = new Intl.DateTimeFormat('zh-CN', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false});
 const matchesStatus = (job, status) => status === 'all' || (status === 'active' ? ['queued', 'running'].includes(job.status) : job.status === status);
 const titleOf = job => job.question || job.input?.question || '未命名研究';
-const modeOf = job => job.mode || job.plan?.mode || job.input?.mode;
-const modeLabel = job => modes[modeOf(job)]?.name || (modeOf(job) === 'auto' ? '智能路由' : job.plan?.name || '研究模式未记录');
 const dateOf = value => value ? new Date(value) : new Date(NaN);
 const errorMessage = error => typeof error === 'string' ? error : error?.message || '暂时无法获取研究记录，请稍后重试。';
 
@@ -55,20 +53,22 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
   const records = Array.isArray(jobs) ? jobs.filter(job => job?.id != null) : [];
   const query = params.get('q') || '';
   const status = groups.some(([key]) => key === params.get('status')) ? params.get('status') : 'all';
+  const mode = Object.hasOwn(modeLabels, params.get('mode')) ? params.get('mode') : 'all';
   const order = params.get('sort') === 'oldest' ? 'oldest' : 'newest';
   const requestedPage = Number(params.get('page'));
   const index = Number.isSafeInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
   const busy = jobsLoading || refreshing;
   const error = refreshError || jobsError;
   const initialLoading = busy && !records.length;
-  const hasFilters = Boolean(query.trim()) || status !== 'all';
+  const hasFilters = Boolean(query.trim()) || status !== 'all' || mode !== 'all';
   const terms = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
   const searched = records.filter(job => {
     const text = searchableText(job);
     return terms.every(term => text.includes(term));
   });
-  const counts = Object.fromEntries(groups.map(([key]) => [key, searched.filter(job => matchesStatus(job, key)).length]));
-  const filtered = searched.filter(job => matchesStatus(job, status)).sort((a, b) => {
+  const modeFiltered = searched.filter(job => mode === 'all' || modeOf(job) === mode);
+  const counts = Object.fromEntries(groups.map(([key]) => [key, modeFiltered.filter(job => matchesStatus(job, key)).length]));
+  const filtered = modeFiltered.filter(job => matchesStatus(job, status)).sort((a, b) => {
     const first = dateOf(a.createdAt).getTime(), second = dateOf(b.createdAt).getTime();
     // Records without a usable date stay last in both sort directions.
     if (!Number.isFinite(first)) return Number.isFinite(second) ? 1 : 0;
@@ -94,7 +94,7 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
   }
 
   function clear() {
-    update({q: null, status: null, page: null});
+    update({q: null, status: null, mode: null, page: null});
     searchInput.current?.focus();
   }
 
@@ -136,6 +136,10 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
           {query && <Button type="button" variant="ghost" size="icon-lg" aria-label="清空搜索" onClick={() => {update({q: null, page: null}); searchInput.current?.focus();}}><X size={16} aria-hidden="true"/></Button>}
         </div>
         <div className="rh-tools">
+          <Select value={mode} onValueChange={value => update({mode: value === 'all' ? null : value, page: null})}>
+            <SelectTrigger aria-label="按研究模式筛选" className="rh-mode-filter" data-active={mode !== 'all'}><SelectValue/></SelectTrigger>
+            <SelectContent><SelectItem value="all">全部研究模式</SelectItem>{Object.entries(modeLabels).map(([id, label]) => <SelectItem value={id} key={id}>{label}</SelectItem>)}</SelectContent>
+          </Select>
           <Select value={order} onValueChange={value => update({sort: value === 'newest' ? null : value, page: null})}>
             <SelectTrigger aria-label="研究排序" className="rh-sort"><SelectValue/></SelectTrigger>
             <SelectContent><SelectItem value="newest">最新创建优先</SelectItem><SelectItem value="oldest">最早创建优先</SelectItem></SelectContent>
@@ -160,6 +164,7 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
             {refreshed && !error && <span className="rh-refreshed"><CheckCheck size={14} aria-hidden="true"/>已刷新</span>}
             <span>{hasFilters ? <>找到 <strong>{filtered.length}</strong> 项匹配研究 / 共 {records.length} 项</> : <>共 <strong>{records.length}</strong> 项研究</>}</span>
             {status !== 'all' && <span className="rh-query">{groups.find(([key]) => key === status)[1]}</span>}
+            {mode !== 'all' && <span className="rh-query">{modeLabels[mode]}</span>}
             {query.trim() && <span className="rh-query">搜索“{query.trim()}”</span>}
           </>}
         </p>
@@ -173,11 +178,13 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
             const validDate = Number.isFinite(created.getTime());
             const sourceCount = job.sourceCount ?? job.input?.sources?.length ?? 0;
             const securities = securitiesOf(job).map(security => typeof security === 'string' ? security : security?.symbol || security?.name || security?.ticker).filter(Boolean);
+            const recordMode = modeOf(job);
             return <li className="rh-row" key={job.id} data-status={job.status}>
               <Link className="rh-open" to={'/research/' + encodeURIComponent(job.id)} aria-busy={opening === job.id}>
                 <div className="rh-row-copy">
                   <strong className="rh-title" title={titleOf(job)}><Highlight text={titleOf(job)} terms={terms}/></strong>
-                  <div className="rh-meta"><Badge variant="outline" className="rh-mode"><Highlight text={modeLabel(job)} terms={terms}/></Badge>{job.researchOutcome?.action&&<Badge variant="secondary" className="rh-outcome" title={'研究判断 · 置信度 '+job.researchOutcome.confidence}><Highlight text={job.researchOutcome.action} terms={terms}/></Badge>}{securities.length > 0 && <span className="rh-securities" title={securities.join(' · ')}><Highlight text={securities.join(' · ')} terms={terms}/></span>}<span className="rh-source-total"><FileText size={13} aria-hidden="true"/>{sourceCount} 份资料</span></div>
+                  <div className="rh-mode-row"><span>研究模式</span><Badge variant="outline" className="rh-mode" data-mode={recordMode}><Highlight text={modeLabel(job)} terms={terms}/></Badge></div>
+                  <div className="rh-meta">{job.researchOutcome?.action&&<Badge variant="secondary" className="rh-outcome" title={'研究判断 · 置信度 '+job.researchOutcome.confidence}><Highlight text={job.researchOutcome.action} terms={terms}/></Badge>}{securities.length > 0 && <span className="rh-securities" title={securities.join(' · ')}><Highlight text={securities.join(' · ')} terms={terms}/></span>}<span className="rh-source-total"><FileText size={13} aria-hidden="true"/>{sourceCount} 份资料</span></div>
                 </div>
                 <span className="rh-created"><span>创建时间</span><time className="rh-time" dateTime={validDate ? created.toISOString() : undefined} title={validDate ? dateFormatter.format(created) : undefined}>{validDate ? dateFormatter.format(created) : '时间未记录'}</time></span>
                 <span className="rh-row-state"><Status status={job.status}/><span className="rh-open-hint">{opening === job.id ? <><LoaderCircle size={13} className="rh-spin" aria-hidden="true"/>加载中</> : job.status === 'completed' ? '查看报告' : ['queued', 'running'].includes(job.status) ? '查看进展' : '查看记录'}<ChevronRight size={14} aria-hidden="true"/></span></span>

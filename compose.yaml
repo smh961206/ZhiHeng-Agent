@@ -1,0 +1,19 @@
+name: zhiheng-agent
+services:
+  mongodb:
+    image: mongo:8.0
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "quit(db.adminCommand({ping:1}).ok ? 0 : 1)"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+volumes:
+  mongodb_data:
+  mongodb_config:

@@ -1,0 +1,46 @@
+name: zhiheng-production
+services:
+  app:
+    image: ${APP_IMAGE:-zhiheng-agent:local}
+    build: .
+    init: true
+    restart: unless-stopped
+    env_file: .env.production
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3001
+      MONGODB_URI: mongodb://mongodb:27017
+      MONGODB_DATABASE: zhiheng_agent
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-3001}:3001"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    stop_grace_period: 30s
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+  mongodb:
+    image: mongo:8.0
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    healthcheck:
+      test: [CMD, mongosh, --quiet, --eval, "quit(db.adminCommand({ping:1}).ok ? 0 : 1)"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+volumes:
+  mongodb_data:
+  mongodb_config:

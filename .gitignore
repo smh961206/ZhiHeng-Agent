@@ -1,0 +1,14 @@
+node_modules/
+.pnpm-store/
+dist/
+.env
+.env.production
+backups/
+.deploy/
+data/
+*.log
+
+.env.*
+!.env.example
+!.env.production.example
+artifacts/

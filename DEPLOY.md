@@ -1,0 +1,62 @@
+# Linux 部署与升级
+
+服务器需安装 Docker Engine、Docker Compose v2（支持 `up --wait`）、Bash、flock、sha256sum。单实例部署，建议至少 2 核 / 4GB 内存。MongoDB 8 的 CPU/平台要求应在选机时确认。
+
+## 首次部署
+
+将项目代码完整上传至服务器固定目录（不上传 node_modules、.env、data、dist）。执行：
+
+```bash
+cp .env.production.example .env.production
+nano .env.production
+bash deploy.sh up
+```
+
+填写 LLM_API_KEY、LLM_BASE_URL、LLM_MODEL。无配置文件时脚本会生成模板并退出，不会猜测密钥。项目不需要在服务器安装 Node.js；镜像构建包含前端编译和生产依赖安装。首次构建需要访问容器镜像与 npm 仓库。
+
+默认仅绑定服务器 127.0.0.1:3001。电脑端运行 `ssh -L 3001:127.0.0.1:3001 user@server` 后打开 http://127.0.0.1:3001。提供域名访问时，在外层配置带认证的 HTTPS 反向代理，转发到 127.0.0.1:3001，保留 Host，并把浏览器地址写入 `PUBLIC_ORIGINS=https://research.example.com`。该变量是访问来源白名单，不是用户认证。应用没有多用户鉴权，数据库不映射宿主机端口。仅在受控内网且已有访问控制时修改 BIND_ADDRESS。
+
+生产 Compose 独立于本地开发 compose.yaml，固定项目名 zhiheng-production；持久化卷为 zhiheng-production_mongodb_data 和 zhiheng-production_mongodb_config。生产数据库名固定 zhiheng_agent。首次部署不会自动复制本机 MongoDB；如需搬迁现有数据，停本机写入后用 mongodump / mongorestore 导入生产库再启动应用。
+
+## 后续代码和结构升级
+
+将新版代码同步到相同目录，保留 `.env.production`、`.deploy/`、`backups/`；Git 项目也可先拉取经过审核的发布版本。然后：
+
+```bash
+bash deploy.sh upgrade
+bash deploy.sh status
+bash deploy.sh logs
+```
+
+脚本先构建唯一版本镜像，构建失败不影响旧服务。随后检查数据库健康、停止应用写入、创建压缩备份及校验和、保留旧镜像标签、执行数据库迁移、启动应用并等待健康检查。升级存在短暂停机，未完成研究任务在重启后会标记失败，需要重新提交。不要同时运行其他写入相同数据库的应用实例，也不要绕过脚本手动重建数据库容器。
+
+迁移在 `server/schema-migrations.mjs` 按版本连续追加：增加 `{version:2,name:'...',async up(db){...}}`，不得改名、重排或修改已发布迁移。既有数据库首次接入时记录 v1 并确保原有索引，不删除任务。每步完成后写入 schema_migrations；失败步骤不记成功，下次重试。MongoDB DDL 不具备整批事务回滚，因此每步必须幂等，优先新增字段、分阶段回填、最后再清理旧字段。测试中应覆盖旧数据升级和中途失败重试。
+
+数据库锁阻止同时迁移，代码拒绝比自身更新或不匹配的数据库版本。进程崩溃可能留下 schema_locks 锁；先停止应用并确认不存在迁移容器，再检查上次迁移，最后才可手动清理：
+
+```bash
+bash deploy.sh stop
+docker compose --env-file .env.production -f compose.production.yaml ps -a
+docker compose --env-file .env.production -f compose.production.yaml exec mongodb mongosh zhiheng_agent --eval 'db.schema_locks.deleteOne({_id:"upgrade"})'
+bash deploy.sh upgrade
+```
+
+## 备份与失败恢复
+
+```bash
+bash deploy.sh backup
+# 仅在明确接受丢弃备份之后的数据时执行：
+bash deploy.sh rollback backups/实际文件名.archive.gz --confirm-data-loss
+```
+
+备份会短暂停止应用，保存在 backups/，配有 .sha256 和旧镜像 .image 记录。升级或健康检查失败会返回非零，不会自动降级数据库。可修复后重试 upgrade，或显式回滚。回滚先验证原备份和旧镜像存在，再备份当前数据库、删除当前应用库、恢复原备份并启动配套旧镜像；删除数据库用于避免新版本新增集合残留。首次空库备份没有旧镜像，因此不能用作代码回滚目标。恢复失败时应用保持停止，应修复原因后重试。
+
+不要删除持久化卷或执行 `down -v`。不要清理仍被备份引用的镜像；镜像标签不会自动过期。将备份、.env.production 和所需镜像另存到服务器外，定期在独立环境演练恢复。此方案覆盖应用集合、字段和索引升级；MongoDB 服务端大版本升级需另行遵循官方兼容性和 FCV 流程，不能只替换镜像标签。
+
+参考：[Compose 启动顺序](https://docs.docker.com/compose/how-tos/startup-order/)、[MongoDB 备份与恢复](https://www.mongodb.com/docs/manual/tutorial/backup-and-restore-tools/)。
+
+## 开发验证
+
+`pnpm test` 验证业务和域名访问限制；`pnpm test:mongodb` 在随机临时库验证数据保存、迁移幂等、迁移锁、失败重试及禁止结构降级。Linux 上运行 `bash tests/deploy.integration.sh` 会创建独立 Compose 项目，演练首次部署、升级保留数据、备份与回滚、新集合清理、构建失败和迁移失败；结束后只删除该测试项目的容器及数据卷。
+
+修改 APP_PORT 后，如浏览器使用非默认端口，请将完整访问 origin 也加入 PUBLIC_ORIGINS，例如 `http://127.0.0.1:8080`。独立 backup 操作仅恢复原先运行中的应用，已停止的应用保持停止；维护阶段健康检查失败也会停止应用。

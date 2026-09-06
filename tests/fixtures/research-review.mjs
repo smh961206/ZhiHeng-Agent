@@ -4,7 +4,7 @@ import {createResearchPlan,scoring} from '../../shared/research-framework.mjs';
 export function reviewFixture(input={},citation='S1'){
  const plan=createResearchPlan(input,input.mode||'B');
  return {
-  ...(plan.mode==='A'?{researchSummary:{checks:['业务质量','现金流','估值边界'].map(topic=>({topic,assessment:'合成资料不足，待核实。',sourceIds:[citation],unresolved:'缺少完整原文。'}))}}:{}),
+  ...(['A','B'].includes(plan.mode)?{researchSummary:{checks:['业务质量','现金流','估值边界'].map(topic=>({topic,assessment:'合成资料不足，待核实。',sourceIds:[citation],unresolved:'缺少完整原文。'}))}}:{}),
   sections:plan.output.sections.map(section=>({id:section.id,text:`经审计的合成${section.title}。资料不足，保留验证条件。[${citation}]`})),
   audit:'仅模拟测试，未验证真实公司数据。',
   decision:{action:plan.output.schema==='Quick'?'观察池':plan.mode==='C'?'维持':'观察',summary:'合成证据覆盖有限，暂待补充资料。',confidence:'低',dataAsOf:'2026-09-06',

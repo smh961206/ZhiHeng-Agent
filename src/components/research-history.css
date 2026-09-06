@@ -56,10 +56,6 @@
 .history-page.research-history .rh-status[data-status="completed"] { color: #356145; background: #eaf3ec; border-color: #d6e6da; }
 .history-page.research-history .rh-status[data-status="queued"], .history-page.research-history .rh-status[data-status="running"] { color: #466581; background: #edf3f9; border-color: #dce7f0; }
 .history-page.research-history .rh-status[data-status="failed"] { color: #9d473f; background: #fbefed; border-color: #f0dcd7; }
-.history-page.research-history .rh-open-hint { display: inline-flex; align-items: center; gap: 3px; color: #526e5c; font-size: 12px; white-space: nowrap; }
-.history-page.research-history .rh-open-hint > svg:last-child { transition: transform .16s; }
-.history-page.research-history .rh-open:is(:hover,:focus-visible) .rh-open-hint { color: #194e36; }
-.history-page.research-history .rh-open:is(:hover,:focus-visible) .rh-open-hint > svg:last-child { transform: translateX(2px); }
 .history-page.research-history .rh-delete { display: flex; align-items: center; flex-shrink: 0; padding-left: 4px; }
 .history-page.research-history .rh-delete button { min-width: 40px; min-height: 40px; border-radius: 8px; }
 .history-page.research-history .rh-empty { display: flex; align-items: center; justify-content: center; flex-direction: column; min-height: 320px; padding: 38px 24px 48px; text-align: center; }

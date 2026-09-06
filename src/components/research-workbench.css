@@ -19,6 +19,7 @@
 @media(max-width:639px){.research-workbench .composer-steps button{white-space:nowrap;gap:5px;font-size:11px}.research-workbench .composer-steps .step-divider{display:none}.research-workbench .suggestions button{width:auto;justify-content:center}.research-workbench .suggestions>span{width:100%}}
 @media(prefers-reduced-motion:reduce){.research-workbench *{scroll-behavior:auto!important;transition:none!important}.animate-spin{animation:none!important}}
 .research-workbench .research-context-fields{display:grid;grid-template-columns:minmax(0,1fr);min-width:0;gap:15px}
+.research-workbench .workbench-settings>.workbench-context{margin-top:18px}
 .research-workbench .screen-scope{margin:18px 0;padding:18px;border:1px solid #d8e5dc;border-radius:10px;background:#f6f9f5;min-width:0}
 .screen-scope-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:14px;color:#315d45}
 .screen-scope-heading>strong{display:flex;align-items:center;gap:7px}
@@ -64,3 +65,5 @@
 .research-workbench .portfolio-context-body>.context-readiness{margin-bottom:0}
 @media(max-width:639px){.research-workbench .portfolio-fields{grid-template-columns:1fr}.research-workbench .portfolio-fields input,.research-workbench .research-context-fields textarea{font-size:16px}.research-workbench .portfolio-context-trigger{padding:12px}.portfolio-context-body{padding:14px 12px}}
 @media(prefers-reduced-motion:reduce){.workbench-context>.research-context-content,.portfolio-context>.portfolio-context-content{animation:none!important}}
+
+.deep-workbench-note{padding:16px 18px;border:1px solid #dce6df;border-radius:10px;background:#f5f8f5;line-height:1.8;color:#52675a}.deep-workbench-note strong{font-size:13px;color:#294e3b}.deep-workbench-note p{font-size:13px;margin:5px 0}.deep-workbench-note small{font-size:12px;color:#728174}

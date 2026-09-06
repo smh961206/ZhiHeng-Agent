@@ -2,9 +2,11 @@
 // Source chapter bindings are checked at server startup; business rules live in those Skills.
 import {researchDataCopy} from './research-data-copy.mjs';
 import {quickScreenCopy} from './quick-screen-copy.mjs';
+import {deepResearchCopy} from './deep-research.mjs';
+import {createPublicResearchApproach} from './research-approach.mjs';
 
 export const frameworkVersion='4.1';
-export const contractVersion=3;
+export const contractVersion=4;
 export const knowledgeSources=[
  {id:'core',path:'knowledge/CORE.md',role:'核心执行规则'},
  {id:'full',path:'knowledge/FULL.md',role:'完整研究与计算协议'},
@@ -32,7 +34,7 @@ export const researchActions=['淘汰','观察','深度研究','建仓候选','�
 export const confidenceLevels=['高','中高','中','中低','低'];
 export const modes={
  A:{name:'快速筛选',description:quickScreenCopy.description,question:'这家公司值得继续研究吗？',goal:quickScreenCopy.goal,example:quickScreenCopy.example,defaultDepth:'Quick',modules:['基本业务理解','五年与近期趋势','资产负债表快扫','财务红旗快扫','估值快扫','关键风险'],coreChapters:[1,2,3,4,6,8,12,13],fullChapters:[1,3,4,5,7,9,15,16],actions:['淘汰','观察池','深度研究']},
- B:{name:'深度研究',description:'验证长期投资逻辑',question:'长期价值由什么支撑？',goal:'连接业务、财务、现金回报和估值，形成可证伪的长期判断。',example:'深度研究贵州茅台的长期价值，验证现金流与股东回报',defaultDepth:'Standard',modules:['基本面','财务质量','股东回报','估值交叉验证','决策','审计'],coreChapters:[1,2,3,4,5,6,7,8,9,12,13],fullChapters:[1,3,4,5,6,7,8,9,10,11,15,16],actions:researchActions},
+ B:{name:'深度研究',description:'验证长期投资逻辑',question:'长期价值由什么支撑？',goal:'连接业务、财务、现金回报和估值，形成可证伪的长期判断。',example:deepResearchCopy.example,defaultDepth:'Standard',modules:['基本面','财务质量','股东回报','估值交叉验证','决策','审计'],coreChapters:[1,2,3,4,5,6,7,8,9,12,13],fullChapters:[1,3,4,5,6,7,8,9,10,11,15,16],actions:researchActions},
  C:{name:'财报更新',description:'追踪新披露与变化',question:'新证据改变了哪些判断？',goal:'将新披露与旧结论对照，区分经营变化、参数变化与价格变化。',example:'更新贵州茅台的最新财报，检查原有现金流判断是否改变',defaultDepth:'Standard',modules:['新旧证据对照','参数变更','逻辑变化','审计'],coreChapters:[1,2,4,8,11,12,13],fullChapters:[1,3,5,9,13,14,15,16],actions:['升级','维持','降级','剔除']},
  D:{name:'标的对比',description:'用统一口径比较公司',question:'哪些公司更值得深入研究？',goal:'先统一期间、币种与估值口径，再比较质量、股东回报和风险。',example:'对比腾讯与苹果的现金回报、财务质量与估值',defaultDepth:'Standard',modules:['口径统一','同业比较','估值排序','审计'],coreChapters:[1,2,3,4,5,6,8,12,13],fullChapters:[1,3,4,5,6,7,9,15,16],actions:researchActions},
  E:{name:'组合分析',description:'审视配置与集中风险',question:'持仓背后的风险集中在哪里？',goal:'把组合视作一家虚拟集团，检视现金创造能力与集中风险。',example:'分析我的持仓组合，检查行业集中与现金回报',defaultDepth:'Standard',modules:['组合上下文','集中度','风险约束','审计'],coreChapters:[1,2,8,10,12,13],fullChapters:[1,3,9,12,15,16],actions:researchActions},
@@ -73,7 +75,7 @@ export function portfolioReadiness(context={}){
 }
 export function outputContract(mode,depth){
  const schema=({A:'Quick',C:'Update',D:'Comparison',E:'Portfolio',F:'Dividend'})[mode]||(depth==='Deep'?'Deep':depth==='Quick'?'Quick':'Standard');
- return {schema,sections:(mode==='A'?screenSections:schemas[schema]).map(item=>({...item})),actions:[...(schema==='Quick'?modes.A.actions:modes[mode].actions)],minFalsifiers:3,confidenceLevels:[...confidenceLevels]};
+ return {schema,sections:(mode==='A'?screenSections:mode==='B'&&schema!=='Quick'?[section('thesis','核心矛盾与待验证假设'),...schemas[schema],section('synthesis','模型分歧与综合价值判断'),section('monitoring','后续验证与判断升级条件')]:schemas[schema]).map(item=>({...item})),actions:[...(schema==='Quick'?modes.A.actions:modes[mode].actions)],minFalsifiers:3,confidenceLevels:[...confidenceLevels]};
 }
 export function createResearchPlan(input={},mode=resolveMode(input)){
  if(!modes[mode])throw new Error('研究模式无效');
@@ -83,7 +85,7 @@ export function createResearchPlan(input={},mode=resolveMode(input)){
  const secondaryModules=[];
  if(['B','C','D'].includes(mode)&&/分红|股息|股东回报/.test(input.question||''))secondaryModules.push('股东回报必要模块');
  if(mode!=='E'&&portfolio.complete)secondaryModules.push('组合约束');
- return {version:frameworkVersion,contractVersion,mode,name:profile.name,goal:profile.goal,modules:[...profile.modules],secondaryModules,
+ const plan={version:frameworkVersion,contractVersion,mode,name:profile.name,goal:profile.goal,modules:[...profile.modules],secondaryModules,
  depth,historyYears:mode==='F'?8:mode==='A'?5:input.historyYears??5,securities:input.securities??[],stages:researchStages,
  ...(mode==='A'?{researchApproach:{objective:quickScreenCopy.objective+'，结论限定为淘汰、观察池或深度研究。',
   scope:{period:quickScreenCopy.period,comparison:quickScreenCopy.periodDetail},
@@ -99,11 +101,14 @@ export function createResearchPlan(input={},mode=resolveMode(input)){
   notice:'这是本次拟查证的问题与验证计划。实际完成情况见执行轨迹，复核后的证据与判断另列摘要。'}}:{}),
  output:outputContract(mode,depth),portfolio,baseline:{provided:baseline,jobId:input.baselineJobId||null},
  requiredData:['行情与估值截止时点','官方披露与报告期','币种、股类与股本口径',...(mode==='A'?['五个完整年度与最新报告期','合并口径、单季与累计、余额与流量','应收、存货、短债、现金与购建长期资产支出']:[]),...(mode==='F'?['八个完整年度与三年滚动现金回报']:[]),...(mode==='C'?['上次结论与估值假设']:[]),...(mode==='D'?['可比期间、币种与同组口径']:[])],
- deliverables:[...(mode==='A'?['研究思路']:[]),'研究报告','审计记录','证据来源','执行轨迹'],
+ deliverables:['研究思路','研究报告','审计记录','证据来源','执行轨迹'],
  constraints:['只执行主任务与必要辅助模块','关键数据缺失须标记，降低置信度，不编造数值','任一标的缺少可读官方财报时停止研究','估值工具按需调用，市赚率与收益率锚不等于内在价值','正式交付必须有研究动作、置信度与至少三条证伪条件',
  ...(!portfolio.complete?['组合信息未齐：仅研究判断，不输出具体仓位']:[]),
  ...(mode==='A'?['只做快速筛选：不执行完整DCF、八年股息研究或仓位建议','五年历史不能只靠最近一年替代；缺失年度必须列出','余额较年末变化与收入同比须分别标明，不可混成同口径增长','红旗须同时检查可能的解释和反证；合同负债增加不直接证明订单质量']:[]),
+ ...(mode==='B'?deepResearchCopy.boundaries:[]),
  ...(mode==='C'&&!baseline?['尚未提供上次结论：仅建立本期基线，不编造变化或升级判断']:[]),
  ...(mode==='D'&&(input.securities?.length??0)<2?['当前不足两个标的，仅能说明比较框架与缺口']:[])],
  ruleBindings:{core:profile.coreChapters,full:profile.fullChapters}};
+ if(!plan.researchApproach)plan.researchApproach=createPublicResearchApproach(plan);
+ return plan;
 }

@@ -41,7 +41,7 @@ function jsonBlock(value){
  const fence='`'.repeat(Math.max(3,...[...text.matchAll(/`+/g)].map(match=>match[0].length+1)));
  return fence+'json\n'+text+'\n'+fence;
 }
-export function exportResearchMarkdown(job){
+export function exportResearchMarkdown(job,{includeResearchProcess=true}={}){
  if(!job.result?.report?.trim())throw new Error('正式报告尚未完成，不能导出');
  const trace=(job.events??[]).filter(event=>['research_plan','tool','tool_result','fetch','fetch_error','audit_validation'].includes(event.type));
  const tools=trace.map((event,index)=>{
@@ -58,6 +58,13 @@ export function exportResearchMarkdown(job){
    `内容指纹：${oneLine(source.contentHash)||'未记录'}；覆盖：${oneLine(source.coverage)||'未记录'}${source.stale?'；归档资料已标记过期':''}${source.truncated?'；正文读取有截断':''}`,
   ].join('\n\n');
  });
+ if(!includeResearchProcess)return [
+  `# ${oneLine(job.input?.question)||'研究报告'}`,
+  ...(job.result.warnings??[]).map(value=>'> '+value),
+  job.result.report,
+  '## 审计记录',job.result.audit||'未记录',
+  '## 来源目录',sources.length?sources.join('\n\n'):'未记录',
+ ].join('\n\n')+'\n';
  return [`# ${oneLine(job.input?.question)||'研究报告'}`,
   `MODE ${oneLine(job.mode)} · ${oneLine(job.plan?.name)} · 任务 ${oneLine(job.id)}`,
   ...(job.result.warnings??[]).map(value=>'> '+value),

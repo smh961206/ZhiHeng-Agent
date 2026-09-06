@@ -1,4 +1,5 @@
 import {Link,useNavigate,useParams,useLocation,useSearchParams} from 'react-router';
+import {modeOf} from './lib/research-mode';
 import ResearchWorkbench,{researchModes as modes} from './components/ResearchWorkbench';
 import ResearchDetail from './components/ResearchDetail';
 import RecentResearch from './components/RecentResearch';
@@ -27,12 +28,17 @@ function Status({status}){return <Badge variant={status==='failed'?'destructive'
 export default function App({page}){
  const routerNavigate=useNavigate(),{jobId}=useParams(),location=useLocation();
  const [searchParams,setSearchParams]=useSearchParams();
- const tab=['report','approach','audit','sources'].includes(searchParams.get('tab'))?searchParams.get('tab'):'report';
+ const tab=['report','audit','sources'].includes(searchParams.get('tab'))?searchParams.get('tab'):'report';
+ useEffect(()=>{
+  if(!jobId||searchParams.get('tab')!=='approach')return;
+  const next=new URLSearchParams(searchParams);next.delete('tab');
+  setSearchParams(next,{replace:true});
+ },[jobId,searchParams,setSearchParams]);
  function setTab(value,hash){
   // Tabs may activate on both pointer-down and focus before Router commits its
   // transition. The browser URL already reflects the first navigation.
   const current=new URLSearchParams(window.location.search);
-  const currentTab=['report','approach','audit','sources'].includes(current.get('tab'))?current.get('tab'):'report';
+  const currentTab=['report','audit','sources'].includes(current.get('tab'))?current.get('tab'):'report';
   if(value===currentTab&&!hash)return;
   if(value==='report')current.delete('tab');else current.set('tab',value);
   if(hash)routerNavigate({pathname:location.pathname,search:current.toString(),hash});else setSearchParams(current);
@@ -136,7 +142,7 @@ export default function App({page}){
   setPortfolio([v.portfolio,questions.length?'上次快筛的待验证事项（须重新取证，不作为当前事实）：\n'+JSON.stringify(questions,null,2):''].filter(Boolean).join('\n\n').slice(0,20000));
   setPortfolioContext(v.portfolioContext??{});setPreviousResearch('');setBaselineJobId('');setContextOpen(Boolean(v.portfolio||questions.length));setError('');setSelected(null);navigate('work');
  }
- function download(){if(!selected?.result)return;const text=exportResearchMarkdown(selected);const url=URL.createObjectURL(new Blob([text],{type:'text/markdown;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download=`research-${selected.id.slice(0,8)}.md`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+ function download(){if(!selected?.result)return;const text=exportResearchMarkdown(selected,{includeResearchProcess:modeOf(selected)==='B'});const url=URL.createObjectURL(new Blob([text],{type:'text/markdown;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download=`research-${selected.id.slice(0,8)}.md`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  const navLink=([id,title,Icon])=><Button variant="ghost" asChild key={id} className={"nav-button "+(page===id?"nav-current":"")}><Link to={pagePaths[id]} aria-current={page===id&&!jobId?"page":undefined} onClick={()=>setMobileOpen(false)}><Icon size={18}/>{title}{id==="history"&&<span className="ml-auto text-xs opacity-70" aria-hidden="true">{jobs.length}</span>}</Link></Button>;
  const sidebar=<div className="sidebar-inner"><Brand onClick={()=>navigate('rules')}/><nav className="sidebar-navigation" aria-label="主导航">{nav.slice(0,3).map(navLink)}<div className="sidebar-reference">{navLink(nav[3])}</div></nav><RecentResearch jobs={jobs} currentId={jobId} onNavigate={()=>setMobileOpen(false)}/><div className="sidebar-bottom"><Link to="/#fw-plans" className="sidebar-service" onClick={()=>setMobileOpen(false)}><span><Sparkles size={16}/>知衡研究服务</span><small>了解方案与开通方式<ArrowUpRight size={14}/></small></Link><div className="side-principle"><ShieldCheck size={21}/><p>知价值，衡长远。</p><span>价值投资与股东回报智能研究</span></div></div></div>;
  return <div className="app-shell"><a href="#main-content" className="skip-to-content">跳至主要内容</a><DeleteResearchDialog job={deleteTarget} pending={deleting} error={deleteError} onConfirm={deleteResearch} onClose={()=>{if(!deleting)setDeleteTarget(null);}}/><aside className="desktop-sidebar">{sidebar}</aside><div className="main-shell"><header className="topbar"><div className="flex items-center gap-3"><Sheet open={mobileOpen} onOpenChange={setMobileOpen}><SheetTrigger asChild><Button variant="ghost" size="icon" className="lg:hidden" aria-label="打开导航菜单"><Menu size={20}/></Button></SheetTrigger><SheetContent side="left" className="w-[280px] p-0"><SheetTitle className="sr-only">研究导航</SheetTitle><SheetDescription className="sr-only">切换首页、研究工作台与研究记录、研究手册</SheetDescription>{sidebar}</SheetContent></Sheet><nav className="breadcrumbs" aria-label="面包屑导航"><ol>{page!=='rules'&&<><li><Link to="/">首页</Link></li><li aria-hidden="true"><ChevronRight size={14}/></li></>}{jobId?<><li><Link to="/history">研究记录</Link></li><li aria-hidden="true"><ChevronRight size={14}/></li><li><span aria-current="page">研究详情</span></li></>:<li><span aria-current="page">{nav.find(n=>n[0]===page)?.[1]||"页面不存在"}</span></li>}</ol></nav></div>{page==='rules'&&<Button asChild variant="outline" size="sm" className="home-workbench-link"><Link to="/workbench">进入工作台<ArrowUpRight size={15}/></Link></Button>}</header><div className="page-scroll" ref={pageScroll}><main className="page-content" id="main-content" tabIndex={-1}>{error&&<Alert variant="destructive" className="mb-6"><AlertDescription className="flex items-center justify-between gap-3">{error}<Button variant="ghost" size="icon" aria-label="关闭错误" onClick={()=>setError('')}><X size={16}/></Button></AlertDescription></Alert>}

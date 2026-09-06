@@ -90,7 +90,7 @@
 .research-detail.rd-reading .rd-content-grid { grid-template-columns: minmax(0, 1fr); max-width: 1040px; margin-inline: auto; }
 .research-detail .rd-report-card { min-width: 0; border: 1px solid var(--rd-line); border-radius: 14px; background: #fff; box-shadow: 0 4px 20px #163d3004; }
 .research-detail .rd-tabs { gap: 0; min-width: 0; }
-.research-detail .rd-tab-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: auto; height: auto; min-height: 46px; padding: 4px; margin: 20px 24px 0; background: #eff3f0; border-radius: 9px; }
+.research-detail .rd-tab-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: auto; height: auto; min-height: 46px; padding: 4px; margin: 20px 24px 0; background: #eff3f0; border-radius: 9px; }
 .research-detail .rd-tab-list [data-slot=tabs-trigger] { display: flex; gap: 7px; min-height: 38px; height: auto; min-width: 0; padding: 7px 8px; font-size: 13px; color: var(--rd-muted); border-radius: 6px; }
 .research-detail .rd-tab-list [data-slot=tabs-trigger][data-state=active] { color: var(--rd-ink); background: #fff; box-shadow: 0 1px 4px #163d3010; font-weight: 600; }
 .research-detail .rd-source-count { padding: 0 5px; border-radius: 4px; background: #e4ece7; color: #345f49; font-size: 10px; font-variant-numeric: tabular-nums; }
@@ -468,3 +468,5 @@
  .research-detail .rd-directory-trigger{width:40px;min-height:44px;padding:8px}
  .research-detail .rd-directory-trigger>span,.research-detail .rd-directory-trigger>svg:last-child,.research-detail .rd-content-toolbar .rd-source-count{display:none}
 }
+
+.rd-deep-process{margin:0 0 24px;border:1px solid #dce6df;border-radius:12px;background:#f7faf7;overflow:hidden}.rd-deep-sequence{display:flex;flex-wrap:wrap;gap:8px 18px;padding:14px 18px;border-bottom:1px solid #e3eae5;color:#647b6c;font-size:12px}.rd-deep-trigger{width:100%;justify-content:flex-start;padding:20px 18px;height:auto;white-space:normal;text-align:left}.rd-deep-trigger>svg:last-child{margin-left:auto;flex-shrink:0}.rd-deep-body{padding:0 18px 18px;line-height:1.8;font-size:13px;color:#53685b;overflow-wrap:anywhere}.rd-deep-body ol{padding-left:20px}.rd-deep-body li{margin:14px 0}.rd-deep-body p{margin:6px 0}.rd-deep-body h3{margin-top:20px;color:#294e3b}.rd-deep-checks{list-style:none;padding:0}.rd-deep-checks strong{display:flex;align-items:center;gap:6px}.rd-deep-checks small{display:block}.rd-deep-checks button{max-width:100%;height:auto;white-space:normal;text-align:left;padding-left:0}

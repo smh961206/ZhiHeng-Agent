@@ -1,4 +1,6 @@
+import {requiresResearchSummary} from '../shared/deep-research.mjs';
 import {scoring,confidenceLevels,portfolioReadiness} from '../shared/research-framework.mjs';
+import {referenceContract,normalizeReviewReferences,validateReportReferences} from './research-references.mjs';
 
 const text=value=>typeof value==='string'&&Boolean(value.trim());
 const fail=message=>{throw new Error(message);};
@@ -6,12 +8,13 @@ const list=(value,label,min=0)=>{
  if(!Array.isArray(value)||value.length<min||value.length>80||value.some(item=>!text(item)))fail(label+'格式无效');
  return value.map(item=>item.trim());
 };
-export function reviewContract(plan){
+export function reviewContract(plan,sources=[]){
  return {
   instruction:'只返回JSON。每个section使用指定id，text为该章节Markdown；缺失不能填造，写明数据不足及原因。researchAction表示研究状态，不代表交易指令。',
   sections:plan.output.sections,
-  schema:{sections:[{id:'按上方section id',text:'章节Markdown'}],audit:'复核过程、限制和未核实事项',
-   ...(plan.mode==='A'&&plan.contractVersion>=3?{researchSummary:{checks:[{topic:'关键研究问题（3至8项）',assessment:'用简短证据判断说明结论或数据不足，不描述内部思维链',sourceIds:['实际来源ID，例如S1；不足时可为空'],unresolved:'仍待核实的部分；已无额外疑问可写无'}]}}:{}),
+  references:referenceContract(sources),
+  schema:{sections:[{id:'按上方section id',text:'章节Markdown；事实或数字旁写[S1]，表格逐行在来源列写[S1]；无依据写数据不足'}],audit:'复核过程、限制和未核实事项',
+   ...(requiresResearchSummary(plan)?{researchSummary:{checks:[{topic:'关键研究问题（3至8项）',assessment:'用简短证据判断说明结论或数据不足，不描述内部思维链',sourceIds:['实际来源ID，例如S1；不足时可为空'],unresolved:'仍待核实的部分；已无额外疑问可写无'}]}}:{}),
    decision:{action:plan.output.actions.join(' / '),summary:'有条件的核心判断',confidence:confidenceLevels.join(' / '),dataAsOf:'YYYY-MM-DD：本次研究截止日期，不冒充行情日期',
     falsifiers:['至少3条具体可检验的证伪条件'],missingData:['缺失信息与影响；无缺失可用空数组'],
     gates:['data','quality','valuation','risk'].map(id=>({id,status:'passed / limited / not_applicable / failed',reason:'依据或不足；failed须先修正才能交付'})),
@@ -23,14 +26,14 @@ export function reviewContract(plan){
 }
 export function validateReview(value,{input,plan,sources}){
  if(!value||typeof value!=='object'||!text(value.audit))fail('审计结果缺少检查记录');
+ const normalized=normalizeReviewReferences(value);value=normalized.value;
  let researchSummary;
- if(plan.mode==='A'&&plan.contractVersion>=3){
+ if(requiresResearchSummary(plan)){
   const checks=value.researchSummary?.checks;
-  if(!Array.isArray(checks)||checks.length<3||checks.length>8)fail('快筛须提供3至8项公开证据与判断摘要');
+  if(!Array.isArray(checks)||checks.length<3||checks.length>8)fail('研究须提供3至8项公开证据与判断摘要');
   researchSummary={checks:checks.map(item=>{
    if(!item||!text(item.topic)||!text(item.assessment)||!text(item.unresolved)||[item.topic,item.assessment,item.unresolved].some(value=>value.length>2500))fail('研究摘要缺少问题、判断或待核实事项');
    const sourceIds=list(item.sourceIds,'研究摘要来源');
-   if(sourceIds.some(id=>!sources.some(source=>source.id===id&&!['filing-index','data-check','search-result','search-summary'].includes(source.type))))fail('研究摘要引用了无效证据来源');
    if(!sourceIds.length&&!/不足|缺失|未取得|未读取|待核实|未核实/.test(item.assessment))fail('没有来源的研究摘要须明确数据不足');
    return {topic:item.topic.trim(),assessment:item.assessment.trim(),sourceIds:[...new Set(sourceIds)],unresolved:item.unresolved.trim()};
   }),notice:'公开的证据判断摘要，由模型复核生成；来源编号校验不等于事实独立核实。'};
@@ -94,11 +97,8 @@ export function validateReview(value,{input,plan,sources}){
   decision.portfolio.summary].join('\n\n');
  const report='# '+input.question.replace(/[\r\n]+/g,' ')+'\n\n'+reportBody;
  if(report.length>500000||value.audit.length>100000)fail('报告或审计内容超出交付上限');
- const cited=[...JSON.stringify({report:reportBody,audit:value.audit,decision,researchSummary}).matchAll(/\[(S\d+)\]/g)].map(match=>match[1]);
- cited.push(...(researchSummary?.checks.flatMap(item=>item.sourceIds)??[]));
- if(cited.some(id=>!sources.some(source=>source.id===id&&!['search-result','search-summary'].includes(source.type))))fail('报告或审计引用了不存在的资料ID或搜索摘要');
- if(sources.length&&!/\[S\d+\]/.test(reportBody))fail('报告正文未关联资料ID');
+ const cited=validateReportReferences({reportBody,audit:value.audit,decision,sections,researchSummary},sources);
  return {report,audit:value.audit.trim(),decision,sections,...(researchSummary?{researchSummary}:{}),
-  validation:{checkedAt:new Date().toISOString(),checks:[{id:'sections',label:'按主模式交付报告章节',passed:true},{id:'decision',label:'研究动作、置信度与证伪条件完整',passed:true},{id:'portfolio',label:'组合信息与动作权限一致',passed:true},{id:'references',label:'引用的来源编号有效',passed:true}],citedSourceIds:[...new Set(cited)],
+  validation:{checkedAt:new Date().toISOString(),checks:[{id:'sections',label:'按主模式交付报告章节',passed:true},{id:'decision',label:'研究动作、置信度与证伪条件完整',passed:true},{id:'portfolio',label:'组合信息与动作权限一致',passed:true},{id:'references',label:'正文引用已关联资料，来源编号有效',passed:true}],citedSourceIds:cited,referenceFormatNormalized:normalized.changed,
    scope:'程序校验交付结构、动作边界与来源编号；各项证据评价来自模型复核，不等于事实被独立证实'}};
 }

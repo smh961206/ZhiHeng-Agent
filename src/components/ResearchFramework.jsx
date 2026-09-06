@@ -5,10 +5,11 @@ import {Badge} from './ui/badge';
 import {Card,CardContent} from './ui/card';
 import {Tabs,TabsList,TabsTrigger,TabsContent} from './ui/tabs';
 import {Collapsible,CollapsibleTrigger,CollapsibleContent} from './ui/collapsible';
-import {modes,researchStages,createResearchPlan} from '../../shared/research-framework.mjs';
+import {modes,researchStages,outputContract} from '../../shared/research-framework.mjs';
 import ResearchService from './ResearchService';
 import ResearchPrinciplesPreview from './ResearchPrinciplesPreview';
-import QuickScreenSummary from './QuickScreenSummary';
+import ResearchScopeSummary from './ResearchScopeSummary';
+import {researchPresentation} from '../config/research-presentation';
 import {researchDataCopy} from '../../shared/research-data-copy.mjs';
 import {useTabAutoplay} from '../hooks/use-tab-autoplay';
 import {useSectionNavigation} from '../hooks/use-section-navigation';
@@ -65,8 +66,13 @@ export default function ResearchFramework({onStart}){
   <section id="fw-paths" className="fw-section"><div className="fw-section-heading"><span>02 / 从问题出发</span><h2>同一套原则，六种研究路径。</h2><p>选择你的问题，看看会得到什么，以及需要准备什么。</p></div>
    <Tabs ref={sceneRotation.rootRef} {...sceneRotation.interactionProps} orientation={narrow?'horizontal':'vertical'} value={scene} onValueChange={sceneRotation.select} className="fw-scenes"><TabsList aria-label="研究场景" className="fw-scene-tabs">{Object.entries(modes).map(([id,item])=>{const Icon=modeIcons[id];return <TabsTrigger key={id} value={id}><Icon size={18}/><span>{item.name}<small>{item.description}</small></span><ArrowRight size={14}/></TabsTrigger>;})}</TabsList>
     <div className="fw-scene-panels">{Object.entries(modes).map(([id,profile])=>{
-     const SceneIcon=modeIcons[id],plan=createResearchPlan({mode:id,depth:profile.defaultDepth,question:profile.example},id);
-     return <TabsContent forceMount value={id} key={id} className="fw-scene-panel" aria-hidden={scene!==id} inert={scene!==id?true:undefined} tabIndex={scene===id?0:-1}><div className="fw-scene-heading"><span className="fw-icon"><SceneIcon size={24}/></span><Badge variant="secondary">{profile.name}</Badge></div><h3>{profile.question}</h3><p>{profile.goal}</p><blockquote>{profile.example}</blockquote>{id==='A'?<QuickScreenSummary plan={plan} showGoal={false} showFacts={false}/>:<div className="fw-scene-details"><div><h4>你会得到</h4><ul>{plan.output.sections.map(item=><li key={item.id}><Check size={14}/>{item.title}</li>)}</ul></div><div><h4>研究会关注</h4><div className="fw-module-tags">{profile.modules.map(item=><Badge variant="outline" key={item}>{item}</Badge>)}</div><p className="fw-scene-boundary">{id==='C'?'选择旧报告或补充上次结论。缺少对照时，明确作为本期基线。':id==='E'?'先检查六项组合信息；不完整时保留风险分析，具体仓位暂不输出。':id==='F'?'八年是检索范围，实际资料不足会标记。特别分红与回购类型分别核查。':id==='D'?'统一期间、币种、股类与估值口径；不适用或缺失项不会被当作低估。':'先公司质量、后价格。估值方法按行业适配，重要冲突需要解释。'}</p></div></div>}<Button onClick={()=>onStart(id)}>开始{profile.name}<ArrowRight size={16}/></Button></TabsContent>;
+     const SceneIcon=modeIcons[id],plan={mode:id,output:outputContract(id,profile.defaultDepth)};
+     return <TabsContent forceMount value={id} key={id} className="fw-scene-panel" aria-hidden={scene!==id} inert={scene!==id?true:undefined} tabIndex={scene===id?0:-1}>
+      <div className="fw-scene-heading"><span className="fw-icon"><SceneIcon size={24}/></span><Badge variant="secondary">{profile.name}</Badge></div>
+      <h3>{profile.question}</h3><p>{researchPresentation[id]?.intro || profile.goal}</p>
+      <ResearchScopeSummary plan={plan}/>
+      <Button onClick={()=>onStart(id)}>开始{profile.name}<ArrowRight size={16}/></Button>
+     </TabsContent>;
     })}</div>
    </Tabs>
   </section>

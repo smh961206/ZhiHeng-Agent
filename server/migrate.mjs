@@ -9,7 +9,7 @@ export async function migrateLegacy(storage,dir=fileURLToPath(new URL('../data/'
  for(const file of await files(dir)){
   const job=JSON.parse(await readFile(path.join(dir,file),'utf8'));
   if(!job.id||!job.input||!Array.isArray(job.input.sources)||!Array.isArray(job.events)||!job.createdAt)throw new Error(`旧任务格式无效：${file}`);
-  if(await storage.hasJob(job.id)){counts.skipped++;continue;}
+  if(await storage.hasJob(job.id)||await storage.isJobDeleted(job.id)){counts.skipped++;continue;}
   await storage.saveJob(job);counts.jobs++;
  }
  for(const file of await files(path.join(dir,'cache'))){

@@ -13,5 +13,5 @@ try{
   if(text.length>1_500_000)break;
  }
  const result={text,pages:doc.numPages,readPages,emptyPages,truncated:readPages<doc.numPages,coverage:'PDF文本提取；表格布局可能丢失，关键数字需核对原件页码'};
- await loading.destroy();parentPort.postMessage(result);
-}catch(e){parentPort.postMessage({error:'PDF解析失败：'+e.message});}
+ await loading.destroy();parentPort.postMessage({type:'pdf:result',result});
+}catch(e){parentPort.postMessage({type:'pdf:error',error:'PDF解析失败：'+e.message});}

@@ -9,5 +9,7 @@ test('部署域名白名单与跨站写入保护',()=>{
  assert.equal(allow(req('evil.example.com',null,'GET')),false);
  assert.equal(allow(req('127.0.0.1:3001',null,'GET')),true);
  assert.equal(allow(req('localhost:5173','http://localhost:5173')),true);
+ assert.equal(allow(req('localhost:3001','https://evil.example.com','DELETE')),false);
+ assert.equal(allow(req('localhost:3001','http://localhost:5173','DELETE')),true);
  assert.throws(()=>createAccessPolicy('https://research.example.com/path'));
 });

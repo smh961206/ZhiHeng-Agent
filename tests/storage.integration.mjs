@@ -18,6 +18,8 @@ test('MongoDB: 大文本、重连读取、任务恢复、缓存过期和幂等�
   await storage.saveJob(job);await storage.close();storage=await createStorage({uri,database});
   assert.deepEqual(await storage.getJob(job.id),job);
   const list=await storage.listJobs();assert.equal(list.length,1);assert.equal(list[0].sourceCount,1);assert.equal(list[0].input,undefined);assert.equal(list[0].payloadId,undefined);
+  await assert.rejects(storage.deleteJob(job.id),e=>e.status===409);
+  assert.equal(await storage.isJobDeleted(job.id),false);
   await storage.recoverInterrupted();assert.equal((await storage.getJob(job.id)).status,'failed');
   assert.equal(await storage.getJob('absent'),null);
   const source={url:'https://static.cninfo.com.cn/test.pdf',text:'缓存正文',fetchedAt:new Date().toISOString()};
@@ -31,6 +33,23 @@ test('MongoDB: 大文本、重连读取、任务恢复、缓存过期和幂等�
   legacy.status='cancelled';await storage.saveJob(legacy);
   assert.deepEqual(await migrateLegacy(storage,dir),{jobs:0,cache:0,skipped:2});
   assert.equal((await storage.getJob(legacy.id)).status,'cancelled');
+  const inspector=new MongoClient(uri);await inspector.connect();
+  try{
+   const db=inspector.db(database);
+   const files=await db.collection('job_payloads.files').find({filename:legacy.id+'.json'}).toArray();
+   assert.ok(files.length>=2);
+   await storage.deleteJob(legacy.id);
+   await storage.deleteJob(legacy.id);
+   assert.equal(await storage.getJob(legacy.id),null);
+   assert.equal((await storage.listJobs()).some(j=>j.id===legacy.id),false);
+   assert.equal(await db.collection('job_payloads.files').countDocuments({filename:legacy.id+'.json'}),0);
+   assert.equal(await db.collection('job_payloads.chunks').countDocuments({files_id:{$in:files.map(f=>f._id)}}),0);
+   assert.deepEqual(await storage.getCachedReport(key),source);
+  }finally{await inspector.close();}
+  await storage.close();storage=await createStorage({uri,database});
+  await migrateLegacy(storage,dir);
+  assert.equal(await storage.getJob(legacy.id),null);
+  assert.equal(await storage.isJobDeleted(legacy.id),true);
  }finally{
   await storage.close();const client=new MongoClient(uri);try{await client.connect();await client.db(database).dropDatabase();}finally{await client.close();}
   await rm(dir,{recursive:true,force:true});

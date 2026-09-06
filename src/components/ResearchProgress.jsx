@@ -1,0 +1,31 @@
+import {Check, LoaderCircle, ChevronDown, CircleAlert, Minus, Square} from 'lucide-react';
+import {Card} from './ui/card';
+import {Button} from './ui/button';
+import {Badge} from './ui/badge';
+import {Collapsible,CollapsibleTrigger,CollapsibleContent} from './ui/collapsible';
+
+const labels = {pending: '待执行', running: '进行中', completed: '已完成', skipped: '未使用', failed: '未通过', cancelled: '已取消', stopped: '未执行'};
+
+export default function ResearchProgress({job}) {
+  const stages = Array.isArray(job?.workflow?.stages) ? job.workflow.stages : [];
+  const active = ['queued', 'running'].includes(job?.status);
+  return <Card className="research-progress gap-0" aria-label="研究框架执行情况">
+    {stages.length ? <ol>{stages.map((stage, index) => {
+      // Interrupted jobs retain pending later stages on the server. They must
+      // not look queued for future execution, nor keep a stale spinner running.
+      const status = !active && stage.status === 'pending' ? 'stopped'
+        : !active && stage.status === 'running' ? (['failed', 'cancelled'].includes(job.status) ? job.status : 'stopped') : stage.status;
+      const Icon = status === 'completed' ? Check : status === 'running' ? LoaderCircle
+        : status === 'failed' ? CircleAlert : status === 'cancelled' ? Square : ['skipped', 'stopped'].includes(status) ? Minus : null;
+      return <li key={stage.id || index} className={`stage-${status}`} aria-current={status === 'running' ? 'step' : undefined}>
+        <span aria-hidden="true">{Icon ? <Icon size={15} className={status === 'running' ? 'animate-spin' : undefined}/> : index + 1}</span>
+        <div><strong>{stage.label}</strong><small>{labels[status] || '状态未记录'}</small></div>
+      </li>;
+    })}</ol> : <p className="legacy-progress">{active ? '等待执行阶段更新…' : '此历史研究未记录结构化阶段，可在执行轨迹中回看过程。'}</p>}
+    {job?.plan && <Collapsible className="research-scope"><CollapsibleTrigger asChild><Button variant="ghost">本次研究范围<ChevronDown size={15} aria-hidden="true"/></Button></CollapsibleTrigger><CollapsibleContent>
+      <div className="plan-meta"><strong>{job.plan.name}</strong><span>{job.plan.version && `研究框架 ${job.plan.version}`}{job.plan.historyYears && ` · 近 ${job.plan.historyYears} 年`}</span></div>
+      {!!job.plan.modules?.length && <div className="plan-modules">{job.plan.modules.map(module => <Badge variant="secondary" key={module}>{module}</Badge>)}</div>}
+      {!!job.plan.constraints?.length && <ul>{job.plan.constraints.map(text => <li key={text}>{text}</li>)}</ul>}
+    </CollapsibleContent></Collapsible>}
+  </Card>;
+}

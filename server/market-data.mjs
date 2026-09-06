@@ -1,6 +1,6 @@
 import {getStorage} from './storage.mjs';
 import {createHash} from 'node:crypto';
-import {Worker} from 'node:worker_threads';
+import {extractPDF} from './pdf-extractor.mjs';
 import {setTimeout as pause} from 'node:timers/promises';
 
 const allowedHosts=new Set(['push2.eastmoney.com','query1.finance.yahoo.com','qt.gtimg.cn','www.cninfo.com.cn','static.cninfo.com.cn','efts.sec.gov','data.sec.gov']);
@@ -143,17 +143,6 @@ export async function cnReportList(security,years,mode,signal){
  const selected=selectReports(reports,years,mode);
  if(!selected.length)throw new Error('官方披露检索未找到可读取的定期报告');
  return {name:company.zwjc,reports:selected,listedCount:new Set(reports.map(r=>r.url)).size,limited};
-}
-async function extractPDF(buffer,signal){
- signal?.throwIfAborted();
- return new Promise((resolve,reject)=>{
-  const worker=new Worker(new URL('./pdf-worker.mjs',import.meta.url),{workerData:buffer});let finished=false;
-  const finish=(error,value)=>{if(finished)return;finished=true;clearTimeout(timer);signal?.removeEventListener('abort',abort);void worker.terminate();error?reject(error):resolve(value);};
-  const abort=()=>finish(new Error('财报解析已取消'));
-  const timer=setTimeout(()=>finish(new Error('财报PDF解析超时（90秒）')),90000);
-  signal?.addEventListener('abort',abort,{once:true});
-  worker.on('message',m=>m.error?finish(new Error(m.error)):finish(null,m));worker.on('error',e=>finish(e));worker.on('exit',code=>{if(!finished)finish(new Error(`PDF解析进程异常退出 ${code}`));});
- });
 }
 export async function pdfReport(report,signal){
  const key=createHash('sha256').update(report.url).digest('hex');const storage=await getStorage();

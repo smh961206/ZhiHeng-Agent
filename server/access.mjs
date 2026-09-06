@@ -9,7 +9,7 @@ export function createAccessPolicy(value=''){
  return (req)=>{
   let host;try{host=new URL('http://'+req.headers.host).hostname;}catch{return false;}
   if(!hosts.has(host))return false;
-  if(req.method==='POST'&&req.headers.origin&&!origins.has(req.headers.origin))return false;
+  if(!['GET','HEAD','OPTIONS'].includes(req.method)&&req.headers.origin&&!origins.has(req.headers.origin))return false;
   return true;
  };
 }

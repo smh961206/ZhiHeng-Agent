@@ -1,3 +1,9 @@
+import {createResearchPlan,frameworkVersion,researchStages} from '../shared/research-framework.mjs';
+import {knowledgeManifest} from './knowledge.mjs';
+import {attachResearchBaseline} from './research-baseline.mjs';
+import {interruptWorkflow} from './research-workflow.mjs';
+import {createJobStreams,publicJob} from './job-stream.mjs';
+import {createResearchRetrier} from './research-retry.mjs';
 import http from 'node:http';
 import {readFile} from 'node:fs/promises';
 import path from 'node:path';
@@ -15,22 +21,32 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const storage=await getStorage();
 console.log('MongoDB 已连接；旧数据迁移：',await migrateLegacy(storage));
 await storage.recoverInterrupted();
-const jobs=new Map(),controllers=new Map();
+const jobs=new Map(),controllers=new Map(),streams=createJobStreams();
+const pendingStarts=new Set(),mutations=new Set();
+const retryResearch=createResearchRetrier({storage,jobs,controllers,pendingStarts,mutations,execute,configured:()=>Boolean(process.env.LLM_API_KEY&&process.env.LLM_MODEL)});
 const save=job=>storage.saveJob(job);
 function send(res,status,value){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(value));}
 async function body(req){let str='',size=0;for await(const chunk of req){size+=chunk.length;if(size>1500000)throw new Error('请求超过1.5MB');str+=chunk;}return JSON.parse(str);}
 async function execute(job){
  const control=new AbortController();controllers.set(job.id,control);job.status='running';
- const emit=(type,message,details)=>job.events.push({time:new Date().toISOString(),type,message,...details});
- try{await save(job);job.result=await runAgent(job,emit,control.signal);job.status='completed';emit('complete','研究完成');}
- catch(e){job.status=control.signal.aborted?'cancelled':'failed';job.error=control.signal.aborted?'任务已取消':e.message;emit('error',job.error);}
- finally{job.finishedAt=new Date().toISOString();controllers.delete(job.id);try{await save(job);jobs.delete(job.id);}catch(e){job.status='failed';job.error='任务持久化失败，请检查 MongoDB 连接';console.error(job.error,e.message);}}
+ const emit=(type,message,details)=>{
+  if(type==='workflow'){streams.publish(job.id,'workflow',details.workflow);return;}
+  if(type==='report_reset'){job.liveReport={text:'',phase:'research'};streams.publish(job.id,'report_reset',job.liveReport);return;}
+  if(type==='report_delta'){job.liveReport.text+=message;streams.publish(job.id,'report_delta',{delta:message});return;}
+  if(type==='report_phase'){job.liveReport.phase=message;streams.publish(job.id,'report_phase',{phase:message});return;}
+  if(type==='research')streams.publish(job.id,'snapshot',publicJob(job));
+  const event={time:new Date().toISOString(),type,message,...details};job.events.push(event);streams.publish(job.id,'trace',event);
+ };
+ try{await save(job);job.result=await runAgent(job,emit,control.signal);job.researchOutcome={action:job.result.decision.action,confidence:job.result.decision.confidence,summary:job.result.decision.summary};job.status='completed';emit('complete','研究完成');}
+ catch(e){job.status=control.signal.aborted?'cancelled':'failed';job.error=control.signal.aborted?'任务已取消':e.message;interruptWorkflow(job,job.status);emit('error',job.error);}
+ finally{delete job.liveReport;job.finishedAt=new Date().toISOString();try{await save(job);jobs.delete(job.id);}catch(e){job.status='failed';job.error='任务持久化失败，请检查 MongoDB 连接';console.error(job.error,e.message);}finally{controllers.delete(job.id);streams.finish(job);}}
 }
 const server=http.createServer(async(req,res)=>{
  try{
   const url=new URL(req.url,'http://localhost');
   if(!allowRequest(req))return send(res,403,{error:'访问地址或请求来源未获允许'});
-  if(url.pathname==='/api/config')return send(res,200,{configured:!!(process.env.LLM_API_KEY&&process.env.LLM_MODEL),model:process.env.LLM_MODEL||null,modes,knowledgeVersion:'4.1',dataProvider:'A股/港股：东方财富+巨潮；美股：Yahoo/腾讯+SEC',markets:['CN','HK','US'],secUserAgentConfigured:!!process.env.SEC_USER_AGENT});
+  if(url.pathname==='/api/config')return send(res,200,{configured:!!(process.env.LLM_API_KEY&&process.env.LLM_MODEL),model:process.env.LLM_MODEL||null,modes,knowledgeVersion:frameworkVersion,knowledge:knowledgeManifest,researchStages,dataProvider:'A股/港股：东方财富+巨潮；美股：Yahoo/腾讯+SEC',markets:['CN','HK','US'],secUserAgentConfigured:!!process.env.SEC_USER_AGENT});
+  if(url.pathname==='/api/research/plan'&&req.method==='POST'){let input=validateInput(await body(req));const mode=route(input);input=await attachResearchBaseline(input,mode,id=>storage.getJob(id));return send(res,200,{...createResearchPlan(input,mode),knowledge:knowledgeManifest});}
   if(url.pathname==='/api/securities/resolve'&&req.method==='POST'){
    const {question}=await body(req);const control=new AbortController();
    res.on('close',()=>{if(!res.writableEnded)control.abort();});
@@ -45,24 +61,50 @@ const server=http.createServer(async(req,res)=>{
   if(url.pathname==='/api/health'&&req.method==='GET'){try{await storage.ping();return send(res,200,{ok:true,storage:'mongodb'});}catch{return send(res,503,{ok:false,storage:'mongodb'});}}
   if(url.pathname==='/api/jobs'&&req.method==='GET'){
    const summaries=new Map((await storage.listJobs()).map(j=>[j.id,j]));
-   for(const {input,result,events,...j} of jobs.values())summaries.set(j.id,{...j,question:input.question,sourceCount:input.sources.length});
+   for(const {input,result,events,draft,liveReport,marketData,...j} of jobs.values())summaries.set(j.id,{...j,question:input.question,sourceCount:input.sources.length});
    return send(res,200,[...summaries.values()].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)));
   }
   if(url.pathname==='/api/jobs'&&req.method==='POST'){
-   if(controllers.size>=3)return send(res,429,{error:'已有3个任务运行，请稍后再试'});
+   if(controllers.size+pendingStarts.size>=3)return send(res,429,{error:'已有3个任务运行或准备中，请稍后再试'});
+   const id=randomUUID();pendingStarts.add(id);
+   try{
    const payload=await body(req);
    if(Array.isArray(payload?.securities)&&payload.securities.length===0||payload?.securities===undefined){
     const resolved=await resolveSecurities(payload?.question);
     if(resolved.ambiguities.length||resolved.unresolved.length||resolved.overflow)throw new Error('问题中的标的存在歧义或未识别，请先核对标的');
     payload.securities=resolved.securities;
    }
-   const input=validateInput(payload);
+   let input=validateInput(payload);
+   const mode=route(input);
+   input=await attachResearchBaseline(input,mode,id=>storage.getJob(id));
    if(!(process.env.LLM_API_KEY&&process.env.LLM_MODEL))return send(res,400,{error:'请先在.env配置LLM_API_KEY和LLM_MODEL'});
-   const job={id:randomUUID(),input,mode:route(input),status:'queued',createdAt:new Date().toISOString(),events:[]};
+   const job={id,input,mode,status:'queued',createdAt:new Date().toISOString(),events:[]};
+   job.plan=createResearchPlan(input,job.mode);
+   job.plan.knowledge=structuredClone(knowledgeManifest);
+   job.input.depth=job.plan.depth;job.input.historyYears=job.plan.historyYears;
    await save(job);jobs.set(job.id,job);void execute(job);return send(res,201,job);
+   }finally{pendingStarts.delete(id);}
+  }
+  const retryMatch=url.pathname.match(/^\/api\/jobs\/([\da-f-]+)\/retry$/);
+  if(retryMatch&&req.method==='POST'){
+   const payload=await body(req);
+   const job=await retryResearch(retryMatch[1],payload?.expectedRetryCount);
+   return send(res,200,publicJob(job));
+  }
+  const streamMatch=url.pathname.match(/^\/api\/jobs\/([\da-f-]+)\/stream$/);
+  if(streamMatch&&req.method==='GET'){
+   const id=streamMatch[1];const stored=jobs.get(id)??await storage.getJob(id);const job=jobs.get(id)??stored;
+   if(!job)return send(res,404,{error:'任务不存在'});streams.subscribe(req,res,job);return;
   }
   const match=url.pathname.match(/^\/api\/jobs\/([\da-f-]+)(\/cancel)?$/);
-  if(match){const job=jobs.get(match[1])??await storage.getJob(match[1]);if(!job)return send(res,404,{error:'任务不存在'});if(match[2]&&req.method==='POST'){controllers.get(job.id)?.abort();return send(res,200,{ok:true});}if(req.method==='GET')return send(res,200,{...job,input:{...job.input,sources:job.input.sources.map(s=>({...s,text:s.text.slice(0,12000),previewTruncated:s.text.length>12000}))}});}
+  if(match&&!match[2]&&req.method==='DELETE'){
+   if(mutations.has(match[1])||controllers.has(match[1])||['queued','running'].includes(jobs.get(match[1])?.status))return send(res,409,{error:'研究正在运行或处理中，请等待结束后再删除'});
+   mutations.add(match[1]);
+   try{await storage.deleteJob(match[1]);jobs.delete(match[1]);return send(res,200,{ok:true});}
+   catch(e){return send(res,e.status===409?409:503,{error:e.status===409?e.message:'删除失败，请检查数据库连接并重试'});}
+   finally{mutations.delete(match[1]);}
+  }
+  if(match){const stored=jobs.get(match[1])??await storage.getJob(match[1]);const job=jobs.get(match[1])??stored;if(!job)return send(res,404,{error:'任务不存在'});if(match[2]&&req.method==='POST'){controllers.get(job.id)?.abort();return send(res,200,{ok:true});}if(req.method==='GET')return send(res,200,publicJob(job));}
   if(url.pathname.startsWith('/api/'))return send(res,404,{error:'接口不存在'});
   if(req.method!=='GET')return send(res,405,{error:'不支持的方法'});
   const dist=path.join(root,'dist');let file=path.resolve(dist,'.'+decodeURIComponent(url.pathname));
@@ -70,6 +112,6 @@ const server=http.createServer(async(req,res)=>{
   let content;try{content=await readFile(file);}catch{if(path.extname(file))return send(res,404,{error:'文件不存在'});file=path.join(dist,'index.html');try{content=await readFile(file);}catch{return send(res,404,{error:'请先运行 pnpm build，或用 pnpm dev 启动开发模式'});}}
   const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml'};
   res.writeHead(200,{'Content-Type':types[path.extname(file)]||'application/octet-stream','X-Content-Type-Options':'nosniff'});res.end(content);
- }catch(e){send(res,400,{error:e instanceof SyntaxError?'JSON格式错误':e.message});}
+ }catch(e){send(res,[400,404,409,429,503].includes(e.status)?e.status:400,{error:e instanceof SyntaxError?'JSON格式错误':e.message});}
 });
 server.listen(Number(process.env.PORT)||3001,process.env.HOST||'127.0.0.1',()=>console.log(`知衡 Agent: http://${process.env.HOST||'127.0.0.1'}:${process.env.PORT||3001}`));

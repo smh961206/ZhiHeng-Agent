@@ -354,6 +354,7 @@ async function fixtureContext(browser, {jobs = [], viewport = {width: 1440, heig
         quote: {name: `合成行情 ${item.symbol}`, currency: item.market === 'US' ? 'USD' : 'CNY', price: 123.45,
           provider: 'UI Fixture', asOf: '2026-08-01T08:00:00Z', fetchedAt: '2026-08-01T08:01:00Z',...quoteOverrides}})));
       if (method === 'GET' && path === '/api/jobs') return await json([...db.values()].map(summary));
+      if (method === 'POST' && path === '/api/securities/exchanges') return await json(body.symbols.map(symbol => ({symbol, exchange: ({AAPL:'NASDAQ','BRK-B':'NYSE'})[symbol] || null})));
       if (method === 'POST' && path === '/api/jobs') {
         const job = makeJob(100 + requests('POST', '/api/jobs').length, createdStatus, body);
         db.set(job.id, job);
@@ -473,7 +474,13 @@ for(const width of [320,1440])test(`quick-screen-fixed-scope-${width}`,{viewport
  await workbench(page);await choose(page,'财报历史范围','近 8 年');await choose(page,'报告深度','深入研究');await page.locator('#question').fill('快速筛选贵州茅台');
  await textIncludes(page.locator('.security-chip'),'600519');
  await count(page.getByRole('combobox',{name:'报告深度'}),0);await count(page.getByRole('combobox',{name:'财报历史范围'}),0);
- await textIncludes(page.getByRole('region',{name:'快速筛选范围'}),'五个完整年度 + 最新一期');await textIncludes(page.locator('.research-plan .plan-meta'),'近 5 年');
+ await textIncludes(page.getByRole('region',{name:'快速筛选范围'}),'五个完整年度 + 最新一期');await textIncludes(page.locator('.research-plan .plan-meta'),'五个完整年度 + 最新一期');
+ await page.getByRole('button',{name:'筛选内容与研究边界',exact:true}).click();
+ await count(page.locator('.screen-scope .quick-screen-deliverables li'),10);
+ await textIncludes(page.locator('.screen-scope'),'财务红旗与反证');
+ await page.getByRole('button',{name:'筛选内容与研究边界',exact:true}).click();
+ const scopeBox=await page.locator('.screen-scope').boundingBox(),contextBox=await page.locator('.workbench-context').boundingBox();
+ assert.ok(contextBox.y-(scopeBox.y+scopeBox.height)>=16,'Quick screen card needs a visible gap before supplemental focus');
  await page.getByRole('button',{name:'交付内容与研究约束'}).click();await textIncludes(page.locator('.research-plan'),'红旗与反证');await textIncludes(page.locator('.research-plan'),'单季变化');
  await textIncludes(page.locator('.screen-plan-questions'),'公司如何赚钱');await page.getByRole('button',{name:'交付内容与研究约束'}).click();
  await page.getByRole('button',{name:/补充筛选关注点/}).click();await page.getByRole('textbox',{name:'筛选关注点'}).fill('优先核对现金流与存货（合成关注点）');
@@ -517,6 +524,10 @@ for(const width of [320,1440])test(`quick-screen-progress-${width}`,{jobs:[scree
  assert.equal(await page.getByRole('tab',{name:'研究思路'}).getAttribute('aria-selected'),'true');await noOverflow(page,`quick progress ${width}`);
  for(const [job,title] of [[screenFailed,'快速筛选未完成'],[screenCancelled,'快速筛选已取消']]){
   await detail(page,job);await textIncludes(page.locator('.rd-overview'),title);await count(page.getByRole('button',{name:'准备深度研究'}),0);await textIncludes(page.locator('.rd-empty'),'输入与执行记录');
+  await page.getByRole('button',{name:'本次研究范围',exact:true}).click();
+  await count(page.locator('.research-scope .quick-screen-deliverables li'),10);
+  await noOverflow(page,`quick screen detail scope ${width}`);
+  if(job===screenFailed)await screenshot(page,`quick-screen-detail-scope-${width}`,'.research-scope');
  }
  assert.equal(requests('POST','/api/jobs').length,0);
 });
@@ -657,6 +668,23 @@ for (const trigger of ['button', 'ctrl-enter']) test(`submit-${trigger}`, {}, as
   assert.equal(requests('POST', '/api/jobs').length, 1, 'Duplicate submission after completion');
 });
 
+const exchangeJobs=[
+ makeJob(981,'completed',{securities:[{market:'CN',symbol:'002594'},{market:'CN',symbol:'600519'},{market:'HK',symbol:'01211'}]}),
+ makeJob(982,'completed',{securities:[{market:'US',symbol:'AAPL'},{market:'US',symbol:'BRK-B'},{market:'US',symbol:'UNKNOWN'}]}),
+];
+for(const width of [320,1440])test(`history-exchange-prefixes-${width}`,{jobs:exchangeJobs,viewport:{width,height:1000}},async({page,requests})=>{
+ await page.goto('/history');await count(page.locator('.rh-row'),2);
+ const codes=page.locator('.rh-security');
+ await eventually(async()=> (await codes.allTextContents()).some(text=>text.includes('NASDAQ:AAPL')),'US exchange lookup should complete');
+ for(const code of ['SZ:002594','SH:600519','HK:01211','NASDAQ:AAPL','NYSE:BRK-B','US:UNKNOWN'])await textIncludes(codes.filter({hasText:code}),code);
+ await count(codes.filter({hasText:'UNKNOWN'}).filter({hasText:'NASDAQ'}),0);
+ assert.match(await codes.filter({hasText:'UNKNOWN'}).getAttribute('title'),/待核实/);
+ assert.equal(requests('POST','/api/securities/exchanges').length,1);
+ await noOverflow(page,`history exchange prefixes ${width}`);await screenshot(page,`history-exchange-prefixes-${width}`);
+ await page.getByRole('searchbox',{name:'搜索研究问题、模式或标的'}).fill('NYSE:BRK-B');await count(page.locator('.rh-row'),1);
+ await count(page.locator('.rh-securities mark'),1);
+});
+
 function historyModeFixtures(){
  const jobs=Object.keys(modes).flatMap((mode,index)=>['completed','running','failed'].map((status,offset)=>makeJob(200+index*3+offset,status,{mode,question:`${modes[mode].name}验证 · ${status==='running'?'经营趋势':'现金流'} AAPL`})));
  jobs.push(...Array.from({length:7},(_,index)=>makeJob(230+index,'completed',{mode:'B',question:`补充现金流研究 ${index+1} AAPL`})));
@@ -674,8 +702,24 @@ for(const width of [320,1440])test(`history-mode-filter-${width}`,{jobs:historyM
  const rows=page.locator('.rh-row'),badges=page.locator('.rh-mode');
  const status=page.getByRole('group',{name:'按研究状态筛选',exact:true});
  await count(rows,8);
- await count(rows.locator('.rh-mode-row'),8);
- await textIncludes(rows.first().locator('.rh-mode-row'),'研究模式');
+ await count(rows.locator('.rh-mode-row'),0);
+ await count(rows.getByText('研究模式',{exact:true}),0);
+ await count(rows.locator('.rh-title-row .rh-mode'),8);
+ const adjacent=async(root,titleSelector,tagSelector)=>{
+  for(const row of await root.all()){
+   const title=titleSelector==='.rr-title'?await row.locator(titleSelector).evaluate(element=>{
+    const walker=document.createTreeWalker(element,NodeFilter.SHOW_TEXT);
+    let last,node;
+    while((node=walker.nextNode()))if(!node.parentElement.closest('.rr-mode'))last=node;
+    const range=document.createRange();range.selectNodeContents(last);
+    const rect=Array.from(range.getClientRects()).at(-1);
+    return {x:rect.x,y:rect.y,width:rect.width,height:rect.height};
+   }):await row.locator(titleSelector).boundingBox(),tag=await row.locator(tagSelector).boundingBox();
+   assert.ok(tag.x>=title.x+title.width-1&&tag.x-title.x-title.width<=8,'Mode tag must immediately follow the title');
+   assert.ok(Math.abs((tag.y+tag.height/2)-(title.y+title.height/2))<=3,'Mode tag must share the final title line');
+  }
+ };
+ await adjacent(rows,'.rh-title','.rh-mode');
  let sidebar=page.locator('.desktop-sidebar');
  if(width<1024){
   await page.getByRole('button',{name:'打开导航菜单',exact:true}).click();
@@ -686,7 +730,9 @@ for(const width of [320,1440])test(`history-mode-filter-${width}`,{jobs:historyM
  await count(recentModes,4);
  assert.deepEqual(await recentModes.allTextContents(),['智能路由','未记录',modes.C.name,modes.B.name]);
  for(const badge of await recentModes.all())assert.ok(await badge.isVisible(),'Recent research mode label must be visible');
- await textIncludes(sidebar.locator('.rr-mode-row').first(),'研究模式');
+ await count(sidebar.locator('.rr-mode-row'),0);
+ await count(sidebar.locator('.rr-list').getByText('研究模式',{exact:true}),0);
+ await adjacent(sidebar.locator('.rr-link'),'.rr-title','.rr-mode');
  await noOverflow(page,'recent mode labels '+width);
  await screenshot(page,'recent-mode-labels-'+width);
  if(width<1024){await page.keyboard.press('Escape');await sidebar.waitFor({state:'hidden'});}

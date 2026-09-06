@@ -1,0 +1,23 @@
+.quick-screen-summary { min-width: 0; color: #536c5c; }
+.quick-screen-summary p { margin: 12px 0 0; font-size: 12px; line-height: 1.9; }
+.quick-screen-summary .quick-screen-goal { margin-top: 12px; font-size: 13px; }
+.quick-screen-summary .quick-screen-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin: 18px 0 14px; }
+.quick-screen-summary .quick-screen-facts > div { min-width: 0; }
+.quick-screen-summary dt { margin-bottom: 6px; color: #71816f; font-size: 12px; }
+.quick-screen-summary dd { margin: 0; color: #2d5340; font-size: 15px; font-weight: 600; line-height: 1.65; }
+.quick-screen-summary small { display: block; margin-top: 4px; color: #687c68; font-size: 12px; line-height: 1.9; }
+.quick-screen-summary .quick-screen-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 20px; }
+.quick-screen-summary .quick-screen-details > section { min-width: 0; }
+.quick-screen-summary h4 { margin: 0 0 12px; color: #2d5340; font-size: 13px; font-weight: 600; }
+.quick-screen-summary .quick-screen-details section ul.quick-screen-deliverables { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.quick-screen-summary .quick-screen-details section .quick-screen-deliverables li { display: flex; align-items: flex-start; gap: 6px; color: #536c5c; font-size: 12px; line-height: 1.85; }
+.quick-screen-summary .quick-screen-deliverables svg { flex-shrink: 0; margin-top: 4px; color: #6d9274; }
+.quick-screen-summary .quick-screen-modules { display: flex; flex-wrap: wrap; gap: 6px; }
+.quick-screen-summary .quick-screen-modules [data-slot=badge] { max-width: 100%; white-space: normal; font-size: 11px; font-weight: 400; color: #58704f; border-color: #dce5dd; }
+.quick-screen-summary .quick-screen-more { margin-top: 16px; border-top: 1px solid #dde7dd; }
+.quick-screen-summary .quick-screen-more > button { display: flex; justify-content: space-between; width: 100%; height: auto; min-height: 42px; padding: 10px 0; white-space: normal; text-align: left; font-size: 12px; color: #356348; }
+.quick-screen-summary .quick-screen-more > button[data-state=open] svg { transform: rotate(180deg); }
+.quick-screen-summary .quick-screen-more .quick-screen-details { margin-top: 8px; }
+.research-framework .fw-scene-panel > .quick-screen-summary { margin-bottom: 22px; }
+@media (max-width: 900px) { .quick-screen-summary .quick-screen-details { grid-template-columns: minmax(0, 1fr); gap: 20px; } }
+@media (max-width: 639px) { .quick-screen-summary .quick-screen-facts { grid-template-columns: minmax(0, 1fr); gap: 14px; } .quick-screen-summary dd { font-size: 14px; } .quick-screen-summary .quick-screen-more > button { min-height: 44px; } }

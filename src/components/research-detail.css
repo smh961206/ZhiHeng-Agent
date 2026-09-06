@@ -345,6 +345,9 @@
 .research-detail .research-progress ol > li { flex-direction: column; align-items: flex-start; gap: 6px; }
 .research-detail .research-scope > button { width: 100%; height: auto; justify-content: space-between; background: transparent; font-weight: 400; }
 .research-detail .research-scope > button[data-state=open] > svg { transform: rotate(180deg); }
+.research-detail .scope-constraints { margin-top: 18px; border-top: 1px solid #e7ece9; }
+.research-detail .scope-constraints > button { width: 100%; height: auto; min-height: 44px; padding: 10px 0; justify-content: space-between; white-space: normal; text-align: left; font-size: 12px; color: var(--rd-muted); }
+.research-detail .scope-constraints > button[data-state=open] > svg { transform: rotate(180deg); }
 .research-detail .rd-source-trigger { display: flex; gap: 11px; align-items: center; padding: 15px; width: 100%; height: auto; white-space: normal; text-align: left; border-radius: 9px; background: #fafcf9; }
 .research-detail .rd-source-trigger:hover { background: #f0f5ef; }
 .research-detail .rd-source-trigger[data-state=open] { background: #f0f5ef; border-radius: 9px 9px 0 0; border-bottom: 1px solid var(--rd-line); }

@@ -39,15 +39,16 @@
 .history-page.research-history .rh-record-icon { display: grid; place-items: center; align-self: flex-start; flex-shrink: 0; width: 42px; height: 46px; margin-top: 3px; border: 1px solid #e1e9e2; border-radius: 11px; background: #eff4f0; color: #517760; }
 .history-page.research-history .rh-row[data-status="failed"] .rh-record-icon { background: #faf3ef; border-color: #f0e4db; color: #a46a50; }
 .history-page.research-history .rh-row-copy { flex: 1; min-width: 0; }
-.history-page.research-history .rh-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; color: #234737; font-size: 15px; font-weight: 600; line-height: 1.8; }
+.history-page.research-history .rh-title-row { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.history-page.research-history .rh-title { display: block; flex: 0 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: #234737; font-size: 15px; font-weight: 600; line-height: 26px; }
+.history-page.research-history .rh-mode, .recent-research .rr-mode { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; height: 24px; padding: 0 7px; border: 1px solid #d3e1d6; border-radius: 4px; background: #f0f5f0; color: #47634e; font-size: 12px; font-weight: 500; line-height: 20px; white-space: nowrap; }
 .history-page.research-history .rh-open:hover .rh-title { color: #123c35; }
 .history-page.research-history .rh-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 9px; color: var(--rh-muted); font-size: 12px; line-height: 1.7; }
 .history-page.research-history mark { background: #e4edd0; color: inherit; border-radius: 2px; padding-block: 1px; }
 .history-page.research-history .rh-source-total { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .history-page.research-history .rh-created { display: flex; flex-direction: column; gap: 5px; color: var(--rh-muted); font-size: 12px; }
-.history-page.research-history .rh-mode-row, .recent-research .rr-mode-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 8px; color: #596e63; font-size: 12px; font-weight: 400; line-height: 1.7; }
-.history-page.research-history .rh-mode, .recent-research .rr-mode { display: inline-flex; gap: 0; max-width: 100%; padding: 3px 8px; border: 1px solid #c4d9cb; border-radius: 5px; background: #eaf2ec; color: #24543b; font-size: 12px; font-weight: 500; }
-.history-page.research-history .rh-securities { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.history-page.research-history .rh-securities { min-width: 0; max-width: 100%; white-space: normal; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.history-page.research-history .rh-security { display: inline-block; max-width: 100%; vertical-align: top; }
 .history-page.research-history .rh-time { display: block; margin: 0; color: #4d6657; font-size: 12px; line-height: 1.8; font-variant-numeric: tabular-nums; }
 .history-page.research-history .rh-row-state { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; flex-shrink: 0; }
 .history-page.research-history .rh-row-state .job-status, .history-page.research-history .rh-status { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; font-size: 12px; font-weight: 500; }
@@ -97,9 +98,12 @@
 .recent-research .rr-link:hover { background: #f0f5f1; border-color: #e0e8e1; }
 .recent-research .rr-link[aria-current="page"] { background: #eaf2ec; border-color: #c8dccc; }
 .recent-research .rr-link[aria-current="page"]::before { content: ''; position: absolute; top: 14px; bottom: 14px; left: -1px; width: 3px; border-radius: 3px; background: #3d7255; }
-.recent-research .rr-title-row { display: flex; align-items: flex-start; gap: 5px; }
-.recent-research .rr-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; min-width: 0; flex: 1; color: #304f3c; font-size: 14px; font-weight: 500; line-height: 1.8; }
-.recent-research .rr-open-icon { margin-top: 5px; color: #6d8273; opacity: 0; transition: opacity .16s, transform .16s; }
+.recent-research .rr-title-row { position: relative; display: block; min-width: 0; padding-right: 18px; font-size: 15px; line-height: 26px; }
+.recent-research .rr-title { display: inline; white-space: normal; overflow-wrap: anywhere; color: #304f3c; font-size: inherit; font-weight: 500; line-height: inherit; }
+.recent-research .rr-title-end { display: inline-flex; align-items: center; vertical-align: baseline; white-space: nowrap; }
+.recent-research .rr-title-ending { display: block; line-height: 26px; }
+.recent-research .rr-mode { margin-left: 5px; }
+.recent-research .rr-open-icon { position: absolute; right: 0; top: 5px; color: #6d8273; opacity: 0; transition: opacity .16s, transform .16s; }
 .recent-research .rr-link:is(:hover,:focus-visible,[aria-current=page]) .rr-open-icon { opacity: 1; transform: translateX(2px); }
 .recent-research .rr-link[aria-current="page"] .rr-title { color: #1f5036; font-weight: 600; }
 .recent-research .rr-meta { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 5px; margin-top: 10px; color: #5b7162; font-size: 12px; font-weight: 400; line-height: 1.7; }
@@ -153,7 +157,6 @@
   .history-page.research-history .rh-meta { margin-top: 7px; }
   .history-page.research-history .rh-delete { align-items: flex-end; padding: 0 0 9px 0; border-left: 0; }
   .history-page.research-history .rh-delete button { width: 44px; height: 44px; min-width: 44px; }
-  .history-page.research-history .rh-securities { max-width: 145px; }
   .history-page.research-history .rh-pagination { gap: 12px; padding: 14px; }
   .history-page.research-history .rh-pagination > div { width: 100%; justify-content: space-between; gap: 6px; }
   .history-page.research-history .rh-pagination button { min-height: 44px; }

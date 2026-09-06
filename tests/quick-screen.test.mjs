@@ -18,7 +18,7 @@ const args=(periods=[],balances=[])=>({sector:'non-financial',amountUnit:'人民
 const source={id:'S1',title:'合成官方财报',type:'official-report',official:true,security:'CN:600001',text:'合成报告仅供测试：OCF20、资本开支12，现金流待验证。'};
 test('MODE A fixes a five-year scope and ten report sections while B Quick keeps its existing scope',()=>{
  const plan=createResearchPlan({mode:'A',historyYears:1});assert.equal(plan.historyYears,5);assert.equal(plan.output.sections.length,10);assert.equal(plan.depth,'Quick');
- assert.equal(plan.researchApproach.steps.length,6);assert.equal(createResearchPlan({mode:'B',depth:'Quick',historyYears:3}).output.sections.length,5);
+ assert.ok(plan.researchApproach.steps.some(step=>step.id==='redFlags'));assert.equal(createResearchPlan({mode:'B',depth:'Quick',historyYears:3}).output.sections.length,5);
  assert.ok(toolsForMode('A').some(t=>t.function.name==='calculate_screen_metrics'));assert.ok(!toolsForMode('A').some(t=>['calculate_dcf','calculate_dividend'].includes(t.function.name)));
  assert.ok(toolsForMode('B').some(t=>t.function.name==='calculate_dcf'));
 });
@@ -86,6 +86,20 @@ test('three-part export contains only saved reasoning summaries and chronologica
  const job={id:'fixture',mode:'A',status:'completed',input,plan,result,events:[{type:'tool',time:'2026-09-07T01:00:00Z',message:'调用财务计算',toolName:'calculate_screen_metrics',toolCallId:'c1',arguments:{note:'```keep actual```'}},{type:'tool_result',time:'2026-09-07T01:00:01Z',message:'财务计算返回',toolCallId:'c1',result:{quickFcf:8}}]};
  const output=exportResearchMarkdown(job);assert.ok(output.indexOf('# 一、')<output.indexOf('# 二、'));assert.ok(output.indexOf('# 二、')<output.indexOf('# 三、'));assert.ok(output.indexOf('调用财务计算')<output.indexOf('财务计算返回'));assert.match(output,/c1/);assert.match(output,/````json/);assert.match(output,/无.*|未明确/);
  assert.match(researchApproachMarkdown({status:'completed'}),/没有保存公开研究计划/);assert.throws(()=>exportResearchMarkdown({result:null}),/尚未完成/);
+});
+
+test('approach presentation separates saved plans, completed evidence and interrupted states',()=>{
+ const input={mode:'A',question:'合成快筛'},plan=createResearchPlan(input),result=reviewFixture(input);
+ const completed=researchApproachMarkdown({mode:'A',status:'completed',plan,result});
+ for(const text of ['五个完整年度 + 最新一期','红旗是否经得起反证','同口径单季','Quick FCF','至少三条证伪条件','证据判断','下一步验证重点','什么会推翻判断','数据缺口与影响'])assert.ok(completed.includes(text),text);
+ for(const status of ['queued','running','failed','cancelled']){
+  const text=researchApproachMarkdown({mode:'A',status,plan,result});
+  assert.ok(text.includes('本次查证问题'));assert.ok(!text.includes('### 业务质量'));assert.ok(!text.includes('## 筛选判断与后续验证'));
+  assert.match(text,/尚未|仍在/);
+ }
+ const legacy={status:'completed',plan:{researchApproach:{objective:'当时保存的目标',steps:[{title:'旧问题',question:'当时的验证问题'}],boundaries:[]}}};
+ const before=JSON.stringify(legacy),text=researchApproachMarkdown(legacy);
+ assert.ok(text.includes('当时的验证问题'));assert.ok(!text.includes('五个完整年度'));assert.match(text,/没有保存证据判断摘要/);assert.equal(JSON.stringify(legacy),before);
 });
 test('MODE A executes screen arithmetic and refuses forbidden tool calls in the actual agent loop',async()=>{
  const previous=global.fetch;let calls=0;const events=[];

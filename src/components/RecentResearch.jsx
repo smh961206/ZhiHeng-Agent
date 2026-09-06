@@ -13,6 +13,7 @@ const statuses = {
 };
 const fullDate = new Intl.DateTimeFormat('zh-CN', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false});
 const timestamp = job => job.createdAt ? new Date(job.createdAt).getTime() : NaN;
+const titleSegments = new Intl.Segmenter('zh-CN', {granularity: 'grapheme'});
 
 function readableDate(date, now) {
   if (date.toDateString() === now.toDateString()) return '今天 ' + date.toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit', hour12: false});
@@ -47,10 +48,11 @@ export default function RecentResearch({jobs = [], currentId, onNavigate}) {
         const {label, Icon} = statuses[job.status] || {label: '状态未知', Icon: Clock3};
         const created = new Date(timestamp(job));
         const validDate = Number.isFinite(created.getTime());
-        const title = job.question || job.input?.question || '未命名研究';
+        const title = (job.question || job.input?.question || '未命名研究').trimEnd();
+        // Keep short final words/tickers intact, and keep other endings with the tag.
+        const ending = title.match(/(?<![A-Za-z0-9.-])[A-Za-z0-9][A-Za-z0-9.-]{0,7}[.,!?]?$/)?.[0] || Array.from(titleSegments.segment(title)).at(-1)?.segment || '';
         return <li key={job.id}><Button asChild variant="ghost"><Link className="rr-link" to={'/research/' + encodeURIComponent(job.id)} title={title} aria-current={currentId === job.id ? 'page' : undefined} onClick={afterNavigation}>
-          <span className="rr-title-row"><span className="rr-title">{title}</span><ChevronRight className="rr-open-icon" size={15} aria-hidden="true"/></span>
-          <span className="rr-mode-row"><span>研究模式</span><Badge variant="outline" className="rr-mode" data-mode={modeOf(job)}>{modeLabel(job)}</Badge></span>
+          <span className="rr-title-row"><span className="rr-title">{title.slice(0, title.length - ending.length)}<span className="rr-title-end"><span className="rr-title-ending">{ending}</span><Badge variant="outline" className="rr-mode" data-mode={modeOf(job)}>{modeLabel(job)}</Badge></span></span><ChevronRight className="rr-open-icon" size={15} aria-hidden="true"/></span>
           <span className="rr-meta"><Badge variant="outline" className="rr-status" data-status={job.status}><Icon size={13} className={job.status === 'running' ? 'rr-spin' : undefined} aria-hidden="true"/>{label}</Badge>{job.researchOutcome?.action&&<span className="rr-outcome" title={'研究判断 · 置信度 '+job.researchOutcome.confidence}>{job.researchOutcome.action}</span>}<time dateTime={validDate ? created.toISOString() : undefined} title={validDate ? '创建于 ' + fullDate.format(created) : undefined}>{validDate ? readableDate(created, now) : '时间未记录'}</time></span>
         </Link></Button></li>;
       })}

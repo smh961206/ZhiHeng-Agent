@@ -17,7 +17,7 @@ export function createRemoteClient({fetchImpl=(...args)=>fetch(...args),wait=pau
  return async function remote(url,{signal,method='GET',body,contentType='application/x-www-form-urlencoded',maxBytes=12_000_000,timeoutMs=15000,retries=2,totalTimeoutMs=45000}={}){
   const parsed=new URL(url),host=parsed.hostname,isSEC=secHost(host);
   if(parsed.protocol!=='https:'||!allowedHosts.has(host)||parsed.username||parsed.password||parsed.port&&parsed.port!=='443')throw new Error('数据源地址不在允许列表');
-  if(host==='www.sec.gov'&&parsed.pathname!=='/files/company_tickers.json'&&!/^\/Archives\/edgar\/data\/\d+\/\d{18}\/[\w.-]+\.(?:htm|html|txt|pdf|json)$/i.test(parsed.pathname))throw new Error('数据源地址不在允许列表');
+  if(host==='www.sec.gov'&&!['/files/company_tickers.json','/files/company_tickers_exchange.json'].includes(parsed.pathname)&&!/^\/Archives\/edgar\/data\/\d+\/\d{18}\/[\w.-]+\.(?:htm|html|txt|pdf|json)$/i.test(parsed.pathname))throw new Error('数据源地址不在允许列表');
   if(host.endsWith('.hkexnews.hk')&&!/^\/(?:search\/(?:prefix\.do|titlesearch\.xhtml)|listedco\/listconews\/sehk\/\d{4}\/\d{4}\/[\w.-]+\.pdf)$/i.test(parsed.pathname))throw new Error('数据源地址不在允许列表');
   if(host==='static.www.tencent.com'&&!/^\/(?:storage\/)?uploads\/\d{4}\/\d{2}\/\d{2}\/[a-f0-9]+\.pdf$/i.test(parsed.pathname))throw new Error('数据源地址不在允许列表');
   if(host==='api.tushare.pro'&&(parsed.pathname!=='/'||parsed.search))throw new Error('数据源地址不在允许列表');

@@ -5,10 +5,11 @@
   --border: #dde5e2;
   --muted-foreground: #5b6c66;
   --ring: #508477;
+  --sidebar-width: 256px;
 }
 body { line-height: 1.65; }
-.desktop-sidebar { width: 224px; background: #fbfcfc; }
-.main-shell { margin-left: 224px; }
+.desktop-sidebar { width: var(--sidebar-width); background: #fbfcfc; }
+.main-shell { margin-left: var(--sidebar-width); }
 .sidebar-inner { padding: 32px 16px 24px; }
 .brand { padding: 0 10px; }
 .side-label { margin-top: 32px; color: #74817b; }

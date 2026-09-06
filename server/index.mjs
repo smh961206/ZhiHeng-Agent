@@ -13,6 +13,7 @@ import {runAgent} from './agent.mjs';
 import {modes,route,validateInput} from './router.mjs';
 import {validateSecurities,fetchQuote} from './market-data.mjs';
 import {resolveSecurities} from './security-resolver.mjs';
+import {lookupSecurityExchanges} from './security-exchanges.mjs';
 import {providerStatus} from './data-provider-config.mjs';
 import {webSearchStatus} from './web-search-provider.mjs';
 import {getStorage} from './storage.mjs';
@@ -59,6 +60,11 @@ const server=http.createServer(async(req,res)=>{
    const control=new AbortController();res.on('close',()=>{if(!res.writableEnded)control.abort();});
    const result=await Promise.allSettled(securities.map(s=>fetchQuote(s,control.signal)));
    return send(res,200,result.map((r,i)=>r.status==='fulfilled'?{security:securities[i],quote:r.value}:{security:securities[i],error:r.reason.message}));
+  }
+  if(url.pathname==='/api/securities/exchanges'&&req.method==='POST'){
+   const {symbols}=await body(req);const control=new AbortController();
+   res.on('close',()=>{if(!res.writableEnded)control.abort();});
+   return send(res,200,await lookupSecurityExchanges(symbols,control.signal));
   }
   if(url.pathname==='/api/health'&&req.method==='GET'){try{await storage.ping();return send(res,200,{ok:true,storage:'mongodb'});}catch{return send(res,503,{ok:false,storage:'mongodb'});}}
   if(url.pathname==='/api/jobs'&&req.method==='GET'){

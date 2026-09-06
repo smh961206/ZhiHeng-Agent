@@ -8,6 +8,8 @@ import {Card} from './ui/card';
 import {Input} from './ui/input';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from './ui/select';
 import {Skeleton} from './ui/skeleton';
+import {useSecurityExchanges} from '../hooks/use-security-exchanges';
+import {securityDisplayLabel} from '../../shared/security-display.mjs';
 
 const PAGE_SIZE = 8;
 const groups = [['all', '全部'], ['active', '进行中'], ['completed', '已完成'], ['failed', '失败'], ['cancelled', '已取消']];
@@ -31,9 +33,9 @@ function securitiesOf(job) {
   return Array.isArray(securities) ? securities : [];
 }
 
-function searchableText(job) {
+function searchableText(job, exchanges) {
   return [titleOf(job), modeOf(job), modeLabel(job), job.researchOutcome?.action, job.researchOutcome?.confidence, ...securitiesOf(job).flatMap(security =>
-    typeof security === 'string' ? [security] : [security?.name, security?.symbol, security?.ticker, security?.market]
+    [securityDisplayLabel(security, exchanges), ...(typeof security === 'string' ? [security] : [security?.name, security?.symbol, security?.ticker, security?.market])]
   )].filter(Boolean).join(' ').toLocaleLowerCase();
 }
 
@@ -43,6 +45,7 @@ function FallbackStatus({status}) {
 
 // The legacy onOpen prop may still be passed; Link continues to own navigation, including new tabs.
 export default function ResearchHistory({jobs = [], onStart, renderDelete, Status = FallbackStatus, opening, jobsLoading = false, jobsError, onRefresh}) {
+  const exchanges = useSecurityExchanges(jobs);
   const [params, setParams] = useSearchParams();
   const [refreshing, setRefreshing] = useState(false);
   const [refreshError, setRefreshError] = useState(null);
@@ -63,7 +66,7 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
   const hasFilters = Boolean(query.trim()) || status !== 'all' || mode !== 'all';
   const terms = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
   const searched = records.filter(job => {
-    const text = searchableText(job);
+    const text = searchableText(job, exchanges);
     return terms.every(term => text.includes(term));
   });
   const modeFiltered = searched.filter(job => mode === 'all' || modeOf(job) === mode);
@@ -177,17 +180,17 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
             const created = dateOf(job.createdAt);
             const validDate = Number.isFinite(created.getTime());
             const sourceCount = job.sourceCount ?? job.input?.sources?.length ?? 0;
-            const securities = securitiesOf(job).map(security => typeof security === 'string' ? security : security?.symbol || security?.name || security?.ticker).filter(Boolean);
+            const securities = securitiesOf(job).map(security => securityDisplayLabel(security, exchanges)).filter(Boolean);
             const recordMode = modeOf(job);
+            const openLabel = job.status === 'completed' ? '查看报告' : ['queued', 'running'].includes(job.status) ? '查看进展' : null;
             return <li className="rh-row" key={job.id} data-status={job.status}>
               <Link className="rh-open" to={'/research/' + encodeURIComponent(job.id)} aria-busy={opening === job.id}>
                 <div className="rh-row-copy">
-                  <strong className="rh-title" title={titleOf(job)}><Highlight text={titleOf(job)} terms={terms}/></strong>
-                  <div className="rh-mode-row"><span>研究模式</span><Badge variant="outline" className="rh-mode" data-mode={recordMode}><Highlight text={modeLabel(job)} terms={terms}/></Badge></div>
-                  <div className="rh-meta">{job.researchOutcome?.action&&<Badge variant="secondary" className="rh-outcome" title={'研究判断 · 置信度 '+job.researchOutcome.confidence}><Highlight text={job.researchOutcome.action} terms={terms}/></Badge>}{securities.length > 0 && <span className="rh-securities" title={securities.join(' · ')}><Highlight text={securities.join(' · ')} terms={terms}/></span>}<span className="rh-source-total"><FileText size={13} aria-hidden="true"/>{sourceCount} 份资料</span></div>
+                  <div className="rh-title-row"><strong className="rh-title" title={titleOf(job)}><Highlight text={titleOf(job)} terms={terms}/></strong><Badge variant="outline" className="rh-mode" data-mode={recordMode}><Highlight text={modeLabel(job)} terms={terms}/></Badge></div>
+                  <div className="rh-meta">{job.researchOutcome?.action&&<Badge variant="secondary" className="rh-outcome" title={'研究判断 · 置信度 '+job.researchOutcome.confidence}><Highlight text={job.researchOutcome.action} terms={terms}/></Badge>}{securities.length > 0 && <span className="rh-securities" title={securities.join(' · ')}>{securities.map((symbol, index) => <span className="rh-security" key={index} title={symbol.startsWith('US:')?symbol+' · 交易所信息待核实':symbol}>{index > 0 && ' · '}<Highlight text={symbol} terms={terms}/></span>)}</span>}<span className="rh-source-total"><FileText size={13} aria-hidden="true"/>{sourceCount} 份资料</span></div>
                 </div>
                 <span className="rh-created"><span>创建时间</span><time className="rh-time" dateTime={validDate ? created.toISOString() : undefined} title={validDate ? dateFormatter.format(created) : undefined}>{validDate ? dateFormatter.format(created) : '时间未记录'}</time></span>
-                <span className="rh-row-state"><Status status={job.status}/><span className="rh-open-hint">{opening === job.id ? <><LoaderCircle size={13} className="rh-spin" aria-hidden="true"/>加载中</> : job.status === 'completed' ? '查看报告' : ['queued', 'running'].includes(job.status) ? '查看进展' : '查看记录'}<ChevronRight size={14} aria-hidden="true"/></span></span>
+                <span className="rh-row-state"><Status status={job.status}/>{(opening === job.id || openLabel)&&<span className="rh-open-hint">{opening === job.id ? <><LoaderCircle size={13} className="rh-spin" aria-hidden="true"/>加载中</> : openLabel}<ChevronRight size={14} aria-hidden="true"/></span>}</span>
               </Link>
               {renderDelete && <div className="rh-delete">{renderDelete(job)}</div>}
             </li>;

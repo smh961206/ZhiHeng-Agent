@@ -600,6 +600,29 @@ for(const width of [320,1440])test(`quick-screen-follow-up-${width}`,{jobs:[scre
  assert.match(await page.getByRole('textbox',{name:'组合上下文'}).inputValue(),/上次快筛的待验证事项/);assert.match(await page.getByRole('textbox',{name:'组合上下文'}).inputValue(),/实际用途/);await noOverflow(page,`prepared deep ${width}`);
 });
 const screenPending=makeJob(907,'running',{mode:'A',question:'快速筛选合成标的'});delete screenPending.liveReport;
+for(const width of [320,780,1440]){
+ const jobs=['running','queued','completed','failed','cancelled'].map((status,index)=>makeJob(1100+index,status,{mode:'D'}));
+ test(`progress-status-card-${width}`,{jobs,viewport:{width,height:1000}},async({page,requests})=>{
+  for(const job of jobs){
+   await detail(page,job);
+   const card=page.getByLabel('研究进展',{exact:true});
+   assert.equal(await card.getAttribute('data-progress-state'),job.status);
+   const style=await card.evaluate(element=>({border:getComputedStyle(element).borderTopWidth,radius:getComputedStyle(element).borderRadius,font:getComputedStyle(element.querySelector('strong')).fontSize}));
+   assert.equal(style.border,'1px');assert.equal(style.radius,'12px');assert.ok(parseFloat(style.font)>=14);
+   await count(card.locator('.rd-spin'),job.status==='running'?1:0);
+   await count(card.locator('.rd-progress-error'),job.status==='failed'?1:0);
+   if(job.status==='failed')await textIncludes(card.locator('.rd-progress-error'),job.error);
+   const trigger=card.getByRole('button',{name:'研究过程',exact:true});
+   await trigger.focus();await page.keyboard.press('Enter');
+   await page.getByRole('dialog',{name:'研究过程',exact:true}).waitFor();
+   await closeProcess(page);
+   await eventually(()=>trigger.evaluate(element=>element===document.activeElement),'Closing the process drawer restores keyboard focus');
+   await noOverflow(page,`progress status ${job.status} ${width}`);
+   if(job.status==='running')await screenshot(page,`progress-status-card-${width}`);
+  }
+  assert.equal(requests('POST','/api/jobs').length,0);
+ });
+}
 screenPending.workflow.stages=screenPending.workflow.stages.map(stage=>({...stage,status:stage.id==='task'?'completed':stage.id==='evidence'?'running':'pending'}));
 const screenFailed=makeJob(908,'failed',{mode:'A'}),screenCancelled=makeJob(909,'cancelled',{mode:'A'});
 for(const width of [320,1440])test(`quick-screen-progress-${width}`,{jobs:[screenPending,screenFailed,screenCancelled],viewport:{width,height:1000}},async({page,requests})=>{

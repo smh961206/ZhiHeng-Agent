@@ -23,6 +23,7 @@ import {Popover,PopoverTrigger,PopoverContent} from './ui/popover';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from './ui/tabs';
 import DocumentReadingSummary from './DocumentReadingSummary';
 import ResearchProgress from './ResearchProgress';
+import {researchProgress} from '../../shared/research-progress.mjs';
 import ResearchDecision from './ResearchDecision';
 import {modes} from '../../shared/research-framework.mjs';
 import {reportPreview} from '../../shared/report-preview.mjs';
@@ -596,6 +597,11 @@ function DetailView({job, tab, onTabChange, streamConnection, onRetry, retrying,
   function closeProcess(event){if(processDestination.current){event.preventDefault();const next=processDestination.current;processDestination.current=null;showContent(next);}}
   const actionProps={reading,setReading,active,hasReport,cancelling,onCancel,onRetry:retryAction,retrying,onReuse,onDownload,saveOnly:needsSaveRetry(job),saving:isSavingResult(job),saveUnavailable:recovery?.kind==='save-unavailable'};
   const title=job.input?.question||job.question||'未命名研究';
+  const progressState=researchProgress(job);
+  const progressFailed=job.status==='failed'||job.delivery?.status==='failed';
+  const failureReason=progressFailed?(typeof job.error==='string'&&job.error.trim()||'未记录具体失败原因，可查看研究过程与执行轨迹。'):'';
+  const executionReason=progressFailed&&typeof job.delivery?.executionError==='string'?job.delivery.executionError.trim():'';
+  const ProgressIcon=progressState.busy?LoaderCircle:progressState.status==='queued'?Clock3:progressState.status==='completed'?Check:progressState.status==='cancelled'?Square:CircleAlert;
   const overview=job.status==='queued'?'任务已排队':job.status==='running'
     ?(job.liveReport?.phase==='audit'?'正在复核研究草稿':job.liveReport?.phase==='formatting'?'正在整理研究报告':'研究正在进行')
     :job.status==='completed'?(hasReport?'报告已完成，可以查阅与导出':'研究已结束，未找到报告正文')
@@ -612,9 +618,10 @@ function DetailView({job, tab, onTabChange, streamConnection, onRetry, retrying,
     {retryError&&<Alert ref={retryAlert} tabIndex={-1} variant="destructive" className="rd-retry-error"><CircleAlert size={17}/><AlertTitle>{needsSaveRetry(job)?'结果仍未保存':'重试未能启动'}</AlertTitle><AlertDescription><p>{retryError}</p><p>{needsSaveRetry(job)?'可稍后重试保存；若提示版本变化或暂存内容不存在，请刷新详情确认最新状态。':'若请求超时或提示版本变化，请先刷新详情确认是否已启动，避免重复操作；输入需调整时可选择“修改研究输入”。'}</p>{onReuse&&!needsSaveRetry(job)&&<Button type="button" variant="ghost" onClick={onReuse} disabled={retrying}>修改研究输入</Button>}</AlertDescription></Alert>}
     <div className="rd-layout">
       <div className="rd-main-column">
-        <div className={'rd-overview rd-context-strip rd-overview-'+job.status} aria-label="研究进展">
-          <span className="rd-overview-copy"><strong>{screenState?.title||overview}</strong></span>
-          <Sheet open={processOpen} onOpenChange={setProcessOpen}><SheetTrigger asChild><Button type="button" variant="ghost" size="sm" className="rd-process-trigger"><Activity size={15}/>研究过程<ChevronDown size={14}/></Button></SheetTrigger><SheetContent side="right" className="research-detail rd-process-sheet" onCloseAutoFocus={closeProcess}><SheetHeader><SheetTitle>研究过程</SheetTitle><SheetDescription>查看研究设置、执行阶段与资料覆盖。</SheetDescription></SheetHeader><div className="rd-process-body">
+        <div className={'rd-overview rd-context-strip rd-overview-'+job.status} data-progress-state={progressState.status} aria-label="研究进展">
+          <span className="rd-overview-icon" aria-hidden="true"><ProgressIcon size={21} className={progressState.busy?'rd-spin':undefined}/></span>
+          <span className="rd-overview-copy" role="status" aria-atomic="true"><span className="rd-progress-label">研究进展<span aria-hidden="true">·</span>{progressState.label}</span><strong>{screenState?.title||overview}</strong>{failureReason&&<span className="rd-progress-error"><b>{job.delivery?.status==='failed'?'保存问题：':'失败原因：'}</b>{failureReason}</span>}{executionReason&&executionReason!==failureReason&&<span className="rd-progress-error"><b>原执行问题：</b>{executionReason}</span>}</span>
+          <Sheet open={processOpen} onOpenChange={setProcessOpen}><SheetTrigger asChild><Button type="button" variant="outline" size="sm" className="rd-process-trigger" aria-label="研究过程"><Activity size={16} aria-hidden="true"/>查看研究过程<ArrowUpRight size={16} aria-hidden="true"/></Button></SheetTrigger><SheetContent side="right" className="research-detail rd-process-sheet" onCloseAutoFocus={closeProcess}><SheetHeader><SheetTitle>研究过程</SheetTitle><SheetDescription>查看研究设置、执行阶段与资料覆盖。</SheetDescription></SheetHeader><div className="rd-process-body">
     <dl className="rd-meta">
       <div><dt>研究路径</dt><dd>{modes[job.mode]?.name||(job.mode==='auto'?'自动匹配':job.plan?.name||'研究路径未记录')}</dd></div>
       {job.input?.depth&&<div><dt>{quick?'研究目标':'报告深度'}</dt><dd>{quick?'判断是否继续研究':depthLabels[job.input.depth]||job.input.depth}</dd></div>}

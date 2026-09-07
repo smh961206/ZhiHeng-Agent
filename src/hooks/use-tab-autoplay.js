@@ -2,22 +2,25 @@ import {useEffect,useRef,useState} from 'react';
 
 // Keep each tab group independent, and give readers a full interval after interaction.
 export function useTabAutoplay(items,initialValue=items[0],interval=4000){
- const rootRef=useRef(null);
+ const rootRef=useRef(null),hoverTimer=useRef(null);
  const [value,setValue]=useState(initialValue),[revision,setRevision]=useState(0);
  const [hovered,setHovered]=useState(false),[focused,setFocused]=useState(false);
  const [inView,setInView]=useState(false),[visible,setVisible]=useState(true);
  const [reducedMotion,setReducedMotion]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+ function cancelHover(){window.clearTimeout(hoverTimer.current);hoverTimer.current=null;}
+ function select(next){cancelHover();setValue(next);setRevision(current=>current+1);}
 
  useEffect(()=>{
   const media=window.matchMedia('(prefers-reduced-motion: reduce)');
   const onMotion=()=>setReducedMotion(media.matches);
-  const onVisibility=()=>setVisible(document.visibilityState==='visible');
+  const onVisibility=()=>{setVisible(document.visibilityState==='visible');if(document.visibilityState!=='visible')cancelHover();};
   onMotion();onVisibility();
   media.addEventListener('change',onMotion);
   document.addEventListener('visibilitychange',onVisibility);
   const observer=new IntersectionObserver(([entry])=>setInView(entry.isIntersecting&&entry.intersectionRatio>=.1),{threshold:[0,.1]});
   observer.observe(rootRef.current);
   return()=>{
+   cancelHover();
    observer.disconnect();
    media.removeEventListener('change',onMotion);
    document.removeEventListener('visibilitychange',onVisibility);
@@ -42,11 +45,20 @@ export function useTabAutoplay(items,initialValue=items[0],interval=4000){
 
  return {
   value,rootRef,
-  select(next){setValue(next);setRevision(current=>current+1);},
+  select,
+  hoverProps(next){return {
+   onPointerEnter(event){
+    cancelHover();
+    if(event.pointerType==='mouse'&&next!==value)hoverTimer.current=window.setTimeout(()=>select(next),200);
+   },
+   onPointerLeave:cancelHover,
+   onPointerCancel:cancelHover,
+   onPointerDown:cancelHover,
+  };},
   interactionProps:{
    onPointerEnter(event){if(event.pointerType!=='touch')setHovered(true);},
-   onPointerLeave(){setHovered(false);},
-   onPointerCancel(){setHovered(false);},
+   onPointerLeave(){cancelHover();setHovered(false);},
+   onPointerCancel(){cancelHover();setHovered(false);},
    onFocusCapture(){setFocused(true);},
    onBlurCapture(event){if(!event.currentTarget.contains(event.relatedTarget))setFocused(false);},
   },

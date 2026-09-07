@@ -1,5 +1,6 @@
 import {remote} from './market-request.mjs';
 import {createMarketCache} from './market-cache.mjs';
+import {boundedReads} from './bounded-reads.mjs';
 import {lookupSECCompanies,normalizedTicker} from './sec-directory.mjs';
 import {providerStatus} from './data-provider-config.mjs';
 import {fetchLongbridgeQuote} from './longbridge-quotes.mjs';
@@ -19,18 +20,8 @@ export {remote} from './market-request.mjs';
 const now=()=>new Date().toISOString();
 const dateCN=value=>new Date(value).toLocaleDateString('sv-SE',{timeZone:'Asia/Shanghai'});
 const clean=text=>String(text??'').replace(/<[^>]*>/g,'').trim();
-export function validateSecurities(value){
- if(!Array.isArray(value)||value.length>3)throw new Error('每项研究最多3个标的');
- const securities=value.map(x=>{
-  if(!x||!['CN','HK','US'].includes(x.market)||typeof x.symbol!=='string')throw new Error('市场或股票代码无效');
-  const symbol=x.symbol.trim().toUpperCase();
-  if(x.market==='CN'&&!/^[036489]\d{5}$/.test(symbol))throw new Error('A股请输入6位股票代码');
-  if(x.market==='HK'&&!/^\d{1,5}$/.test(symbol))throw new Error('港股请输入1至5位代码');
-  if(x.market==='US'&&!/^[A-Z][A-Z0-9.-]{0,11}$/.test(symbol))throw new Error('美股代码格式无效，例如 AAPL、BRK-B');
-  return {market:x.market,symbol:x.market==='HK'?symbol.padStart(5,'0'):symbol};
- });
- return [...new Map(securities.map(x=>[x.market+':'+x.symbol,x])).values()];
-}
+import {validateSecurities} from '../shared/security-input.mjs';
+export {validateSecurities} from '../shared/security-input.mjs';
 const json=async(url,options)=>{
  const bytes=await remote(url,options);
  try{return JSON.parse(bytes.toString('utf8'));}catch{throw new Error(`${new URL(url).hostname} 返回了无效JSON，接口可能暂不可用或格式已变化`);}
@@ -44,13 +35,13 @@ export function parseEastmoney(data,security,fetchedAt=now()){
  const divisor=10**d.f59;
  const price=validNumber(d.f43),timestamp=validNumber(d.f86);
  if(price===null||price<=0||!timestamp||timestamp<946684800)throw new Error('行情缺少有效价格/行情时间，可能停牌或来源暂不可用');
- return {market:security.market,symbol:security.symbol,name:d.f58,currency:security.market==='HK'?'HKD':'CNY',price:price/divisor,previousClose:validNumber(d.f60)===null?null:d.f60/divisor,changePercent:validNumber(d.f170)===null?null:d.f170/100,marketCap:validNumber(d.f116),pb:validNumber(d.f167)>0?d.f167/100:null,asOf:new Date(timestamp*1000).toISOString(),fetchedAt,provider:'东方财富公开行情',official:false,url:`https://push2.eastmoney.com/api/qt/stock/get?secid=${security.market==='HK'?'116':security.symbol.startsWith('6')?'1':'0'}.${security.symbol}`,notice:'最新可得行情快照；来源可能延迟，非交易所直连。行情币种不代表财报币种。PE口径未核实，未自动用于估值。'};
+ return {market:security.market,symbol:security.symbol,name:d.f58,currency:security.market==='HK'?'HKD':'CNY',price:price/divisor,open:validNumber(d.f46)>0?d.f46/divisor:null,high:validNumber(d.f44)>0?d.f44/divisor:null,low:validNumber(d.f45)>0?d.f45/divisor:null,turnover:validNumber(d.f48)!==null&&d.f48>=0?d.f48:null,previousClose:validNumber(d.f60)===null?null:d.f60/divisor,changePercent:validNumber(d.f170)===null?null:d.f170/100,marketCap:validNumber(d.f116),pb:validNumber(d.f167)>0?d.f167/100:null,asOf:new Date(timestamp*1000).toISOString(),fetchedAt,provider:'东方财富公开行情',official:false,url:`https://push2.eastmoney.com/api/qt/stock/get?secid=${security.market==='HK'?'116':security.symbol.startsWith('6')?'1':'0'}.${security.symbol}`,notice:'最新可得行情快照；来源可能延迟，非交易所直连。行情币种不代表财报币种。PE口径未核实，未自动用于估值。'};
 }
 export function parseYahoo(data,security,fetchedAt=now()){
  const d=data?.chart?.result?.[0]?.meta;
  if(!d||d.symbol?.toUpperCase()!==security.symbol.replaceAll('.','-'))throw new Error('美股行情代码校验失败');
  if(!(validNumber(d.regularMarketPrice)>0)||!(validNumber(d.regularMarketTime)>946684800)||!d.currency)throw new Error('美股行情缺少价格、时间或币种');
- return {market:'US',symbol:security.symbol,name:d.longName||d.shortName||d.symbol,currency:d.currency,price:d.regularMarketPrice,previousClose:validNumber(d.chartPreviousClose),changePercent:validNumber(d.regularMarketChangePercent),asOf:new Date(d.regularMarketTime*1000).toISOString(),fetchedAt,provider:'Yahoo Finance 公开行情',official:false,url:`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(d.symbol)}?interval=1d&range=1d`,notice:'最近常规交易时段行情，可能延迟；不混入盘前盘后价格。非交易所直连。'};
+ return {market:'US',symbol:security.symbol,name:d.longName||d.shortName||d.symbol,currency:d.currency,price:d.regularMarketPrice,high:validNumber(d.regularMarketDayHigh)>0?d.regularMarketDayHigh:null,low:validNumber(d.regularMarketDayLow)>0?d.regularMarketDayLow:null,volume:validNumber(d.regularMarketVolume)!==null&&d.regularMarketVolume>=0?d.regularMarketVolume:null,previousClose:validNumber(d.chartPreviousClose),changePercent:validNumber(d.regularMarketChangePercent),asOf:new Date(d.regularMarketTime*1000).toISOString(),fetchedAt,provider:'Yahoo Finance 公开行情',official:false,url:`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(d.symbol)}?interval=1d&range=1d`,notice:'最近常规交易时段行情，可能延迟；不混入盘前盘后价格。非交易所直连。'};
 }
 export function freshness(quote,reference=Date.now()){
  const age=reference-Date.parse(quote.asOf);
@@ -87,7 +78,8 @@ export function parseTencent(text,security,fetchedAt=now()){
  // Currency positions differ by market. Never infer it from the company name.
  const currencyIndex={CN:82,HK:75,US:35}[security.market];
  if(!(price>0)||parts[currencyIndex]!==currency)throw new Error('备用行情价格或币种校验失败');
- return {market:security.market,symbol:security.symbol,name:security.market==='US'?parts[46]||parts[1]:parts[1],currency,price,previousClose:num(parts[4]),changePercent:num(parts[32]),asOf:security.market==='US'?newYorkTime(parts[30]):chinaTime(parts[30]),fetchedAt,provider:'腾讯财经公开行情（备用源）',official:false,url:`https://qt.gtimg.cn/q=${encodeURIComponent(tencentCode(security))}`,notice:security.market==='US'?'美国东部交易时间按America/New_York转换，处理夏令时。公开行情可能延迟，非交易所直连。':'行情时间按UTC+8转换。公开行情可能延迟，非交易所直连；未核实估值字段不自动用于估值。'};
+ return {market:security.market,symbol:security.symbol,name:security.market==='US'?parts[46]||parts[1]:parts[1],currency,price,open:num(parts[5])>0?num(parts[5]):null,high:num(parts[33])>0?num(parts[33]):null,low:num(parts[34])>0?num(parts[34]):null,
+  volume:num(parts[6])!==null&&num(parts[6])>=0?num(parts[6])*(security.market==='CN'?100:1):null,turnover:num(parts[37])!==null&&num(parts[37])>=0?num(parts[37])*(security.market==='CN'?10000:1):null,previousClose:num(parts[4]),changePercent:num(parts[32]),asOf:security.market==='US'?newYorkTime(parts[30]):chinaTime(parts[30]),fetchedAt,provider:'腾讯财经公开行情（备用源）',official:false,url:`https://qt.gtimg.cn/q=${encodeURIComponent(tencentCode(security))}`,notice:security.market==='US'?'美国东部交易时间按America/New_York转换，处理夏令时。公开行情可能延迟，非交易所直连。':'行情时间按UTC+8转换。公开行情可能延迟，非交易所直连；未核实估值字段不自动用于估值。'};
 }
 export function createQuoteFetcher({request=remote,clock=Date.now,longbridge=fetchLongbridgeQuote,longbridgeConfigured=()=>providerStatus().longbridge.configured,archive}={}){
  const cache=new Map(),read=createMarketCache({maxEntries:256,clock});
@@ -96,7 +88,7 @@ export function createQuoteFetcher({request=remote,clock=Date.now,longbridge=fet
   const quote=await read(key,async shared=>{
    const errors=[];
    const secid=`${security.market==='HK'?'116':security.symbol.startsWith('6')?'1':'0'}.${security.symbol}`;
-   const primary=security.market==='US'?`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(security.symbol.replaceAll('.','-'))}?interval=1d&range=1d`:`https://push2.eastmoney.com/api/qt/stock/get?secid=${secid}&fields=f43,f57,f58,f59,f60,f86,f116,f167,f170`;
+   const primary=security.market==='US'?`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(security.symbol.replaceAll('.','-'))}?interval=1d&range=1d`:`https://push2.eastmoney.com/api/qt/stock/get?secid=${secid}&fields=f43,f44,f45,f46,f48,f57,f58,f59,f60,f86,f116,f167,f170`;
    const providers=[
     [primary,bytes=>(security.market==='US'?parseYahoo:parseEastmoney)(JSON.parse(bytes.toString('utf8')),security,new Date(clock()).toISOString())],
     [`https://qt.gtimg.cn/q=${encodeURIComponent(tencentCode(security))}`,bytes=>parseTencent(new TextDecoder('gb18030').decode(bytes),security,new Date(clock()).toISOString())],
@@ -312,7 +304,7 @@ export async function officialReportList(security,years,mode,signal,{cn=cnReport
   return {...previous,limited:true,stale:true,warnings:[...(previous.warnings||[]),`官方目录刷新失败，使用 ${previous.directoryFetchedAt} 留存目录，可能缺少新披露：${error.message}`]};
  }
 }
-export async function collectMarketData(securities,{years=5,mode='B',signal,emit=()=>{},financials=fetchTushareFinancials,shareholder=fetchShareholderData,valuations=fetchValuationHistory,listReports=officialReportList,readReport=readOfficialReport,capitalReports=cnCapitalReports,quotes=fetchQuote,brokerFundamentals=fetchBrokerFundamentals}={}){
+export async function collectMarketData(securities,{years=5,mode='B',signal,emit=()=>{},reportConcurrency=2,financials=fetchTushareFinancials,shareholder=fetchShareholderData,valuations=fetchValuationHistory,listReports=officialReportList,readReport=readOfficialReport,capitalReports=cnCapitalReports,quotes=fetchQuote,brokerFundamentals=fetchBrokerFundamentals}={}){
  const sources=[],snapshots=[],coverage=[],warnings=[],financialCoverage=[],shareholderCoverage=[],valuationCoverage=[],dataChecks=[];
  const add=s=>sources.push({...s,id:`S${sources.length+1}`});
  for(const security of securities){
@@ -329,10 +321,21 @@ export async function collectMarketData(securities,{years=5,mode='B',signal,emit
    if(security.market==='US'){
     for(const s of list.sources||[]){add(s);if(s.factsCount){outcome.coreFactsRead++;readURLs.add(s.filingUrl);}else outcome.failed.push(s.title+'：无匹配XBRL事实');}
    }
-   for(const report of list.reports){
-     signal?.throwIfAborted();emit('fetch',`${label} 下载并解析：${report.title}`);
-     try{const parsed=await readReport(report,signal);add(parsed);readURLs.add(report.url);outcome.fullTextRead++;if(parsed.cacheWarning)warnings.push(parsed.cacheWarning);warnings.push(...parsingWarnings(parsed).map(warning=>`${report.title}：${warning}`));}
-     catch(e){signal?.throwIfAborted();outcome.failed.push(`${report.title}：${e.message}`);emit('fetch_error',outcome.failed.at(-1));}
+   const distinctReports=[...new Map(list.reports.map(report=>[`${report.security||label}:${report.url}`,report])).values()];
+   outcome.duplicateEntries=list.reports.length-distinctReports.length;outcome.listed=distinctReports.length;
+   let finished=0,succeeded=0,failed=0;const readingStarted=Date.now();
+   const reportReads=await boundedReads(distinctReports,async report=>{
+     emit('fetch',`${label} 下载并解析：${report.title}`);
+     try{const parsed=await readReport(report,signal);succeeded++;return parsed;}
+     catch(error){failed++;throw error;}
+     finally{if(!signal?.aborted)emit('fetch',`${label} 财报读取进度：${++finished}/${distinctReports.length}份已处理，${succeeded}份成功、${failed}份失败`);}
+   },{concurrency:reportConcurrency,signal});
+   outcome.processing={concurrency:reportConcurrency,durationMs:Date.now()-readingStarted,duplicatesSkipped:outcome.duplicateEntries,
+    reusedArchives:reportReads.filter(item=>item.status==='fulfilled'&&item.value.fromCache).length};
+   for(const [index,result] of reportReads.entries()){
+     const report=distinctReports[index];
+     if(result.status==='fulfilled'){const parsed=result.value;add(parsed);readURLs.add(report.url);outcome.fullTextRead++;if(parsed.cacheWarning)warnings.push(parsed.cacheWarning);warnings.push(...parsingWarnings(parsed).map(warning=>`${report.title}：${warning}`));}
+     else{outcome.failed.push(`${report.title}：${result.reason.message}`);emit('fetch_error',outcome.failed.at(-1));}
    }
    outcome.read=readURLs.size;
    const readable=sources.filter(source=>source.security===label&&source.type==='official-report');

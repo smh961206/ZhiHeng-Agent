@@ -29,6 +29,6 @@ process.on('message',async({type,credentials,id,symbol})=>{
   ]);
   const quote=quotes.find(item=>item.symbol===symbol);
   if(!quote)throw new Error('长桥没有返回该证券行情');
-  process.send?.({id,value:{symbol:quote.symbol,lastDone:quote.lastDone.toString(),prevClose:quote.prevClose.toString(),timestamp:quote.timestamp.toISOString(),info}});
+  process.send?.({id,value:{symbol:quote.symbol,lastDone:quote.lastDone.toString(),prevClose:quote.prevClose.toString(),open:quote.open?.toString(),high:quote.high?.toString(),low:quote.low?.toString(),volume:quote.volume,turnover:quote.turnover?.toString(),timestamp:quote.timestamp.toISOString(),info}});
  }catch(error){process.send?.({id,error:redactProviderError(error,secrets)});}
 });

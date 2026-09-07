@@ -79,7 +79,8 @@ test('交付拒绝缺章、伪引用、无证伪、越权动作与虚高置信�
  const quick={...base,mode:'A'},review=reviewFixture(quick);review.decision.action='建仓候选';assert.throws(()=>validate(review,quick),/研究动作/);
  const update={...base,mode:'C'},changed=reviewFixture(update);changed.decision.action='升级';changed.decision.gates.forEach(gate=>gate.status='passed');assert.throws(()=>validate(changed,update),/建立本期基线/);
  assert.equal(validate(reviewFixture(update),update).decision.baselineStatus,'new_baseline');
- assert.equal(validate(reviewFixture(update),{...update,previousResearch:'真实提供的旧假设'}).decision.baselineStatus,'compared');
+ const withBaseline={...update,previousResearch:'真实提供的旧假设'};
+ assert.equal(validate(reviewFixture(withBaseline),withBaseline).decision.baselineStatus,'compared');
 });
 
 test('用户问题中的来源标记不充作报告证据，也不误判为模型捏造引用',()=>{

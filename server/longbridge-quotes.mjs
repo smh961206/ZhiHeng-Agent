@@ -18,6 +18,8 @@ export function parseLongbridge(value,security,fetchedAt=new Date().toISOString(
  return {market:security.market,symbol:security.symbol,name:value.info.name||security.symbol,currency:value.info.currency,price,
   shareCapital:{totalShares:shares(value.info.totalShares),circulatingShares:shares(value.info.circulatingShares),hkShares:security.market==='HK'?shares(value.info.hkShares):null,unit:'股',fetchedAt:value.info.fetchedAt||fetchedAt,asOf:null,shareBasisVerified:false,
    notice:'证券基础信息快照，数据生效日期未提供，抓取时间不是生效日。总股本、流通股本及港股股数分列；不代表稀释加权平均股本，A/H与ADR每份对应股数仍须核对。'},
+  open:number(value.open)>0?number(value.open):null,high:number(value.high)>0?number(value.high):null,low:number(value.low)>0?number(value.low):null,
+  volume:Number.isSafeInteger(value.volume)&&value.volume>=0?value.volume:null,turnover:number(value.turnover)!==null&&number(value.turnover)>=0?number(value.turnover):null,
   previousClose:previousClose>0?previousClose:null,changePercent:previousClose>0?(price/previousClose-1)*100:null,
   asOf:new Date(time).toISOString(),fetchedAt,provider:'长桥 OpenAPI',official:false,url:'https://open.longbridge.cn/zh-CN/docs/quote/pull/quote',
   notice:'长桥账户授权行情；延迟取决于市场权限。使用常规行情字段，不混入盘前、盘后及夜盘价格。行情币种与财报币种分别核对。'};

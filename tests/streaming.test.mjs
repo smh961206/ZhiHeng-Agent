@@ -8,6 +8,11 @@ import {reviewFixture} from './fixtures/research-review.mjs';
 import {reportPreview} from '../shared/report-preview.mjs';
 const frame=(delta,finish_reason=null)=>'data: '+JSON.stringify({choices:[{index:0,delta,finish_reason}]})+'\r\n\r\n';
 function response(text){const bytes=Buffer.from(text);return new Response(new ReadableStream({start(c){for(let i=0;i<bytes.length;i+=3)c.enqueue(bytes.subarray(i,i+3));c.close();}}),{headers:{'Content-Type':'text/event-stream'}});}
+test('DeepSeek thinking context survives tool turns without entering user-facing deltas',async()=>{
+ const visible=[];
+ const result=await readCompletion(response(frame({reasoning_content:'synthetic internal context'})+frame({content:'可见正文'})+frame({tool_calls:[{index:0,id:'t1',function:{name:'read_rules',arguments:'{}'}}]})+frame({},'tool_calls')+'data: [DONE]\n\n'),text=>visible.push(text));
+ assert.equal(result.reasoning_content,'synthetic internal context');assert.deepEqual(visible,['可见正文']);assert.equal(result.tool_calls[0].id,'t1');
+});
 const complete=text=>response(frame({content:text})+frame({},'stop')+'data: [DONE]\n\n');
 test('stream parser preserves split Chinese characters and joins tool arguments',async()=>{
  const deltas=[];const r=await readCompletion(response(': heartbeat\n\n'+frame({content:'现金流'})+frame({tool_calls:[{index:0,id:'call_1',function:{name:'calculate_p2',arguments:'{"pe":'}}]})+frame({tool_calls:[{index:0,function:{arguments:'12.5}'}}]})+frame({},'tool_calls')+'data: [DONE]\n\n'),d=>deltas.push(d));

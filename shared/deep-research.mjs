@@ -1,3 +1,4 @@
+import {calculationProgress} from './calculation-progress.mjs';
 // Public product copy and execution requirements; never company facts.
 export const deepResearchCopy = {
  example: '比亚迪深度投资研究：验证海外增长能否抵消国内压力、再投资能否创造持续资本回报，并比较 A/H 股的估值区间与安全边际。',
@@ -17,10 +18,15 @@ export const deepResearchCopy = {
 export const deepResearchRules = `MODE B 深度研究执行要求：先用公开研究计划说明核心问题、竞争假设、需要的证据与模型选择理由，不披露或模拟内部隐藏思维。先读取当前资料，再按缺口补充，计算保留输入、公式、来源、期间、币种和单位。${deepResearchCopy.boundaries.join(' ')} 使用 calculate_screen_metrics 核对历史统计、单季及现金流；正常化ROE×权益×PE适用时使用 calculate_normalized_earnings，对悲观、基准、乐观假设分别计算，不把假设当作事实。完整展开报告须解释三情景、敏感性和模型冲突，数据不足时说明哪些估值无法可靠完成。researchSummary只总结本次已读证据、公开判断依据和未解问题，不复制计划冒充已验证结论，不编造调用。最终区分公司质量、当前价格与研究动作，并列后续验证指标、观察期间、升级及证伪条件。`;
 
 export function requiresResearchSummary(plan) {
- return (plan.mode==='A' && plan.contractVersion>=3) || (plan.mode==='B' && plan.contractVersion>=4);
+ return (plan.mode==='A' && plan.contractVersion>=3) || (plan.mode==='B' && plan.contractVersion>=4) || (plan.mode==='C' && plan.contractVersion>=5) || (plan.mode==='D' && plan.contractVersion>=6);
 }
 
 export function deepResearchProgress(job,hasReport=false) {
+ const calculation=calculationProgress(job);
+ if(job.status==='completed'&&hasReport&&['partial','failed'].includes(calculation.status))return {
+  title:calculation.status==='partial'?'深度研究报告已生成，计算部分完成':'深度研究报告已生成，计算未完成',
+  text:'报告生成不代表所有计算通过。请展开下方计算记录，结合报告中的数据缺口与适用条件阅读。',
+ };
  const fixed={
   queued:['深度研究已排队','已保存研究问题与设置，等待读取资料。验证计划可在下方展开。'],
   failed:['深度研究未完成','尚未形成正式研究判断。已保留输入和执行记录，可重试并重新取证。'],

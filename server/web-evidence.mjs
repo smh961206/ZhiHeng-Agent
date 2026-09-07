@@ -4,6 +4,8 @@ import {extractHTML} from './filing-text.mjs';
 import {PARSER_VERSION,parsingWarnings,readableCharacterCount} from './document-layout.mjs';
 import {parsedDigest,validParsedArchive} from './document-integrity.mjs';
 import {extractPDF} from './pdf-extractor.mjs';
+import {needsVisualUpgrade} from './visual-reading.mjs';
+import {readDocument,documentKind} from './document-reader.mjs';
 import {fetchWebDocument,publicWebURL} from './web-evidence-request.mjs';
 import {dataArchive} from './data-archive.mjs';
 
@@ -63,15 +65,22 @@ export function createWebEvidenceReader({fetchDocument=fetchWebDocument,parsePDF
   let cached,cacheWarning;
   try{cached=await archive?.get(key,{maxAgeMs:30*86400000});}catch{cacheWarning='网页归档读取失败，本次尝试原始网页';}
   signal?.throwIfAborted();
-  if(!cached){try{cached=await archive?.get(`web-body:v1:${security||'general'}:${requested}`,{maxAgeMs:30*86400000});if(cached)cached={...cached,legacyParser:true};}catch{}}
   if(cached&&(!cached.documentRead||cached.requestedUrl!==requested||cached.security!==security||!validParsedArchive(cached)))cached=null;
+  if(!cached)for(const version of ['evidence-9','evidence-8','evidence-7','evidence-6','evidence-5','evidence-4','evidence-3','v1']){
+   try{
+    const legacy=await archive?.get(`web-body:${version}:${security||'general'}:${requested}`,{maxAgeMs:30*86400000});
+    if(legacy?.documentRead&&legacy.requestedUrl===requested&&legacy.security===security&&validParsedArchive(legacy)){cached={...legacy,legacyParser:true};break;}
+   }catch{}
+  }
+  if(cached&&cached.parserVersion!==PARSER_VERSION)cached={...cached,legacyParser:true};
   if(cached){Object.assign(cached,sourceAuthority(cached.url,security));cached.metadataWarnings=(cached.metadataWarnings||[]).filter(warning=>warning!=='发布者身份未由配置的机构/公司域名确认');if(!cached.authorityVerified)cached.metadataWarnings.push('发布者身份未由配置的机构/公司域名确认');}
-  if(cached&&!cached.legacyParser&&clock()-Date.parse(cached.fetchedAt)<6*3600000)return {...cached,fromCache:true};
+  const cacheAge=cached?clock()-Date.parse(cached.fetchedAt):NaN;
+  if(cached&&!cached.legacyParser&&!needsVisualUpgrade(cached,cacheAge)&&cacheAge>=0&&cacheAge<6*3600000)return {...cached,fromCache:true};
   try{
    const response=await fetchDocument(requested,{signal});signal?.throwIfAborted();
    const url=publicWebURL(response.url).href;let content,metadata;
-   if(response.bytes.subarray(0,1024).toString('latin1').includes('%PDF-')){
-    content=await parsePDF(response.bytes,signal);metadata=extractWebMetadata('',content.text,clock);
+   if(documentKind(response.bytes,url)){
+    content=await readDocument(response.bytes,{name:url,signal,parsePDF});metadata=extractWebMetadata('',content.text,clock);
    }else{
     if(/\.pdf$/i.test(new URL(url).pathname)||response.contentType.includes('application/pdf'))throw new Error('原始链接未返回有效PDF');
     const html=decodeBody(response.bytes,response.contentType);

@@ -1,4 +1,5 @@
 import {modes,resolveMode,portfolioFields} from '../shared/research-framework.mjs';
+import {normalizeReferenceMaterials} from '../shared/reference-materials.mjs';
 export {modes} from '../shared/research-framework.mjs';
 export function route(input){
   return resolveMode(input);
@@ -11,8 +12,9 @@ export function validateInput(x){
   const securities=validateSecurities(x.securities??[]);
   if(x.historyYears!==undefined&&![3,5,8].includes(x.historyYears))throw new Error('历史范围须为3、5或8年');
   if(!securities.length)throw new Error('请添加至少一个研究标的，系统将自动抓取行情和官方财报');
-  if(!Array.isArray(x.sources??[])||(x.sources??[]).length>12)throw new Error('最多12份资料');
-  for(const s of x.sources??[]){if(!s||typeof s.title!=='string'||!s.title.trim()||s.title.length>200||typeof s.text!=='string'||!s.text.trim()||s.text.length>100000)throw new Error('资料标题/正文无效或超限');if(s.url && (typeof s.url!=='string'||!/^https?:\/\//i.test(s.url)))throw new Error('来源链接必须使用http(s)');}
+  if(resolveMode(x)==='D'&&securities.length<2)throw new Error('多公司比较至少需要2个不同标的，请补充比较对象');
+  if(x.referenceMaterials!=null&&x.sources?.length)throw new Error('请统一使用补充资料字段，避免重复提交');
+  const referenceMaterials=normalizeReferenceMaterials(x.referenceMaterials??x.sources??[]);
   if(x.portfolio!==undefined&&(typeof x.portfolio!=='string'||x.portfolio.length>20000))throw new Error('组合上下文无效');
   if(x.previousResearch!==undefined&&(typeof x.previousResearch!=='string'||x.previousResearch.length>30000))throw new Error('上次研究结论最多30000字');
   if(x.baselineJobId!=null&&x.baselineJobId!==''&&(typeof x.baselineJobId!=='string'||! /^[\da-f-]{36}$/i.test(x.baselineJobId)))throw new Error('对照研究编号无效');
@@ -20,7 +22,7 @@ export function validateInput(x){
   const portfolioContext={};
   for(const {id,label} of portfolioFields){const value=x.portfolioContext?.[id];if(value!==undefined&&(typeof value!=='string'||value.length>4000))throw new Error(label+'最多4000字');if(value?.trim())portfolioContext[id]=value.trim();}
   return {question:x.question.trim(),mode:x.mode??'auto',depth:x.depth??'Standard',portfolio:x.portfolio??'',securities,historyYears:x.historyYears??5,sources:[],
-    previousResearch:x.previousResearch?.trim()||'',baselineJobId:x.baselineJobId||null,portfolioContext};
+    previousResearch:x.previousResearch?.trim()||'',baselineJobId:x.baselineJobId||null,portfolioContext,...(referenceMaterials.length?{referenceMaterials}:{})};
 }
 
 import {validateSecurities} from './market-data.mjs';

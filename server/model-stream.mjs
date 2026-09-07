@@ -14,6 +14,9 @@ export async function readCompletion(response,onDelta=()=>{}){
   const choice=chunk.choices?.find(c=>c.index===0)||chunk.choices?.[0];if(!choice)return;
   if(choice.finish_reason){checkFinish(choice.finish_reason);finished=true;}
   const delta=choice.delta??{};
+  // Required when DeepSeek thinking-mode tool calls continue. Keep this only
+  // inside model messages; never emit it as report text or trace events.
+  if(typeof delta.reasoning_content==='string')message.reasoning_content=(message.reasoning_content||'')+delta.reasoning_content;
   if(typeof delta.content==='string'){message.content+=delta.content;onDelta(delta.content);}
   for(const tool of delta.tool_calls??[]){
    const index=tool.index;if(!Number.isInteger(index)||index<0||index>=12)throw new Error('模型工具分片索引无效');
@@ -29,11 +32,11 @@ export async function readCompletion(response,onDelta=()=>{}){
   if(done)break;
  }
  if(!done){buffer+=decoder.decode();if(buffer.trim())consume(buffer);}
- if(!done||!finished)throw new Error('模型流式响应中断，请重试');
+ if(!done||!finished)throw Object.assign(new Error('模型流式响应中断，请重试'),{code:'model_stream_incomplete'});
  if(calls.size){message.tool_calls=[...calls.entries()].sort((a,b)=>a[0]-b[0]).map(([,call])=>call);if(message.tool_calls.some(c=>!c.id||!c.function.name))throw new Error('模型工具调用不完整');}
  return message;
 }
 function checkFinish(reason){
- if(reason==='length')throw new Error('模型输出被截断，请缩短资料或提高模型输出限额后重试');
- if(reason==='content_filter')throw new Error('模型未能完成报告，输出已被过滤');
+ if(reason==='length')throw Object.assign(new Error('模型输出被截断，请缩短资料或提高模型输出限额后重试'),{code:'model_output_truncated'});
+ if(reason==='content_filter')throw Object.assign(new Error('模型未能完成报告，输出已被过滤'),{code:'model_refusal'});
 }

@@ -1,3 +1,5 @@
+import {evidenceBlocks} from './evidence-search.mjs';
+import {usableEvidenceBlock} from './document-layout.mjs';
 const finite = x => typeof x === 'number' && Number.isFinite(x);
 const positive = x => finite(x) && x > 0;
 export function correction(d) {
@@ -42,15 +44,24 @@ export function calculationBasis(basis,sources){
  }
  if(!Array.isArray(basis.sourceIds)||!basis.sourceIds.length||basis.sourceIds.some(id=>!sources.some(source=>source.id===id&&!['filing-index','data-check','search-result','search-summary'].includes(source.type))))throw new Error('计算参数须关联实际资料ID，搜索摘要、披露目录与覆盖检查不能代替正文证据');
  const evidence=sources.filter(source=>basis.sourceIds.includes(source.id));
+ const duplicateIds=[...new Set(evidence.map(source=>source.id))].filter(id=>evidence.filter(source=>source.id===id).length>1);
+ if(duplicateIds.length)throw Object.assign(new Error('计算引用的资料编号重复，无法唯一定位：'+duplicateIds.join('、')),{code:'calculation_evidence',sourceIds:duplicateIds});
+ const missingBlocks=evidence.filter(source=>['official-report','web-evidence'].includes(source.type)&&Array.isArray(source.documentBlocks)&&!source.documentBlocks.length&&!source.financialFacts?.length);
+ if(missingBlocks.length)throw Object.assign(new Error('所选已解析资料没有可引用的正文证据块，须重新读取或补充原件'),{code:'calculation_evidence',sourceIds:missingBlocks.map(source=>source.id)});
  const references=basis.evidenceBlocks||[];
  if(!Array.isArray(references)||references.length>30)throw new Error('计算证据块清单格式无效');
  const referencedBlocks=references.map(reference=>{
-  const source=evidence.find(source=>source.id===reference?.sourceId),block=source?.documentBlocks?.find(block=>block.id===reference?.blockId);
-  if(!block)throw new Error('计算引用的原文证据块不存在或不属于所选资料');
+  const candidates=evidence.filter(source=>source.id===reference?.sourceId),source=candidates[0];
+  const blocks=source?evidenceBlocks(source).filter(block=>block.id===reference?.blockId):[];
+  if(candidates.length>1||blocks.length>1)throw Object.assign(new Error('计算引用的资料或证据块编号重复，无法唯一定位：'+String(reference?.sourceId)+' / '+String(reference?.blockId)),{code:'calculation_evidence',sourceIds:[reference?.sourceId].filter(Boolean)});
+  const block=blocks[0];
+  if(!block)throw Object.assign(new Error('计算引用的原文证据块不存在或不属于所选资料：'+String(reference?.sourceId)+' / '+String(reference?.blockId)),{code:'calculation_evidence',sourceIds:[reference?.sourceId].filter(Boolean)});
   return {source,block};
  });
- const nativeReference=referencedBlocks.some(({source,block})=>source.official===true&&source.type==='official-report'&&block.method!=='ocr'&&!block.needsReview&&!block.truncated);
- if(evidence.some(source=>source.qualitySummary?.ocrPages)&&!nativeReference&&!evidence.some(source=>source.official===true&&(source.type==='official-xbrl'&&source.factsCount>0||source.type==='official-report'&&!source.qualitySummary?.ocrPages&&!source.truncated&&!source.emptyPages&&!source.legacyParser)))throw new Error('OCR识别数字仍待核对，须关联非OCR的官方XBRL/原文；混合PDF请用evidenceBlocks明确引用已检索的非OCR正文块');
+ const unsafe=referencedBlocks.filter(({source,block})=>block.method==='ocr'||block.truncated||['official-report','official-xbrl','web-evidence'].includes(source.type)&&(block.needsReview||block.symbolReview));
+ if(unsafe.length)throw Object.assign(new Error('计算引用的OCR或待核对正文块不能作为数值依据；请改用已检索且可核对的非OCR官方正文'),{code:'calculation_evidence',sourceIds:[...new Set(unsafe.map(({source})=>source.id))]});
+ const nativeReference=referencedBlocks.some(({source,block})=>usableEvidenceBlock(source,block));
+ if(evidence.some(source=>source.qualitySummary?.ocrPages)&&!nativeReference&&!evidence.some(source=>source.official===true&&(source.type==='official-xbrl'&&source.factsCount>0||source.type==='official-report'&&!source.qualitySummary?.ocrPages&&!source.truncated&&!source.emptyPages&&!source.legacyParser)))throw Object.assign(new Error('OCR识别数字仍待核对，须关联非OCR的官方XBRL/原文；混合PDF请用evidenceBlocks明确引用已检索的非OCR正文块'),{code:'calculation_evidence',sourceIds:evidence.filter(source=>source.qualitySummary?.ocrPages).map(source=>source.id)});
  if(new Set(evidence.map(source=>source.security).filter(Boolean)).size>1)throw new Error('单标的估值不能混用不同证券或不同股类的资料');
  if(evidence.some(source=>source.type==='web-evidence'&&(!source.documentRead||!source.authorityVerified||!source.publishedAt)))throw new Error('网页财务数值须已读取正文、确认来源机构并取得原文发布日期；未知身份、日期或摘要不能用于计算');
  if(evidence.some(source=>['vendor-financials','shareholder-data','valuation-history','web-evidence'].includes(source.type))&&!evidence.some(source=>source.official===true&&['official-report','official-xbrl'].includes(source.type)))throw new Error('补充财务及股东回报数据须关联已读取的官方披露，核对币种、单位、期间和股本后计算');

@@ -1,4 +1,5 @@
 // Presentation only: a readable preview is still an unreviewed draft, never a final report.
+import {deduplicateReportHeadings,reportSectionBody} from './report-headings.mjs';
 export function reportPreview(raw,plan,depth=0){
  if(typeof raw!=='string'||depth>3)return '';
  let body=raw,probe=body.trimStart();
@@ -17,7 +18,7 @@ export function reportPreview(raw,plan,depth=0){
  }
  const first=probe[0];
  const structured=first==='{'||first==='"'||/^\[\s*(?:\{|"|\]|$)/.test(probe);
- if(!structured)return body;
+ if(!structured)return deduplicateReportHeadings(body);
  // Incomplete structured responses stay hidden until their report text can be decoded.
  const last=probe.trimEnd().at(-1),closing={'{':'}','[':']','"':'"'}[first];
  if(last!==closing)return '';
@@ -32,6 +33,6 @@ export function reportPreview(raw,plan,depth=0){
   const content=reportPreview(section?.text,plan,depth+1);
   if(!content.trim())return [];
   const title=expected?.find(item=>item.id===section.id)?.title||'研究内容';
-  return ['## '+title+'\n\n'+content];
+  return ['## '+title+'\n\n'+reportSectionBody(title,content)];
  }).join('\n\n');
 }

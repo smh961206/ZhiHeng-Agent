@@ -45,6 +45,8 @@ bash deploy.sh upgrade
 
 ## 备份与失败恢复
 
+模型原页视图另外保存在 `visual_attachments` 持久卷（容器内 `/app/data/visual-attachments`）。重新创建应用容器会保留此卷。现有 `deploy.sh backup` 仅备份 MongoDB，迁移服务器时还需复制此卷；原页缺失不会冒充视觉审计完成，而会在研究中记录未纳入原因。
+
 ```bash
 bash deploy.sh backup
 # 仅在明确接受丢弃备份之后的数据时执行：

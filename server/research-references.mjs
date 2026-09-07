@@ -70,6 +70,7 @@ export function normalizeReviewReferences(value){
  }
  const normalized={...value,audit:normalize(value.audit),sections:array(value.sections,item=>record(item,['text'])),decision};
  if(value.researchSummary)normalized.researchSummary={...value.researchSummary,checks:array(value.researchSummary.checks,item=>record(item,['topic','assessment','unresolved']))};
+ if(value.comparisonDecisions)normalized.comparisonDecisions=array(value.comparisonDecisions,item=>({...record(item,['summary','unresolved']),falsifiers:array(item?.falsifiers,normalize)}));
  return {value:normalized,changed};
 }
 
@@ -100,6 +101,8 @@ export function validateReportReferences({reportBody,audit,decision,sections,res
 }
 
 export function reviewRepairMessage(error,sources){
+ if(error.code==='review_json'||['model_output_truncated','model_stream_incomplete'].includes(error.code))return '审计输出未能完整解析：'+error.message+'。这是格式或传输问题，不代表研究结论错误。依据同一份草稿、资料和交付协议重新返回完整JSON对象，不接续残缺片段。\n'+
+  JSON.stringify({issues:error.validationIssues??[],instruction:'只输出一个JSON对象，不添加说明或代码围栏。字符串内的双引号、反斜杠、换行必须正确转义。保留全部必需章节与字段，删去重复叙述以控制长度；不编造数值、日期、引用或证据，不将failed改成passed来凑格式。完成格式修复后仍须复查原交付协议与引用规则。'});
  return '程序交付检查未通过：'+(error instanceof SyntaxError?'审计返回JSON格式无效':error.message)+'。依据已有证据修正，不能伪造缺失字段或提高结论强度。重新输出完整JSON。\n'+
-  JSON.stringify({issues:error.validationIssues??[],references:referenceContract(sources),instruction:'逐项修正本次列出的全部问题，并复查完整协议。保留已有效关联的正文引用；摘要和审计中的引用不能代替正文引用。仅在已读证据支持时补回实际编号；无法核实的事实删除或标明数据不足，保留缺口及影响。'});
+  JSON.stringify({issues:error.validationIssues??[],references:referenceContract(sources),instruction:'逐项修正本次列出的全部问题，并复查完整协议。研究动作只能选择原协议中的一个完整选项；dataAsOf只写真实研究截止日YYYY-MM-DD，日期说明放正文。资料不足但已披露影响并收敛判断可标limited，同时保持较低置信度和适用的研究动作。failed意味着报告仍有实质错误，须先修正正文和结论，不能只改状态来通过。保留已有效关联的正文引用；摘要和审计中的引用不能代替正文引用。仅在已读证据支持时补回实际编号；无法核实的事实删除或标明数据不足，保留缺口及影响。'});
 }

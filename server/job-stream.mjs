@@ -1,7 +1,8 @@
 import {sourceSummary} from './document-layout.mjs';
 // Each reconnect starts with a current snapshot; no event replay store is needed.
 export function publicJob(job){
- const {draft,...visible}=job;
+ const {draft,submission,...visible}=job;
+ if(['saving','failed'].includes(job.delivery?.status)){delete visible.result;delete visible.researchOutcome;}
  return {...visible,liveReport:['queued','running'].includes(job.status)?job.liveReport:undefined,input:{...job.input,sources:job.input.sources.map(s=>({...sourceSummary(s),text:s.text.slice(0,12000),previewTruncated:s.text.length>12000}))}};
 }
 export function createJobStreams(){

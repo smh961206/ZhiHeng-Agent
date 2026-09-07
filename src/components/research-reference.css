@@ -66,7 +66,7 @@
 .fw-data-sources>div+div{border-top:1px solid var(--fw-line)}
 .fw-data-sources dt{font-size:14px;line-height:1.9;font-weight:600;color:var(--fw-ink)}
 .fw-data-sources dd{margin:0;font-size:14px;line-height:1.95;color:var(--fw-muted);overflow-wrap:anywhere}
-.fw-data-boundaries{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:20px;padding:22px;border:1px solid #dce6da;border-radius:12px;background:#edf3ed}
+.fw-data-boundaries{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:20px;padding:22px;border:1px solid #dce6da;border-radius:12px;background:#edf3ed}
 .fw-data-boundaries h3{font-size:14px;line-height:1.8;font-weight:600}
 .fw-data-boundaries p{font-size:13px;line-height:1.95;color:var(--fw-muted);margin-top:7px!important}
 @media(max-width:760px){.fw-data-sources>div{grid-template-columns:135px minmax(0,1fr);gap:17px}.fw-data-boundaries{grid-template-columns:minmax(0,1fr);gap:18px}}
@@ -74,3 +74,29 @@
 @media(max-width:760px){.fw-boundary-grid{grid-template-columns:minmax(0,1fr)}.fw-principle-panel{padding:24px}}
 @media(max-width:639px){.research-framework .fw-reference-trigger{padding:18px 16px;gap:12px}.fw-reference-label{gap:7px}.fw-reference-label strong{font-size:14px}.fw-prohibition-list{margin-inline:16px;padding-left:23px}.fw-principle-panel{padding:21px 18px}.fw-principle-question{font-size:20px}.fw-dividend-principle{padding-left:13px}.fw-principle-chain{gap:9px 7px}.research-framework .fw-glossary-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;overflow:visible}.research-framework .fw-glossary-tabs>[data-slot=tabs-trigger]{min-width:0;min-height:44px;white-space:normal;font-size:12px;line-height:1.6;padding:8px 5px;gap:5px}.research-framework .fw-term-trigger{padding:16px;min-height:58px;font-size:14px}.fw-term-list dd{padding:0 16px 19px}.fw-term-example{padding:12px}.research-handbook .fw-section+.fw-section{padding-top:24px;margin-top:28px}}
 @media(max-width:639px){.fw-boundary-preview{grid-template-columns:minmax(0,1fr);gap:17px}.fw-boundary-preview p{margin-top:3px!important}.fw-reference-links{gap:8px}.fw-reference-links>[data-slot=button]{width:100%}.handbook-heading{padding-top:8px;padding-bottom:23px}.handbook-heading h1{font-size:29px}.handbook-heading p{font-size:14px;padding-right:0}.handbook-tabs>[data-slot=tabs-content]>.fw-section:first-child{margin-top:24px}}
+
+/* Discipline follows principles, evidence, conclusions, scoring, then detailed rules. */
+.research-handbook .fw-principle-details{margin-top:20px;border-top:1px solid #d3e0d1}
+.research-handbook .fw-principle-details>.fw-reference-trigger{min-height:48px;padding:12px 0;font-size:13px}
+.research-handbook .fw-principle-details .fw-dividend-principle{margin-top:8px}
+.research-handbook .fw-source-details{margin-top:18px}
+.research-handbook .fw-source-intro{padding:0 22px 18px;font-size:13px;line-height:1.9;color:var(--fw-muted)}
+.research-handbook .fw-source-details .fw-data-sources{border:0;border-top:1px solid var(--fw-line);border-radius:0}
+.research-handbook .fw-conclusion-types{padding:22px;border:1px solid var(--fw-line);border-radius:12px;background:#fff;min-width:0}
+.research-handbook .fw-conclusion-types h3,.research-handbook .fw-scoring .fw-discipline-copy>h3{font-size:18px;line-height:1.7;margin:0 0 14px}
+.research-handbook .fw-conclusion-types dl{margin:0}
+.research-handbook .fw-conclusion-types dl>div+div{margin-top:13px;padding-top:13px;border-top:1px solid var(--fw-line)}
+.research-handbook .fw-conclusion-types dt{font-size:13px;font-weight:600;line-height:1.8}
+.research-handbook .fw-conclusion-types dd{margin:4px 0 0;color:var(--fw-muted);font-size:13px;line-height:1.9;overflow-wrap:anywhere}
+.research-handbook .fw-scoring .fw-discipline-grid{align-items:start}
+.research-handbook .fw-scoring .fw-score-heading h3{font-size:19px;line-height:1.6}
+@media(max-width:639px){.research-handbook .fw-source-intro{padding-inline:16px}.research-handbook .fw-conclusion-types{padding:18px 16px}}
+
+/* Each handbook chapter starts with the same title and introductory line. */
+.research-handbook .handbook-chapter-heading{margin-bottom:24px}
+.research-handbook .handbook-chapter-heading h2{margin:0;font-size:23px;line-height:1.6;font-weight:600;letter-spacing:0;color:#244a36}
+.research-handbook .handbook-chapter-heading p{margin:6px 0 0!important;font-size:14px;line-height:1.8;color:var(--fw-muted)}
+.research-handbook .discipline-heading{margin-top:30px}
+.research-handbook .discipline-heading+.fw-section{margin-top:24px}
+.research-handbook .discipline-heading~.fw-section>.fw-section-heading h2{font-size:20px;line-height:1.65}
+@media(max-width:639px){.research-handbook .discipline-heading{margin-top:24px}}

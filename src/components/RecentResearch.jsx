@@ -2,6 +2,7 @@ import {Link} from 'react-router';
 import {Check, ChevronRight, CircleAlert, Clock3, LoaderCircle, Minus} from 'lucide-react';
 import {Button} from './ui/button';
 import {Badge} from './ui/badge';
+import {deliveryProgress} from '../../shared/research-delivery.mjs';
 
 const statuses = {
   queued: {label: '等待中', Icon: Clock3},
@@ -43,7 +44,8 @@ export default function RecentResearch({jobs = [], currentId, onNavigate}) {
     <div className="rr-heading"><h2>最近研究</h2><Button asChild variant="ghost" size="sm"><Link to="/history" onClick={afterNavigation} aria-label="查看全部研究记录">全部<ChevronRight size={14} aria-hidden="true"/></Link></Button></div>
     <ul className="rr-list">
       {recent.map(job => {
-        const {label, Icon} = statuses[job.status] || {label: '状态未知', Icon: Clock3};
+        const state = statuses[job.status] || {label: '状态未知', Icon: Clock3};
+        const label=deliveryProgress(job)?.label||state.label,Icon=state.Icon;
         const created = new Date(timestamp(job));
         const validDate = Number.isFinite(created.getTime());
         const title = (job.question || job.input?.question || '未命名研究').trimEnd();

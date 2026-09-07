@@ -7,6 +7,7 @@ const failure=(status,message)=>Object.assign(new Error(message),{status});
 export async function prepareResearchRetry(job,loadJob,now=new Date().toISOString()){
  if(!job)throw failure(404,'研究记录不存在');
  if(!['failed','cancelled'].includes(job.status))throw failure(409,'只有失败或已取消的研究可以重试');
+ if(job.delivery?.recoverable)throw failure(409,'已有待保存结果，请先重试保存，无须重新研究');
  const original=job.input??{};
  // Rebuild execution data from saved inputs, without feeding old evidence back into a new run.
  let input=validateInput({...original,mode:job.mode||original.mode,sources:[]});
@@ -17,7 +18,7 @@ export async function prepareResearchRetry(job,loadJob,now=new Date().toISOStrin
  const plan=createResearchPlan(input,mode);plan.knowledge=structuredClone(knowledgeManifest);
  input.depth=plan.depth;input.historyYears=plan.historyYears;
  const retryCount=(job.retryCount??0)+1;
- return {id:job.id,createdAt:job.createdAt,input,mode,plan,status:'queued',retryCount,lastRetriedAt:now,
+ return {id:job.id,createdAt:job.createdAt,...(job.submission?{submission:structuredClone(job.submission)}:{}),input,mode,plan,status:'queued',retryCount,lastRetriedAt:now,
   events:[{time:now,type:'progress',message:`第${retryCount}次重试，重新执行本次研究。`}]};
 }
 

@@ -3,10 +3,12 @@
 import {researchDataCopy} from './research-data-copy.mjs';
 import {quickScreenCopy} from './quick-screen-copy.mjs';
 import {deepResearchCopy} from './deep-research.mjs';
+import {earningsUpdateCopy} from './earnings-update.mjs';
+import {comparisonCopy} from './company-comparison.mjs';
 import {createPublicResearchApproach} from './research-approach.mjs';
 
 export const frameworkVersion='4.1';
-export const contractVersion=4;
+export const contractVersion=6;
 export const knowledgeSources=[
  {id:'core',path:'knowledge/CORE.md',role:'核心执行规则'},
  {id:'full',path:'knowledge/FULL.md',role:'完整研究与计算协议'},
@@ -35,8 +37,8 @@ export const confidenceLevels=['高','中高','中','中低','低'];
 export const modes={
  A:{name:'快速筛选',description:quickScreenCopy.description,question:'这家公司值得继续研究吗？',goal:quickScreenCopy.goal,example:quickScreenCopy.example,defaultDepth:'Quick',modules:['基本业务理解','五年与近期趋势','资产负债表快扫','财务红旗快扫','估值快扫','关键风险'],coreChapters:[1,2,3,4,6,8,12,13],fullChapters:[1,3,4,5,7,9,15,16],actions:['淘汰','观察池','深度研究']},
  B:{name:'深度研究',description:'验证长期投资逻辑',question:'长期价值由什么支撑？',goal:'连接业务、财务、现金回报和估值，形成可证伪的长期判断。',example:deepResearchCopy.example,defaultDepth:'Standard',modules:['基本面','财务质量','股东回报','估值交叉验证','决策','审计'],coreChapters:[1,2,3,4,5,6,7,8,9,12,13],fullChapters:[1,3,4,5,6,7,8,9,10,11,15,16],actions:researchActions},
- C:{name:'财报更新',description:'追踪新披露与变化',question:'新证据改变了哪些判断？',goal:'将新披露与旧结论对照，区分经营变化、参数变化与价格变化。',example:'更新贵州茅台的最新财报，检查原有现金流判断是否改变',defaultDepth:'Standard',modules:['新旧证据对照','参数变更','逻辑变化','审计'],coreChapters:[1,2,4,8,11,12,13],fullChapters:[1,3,5,9,13,14,15,16],actions:['升级','维持','降级','剔除']},
- D:{name:'标的对比',description:'用统一口径比较公司',question:'哪些公司更值得深入研究？',goal:'先统一期间、币种与估值口径，再比较质量、股东回报和风险。',example:'对比腾讯与苹果的现金回报、财务质量与估值',defaultDepth:'Standard',modules:['口径统一','同业比较','估值排序','审计'],coreChapters:[1,2,3,4,5,6,8,12,13],fullChapters:[1,3,4,5,6,7,9,15,16],actions:researchActions},
+ C:{name:'财报更新',description:'核对本期变化与旧判断',question:'新证据改变了哪些判断？',goal:earningsUpdateCopy.intro,example:earningsUpdateCopy.example,defaultDepth:'Standard',modules:['新旧证据对照','单季与现金流核算','关键变量与反证','参数变更','逻辑变化','审计'],coreChapters:[1,2,4,6,8,11,12,13],fullChapters:[1,3,5,7,9,13,14,15,16],actions:['升级','维持','降级','剔除']},
+ D:{name:'多公司比较',description:'统一口径，分别形成判断',question:'哪些公司更值得深入研究？',goal:comparisonCopy.intro,example:comparisonCopy.example,defaultDepth:'Standard',modules:['比较对象与适配组','共同期间与来源核验','财务与ROE稳定性','股东回报','估值适配与逐家公司判断','审计'],coreChapters:[1,2,3,4,5,6,8,12,13],fullChapters:[1,3,4,5,6,7,9,15,16],actions:researchActions},
  E:{name:'组合分析',description:'审视配置与集中风险',question:'持仓背后的风险集中在哪里？',goal:'把组合视作一家虚拟集团，检视现金创造能力与集中风险。',example:'分析我的持仓组合，检查行业集中与现金回报',defaultDepth:'Standard',modules:['组合上下文','集中度','风险约束','审计'],coreChapters:[1,2,8,10,12,13],fullChapters:[1,3,9,12,15,16],actions:researchActions},
  F:{name:'股东回报',description:'关注分红与现金质量',question:'企业能持续把现金回报股东吗？',goal:'检视八年历史、三年滚动与资本配置，区分收益率锚和企业价值。',example:'研究贵州茅台近八年的分红与可持续股东回报',defaultDepth:'Standard',modules:['八年分红','三年滚动','可分配现金','收益率锚','主估值交叉验证','审计'],coreChapters:[1,2,4,5,6,7,8,12,13],fullChapters:[1,3,5,6,7,8,9,15,16],actions:researchActions},
 };
@@ -53,8 +55,8 @@ const schemas={
  Quick:[section('business','一句话商业模式'),section('advantages','三个优势'),section('risks','三个风险'),section('financial','关键财务趋势'),section('valuation','估值快照与适用性')],
  Standard:[section('business','公司一句话、核心业务与行业'),section('moat','护城河与定价权'),section('financial','财务质量'),section('returns','股东回报'),section('valuation','估值区间与交叉验证'),section('risks','核心风险')],
  Deep:[section('business','公司一句话与业务产品'),section('industry','行业与竞争'),section('moat','护城河与定价权'),section('strategy','战略与管理层'),section('financial','财务质量'),section('redFlags','财务红旗'),section('returns','股东回报'),section('valuation','估值方法与三情景'),section('margin','安全边际与敏感性'),section('scores','100分研究仪表盘'),section('risks','风险与反证')],
- Update:[section('changes','本期变化与新旧指标'),section('thesis','投资逻辑变化'),section('parameters','旧假设 → 新假设 → 新证据 → 区间影响'),section('action','股票池动作与后续跟踪')],
- Comparison:[section('basis','统一口径与可比边界'),section('comparison','质量、财务、回报与风险对比'),section('valuation','估值适配与同组排序'),section('candidates','候选理由与反证')],
+ Update:[section('baseline','最新财报与对照范围'),section('changes','累计与单季财务变化'),section('drivers','关键变量、红旗与反证'),section('thesis','旧判断与本期证据'),section('parameters','估值参数变化与区间影响'),section('action','研究动作与下期验证')],
+ Comparison:[section('basis','比较对象、共同期间与可比边界'),section('comparison','业务质量与成长差异'),section('financial','同期间盈利、现金流与红旗'),section('capital','ROE稳定性与资本回报'),section('returns','股东回报与可持续性'),section('valuation','逐家公司估值适配与价格吸引力'),section('candidates','研究优先级、逐家公司动作与验证条件')],
  Portfolio:[section('context','组合信息与分析范围'),section('business','虚拟集团的经营与现金回报'),section('concentration','行业、单股与风险因子集中'),section('constraints','风险约束与流动性'),section('actions','组合观察与条件动作')],
  Dividend:[section('snapshot','最新数据快照与口径'),section('history','八年盈利、分红与回购'),section('rolling','最新年度与三年滚动'),section('policy','分红承诺与资本配置'),section('coverage','现金覆盖、可持续性与专项评分'),section('yield','TTM股息率、可持续股息率与收益率锚'),section('sensitivity','现金回报敏感性'),section('valuation','主估值与市赚率适用性及交叉验证')],
 };
@@ -62,9 +64,10 @@ export function resolveMode(input={}){
  if(input.mode&&input.mode!=='auto'&&modes[input.mode])return input.mode;
  const q=input.question||'';
  if(/我的持仓|持仓分析|分析.*持仓|组合|加仓|减仓/.test(q))return 'E';
+ if(/对比|比较|\bvs\.?\b/i.test(q)&&/最新财报|财报更新/.test(q))return 'D';
  if(/财报更新|最新财报|更新.*判断|更新.*财报|与上次|对照.*上次/.test(q))return 'C';
  if(/初筛|快速|值不值得研究|股票池|成分股.*筛选/.test(q))return 'A';
- if(/对比|比较|选哪/.test(q))return 'D';
+ if(/对比|比较|选哪|\bvs\.?\b/i.test(q))return 'D';
  if(/深度|详细分析|完整.*报告|长期.*价值|投资价值/.test(q))return 'B';
  if(/股息|分红|股东回报|收益率/.test(q))return 'F';
  return 'B';
@@ -81,7 +84,7 @@ export function createResearchPlan(input={},mode=resolveMode(input)){
  if(!modes[mode])throw new Error('研究模式无效');
  const profile=modes[mode],depth=mode==='A'?'Quick':input.depth||profile.defaultDepth;
  const portfolio=portfolioReadiness(input.portfolioContext);
- const baseline=Boolean(input.baselineJobId||input.previousResearch?.trim());
+ const baseline=Boolean(input.baseline||input.baselineJobId||input.previousResearch?.trim());
  const secondaryModules=[];
  if(['B','C','D'].includes(mode)&&/分红|股息|股东回报/.test(input.question||''))secondaryModules.push('股东回报必要模块');
  if(mode!=='E'&&portfolio.complete)secondaryModules.push('组合约束');
@@ -110,5 +113,16 @@ export function createResearchPlan(input={},mode=resolveMode(input)){
  ...(mode==='D'&&(input.securities?.length??0)<2?['当前不足两个标的，仅能说明比较框架与缺口']:[])],
  ruleBindings:{core:profile.coreChapters,full:profile.fullChapters}};
  if(!plan.researchApproach)plan.researchApproach=createPublicResearchApproach(plan);
+ if(mode==='C'){
+  plan.constraints.push(...earningsUpdateCopy.boundaries);
+  plan.requiredData.push('最新正式财报、去年同期与累计拆季所需原文','归母与扣非利润、经营现金流、资本开支及期初期末余额');
+  if(!baseline)plan.output.actions=['建立基线'];
+  plan.researchApproach=createPublicResearchApproach(plan);
+ }
+ if(mode==='D'){
+  plan.constraints.push(...comparisonCopy.boundaries);
+  plan.requiredData.push('每家公司独立来源与共同财报起止日','各公司价格日期、单位和股类','共同完整年度ROE序列及有效样本数');
+  plan.researchApproach=createPublicResearchApproach(plan);
+ }
  return plan;
 }

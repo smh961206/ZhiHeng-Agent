@@ -11,7 +11,7 @@ export async function createStorage({uri=process.env.MONGODB_URI||'mongodb://127
   const jobs=db.collection('jobs'),cache=db.collection('report_cache'),deleted=db.collection('deleted_jobs');
   const bucket=new GridFSBucket(db,{bucketName:'job_payloads'});
   await migrateSchema(db);
-  async function writeJob(job,filter={_id:job.id},upsert=true){
+  async function writeJob(job,filter={_id:job.id},upsert=true,insertOnly=false){
     // Serialize before awaiting: running jobs can continue emitting events.
     const {liveReport,...stored}=job;
     const bytes=Buffer.from(JSON.stringify(stored));
@@ -19,14 +19,27 @@ export async function createStorage({uri=process.env.MONGODB_URI||'mongodb://127
     const upload=bucket.openUploadStream(job.id+'.json');
     await pipeline(Readable.from([bytes]),upload);
     try{
-     const result=await jobs.replaceOne(filter,{_id:job.id,...summary,question:input.question,sourceCount:input.sources.length,payloadId:upload.id},{upsert});
-     if(!upsert&&result.matchedCount!==1)throw Object.assign(new Error('研究状态已变化，请刷新详情页后再试'),{status:409});
+     const entry={_id:job.id,...summary,question:input.question,sourceCount:input.sources.length,payloadId:upload.id};
+     if(insertOnly){
+      if(await deleted.findOne({_id:job.id}))throw Object.assign(new Error('研究已删除，不能恢复本次提交'),{status:409});
+      await jobs.insertOne(entry);
+     }else{
+      const result=await jobs.replaceOne(filter,entry,{upsert});
+      if(!upsert&&result.matchedCount!==1)throw Object.assign(new Error('研究状态已变化，请刷新详情页后再试'),{status:409});
+     }
     }
-    catch(error){await bucket.delete(upload.id).catch(()=>{});throw error;}
+    catch(error){
+     // Only a definite rejection is safe to clean up. A lost acknowledgement
+     // may follow a commit, even if a later writer already replaced the head;
+     // concurrent readers can still be reading that older payload.
+     if(error.code===11000||error.status===409){try{if(!await jobs.findOne({_id:job.id,payloadId:upload.id}))await bucket.delete(upload.id);}catch{/* Retain an uncertain upload rather than corrupt a committed record. */}}
+     throw error;
+    }
     // Retain old payload versions so concurrent readers can finish safely.
   }
   return {
    saveJob:writeJob,
+   createJob:job=>writeJob(job,undefined,false,true),
    async restartJob(job,expectedRetryCount){
     if(!Number.isSafeInteger(expectedRetryCount)||expectedRetryCount<0||job.retryCount!==expectedRetryCount+1||job.status!=='queued')throw new Error('重试写入参数无效');
     const version=expectedRetryCount===0?{$or:[{retryCount:0},{retryCount:{$exists:false}}]}:{retryCount:expectedRetryCount};
@@ -48,7 +61,7 @@ export async function createStorage({uri=process.env.MONGODB_URI||'mongodb://127
     for await(const file of bucket.find({filename:id+'.json'}))await bucket.delete(file._id);
    },
    async hasJob(id){return !!await jobs.findOne({_id:id},{projection:{_id:1}});},
-   async listJobs(){return jobs.find({},{projection:{_id:0,payloadId:0}}).sort({createdAt:-1}).toArray();},
+   async listJobs(){return jobs.find({},{projection:{_id:0,payloadId:0,submission:0}}).sort({createdAt:-1}).toArray();},
    async recoverInterrupted(){
     for await(const entry of jobs.find({status:{$in:['queued','running']}})){
      const job=await this.getJob(entry._id);job.status='failed';interruptWorkflow(job,'failed');job.error='服务重启中断任务，请重新运行';job.finishedAt=new Date().toISOString();await this.saveJob(job);

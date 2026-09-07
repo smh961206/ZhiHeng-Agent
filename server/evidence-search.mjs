@@ -10,21 +10,31 @@ export function financialRowBlocks(source){
    text:JSON.stringify(row)}));
  }catch{return [];}
 }
+// Retrieval and calculations must resolve the same stable block identifiers,
+// including generated quote, vendor-row and XBRL blocks.
+export function evidenceBlocks(source){
+ const rows=financialRowBlocks(source);
+ const blocks=rows.length?rows:Array.isArray(source.documentBlocks)?source.documentBlocks:plainBlocks(source.text||'',{idPrefix:'legacy'});
+ return [...(source.financialFacts||[]).map((fact,index)=>({id:`fact${index+1}`,kind:'xbrl-fact',text:JSON.stringify(fact),method:fact.origin||'xbrl-api',needsReview:fact.needsReview})),...blocks];
+}
 export function searchEvidence(sources,query,sourceId){
- const q=String(query??'').trim().toLowerCase();if(!q)return [];
+ const input=String(query??'').trim().toLowerCase();if(!input)return [];
+ const pages=new Set();
+ const q=input.replace(/(?:pdf\s*)?第\s*(\d{1,5})\s*页|\bpage\s+(\d{1,5})\b/g,(_match,cn,en)=>{pages.add(Number(cn||en));return ' ';}).trim();
  const terms=[...new Set([...q.split(/[\s，、,]+/).filter(Boolean),...(q.match(/[\p{Script=Han}]{2,}/gu)||[]).flatMap(t=>Array.from({length:t.length-1},(_,i)=>t.slice(i,i+2))),...aliases.filter(group=>group.some(term=>q.includes(term))).flat()])];
  const chunks=[];
  for(const source of sources.filter(s=>(!sourceId||s.id===sourceId)&&typeof s.text==='string'&&!['search-result','search-summary'].includes(s.type))){
-  const rowBlocks=financialRowBlocks(source);
-  const blocks=rowBlocks.length?rowBlocks:source.documentBlocks?.length?source.documentBlocks:plainBlocks(source.text,{idPrefix:'legacy'});
-  const facts=source.financialFacts||[];
-  const entries=[...facts.map((fact,index)=>({id:`fact${index+1}`,kind:'xbrl-fact',text:JSON.stringify(fact),method:fact.origin||'xbrl-api',needsReview:fact.needsReview})),...blocks];
+  const entries=evidenceBlocks(source);
+  const identifiers=new Map();for(const block of entries)identifiers.set(block.id,(identifiers.get(block.id)||0)+1);
+  const duplicateSource=sources.filter(candidate=>candidate.id===source.id).length>1;
   for(const block of entries){
-   const lower=block.text.toLowerCase();const score=terms.reduce((n,t)=>n+(lower.includes(t)?1:0),0);
+   if(pages.size&&!pages.has(block.page))continue;
+   const lower=block.text.toLowerCase();const score=!q&&pages.size?1:terms.reduce((n,t)=>n+(lower.includes(t)?1:0),0);
    if(!score)continue;
-   const text=[block.page?`【PDF第${block.page}页${block.method==='ocr'?' · OCR待核对':''}】`:'',block.context&&!block.text.includes(block.context)?`【页首/表头上下文】\n${block.context}`:'',block.text].filter(Boolean).join('\n');
+   const referenceAmbiguous=duplicateSource||identifiers.get(block.id)>1;
+   const text=[referenceAmbiguous?'【引用编号重复，无法唯一定位，须重新核对资料】':'',block.page?`【PDF第${block.page}页${block.method==='ocr'?' · OCR待核对':''}】`:'',block.context&&!block.text.includes(block.context)?`【页首/表头上下文】\n${block.context}`:'',block.text].filter(Boolean).join('\n');
    chunks.push({id:source.id,title:source.title,url:source.url,date:source.date,publishedAt:source.publishedAt,reportPeriod:source.reportPeriod,reportDate:source.reportDate,periodStatus:source.periodStatus,fetchedAt:source.fetchedAt,stale:source.stale,type:source.type,provider:source.provider,official:source.official,authorityVerified:source.authorityVerified,
-    blockId:block.id,page:block.page,kind:block.kind,lineStart:block.lineStart,lineEnd:block.lineEnd,method:block.method,needsReview:block.needsReview,quality:block.quality,truncated:!!(source.truncated||block.truncated),cellPositions:block.cellPositions,spans:block.spans,text,
+    blockId:block.id,page:block.page,kind:block.kind,lineStart:block.lineStart,lineEnd:block.lineEnd,method:block.method,needsReview:referenceAmbiguous||block.needsReview,referenceAmbiguous,symbolReview:block.symbolReview,ocrAlternative:block.ocrAlternative,quality:block.quality,truncated:!!(block.truncated||source.truncated&&!source.documentBlocks?.length&&!source.financialFacts?.length),sourceTruncated:!!source.truncated,cellPositions:block.cellPositions,spans:block.spans,text,
     score:score+(block.kind==='xbrl-fact'?.25:block.kind==='html-table'?.1:0)});
   }
  }

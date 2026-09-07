@@ -126,9 +126,15 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
 
   return <section className="history-page research-history" aria-label="研究记录">
     <header className="rh-heading">
-      <div><h1>研究记录</h1><p>留存每一次判断，连接下一次思考。</p></div>
+      <div><h1>研究记录</h1><p>跟进研究进度，查找报告与判断，继续已有研究。</p></div>
       <Button type="button" onClick={() => onStart?.()} className="rh-create"><Plus size={17} aria-hidden="true"/>新建研究</Button>
     </header>
+
+    {!initialLoading&&!hasFilters&&(counts.active>0||counts.failed>0)&&<section className="rh-follow-ups" aria-label="继续跟进研究">
+      <strong>继续跟进</strong>
+      {counts.active>0&&<Button type="button" variant="ghost" onClick={()=>update({status:'active',page:null})}><LoaderCircle size={15} aria-hidden="true"/><span>{counts.active} 项进行中</span><span className="rh-follow-action">查看进度<ArrowRight size={14} aria-hidden="true"/></span></Button>}
+      {counts.failed>0&&<Button type="button" variant="ghost" className="rh-follow-failed" onClick={()=>update({status:'failed',page:null})}><AlertCircle size={15} aria-hidden="true"/><span>{counts.failed} 项失败</span><span className="rh-follow-action">查看恢复方式<ArrowRight size={14} aria-hidden="true"/></span></Button>}
+    </section>}
 
     <Card className="rh-surface gap-0 py-0">
       <div className="rh-toolbar">
@@ -185,11 +191,12 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
             return <li className="rh-row" key={job.id} data-status={job.status}>
               <Link className="rh-open" to={'/research/' + encodeURIComponent(job.id)} aria-busy={opening === job.id}>
                 <div className="rh-row-copy">
-                  <div className="rh-title-row"><strong className="rh-title" title={titleOf(job)}><Highlight text={titleOf(job)} terms={terms}/></strong><Badge variant="outline" className="rh-mode" data-mode={recordMode}><Highlight text={modeLabel(job)} terms={terms}/></Badge></div>
-                  <div className="rh-meta">{job.researchOutcome?.action&&<Badge variant="secondary" className="rh-outcome" title={'研究判断 · 置信度 '+job.researchOutcome.confidence}><Highlight text={job.researchOutcome.action} terms={terms}/></Badge>}{securities.length > 0 && <span className="rh-securities" title={securities.join(' · ')}>{securities.map((symbol, index) => <span className="rh-security" key={index} title={symbol.startsWith('US:')?symbol+' · 交易所信息待核实':symbol}>{index > 0 && ' · '}<Highlight text={symbol} terms={terms}/></span>)}</span>}<span className="rh-source-total"><FileText size={13} aria-hidden="true"/>{sourceCount} 份资料</span></div>
+                  <div className="rh-title-row"><strong className="rh-title" title={titleOf(job)}><Highlight text={titleOf(job)} terms={terms}/></strong></div>
+                  {securities.length > 0 && <div className="rh-subjects"><span className="rh-securities" title={securities.join(' · ')}>{securities.map((symbol, index) => <span className="rh-security" key={index} title={symbol.startsWith('US:')?symbol+' · 交易所信息待核实':symbol}>{index > 0 && ' · '}<Highlight text={symbol} terms={terms}/></span>)}</span></div>}
+                  <div className="rh-meta"><Badge variant="outline" className="rh-mode" data-mode={recordMode}><Highlight text={modeLabel(job)} terms={terms}/></Badge>{job.status==='completed'&&job.researchOutcome?.action&&<><Badge variant="secondary" className="rh-outcome">研究判断：<Highlight text={job.researchOutcome.action} terms={terms}/></Badge>{job.researchOutcome.confidence&&<span className="rh-confidence">置信度 · <Highlight text={job.researchOutcome.confidence} terms={terms}/></span>}</>}</div>
                 </div>
-                <span className="rh-created"><span>创建时间</span><time className="rh-time" dateTime={validDate ? created.toISOString() : undefined} title={validDate ? dateFormatter.format(created) : undefined}>{validDate ? dateFormatter.format(created) : '时间未记录'}</time></span>
-                <span className="rh-row-state"><Status status={job.status}/></span>
+                <span className="rh-row-state"><span className="rh-state-label">执行状态</span><Status status={job.status} delivery={job.delivery}/></span>
+                <span className="rh-created"><span>创建时间</span><time className="rh-time" dateTime={validDate ? created.toISOString() : undefined} title={validDate ? dateFormatter.format(created) : undefined}>{validDate ? dateFormatter.format(created) : '时间未记录'}</time><span className="rh-source-total"><FileText size={13} aria-hidden="true"/>{sourceCount} 份资料</span></span>
               </Link>
               {renderDelete && <div className="rh-delete">{renderDelete(job)}</div>}
             </li>;

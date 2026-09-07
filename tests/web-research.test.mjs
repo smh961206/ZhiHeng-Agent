@@ -10,6 +10,8 @@ import {createWebResearchSession,validateWebResearchReview} from '../server/web-
 import {searchEvidence,runAgent} from '../server/agent.mjs';
 import {calculationBasis} from '../server/calculations.mjs';
 import {reviewFixture} from './fixtures/research-review.mjs';
+import {PARSER_VERSION} from '../server/document-layout.mjs';
+import {parsedDigest} from '../server/document-integrity.mjs';
 
 const now=Date.parse('2026-09-07T00:00:00Z'),clock=()=>now;
 const body='行业统计原文：报告期：2025年。发布日期：2026-08-01。样本覆盖需要核对定义，市场份额并不证明未来增长。'.repeat(8);
@@ -17,6 +19,30 @@ const html=`<html><head><title>行业统计与范围</title><meta property="arti
 const candidate={url:'https://www.stats.gov.cn/article.html',title:'搜索标题，仅供定位',searchProvider:'Tavily'};
 const webSource=()=>({type:'web-evidence',documentRead:true,url:candidate.url,security:'CN:600519',provider:'www.stats.gov.cn',title:'原始统计正文',text:body,publishedAt:'2026-08-01',fetchedAt:new Date(now).toISOString(),authorityVerified:true,metadataWarnings:[],reportPeriod:'报告期：2025年',stale:false});
 function archiveMemory(){const values=new Map();return {values,async get(key){return values.has(key)?structuredClone(values.get(key)):null;},async put(key,value){values.set(key,structuredClone(value));}};}
+
+test('future or invalid cache timestamps force refresh and remain unchanged on outage',async()=>{
+ for(const fetchedAt of [new Date(now+3600000).toISOString(),'invalid-date']){
+  const archive=archiveMemory();let reads=0;
+  const fetchDocument=async()=>{reads++;return {bytes:Buffer.from(html),url:candidate.url,contentType:'text/html'};};
+  const reader=createWebEvidenceReader({archive,clock,fetchDocument});await reader(candidate);
+  for(const source of archive.values.values())source.fetchedAt=fetchedAt;
+  const stale=await createWebEvidenceReader({archive,clock,fetchDocument:async()=>{throw new Error('offline');}})(candidate);
+  assert.equal(stale.stale,true);assert.equal(stale.fetchedAt,fetchedAt);
+  const fresh=await reader(candidate);assert.equal(reads,2);assert.equal(fresh.fetchedAt,new Date(now).toISOString());assert.equal(fresh.fromCache,false);
+ }
+});
+
+test('parser upgrades refresh old web PDF archives and retain verified previous evidence during outages',async()=>{
+ const archive=archiveMemory(),security='CN:600519';let reads=0;
+ const fetchDocument=async()=>{reads++;return {bytes:Buffer.from(html),url:candidate.url,contentType:'text/html'};};
+ const source=await createWebEvidenceReader({archive,clock,fetchDocument})(candidate,{security});
+ archive.values.clear();const legacy={...source,parserVersion:'evidence-5'};legacy.parsedSha256=parsedDigest(legacy);
+ archive.values.set(`web-body:evidence-5:${security}:${candidate.url}`,legacy);
+ const offline=await createWebEvidenceReader({archive,clock,fetchDocument:async()=>{throw new Error('offline');}})(candidate,{security});
+ assert.equal(offline.legacyParser,true);assert.equal(offline.stale,true);assert.equal(offline.fetchedAt,source.fetchedAt);
+ const refreshed=await createWebEvidenceReader({archive,clock,fetchDocument})(candidate,{security});
+ assert.equal(reads,2);assert.equal(refreshed.parserVersion,PARSER_VERSION);assert.equal(refreshed.legacyParser,undefined);
+});
 function makeJob(){return {mode:'B',input:{question:'研究合成公司的行业规模',depth:'Standard',sources:[{id:'S1',type:'official-report',official:true,security:'CN:600519',text:'现有财报只有营业收入和现金流，未包含行业规模。',title:'合成原文'}]}};}
 function session(options={}){const job=options.job||makeJob();return createWebResearchSession({job,searchLocal:searchEvidence,archive:null,clock,status:{enabled:true,configured:true,providers:['Tavily']},searchWeb:async()=>({candidates:[candidate]}),readDocument:async()=>webSource(),...options});}
 const fakeHTTPS=(handler)=>((url,options,callback)=>{

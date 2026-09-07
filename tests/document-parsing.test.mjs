@@ -46,6 +46,24 @@ test('PDF timeout returns substantial completed pages and explicit unread count'
 test('generated page markers cannot masquerade as extracted financial content',async()=>{
  const {worker,result,page}=workerFixture();page(1,'failed');worker.emit('message',{type:'pdf:error',error:'broken'});await assert.rejects(result,/broken/);
 });
+
+test('malformed later PDF messages retain earlier pages without accepting invalid evidence',async()=>{
+ for(const message of [
+  {type:'pdf:page-update',page:{page:9},text:'invalid',documentBlocks:[]},
+  {type:'pdf:page',page:{page:2},text:'invalid',documentBlocks:[{id:'p9-b1',page:9,text:'wrong page'}]},
+  {type:'pdf:start',pages:900},
+ ]){
+  const {worker,result,page}=workerFixture();page(1);worker.emit('message',message);
+  const parsed=await result;assert.equal(parsed.readPages,1);assert.equal(parsed.pages,3);assert.equal(parsed.truncated,true);
+  assert.match(parsed.parseWarning,/格式无效/);assert.doesNotMatch(parsed.text,/invalid|wrong page/);
+ }
+});
+
+test('malformed PDF metadata with no completed text fails explicitly',async()=>{
+ const worker=new EventEmitter();worker.terminate=async()=>{};
+ const result=extractPDF(Buffer.from('fixture'),undefined,{createWorker:()=>worker});
+ worker.emit('message',{type:'pdf:start',pages:NaN});await assert.rejects(result,/页数返回格式无效/);
+});
 test('HTML table retrieval carries headers and spanning cells while hidden content stays hidden',()=>{
  const result=extractHTML('<h2>单位：人民币百万元</h2><table><tr><th rowspan="2">项目</th><th colspan="2">截至2025年12月31日</th></tr><tr><th>本期</th><th>比较期</th></tr><tr><td>经营现金流</td><td>(1,200)</td><td>900</td></tr></table><script>fake 999</script>');
  const matches=searchEvidence([{id:'S1',...result}], '经营现金流','S1');

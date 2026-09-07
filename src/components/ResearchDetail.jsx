@@ -1,9 +1,13 @@
+import ComparisonResults from './ComparisonResults';
+import {comparisonProgress} from '../../shared/company-comparison.mjs';
+import {earningsUpdateProgress} from '../../shared/earnings-update.mjs';
 import {deepResearchProgress} from '../../shared/deep-research.mjs';
+import ReportWarnings from './ReportWarnings';
 import {useCallback, useEffect, useId, useMemo, useRef, useState} from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
-  Activity, ArrowUpRight, BookOpen, Check, ChevronDown, CircleAlert,
+  Activity, ArrowUp, ArrowUpRight, BookOpen, Check, ChevronDown, CircleAlert,
   Clock3, Download, FileText, Globe, List, LoaderCircle, RotateCcw,
   Search, ShieldCheck, Square, X,
 } from 'lucide-react';
@@ -17,12 +21,20 @@ import {Select,SelectTrigger,SelectValue,SelectContent,SelectItem} from './ui/se
 import {Sheet,SheetTrigger,SheetContent,SheetHeader,SheetTitle,SheetDescription} from './ui/sheet';
 import {Popover,PopoverTrigger,PopoverContent} from './ui/popover';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from './ui/tabs';
-import DeepResearchProcess from './DeepResearchProcess';
+import DocumentReadingSummary from './DocumentReadingSummary';
 import ResearchProgress from './ResearchProgress';
 import ResearchDecision from './ResearchDecision';
 import {modes} from '../../shared/research-framework.mjs';
 import {reportPreview} from '../../shared/report-preview.mjs';
+import {deduplicateReportHeadings} from '../../shared/report-headings.mjs';
+import {auditCoverage,auditCoverageNotice} from '../../shared/audit-coverage.mjs';
+import {deliveryProgress,needsSaveRetry,isSavingResult} from '../../shared/research-delivery.mjs';
+import {researchRecovery,researchDraftState,researchRetryNotice,saveRetryNotice} from '../../shared/research-recovery.mjs';
 import {modeOf} from '../lib/research-mode';
+import {webEvidenceProgress} from '../../shared/web-evidence-progress.mjs';
+import './research-recovery.css';
+import './research-report-first.css';
+import './report-warnings.css';
 
 const statusLabels = {
   queued: '等待中', running: '研究中', completed: '已完成', failed: '失败', cancelled: '已取消',
@@ -38,18 +50,18 @@ function formatDate(value, timeOnly = false) {
     : {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false});
 }
 
-function Status({status}) {
+function Status({status,delivery}) {
   const Icon = status === 'running' ? LoaderCircle : status === 'completed' ? Check
     : status === 'failed' ? CircleAlert : status === 'cancelled' ? Square : Clock3;
   return <Badge variant="outline" className={`rd-status rd-status-${status}`}>
     <Icon size={13} aria-hidden="true" className={status === 'running' ? 'rd-spin' : undefined}/>
-    {statusLabels[status] || '状态未知'}
+    {deliveryProgress({delivery})?.label||statusLabels[status] || '状态未知'}
   </Badge>;
 }
 
-function RetryButton({onRetry,retrying}) {
-  return <Button type="button" variant="outline" onClick={onRetry} disabled={retrying} aria-busy={Boolean(retrying)}>
-    {retrying?<LoaderCircle size={16} className="rd-spin"/>:<RotateCcw size={16}/>}{retrying?'正在重试…':'重试研究'}
+function RetryButton({onRetry,retrying,saveOnly=false}) {
+  return <Button type="button" variant="outline" onClick={()=>{if(!retrying)onRetry?.();}} disabled={retrying} aria-busy={Boolean(retrying)} title={saveOnly?saveRetryNotice:researchRetryNotice}>
+    {retrying?<LoaderCircle size={16} className="rd-spin"/>:<RotateCcw size={16}/>}{saveOnly?(retrying?'正在保存…':'重试保存'):(retrying?'正在重试…':'重试研究')}
   </Button>;
 }
 
@@ -89,11 +101,11 @@ const markdownComponents = {
   pre: ({node, ...props}) => <pre {...props} tabIndex={0}/>,
 };
 
-function ReportDocument({text, prefix, draft = false, onOutline}) {
+function ReportDocument({text, prefix, draft = false, draftLabel, onOutline}) {
   const article = useRef(null);
   const markdown = useMemo(() => <Markdown
     remarkPlugins={[remarkGfm, [remarkHeadingIds, {prefix}]]}
-    components={markdownComponents}>{text}</Markdown>, [text, prefix]);
+    components={markdownComponents}>{deduplicateReportHeadings(text)}</Markdown>, [text, prefix]);
 
   // Read only the headings actually rendered by Markdown, so fenced code, inline
   // formatting and streaming incomplete headings cannot create phantom entries.
@@ -103,21 +115,42 @@ function ReportDocument({text, prefix, draft = false, onOutline}) {
       .filter(heading => heading.label);
     onOutline?.({prefix,items:next});
   }, [text, prefix, onOutline]);
-  return <article ref={article} className={`rd-markdown${draft ? ' rd-draft' : ''}`} aria-label={draft ? '实时报告草稿，尚未完成审计' : '报告正文'}>{markdown}</article>;
+  return <article ref={article} className={`rd-markdown${draft ? ' rd-draft' : ''}`} aria-label={draft ? `实时报告草稿，${draftLabel||'尚未完成审计'}` : '报告正文'}>{markdown}</article>;
 }
 
-function ReportPanel({job, prefix, preview, onRetry, retrying, onReuse, onOutline, onUpdate, onDeepen}) {
+function RecoveryGuide({recovery,onSources,onTrace,onReuse,retrying}) {
+  return <Collapsible className="rd-recovery-guide" defaultOpen>
+    <CollapsibleTrigger asChild><Button variant="ghost">恢复方式与排查指引<ChevronDown size={16} aria-hidden="true"/></Button></CollapsibleTrigger>
+    <CollapsibleContent className="rd-recovery-body">
+      <p>{recovery.notice}</p>
+      {recovery.error&&<p className="rd-recovery-error"><strong>本次原因：</strong>{recovery.error}</p>}
+      {recovery.kind==='save'&&<p>若提示版本已变化或暂存内容不存在，请刷新详情确认状态，再选择下一步。</p>}
+      {recovery.retryKind==='research'&&onReuse&&<p>如需补充原始资料、调整标的或问题，选择“修改研究输入”回到工作台；确认提交后才会创建新任务。</p>}
+      <div className="rd-recovery-links">
+        <Button variant="outline" size="sm" onClick={onTrace}><Activity size={15}/>查看执行轨迹</Button>
+        <Button variant="ghost" size="sm" onClick={onSources}><Globe size={15}/>查看证据来源</Button>
+      </div>
+      {recovery.kind==='save-unavailable'&&onReuse&&<Button variant="outline" onClick={onReuse} disabled={retrying}>复用研究输入</Button>}
+    </CollapsibleContent>
+  </Collapsible>;
+}
+
+function ReportPanel({job, prefix, preview, onRetry, retrying, retryError, onReuse, onOutline, onUpdate, onDeepen,onSources,onTrace}) {
   const quick=modeOf(job)==='A';
-  if (job.result?.report?.trim()) return <><ResearchDecision job={job} onUpdate={onUpdate} onDeepen={onDeepen}/><ReportDocument text={job.result.report} prefix={prefix} onOutline={onOutline}/></>;
+  const recovery=researchRecovery(job),draftState=researchDraftState(job);
+  const guide=recovery&&<RecoveryGuide {...{recovery,onSources,onTrace,onReuse,retrying}}/>;
+  if(recovery&&['save','saving','save-unavailable'].includes(recovery.kind))return <EmptyState title={recovery.title} icon={isSavingResult(job)?LoaderCircle:CircleAlert} active={isSavingResult(job)} actions={<>{needsSaveRetry(job)&&onRetry&&<RetryButton onRetry={onRetry} retrying={retrying} saveOnly/>}{guide}</>}>{recovery.text}</EmptyState>;
+  if (job.result?.report?.trim()) return <><div className="rd-report-intro"><ResearchDecision job={job} onUpdate={onUpdate} onDeepen={onDeepen}/></div><ReportDocument text={job.result.report} prefix={prefix} onOutline={onOutline}/>{modeOf(job)==='D'&&<ComparisonResults job={job} onSources={onSources}/>} {guide}</>;
   const active = isActive(job.status);
   if (!job.result && active && preview.trim()) return <>
     <div className="rd-notice rd-draft-notice" role="status"><LoaderCircle size={17} className="rd-spin" aria-hidden="true"/>
-      <div><strong>{job.liveReport.phase === 'audit' ? '草稿已生成，正在审计' : '实时草稿 · 尚未审计'}</strong>
-        <p>{quick?'筛选判断仍在形成，数据缺口与解释可能调整；正式报告将在复核完成后提供。':'内容可能继续调整，请以最终报告为准。正式报告生成后方可导出。'}</p></div>
+      <div><strong>{draftState.title}</strong>
+        <p>{draftState.text}</p></div>
     </div>
-    <ReportDocument text={preview} prefix={prefix} onOutline={onOutline} draft/>
+    <ReportDocument text={preview} prefix={prefix} onOutline={onOutline} draft draftLabel={draftState.title}/>
   </>;
-  const screenState=quick?quickScreenProgress(job,false):modeOf(job)==='B'?deepResearchProgress(job,false):null;
+  const formatting=active&&job.liveReport?.phase!=='audit'&&(job.liveReport?.phase==='formatting'||job.liveReport?.text?.trim()&&!preview.trim());
+  const screenState=active&&['supplement','audit'].includes(draftState?.kind)?draftState:formatting?{title:'正在整理研究报告',text:'草稿内容已返回，正在整理为可读正文；完整内容仍须经过复核。'}:quick?quickScreenProgress(job,false):modeOf(job)==='B'?deepResearchProgress(job,false):modeOf(job)==='C'?earningsUpdateProgress(job,false):modeOf(job)==='D'?comparisonProgress(job,false):null;
   const state = screenState?[screenState.title,screenState.text,active?LoaderCircle:job.status==='failed'?CircleAlert:job.status==='cancelled'?Square:FileText]:job.status === 'queued'
     ? ['任务已排队', '等待研究引擎开始执行，阶段进展和执行轨迹将在这里更新。', Clock3]
     : job.status === 'running'
@@ -131,29 +164,94 @@ function ReportPanel({job, prefix, preview, onRetry, retrying, onReuse, onOutlin
         : job.status === 'cancelled'
           ? ['研究已取消', '可沿用本次输入重新运行当前研究，执行进度、资料和报告将在本页更新。', Square]
           : ['暂无可用报告', '这条研究记录未包含正式报告正文，可查看审计、来源与执行轨迹，或载入输入重新研究。', FileText];
-  const actions=onRetry?<div className="rd-retry-actions"><RetryButton onRetry={onRetry} retrying={retrying}/>{onReuse&&<Button type="button" variant="ghost" onClick={onReuse} disabled={retrying}>修改研究输入</Button>}</div>
+  const actions=onRetry?<div className="rd-retry-actions"><RetryButton onRetry={onRetry} retrying={retrying}/>{onReuse&&!retryError&&<Button type="button" variant="ghost" onClick={onReuse} disabled={retrying}>修改研究输入</Button>}</div>
     :onReuse?<Button type="button" variant="outline" onClick={onReuse}><RotateCcw size={15}/>复用研究输入</Button>:null;
-  return <EmptyState title={state[0]} icon={state[2]} active={job.status === 'running'} actions={!active?actions:null}>{state[1]}</EmptyState>;
+  return <EmptyState title={state[0]} icon={state[2]} active={job.status === 'running'} actions={!active?<>{actions}{guide}</>:null}>{recovery?.text||state[1]}</EmptyState>;
 }
 
-function AuditPanel({job, prefix, onOutline}) {
+function auditResearchNotes(job) {
+  const checks=job.status==='completed'?job.result?.researchSummary?.checks??[]:[];
+  const {unresolved,gaps}=webEvidenceProgress(job);
+  // General research follow-ups stay with the report's decision summary. Only
+  // evidence gaps not already explained in the audit or a judgment appear here.
+  const normalize=text=>String(text??'').replace(/\s+/g,'').trim();
+  const explained=[job.result?.audit,...checks.map(check=>check.unresolved)].map(normalize).filter(Boolean);
+  const seen=new Set();
+  const missing=[
+    ...unresolved.map(item=>({id:item.id,text:[item.description,item.reason].filter(Boolean).join(' · ')})),
+    ...gaps.map(item=>({id:item.id,text:[item.description,...(item.failures??[]),...(item.limitations??[])].filter(Boolean).join(' · ')})),
+  ].filter(item=>{
+    const text=normalize(item.text||item.id);
+    if(!text||seen.has(text)||explained.some(existing=>existing.includes(text)))return false;
+    seen.add(text);return true;
+  }).map(item=>[item.id,item.text].filter(Boolean).join(' · '));
+  return {checks,missing};
+}
+
+function AuditResearchNotes({checks,missing,prefix,onSources}) {
+  if(!checks.length&&!missing.length)return null;
+  return <section className="rd-audit-research-notes" aria-label="判断依据与资料限制">
+    {checks.length>0&&<section className="rd-audit-basis" aria-labelledby={prefix+'-basis'}>
+      <header className="rd-audit-notes-heading">
+        <h3 id={prefix+'-basis'}>判断依据</h3><span>{checks.length} 项研究问题</span>
+      </header>
+      <dl>{checks.map((check,index)=><div className="rd-audit-question" key={index}>
+          <dt>
+            <span className="rd-audit-question-number" aria-hidden="true">{String(index+1).padStart(2,'0')}</span>
+            <span className="rd-audit-question-title">{check.topic}</span>
+          </dt>
+          <dd>
+            <p className="rd-audit-assessment">{check.assessment}</p>
+            {check.unresolved&&<p className="rd-audit-unresolved"><strong>证据限制</strong>{check.unresolved}</p>}
+            {check.sourceIds?.length>0&&<Button type="button" variant="link" size="sm" className="rd-audit-evidence-link" onClick={onSources}><BookOpen size={14} aria-hidden="true"/>查看依据 <span>{check.sourceIds.join('、')}</span><ArrowUpRight size={13}/></Button>}
+          </dd>
+        </div>
+      )}</dl>
+    </section>}
+    {missing.length>0&&<section className="rd-audit-missing" aria-labelledby={prefix+'-missing'}>
+      <h4 id={prefix+'-missing'}>补充资料限制</h4>
+      <ul>{missing.map(item=><li key={item}>{item}</li>)}</ul>
+    </section>}
+  </section>;
+}
+
+function AuditReview({job,prefix,onOutline}) {
+  return <section className="rd-audit-review" aria-labelledby={prefix+'-review'}>
+    <header className="rd-audit-review-heading"><h2 id={prefix+'-review'}>复核说明</h2><p>复核过程、修正记录与结论适用范围</p></header>
+    <div className="rd-audit-review-body"><ReportDocument text={job.result.audit} prefix={prefix} onOutline={onOutline}/></div>
+  </section>;
+}
+
+function AuditPanel({job, prefix, onOutline,onSources}) {
+  const {checks:researchChecks,missing}=auditResearchNotes(job);
+  const hasAudit=Boolean(job.result?.audit?.trim());
+  const recovery=researchRecovery(job),draftState=researchDraftState(job);
+  if(recovery&&['save','saving','save-unavailable'].includes(recovery.kind))return <EmptyState icon={ShieldCheck} title="等待结果保存">{job.delivery.targetStatus==='completed'?'复核记录将在结果保存成功后提供；当前保存状态见研究进展。':'当前正在处理执行记录的保存，不代表已有正式审计；请回到研究报告查看恢复指引。'}</EmptyState>;
   const validation = job.result?.validation;
   const checks = Array.isArray(validation?.checks) ? validation.checks : [];
-  return <>
+  const coverage=auditCoverage(validation);
+  return <div className="rd-audit-content">
     {validation && <section className="rd-validation" aria-label="程序校验记录">
-      <h3><ShieldCheck size={17} aria-hidden="true"/>程序校验记录</h3>
+      <header className="rd-validation-heading"><h3><ShieldCheck size={17} aria-hidden="true"/>程序校验记录</h3>{validation.checkedAt&&<small>校验于 {formatDate(validation.checkedAt)}</small>}</header>
       <ul>{checks.map((check, index) => <li key={`${check.id || 'check'}-${index}`} data-passed={check.passed}>
         {check.passed === true ? <Check size={15} aria-label="通过"/> : <CircleAlert size={15} aria-label={check.passed === false ? '未通过' : '未标记结果'}/>}
         <span>{check.label}{check.passed === false && ' · 未通过'}{check.passed == null && ' · 未标记结果'}</span>
       </li>)}</ul>
       {validation.scope && <p>{validation.scope}</p>}
-      {validation.checkedAt && <small>校验于 {formatDate(validation.checkedAt)}</small>}
+      {coverage.length>0&&<div className="rd-audit-window" aria-label="复核资料范围">
+        {coverage.map((item,index)=><div className="rd-audit-round" key={index}>
+          <p><strong>{item.title}</strong>{item.summary.slice(item.title.length)}</p>
+          {item.limitations.map((text,index)=><p key={index}>{text}</p>)}
+        </div>)}
+        <p>{auditCoverageNotice}</p>
+      </div>}
     </section>}
-    {job.result?.audit?.trim() ? <ReportDocument text={job.result.audit} prefix={prefix} onOutline={onOutline}/> : <EmptyState icon={ShieldCheck}
-      title={job.status === 'cancelled' ? '审计未完成，任务已取消' : job.status === 'failed' ? '研究未完成，暂无正式审计' : isActive(job.status) ? (job.liveReport?.phase === 'audit' ? '正在复核研究草稿' : '等待研究进入审计阶段') : '暂无审计记录'}>
-      {isActive(job.status) ? '正式审计结果将在研究完成后显示；实时草稿不代表审计结论。' : '本次记录没有正式审计正文，可查看执行轨迹了解研究过程。'}
+    {hasAudit ? <AuditReview job={job} prefix={prefix} onOutline={onOutline}/> : <EmptyState icon={ShieldCheck}
+      title={job.status === 'cancelled' ? '审计未完成，任务已取消' : job.status === 'failed' ? '研究未完成，暂无正式审计' : isActive(job.status) ? draftState?.auditTitle : '暂无审计记录'}>
+      {isActive(job.status) ? (draftState?.kind==='supplement'||draftState?.kind==='audit'?draftState.text:'正式审计结果将在研究完成后显示；实时草稿不代表审计结论。') : '本次记录没有正式审计正文，可查看执行轨迹了解研究过程。'}
     </EmptyState>}
-  </>;
+    <AuditResearchNotes checks={researchChecks} missing={missing} prefix={prefix} onSources={onSources}/>
+  </div>;
 }
 
 function sourceHref(value) {
@@ -170,11 +268,32 @@ function SourceLink({url, children}) {
     : url ? <span className="rd-muted">{children}链接不可用</span> : null;
 }
 
-function SourcesPanel({sources, status}) {
+function SourcesPanel({sources, status, referenceMaterials=[],job,sourceTarget,active}) {
   const [query, setQuery] = useState('');
   const [expanded, setExpanded] = useState(() => new Set());
   const input = useRef(null);
+  const sourceNodes=useRef(new Map()),pendingSource=useRef(null),handledSource=useRef(null);
+  useEffect(()=>{
+    if(!active||!sourceTarget||handledSource.current===sourceTarget||!sources[sourceTarget.index])return;
+    handledSource.current=sourceTarget;
+    const key=`${sources[sourceTarget.index].id||'source'}-${sourceTarget.index}`;
+    pendingSource.current=key;
+    setQuery('');setExpanded(current=>new Set([...current,key]));
+  },[sourceTarget,active,sources]);
+  useEffect(()=>{
+    const key=pendingSource.current;
+    if(!active||!key||query||!expanded.has(key))return;
+    const frame=requestAnimationFrame(()=>{
+      const node=sourceNodes.current.get(key);
+      if(!node)return;
+      node.scrollIntoView({block:'start',behavior:'instant'});
+      node.querySelector('.rd-source-trigger')?.focus({preventScroll:true});
+      pendingSource.current=null;
+    });
+    return()=>cancelAnimationFrame(frame);
+  },[active,query,expanded]);
   const inputId = useId();
+  const web=webEvidenceProgress(job);
   const normalized = query.trim().toLocaleLowerCase();
   const filtered = sources.map((source, index) => ({source, key: `${source.id || 'source'}-${index}`}))
     .filter(({source}) => [source.id, source.title, source.provider, source.url, source.filingUrl, source.date]
@@ -190,6 +309,12 @@ function SourcesPanel({sources, status}) {
     });
   }
   return <div className="rd-sources">
+    {(web.searches>0||web.sources>0)&&<p className="rd-web-source-note">网页资料：已搜索 {web.searches} 次，{web.sources>0?`新增 ${web.sources} 份已读取的网页资料，列入下方来源。`:'尚未取得可用正文。'}未解决的资料缺口见审计记录。</p>}
+    {referenceMaterials.length>0&&<section aria-label="已保存的用户补充资料">
+      <h3>用户补充资料 · {referenceMaterials.length} 份</h3>
+      <p className="rd-muted">作为待核实研究线索保存，财务事实仍需对应原始证据。</p>
+      {referenceMaterials.map((item,index)=><Collapsible key={index} className="rd-source"><CollapsibleTrigger asChild><Button variant="ghost" className="rd-source-trigger"><FileText size={16}/><span className="rd-source-heading"><strong>[{item.id}] {item.title}</strong><small>用户提供 · 待核实</small></span><ChevronDown size={16}/></Button></CollapsibleTrigger><CollapsibleContent className="rd-source-body"><pre tabIndex={0}>{item.text}</pre>{item.url&&<SourceLink url={item.url}>用户附带链接</SourceLink>}</CollapsibleContent></Collapsible>)}
+    </section>}
     <label className="rd-field-label" htmlFor={inputId}>检索证据</label>
     <div className="rd-source-search"><Search size={17} aria-hidden="true"/>
       <Input ref={input} id={inputId} type="search" value={query} aria-label="搜索证据来源" aria-describedby={`${inputId}-count`}
@@ -205,7 +330,7 @@ function SourcesPanel({sources, status}) {
         return next;
       })}>{allExpanded ? '收起' : '展开'}{normalized ? '搜索结果' : '全部来源'}<ChevronDown size={14} className={allExpanded ? 'rd-rotate' : undefined}/></Button>}
     </div>
-    <div className="rd-source-list">{filtered.map(({source, key}) => <Collapsible key={key} className="rd-source" open={expanded.has(key)} onOpenChange={open=>setSourceOpen(key,open)}>
+    <div className="rd-source-list">{filtered.map(({source, key}) => <Collapsible key={key} ref={node=>{if(node)sourceNodes.current.set(key,node);else sourceNodes.current.delete(key);}} className="rd-source" open={expanded.has(key)} onOpenChange={open=>setSourceOpen(key,open)}>
       <CollapsibleTrigger asChild><Button variant="ghost" className="rd-source-trigger"><span className="rd-source-icon"><FileText size={18} aria-hidden="true"/></span>
         <span className="rd-source-heading"><strong><span className="rd-source-id">[{source.id || '未编号'}]</span> {source.title || '未命名来源'}</strong>
           <small>{source.provider || '历史资料'} · {source.dateBasis==='latest-report-period'?'报告期 ':source.dateBasis==='latest-observation'?'观测日 ':source.dateBasis==='latest-event'?'记录日期 ':''}{source.date || '日期未提供'}</small></span>
@@ -222,6 +347,7 @@ function SourcesPanel({sources, status}) {
           {source.metadataWarnings?.length>0 && <p>{source.metadataWarnings.join('；')}</p>}
         </>}
           {source.coverage && <p>{source.coverage}</p>}
+          {source.visualReading && <p>原页读取：{source.visualReading.notice}</p>}
           {source.cacheWarning && <p>{source.cacheWarning}</p>}
           {source.stale && <p>这是保留的旧数据，请核对披露日和抓取时间；尚未确认最新披露。</p>}
         {source.text ? <pre tabIndex={0} role="region" aria-label={`${source.id || '来源'} 正文预览`}>{source.text}</pre> : <p className="rd-source-no-text">这份来源未提供正文预览，可打开原始来源查阅。</p>}
@@ -235,18 +361,25 @@ function SourcesPanel({sources, status}) {
   </div>;
 }
 
-function isIssue(event) { return /error|fail|warn/i.test(event.type || '') || Boolean(event.result?.error); }
+function isIssue(event) { return /error|fail|warn/i.test(event.type || '') || event.type==='audit_validation' || Boolean(event.result?.error); }
 function isTool(event) { return /tool/i.test(event.type || '') || event.arguments != null || event.result != null; }
 
-function Trace({events, status, hidden}) {
+function Trace({events, status, hidden,reveal=0}) {
   const [open, setOpen] = useState(true);
   const [filter, setFilter] = useState('all');
+  const trigger=useRef(null);
+  useEffect(()=>{
+    if(!reveal)return;
+    setOpen(true);setFilter('issues');
+    const frame=requestAnimationFrame(()=>{trigger.current?.scrollIntoView({block:'start',behavior:'instant'});trigger.current?.focus({preventScroll:true});});
+    return()=>cancelAnimationFrame(frame);
+  },[reveal]);
   const filterId = useId();
   const filtered = events.map((event, index) => ({event, index})).filter(({event}) =>
     filter === 'issues' ? isIssue(event) : filter === 'tools' ? isTool(event) : true).reverse();
   return <aside className="rd-trace-aside" hidden={hidden} aria-label="研究执行轨迹">
     <Card className="rd-trace"><Collapsible open={open} onOpenChange={setOpen}>
-      <CollapsibleTrigger asChild><Button variant="ghost" className="rd-trace-trigger"><Activity size={18} aria-hidden="true"/><strong>执行轨迹</strong><Badge variant="secondary">{events.length}</Badge><ChevronDown size={16} aria-hidden="true"/></Button></CollapsibleTrigger>
+      <CollapsibleTrigger asChild><Button ref={trigger} variant="ghost" className="rd-trace-trigger"><Activity size={18} aria-hidden="true"/><strong>执行轨迹</strong><Badge variant="secondary">{events.length}</Badge><ChevronDown size={16} aria-hidden="true"/></Button></CollapsibleTrigger>
       <CollapsibleContent className="rd-trace-body">
         <div className="rd-trace-filter"><label htmlFor={filterId}>事件筛选</label><Select value={filter} onValueChange={setFilter}><SelectTrigger id={filterId} aria-label="事件筛选"><SelectValue/></SelectTrigger><SelectContent>
           <SelectItem value="all">全部事件</SelectItem><SelectItem value="tools">工具调用</SelectItem><SelectItem value="issues">异常与提示</SelectItem>
@@ -256,6 +389,11 @@ function Trace({events, status, hidden}) {
           {filtered.length ? <ol>{filtered.map(({event, index}) => <li className={`rd-event${isIssue(event) ? ' rd-event-issue' : ''}`} key={index}>
             <div className="rd-event-meta"><span>{formatDate(event.time, true)}</span><span>{isIssue(event) ? '异常 / 提示' : isTool(event) ? '工具' : '进展'}</span></div>
             <p>{event.message || '执行记录'}</p>
+            {event.type==='audit_validation' && <div className="rd-audit-issues">
+              <p>{event.category==='format'?'报告格式需要修复': '交付内容需要修正'}{event.retryable===true?' · 正在自动修正':event.retryable===false?' · 自动修正已停止':''}</p>
+              {event.issues?.length>0 ? <ul>{[...new Set(event.issues.map(issue=>issue.message).filter(Boolean))].map(message=><li key={message}>{message}</li>)}</ul> : event.reason && <p>{event.reason}</p>}
+              {event.stopReason && <p>{event.stopReason}</p>}
+            </div>}
             {(event.arguments != null || event.result != null) && <Collapsible className="rd-event-data"><CollapsibleTrigger asChild><Button variant="ghost" size="sm">查看工具数据<ChevronDown size={14} aria-hidden="true"/></Button></CollapsibleTrigger><CollapsibleContent>
               {event.arguments != null && <><h4>输入参数</h4><pre tabIndex={0}>{JSON.stringify(event.arguments, null, 2)}</pre></>}
               {event.result != null && <><h4>返回结果</h4><pre tabIndex={0}>{JSON.stringify(event.result, null, 2)}</pre></>}
@@ -269,20 +407,40 @@ function Trace({events, status, hidden}) {
 }
 
 function Outline({items,activeId,onNavigate,reportHref=''}) {
+  const navigation=useRef(null);
+  useEffect(()=>{
+    const nav=navigation.current;if(!nav||!activeId)return;
+    let frame;
+    function revealActive(){
+      cancelAnimationFrame(frame);
+      frame=requestAnimationFrame(()=>{
+        const link=nav.querySelector('[aria-current="location"]');if(!link)return;
+        const viewport=nav.getBoundingClientRect(),item=link.getBoundingClientRect();
+        const top=viewport.top+nav.clientTop,bottom=top+nav.clientHeight;
+        // Scroll only the directory; revealing a link must not move the report.
+        if(item.top<top||item.bottom>bottom){
+          nav.scrollTo({top:nav.scrollTop+item.top-top-(nav.clientHeight-item.height)/2,behavior:'instant'});
+        }
+      });
+    }
+    const observer=new ResizeObserver(revealActive);observer.observe(nav);
+    revealActive();
+    return()=>{cancelAnimationFrame(frame);observer.disconnect();};
+  },[activeId,items]);
   if(!items.length)return null;
   const firstLevel=items.length?Math.min(...items.map(item=>item.level)):1;
   return <Card className="rd-outline"><CardHeader><CardTitle><List size={17}/>报告目录</CardTitle><Badge variant="secondary">{items.length} 章节</Badge></CardHeader><CardContent>
-    <nav aria-label="报告目录"><ol>{items.map(item=><li key={item.id} style={{'--rd-indent':Math.min(item.level-firstLevel,2)}}><Button asChild variant="ghost"><a href={reportHref+'#'+item.id} aria-current={activeId===item.id?'location':undefined} onClick={event=>onNavigate?.(event,item.id)}>{item.label}</a></Button></li>)}</ol></nav>
+    <nav ref={navigation} aria-label="报告目录"><ol>{items.map(item=><li key={item.id} style={{'--rd-indent':Math.min(item.level-firstLevel,2)}}><Button asChild variant="ghost"><a href={reportHref+'#'+item.id} aria-current={activeId===item.id?'location':undefined} onClick={event=>onNavigate?.(event,item.id)}>{item.label}</a></Button></li>)}</ol></nav>
   </CardContent></Card>;
 }
 
-function ResearchActions({reading,setReading,active,hasReport,cancelling,onCancel,onRetry,retrying,onReuse,onDownload,onNavigate}) {
+function ResearchActions({reading,setReading,active,hasReport,cancelling,onCancel,onRetry,retrying,onReuse,onDownload,onNavigate,saveOnly,saving,saveUnavailable}) {
   function perform(action){onNavigate?.();action?.();}
   return <Card className="rd-action-panel" role="group" aria-label="研究操作"><CardContent>
     <Button variant="outline" className="rd-reading-toggle" aria-pressed={reading} onClick={()=>perform(()=>setReading(value=>!value))}><BookOpen size={17}/>{reading?'退出阅读模式':'阅读模式'}</Button>
-    {!active&&(onRetry?<RetryButton onRetry={()=>perform(onRetry)} retrying={retrying}/>:onReuse&&<Button variant="outline" onClick={()=>perform(onReuse)}><RotateCcw size={17}/>复用研究输入</Button>)}
-    <Button className="rd-export" disabled={!hasReport||!onDownload} title={hasReport?'导出报告、审计与来源；深度研究同时包含验证计划及实际工具记录（Markdown）':'正式报告生成后可导出'} onClick={()=>perform(onDownload)}><Download size={17}/>导出报告</Button>
-    {active&&<Button variant="outline" className="rd-cancel" disabled={cancelling||!onCancel} aria-busy={Boolean(cancelling)} onClick={()=>{if(!cancelling)perform(onCancel);}}>{cancelling?<LoaderCircle size={16} className="rd-spin"/>:<Square size={16}/>} {cancelling?'正在取消…':'取消任务'}</Button>}
+    {!active&&(onRetry?<RetryButton onRetry={()=>perform(onRetry)} retrying={retrying} saveOnly={saveOnly}/>:onReuse&&<Button variant="outline" onClick={()=>perform(onReuse)} disabled={retrying} title="将输入载入工作台，确认提交后才会开始新的研究"><RotateCcw size={17}/>复用研究输入</Button>)}
+    <Button className="rd-export" disabled={!hasReport||!onDownload||retrying} title={hasReport?'导出报告、审计与来源；深度研究同时包含验证计划及实际工具记录（Markdown）':saveOnly||saving||saveUnavailable?'结果保存成功后可导出':'正式报告生成后可导出'} onClick={()=>perform(onDownload)}><Download size={17}/>导出报告</Button>
+    {active&&<Button variant="outline" className="rd-cancel" disabled={saving||cancelling||!onCancel} aria-busy={Boolean(cancelling)} title={saving?'正在保存原结果，请等待保存完成':'停止当前执行；之后重试研究会重新采集资料'} onClick={()=>{if(!cancelling&&!saving)perform(onCancel);}}>{cancelling?<LoaderCircle size={16} className="rd-spin"/>:<Square size={16}/>} {saving?'正在保存':cancelling?'正在取消…':'取消任务'}</Button>}
   </CardContent></Card>;
 }
 
@@ -291,6 +449,34 @@ function ReportDirectory({compact,open,onOpenChange,items,activeId,onNavigate,on
  const outline=<Outline {...{items,activeId,onNavigate,reportHref}}/>;
  return compact?<Sheet open={open} onOpenChange={onOpenChange}><SheetTrigger asChild>{trigger}</SheetTrigger><SheetContent side="left" className="research-detail rd-mobile-sheet" onCloseAutoFocus={onCloseAutoFocus}><SheetHeader><SheetTitle>报告目录</SheetTitle><SheetDescription>选择章节，切换到研究报告并定位。</SheetDescription></SheetHeader>{outline}</SheetContent></Sheet>
  :<Popover open={open} onOpenChange={onOpenChange}><PopoverTrigger asChild>{trigger}</PopoverTrigger><PopoverContent align="end" collisionPadding={16} className="research-detail rd-directory-popover" aria-label="报告目录" onCloseAutoFocus={onCloseAutoFocus}>{outline}</PopoverContent></Popover>;
+}
+
+function ReadingTools({body,toolbar,reportActive,onDirectoryOpenChange,directory,children}) {
+  const layer=useRef(null);
+  const [showDirectory,setShowDirectory]=useState(false);
+  useEffect(()=>{if(!reportActive||!showDirectory)onDirectoryOpenChange(false);},[reportActive,showDirectory,onDirectoryOpenChange]);
+  useEffect(()=>{
+    const content=body.current,root=content?.closest('.page-scroll'),tools=layer.current;
+    if(!content||!root||!tools)return;
+    let frame;
+    function update(){
+      cancelAnimationFrame(frame);
+      frame=requestAnimationFrame(()=>{
+        const bounds=content.getBoundingClientRect(),viewport=root.getBoundingClientRect();
+        const toolbarBottom=toolbar.current?.getBoundingClientRect().bottom??viewport.top;
+        const top=Math.max(bounds.top,toolbarBottom)+12;
+        const bottom=Math.min(bounds.bottom-12,viewport.bottom-16);
+        const article=content.querySelector('[role="tabpanel"]:not([hidden]) .rd-markdown');
+        setShowDirectory(reportActive&&Boolean(article)&&article.getBoundingClientRect().top<=toolbarBottom-120&&bottom-top>=100);
+        Object.assign(tools.style,{left:bounds.left+12+'px',width:Math.max(0,bounds.width-24)+'px',top:top+'px',height:Math.max(0,bottom-top)+'px',visibility:bottom-top>=100?'visible':'hidden'});
+      });
+    }
+    const observer=new ResizeObserver(update);
+    observer.observe(content);observer.observe(root);if(toolbar.current)observer.observe(toolbar.current);
+    update();root.addEventListener('scroll',update,{passive:true});
+    return()=>{cancelAnimationFrame(frame);observer.disconnect();root.removeEventListener('scroll',update);};
+  },[body,toolbar,reportActive]);
+  return <div ref={layer} className="rd-reading-tools">{reportActive&&showDirectory&&directory}{children}</div>;
 }
 
 function quickScreenProgress(job,hasReport){
@@ -306,12 +492,26 @@ function quickScreenProgress(job,hasReport){
 
 function DetailView({job, tab, onTabChange, streamConnection, onRetry, retrying, retryError, onReuse, onUpdate,onDeepen, onDownload, onCancel, cancelling}) {
   const [reading,setReading]=useState(false);
+  const [showBackToTop,setShowBackToTop]=useState(false);
+  const [processOpen,setProcessOpen]=useState(false);
+  const processDestination=useRef(null);
+  const [traceReveal,setTraceReveal]=useState({attempt:0,count:0});
+  const [contentTarget,setContentTarget]=useState(null);
+  const [sourceTarget,setSourceTarget]=useState(null);
   const [outline,setOutline]=useState({prefix:'',items:[]});
   const [activeHeading,setActiveHeading]=useState('');
   const [directoryOpen,setDirectoryOpen]=useState(false),[actionsOpen,setActionsOpen]=useState(false);
   const [compact,setCompact]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(max-width: 1023px)').matches);
   const [headerHeight,setHeaderHeight]=useState(80),[toolbarHeight,setToolbarHeight]=useState(68),[anchorTarget,setAnchorTarget]=useState(null);
-  const header=useRef(null),section=useRef(null),toolbar=useRef(null),pendingAnchor=useRef(null);
+  const header=useRef(null),section=useRef(null),toolbar=useRef(null),reportBody=useRef(null),pendingAnchor=useRef(null);
+  useEffect(()=>{
+    const root=section.current?.closest('.page-scroll');if(!root)return;
+    let frame;
+    function update(){cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>setShowBackToTop(root.scrollTop>Math.max(320,root.clientHeight*.6)));}
+    const observer=new ResizeObserver(update);observer.observe(section.current);observer.observe(root);
+    update();root.addEventListener('scroll',update,{passive:true});
+    return()=>{cancelAnimationFrame(frame);observer.disconnect();root.removeEventListener('scroll',update);};
+  },[]);
   const retryAlert=useRef(null);
   useEffect(()=>{if(retryError){retryAlert.current?.focus({preventScroll:true});retryAlert.current?.scrollIntoView({block:'start',behavior:'instant'});}},[retryError]);
   const instanceId=useId();
@@ -321,10 +521,21 @@ function DetailView({job, tab, onTabChange, streamConnection, onRetry, retrying,
     .filter(event=>event.type!=='research_plan'&&(modeOf(job)==='B'||event.toolName!=='read_rules'))
     .map(event=>event.type==='audit'&&/CORE|FULL/.test(event.message||'')?{...event,message:'正在复核报告证据与结论。'}:event);
   const warnings=Array.isArray(job.result?.warnings)?job.result.warnings:[];
-  const active=isActive(job.status),hasReport=Boolean(job.result?.report?.trim());
-  const quick=modeOf(job)==='A',screenState=quick?quickScreenProgress(job,hasReport):modeOf(job)==='B'?deepResearchProgress(job,hasReport):null;
+  const recovery=researchRecovery(job),draftState=researchDraftState(job);
+  const retryAction=recovery?.retryKind?onRetry:undefined;
+  const active=isActive(job.status),hasReport=!['saving','failed'].includes(job.delivery?.status)&&Boolean(job.result?.report?.trim());
+  const quick=modeOf(job)==='A',screenState=(recovery&&['save','saving','save-unavailable'].includes(recovery.kind)?recovery:null)||(['supplement','audit'].includes(draftState?.kind)?draftState:null)||(quick?quickScreenProgress(job,hasReport):modeOf(job)==='B'?deepResearchProgress(job,hasReport):modeOf(job)==='C'?earningsUpdateProgress(job,hasReport):modeOf(job)==='D'?comparisonProgress(job,hasReport):null);
   const preview=useMemo(()=>reportPreview(job.liveReport?.text,job.plan),[job.liveReport?.text,job.plan]);
   const currentTab=Object.hasOwn(tabLabels,tab)?tab:'report';
+  useEffect(()=>{
+    if(!contentTarget||currentTab!==contentTarget)return;
+    const frame=requestAnimationFrame(()=>{
+      toolbar.current?.scrollIntoView({block:'start',behavior:'instant'});
+      toolbar.current?.querySelector('[role="tab"][data-state="active"]')?.focus({preventScroll:true});
+      setContentTarget(null);
+    });
+    return()=>cancelAnimationFrame(frame);
+  },[currentTab,contentTarget]);
   const outlineItems=outline.prefix===prefix+'-report'?outline.items:[];
   const hasOutline=outlineItems.length>0;
   const updateOutline=useCallback(next=>setOutline(current=>current.prefix===next.prefix&&current.items.length===next.items.length&&current.items.every((item,index)=>item.id===next.items[index].id&&item.label===next.items[index].label&&item.level===next.items[index].level)?current:next),[]);
@@ -373,56 +584,70 @@ function DetailView({job, tab, onTabChange, streamConnection, onRetry, retrying,
     });
     return()=>cancelAnimationFrame(frame);
   },[anchorTarget,currentTab,headerHeight,toolbarHeight]);
-  const actionProps={reading,setReading,active,hasReport,cancelling,onCancel,onRetry,retrying,onReuse,onDownload};
+  function showTrace(){setReading(false);setTraceReveal(value=>({attempt:job.retryCount??0,count:value.count+1}));}
+  function backToTop(){
+    header.current?.querySelector('h1')?.focus({preventScroll:true});
+    if(window.location.hash)onTabChange(currentTab,'');
+    section.current?.closest('.page-scroll')?.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+  }
+  function showContent(next){setProcessOpen(false);setContentTarget(next);onTabChange(next);}
+  function showWarningSource(index){setContentTarget(null);setSourceTarget({index});onTabChange('sources');}
+  function showProcessSources(){processDestination.current='sources';setProcessOpen(false);}
+  function closeProcess(event){if(processDestination.current){event.preventDefault();const next=processDestination.current;processDestination.current=null;showContent(next);}}
+  const actionProps={reading,setReading,active,hasReport,cancelling,onCancel,onRetry:retryAction,retrying,onReuse,onDownload,saveOnly:needsSaveRetry(job),saving:isSavingResult(job),saveUnavailable:recovery?.kind==='save-unavailable'};
   const title=job.input?.question||job.question||'未命名研究';
   const overview=job.status==='queued'?'任务已排队':job.status==='running'
     ?(job.liveReport?.phase==='audit'?'正在复核研究草稿':job.liveReport?.phase==='formatting'?'正在整理研究报告':'研究正在进行')
     :job.status==='completed'?(hasReport?'报告已完成，可以查阅与导出':'研究已结束，未找到报告正文')
       :job.status==='failed'?'本次研究未完成':job.status==='cancelled'?'研究已取消':'研究记录';
-  const overviewCopy=active?(events.at(-1)?.message||'任务进度将在这里更新。')
-    :job.error||(job.status==='completed'&&hasReport?'结合审计记录和原始证据，一起阅读研究结论。':onRetry?'输入和执行记录已保留，可在当前详情页直接重试。':'输入和执行记录已保留，可复用输入重新研究。');
   return <section ref={section} className={'research-detail'+(reading?' rd-reading':'')} style={{'--rd-header-height':headerHeight+'px','--rd-toolbar-height':toolbarHeight+'px'}} aria-labelledby={prefix+'-title'}>
     <header className="rd-header" ref={header}>
-      <div className="rd-title-row"><h1 id={prefix+'-title'} title={title}>{title}</h1><Status status={job.status}/></div>
+      <div className="rd-title-row"><h1 id={prefix+'-title'} title={title} tabIndex={-1}>{title}</h1><Status status={job.status} delivery={job.delivery}/></div>
       <div className="rd-desktop-tools"><ResearchActions {...actionProps}/></div>
       <div className="rd-mobile-tools">
-        <Sheet open={actionsOpen} onOpenChange={setActionsOpen}><SheetTrigger asChild><Button variant="outline" size="sm" aria-label="打开研究操作"><BookOpen size={16}/>研究操作</Button></SheetTrigger><SheetContent side="right" className="research-detail rd-mobile-sheet"><SheetHeader><SheetTitle>研究操作</SheetTitle><SheetDescription>{onRetry?'切换阅读模式或直接重试本次研究。':'切换阅读模式、复用输入或导出正式报告。'}</SheetDescription></SheetHeader><ResearchActions {...actionProps} onNavigate={()=>setActionsOpen(false)}/></SheetContent></Sheet>
+        <Sheet open={actionsOpen} onOpenChange={setActionsOpen}><SheetTrigger asChild><Button variant="outline" size="sm" aria-label="打开研究操作"><BookOpen size={16}/>研究操作</Button></SheetTrigger><SheetContent side="right" className="research-detail rd-mobile-sheet"><SheetHeader><SheetTitle>研究操作</SheetTitle><SheetDescription>{needsSaveRetry(job)?'重试保存当前结果，或切换阅读模式。':retryAction?'切换阅读模式或直接重试本次研究。':'切换阅读模式、复用输入或导出正式报告。'}</SheetDescription></SheetHeader><ResearchActions {...actionProps} onNavigate={()=>setActionsOpen(false)}/></SheetContent></Sheet>
       </div>
     </header>
+   {retrying&&<p className="rd-retry-status" role="status"><LoaderCircle size={16} className="rd-spin"/>{needsSaveRetry(job)||isSavingResult(job)?'正在重新保存结果，请稍候…':'正在重新提交研究，请稍候…'}</p>}
+    {retryError&&<Alert ref={retryAlert} tabIndex={-1} variant="destructive" className="rd-retry-error"><CircleAlert size={17}/><AlertTitle>{needsSaveRetry(job)?'结果仍未保存':'重试未能启动'}</AlertTitle><AlertDescription><p>{retryError}</p><p>{needsSaveRetry(job)?'可稍后重试保存；若提示版本变化或暂存内容不存在，请刷新详情确认最新状态。':'若请求超时或提示版本变化，请先刷新详情确认是否已启动，避免重复操作；输入需调整时可选择“修改研究输入”。'}</p>{onReuse&&!needsSaveRetry(job)&&<Button type="button" variant="ghost" onClick={onReuse} disabled={retrying}>修改研究输入</Button>}</AlertDescription></Alert>}
+    <div className="rd-layout">
+      <div className="rd-main-column">
+        <div className={'rd-overview rd-context-strip rd-overview-'+job.status} aria-label="研究进展">
+          <span className="rd-overview-copy"><strong>{screenState?.title||overview}</strong></span>
+          <Sheet open={processOpen} onOpenChange={setProcessOpen}><SheetTrigger asChild><Button type="button" variant="ghost" size="sm" className="rd-process-trigger"><Activity size={15}/>研究过程<ChevronDown size={14}/></Button></SheetTrigger><SheetContent side="right" className="research-detail rd-process-sheet" onCloseAutoFocus={closeProcess}><SheetHeader><SheetTitle>研究过程</SheetTitle><SheetDescription>查看研究设置、执行阶段与资料覆盖。</SheetDescription></SheetHeader><div className="rd-process-body">
     <dl className="rd-meta">
-      <div><dt>研究路径</dt><dd>{modes[job.mode]?.name||(job.mode==='auto'?'智能路由':job.plan?.name||'研究路径未记录')}</dd></div>
+      <div><dt>研究路径</dt><dd>{modes[job.mode]?.name||(job.mode==='auto'?'自动匹配':job.plan?.name||'研究路径未记录')}</dd></div>
       {job.input?.depth&&<div><dt>{quick?'研究目标':'报告深度'}</dt><dd>{quick?'判断是否继续研究':depthLabels[job.input.depth]||job.input.depth}</dd></div>}
       {(job.plan?.historyYears||job.input?.historyYears)&&<div><dt>财报范围</dt><dd>近 {job.plan?.historyYears||job.input.historyYears} 年</dd></div>}
       <div><dt>创建时间</dt><dd>{formatDate(job.createdAt)}</dd></div>
       {job.lastRetriedAt&&<div><dt>最近重试</dt><dd>{formatDate(job.lastRetriedAt)}</dd></div>}
     </dl>
-    {retrying&&<p className="rd-retry-status" role="status"><LoaderCircle size={16} className="rd-spin"/>正在重新提交研究，请稍候…</p>}
-    {retryError&&<Alert ref={retryAlert} tabIndex={-1} variant="destructive" className="rd-retry-error"><CircleAlert size={17}/><AlertTitle>重试未能启动</AlertTitle><AlertDescription><p>{retryError}</p><p>原研究记录已保留，可以再次重试。</p>{onReuse&&<Button type="button" variant="ghost" onClick={onReuse}>修改研究输入</Button>}</AlertDescription></Alert>}
-    <div className="rd-layout">
-      <div className="rd-main-column">
-        <section className={'rd-overview rd-overview-'+job.status} aria-label="研究进展">
-          <span className="rd-overview-icon">{active?(job.status==='queued'?<Clock3 size={20}/>:<LoaderCircle size={20} className="rd-spin"/>):job.status==='failed'?<CircleAlert size={20}/>:job.status==='completed'?<Check size={20}/>:<Square size={18}/>}</span>
-          <div className="rd-overview-copy"><strong>{screenState?.title||overview}</strong><p>{screenState?.text||overviewCopy}</p>{(quick||modeOf(job)==='B')&&job.error&&<p className="rd-screen-error">{job.error}</p>}</div>
-          <div className="rd-overview-counts"><span><strong>{sources.length}</strong> 份资料</span><span><strong>{events.length}</strong> 条轨迹</span></div>
-        </section>
+
+            <ResearchProgress job={job} expanded/>
+            <DocumentReadingSummary job={job} onSources={showProcessSources}/>
+          </div></SheetContent></Sheet>
+        </div>
         {streamConnection&&<p className="rd-connection" role="status"><Activity size={15} aria-hidden="true"/>{streamConnection}</p>}
-        <ResearchProgress job={job}/>
         <Card className="rd-report-card" aria-label="研究内容">
           <Tabs value={currentTab} onValueChange={onTabChange} className="rd-tabs">
             <div ref={toolbar} className="rd-content-toolbar"><TabsList className="rd-tab-list" aria-label="研究详情内容">
               <TabsTrigger value="report"><FileText size={16}/>研究报告</TabsTrigger>
               <TabsTrigger value="audit"><ShieldCheck size={16}/>审计记录</TabsTrigger>
               <TabsTrigger value="sources"><Globe size={16}/>证据来源<Badge variant="secondary" className="rd-source-count">{sources.length}</Badge></TabsTrigger>
-            </TabsList>
-            <ReportDirectory compact={compact} open={directoryOpen} onOpenChange={setDirectoryOpen} items={outlineItems} activeId={activeHeading} onNavigate={navigateOutline} onCloseAutoFocus={finishDirectoryClose} reportHref={'/research/'+encodeURIComponent(job.id)}/></div>
-            {warnings.length>0&&<section className="rd-warnings" aria-label="报告使用提示"><CircleAlert size={17} aria-hidden="true"/><div><strong>阅读提示</strong><ul>{warnings.map((warning,index)=><li key={index}>{warning}</li>)}</ul></div></section>}
-            <TabsContent value="report" className="rd-panel" forceMount hidden={currentTab!=='report'}>{modeOf(job)==='B'&&<DeepResearchProcess key={job.retryCount??0} job={job} onSources={()=>onTabChange('sources')}/>}<ReportPanel job={job} prefix={prefix+'-report'} preview={preview} onRetry={onRetry} retrying={retrying} onReuse={onReuse} onUpdate={job.status==='completed'?onUpdate:undefined} onDeepen={job.status==='completed'?onDeepen:undefined} onOutline={updateOutline}/></TabsContent>
-            <TabsContent value="audit" className="rd-panel"><AuditPanel job={job} prefix={prefix+'-audit'}/></TabsContent>
-            <TabsContent value="sources" className="rd-panel" forceMount hidden={currentTab!=='sources'}><SourcesPanel key={job.retryCount??0} sources={sources} status={job.status}/></TabsContent>
+            </TabsList></div>
+            <div ref={reportBody} className="rd-reading-body">
+            <ReadingTools body={reportBody} toolbar={toolbar} reportActive={currentTab==='report'} onDirectoryOpenChange={setDirectoryOpen} directory={hasOutline&&<ReportDirectory compact={compact} open={directoryOpen} onOpenChange={setDirectoryOpen} items={outlineItems} activeId={activeHeading} onNavigate={navigateOutline} onCloseAutoFocus={finishDirectoryClose} reportHref={'/research/'+encodeURIComponent(job.id)}/> }>
+              {showBackToTop&&!processOpen&&!directoryOpen&&!actionsOpen&&<Button type="button" variant="outline" className="rd-back-to-top" onClick={backToTop} aria-label="回到顶部" title="回到顶部"><ArrowUp size={18} aria-hidden="true"/><span>回到顶部</span></Button>}
+            </ReadingTools>
+            {currentTab==='report'&&<ReportWarnings warnings={warnings} sources={sources} onSource={showWarningSource}/>}
+            <TabsContent value="report" className="rd-panel" forceMount hidden={currentTab!=='report'}><ReportPanel job={job} prefix={prefix+'-report'} preview={preview} onRetry={retryAction} retrying={retrying} retryError={retryError} onReuse={onReuse} onUpdate={job.status==='completed'?onUpdate:undefined} onDeepen={job.status==='completed'?onDeepen:undefined} onOutline={updateOutline} onSources={()=>showContent('sources')} onAudit={()=>showContent('audit')} onTrace={showTrace}/></TabsContent>
+            <TabsContent value="audit" className="rd-panel rd-audit-panel"><AuditPanel job={job} prefix={prefix+'-audit'} onSources={()=>showContent('sources')}/></TabsContent>
+            <TabsContent value="sources" className="rd-panel" forceMount hidden={currentTab!=='sources'}><SourcesPanel key={job.retryCount??0} job={job} sources={sources} status={job.status} referenceMaterials={job.input?.referenceMaterials} sourceTarget={sourceTarget} active={currentTab==='sources'}/></TabsContent>
+            </div>
           </Tabs>
         </Card>
       </div>
-      <aside className="rd-right-rail" aria-label="研究执行记录" hidden={reading}><Trace key={job.retryCount??0} events={events} status={job.status} hidden={reading}/></aside>
+      <aside className="rd-right-rail" aria-label="研究执行记录" hidden={reading}><Trace key={job.retryCount??0} events={events} status={job.status} hidden={reading} reveal={traceReveal.attempt===(job.retryCount??0)?traceReveal.count:0}/></aside>
     </div>
   </section>;
 }
@@ -431,7 +656,8 @@ function DetailView({job, tab, onTabChange, streamConnection, onRetry, retrying,
  * Controlled tab: 'report' | 'audit' | 'sources'; onTabChange(nextTab) stays in
  * the parent so its URL/query parameters remain authoritative. Action callbacks
  * take no arguments; the parent owns requests, download content and errors.
- * onRetry restarts this record in place; onReuse only loads the workbench inputs.
+ * onRetry saves the retained result when recoverable, otherwise restarts this
+ * record in place; onReuse only loads the workbench inputs.
  * streamConnection comes from useJobStream; cancelling/retrying/retryError are parent-owned.
  * All reading/search/expansion/filter state resets only when job.id changes.
  */

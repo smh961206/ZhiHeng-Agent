@@ -6,6 +6,8 @@ services:
     init: true
     restart: unless-stopped
     env_file: .env.production
+    volumes:
+      - visual_attachments:/app/data/visual-attachments
     environment:
       HOST: 0.0.0.0
       PORT: 3001
@@ -42,5 +44,6 @@ services:
         max-size: 10m
         max-file: "3"
 volumes:
+  visual_attachments:
   mongodb_data:
   mongodb_config:

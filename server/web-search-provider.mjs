@@ -5,7 +5,7 @@ export function webSearchConfig(env=process.env){
 }
 export function webSearchStatus(env=process.env){
  const config=webSearchConfig(env);
- return {enabled:config.enabled,configured:config.enabled&&Boolean(config.tavily||config.brave),providers:[...(config.tavily?['Tavily']:[]),...(config.brave?['Brave']:[])],strategy:'先查已有资料，按缺口搜索，读取正文后纳入证据',limits:{searches:6,documents:8,seconds:180}};
+ return {enabled:config.enabled,configured:config.enabled&&Boolean(config.tavily||config.brave),providers:[...(config.tavily?['Tavily']:[]),...(config.brave?['Brave']:[])],strategy:'先查已有资料，交付前强制检查关键缺口，读取补充正文后重新审计',limits:{searches:6,documents:8,seconds:180}};
 }
 export function validateSearchQuery(query,env=process.env){
  if(typeof query!=='string'||query.trim().length<2||query.length>300||query.trim().split(/\s+/).length>45)throw new Error('搜索词须为2—300字、最多45个词的公开资料关键词');

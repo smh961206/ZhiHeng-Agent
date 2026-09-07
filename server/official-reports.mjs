@@ -3,13 +3,15 @@ import {getStorage} from './storage.mjs';
 import {remote} from './market-request.mjs';
 import {extractPDF} from './pdf-extractor.mjs';
 import {extractHTML} from './filing-text.mjs';
-import {PARSER_VERSION,parsingWarnings,readableCharacterCount} from './document-layout.mjs';
+import {PARSER_VERSION,parsingWarnings,readableCharacterCount,needsParsingRetry} from './document-layout.mjs';
 import {parsedDigest,validParsedArchive} from './document-integrity.mjs';
+import {needsVisualUpgrade} from './visual-reading.mjs';
+import {readDocument,documentKind} from './document-reader.mjs';
 
 const digest=value=>createHash('sha256').update(value).digest('hex');
 export function createOfficialReportReader({request=remote,storage=getStorage,parsePDF=extractPDF,clock=Date.now}={}){
  return async(report,signal)=>{
-  const failures=[];
+  const failures=[];let fallback;
   for(const candidate of [report,...(report.alternatives||[])]){
    signal?.throwIfAborted();const {alternatives,...metadata}=candidate;
    const key=digest(`official-report:${PARSER_VERSION}:${candidate.security}:${candidate.url}`);
@@ -21,15 +23,18 @@ export function createOfficialReportReader({request=remote,storage=getStorage,pa
      signal?.throwIfAborted();
      if(cached?.url===candidate.url&&cached.security===candidate.security&&validParsedArchive(cached)&&cached.parserVersion===PARSER_VERSION){
       previous=cached;
-      if(!cached.truncated||clock()-Date.parse(cached.fetchedAt)<6*3600000)
+      const age=clock()-Date.parse(cached.fetchedAt);
+      if(!needsVisualUpgrade(cached,age)&&(!needsParsingRetry(cached)||age>=0&&age<6*3600000))
       return {...cached,fromCache:true,...(failures.length?{fallbackReason:failures.join('；')}:{}),notice:'使用已校验的原件文本归档；披露日期和原抓取时间保留，不代表已取得更新或修订文件。'};
      }
-     if(!previous){const legacy=await store.getCachedReport(digest(`official-report:v2:${candidate.security}:${candidate.url}`)).catch(()=>null);
-      if(legacy?.url===candidate.url&&legacy.security===candidate.security&&validParsedArchive(legacy))previous={...legacy,legacyParser:true};}
+     if(!previous)for(const version of ['evidence-9','evidence-8','evidence-7','evidence-6','evidence-5','evidence-4','evidence-3','v2']){
+      const legacy=await store.getCachedReport(digest(`official-report:${version}:${candidate.security}:${candidate.url}`)).catch(()=>null);
+      if(legacy?.url===candidate.url&&legacy.security===candidate.security&&validParsedArchive(legacy)){previous={...legacy,legacyParser:true};break;}
+     }
     }
     const bytes=await request(candidate.url,{signal,maxBytes:32_000_000,timeoutMs:45000,totalTimeoutMs:90000,retries:1});
     let parsed;
-    if(bytes.subarray(0,1024).toString('latin1').includes('%PDF-'))parsed=await parsePDF(bytes,signal);
+    if(documentKind(bytes,candidate.url))parsed=await readDocument(bytes,{name:candidate.url,signal,parsePDF});
     else{
      if(/\.pdf(?:\?|$)/i.test(candidate.url))throw new Error('官方链接未返回PDF原件');
      const html=bytes.toString('utf8');
@@ -54,8 +59,11 @@ export function createOfficialReportReader({request=remote,storage=getStorage,pa
     if(store){try{await store.saveCachedReport(key,JSON.parse(JSON.stringify(source)),{retainMs:3650*86400000});}catch{source.cacheWarning='官方原文已读取，但持久归档失败。';}}
     return source;
    }catch(error){signal?.throwIfAborted();failures.push(`${candidate.provider||new URL(candidate.url).hostname} ${candidate.title}：${error.message}`);
-    if(previous)return {...previous,fromCache:true,stale:true,cacheWarning:'原件重新解析失败，使用已校验历史归档；旧版归档没有本次新增的逐页/表格质量核验。',fallbackReason:failures.join('；')};}
+    if(previous&&!fallback)fallback={...previous,fromCache:true,stale:true,cacheWarning:previous.legacyParser
+     ?'原件重新解析失败，使用已校验历史归档；旧版归档没有本次新增的逐页/表格质量核验。'
+     :'原件重新解析失败，保留已校验归档及原有识别缺口，抓取时间未更新。'};}
   }
+  if(fallback)return {...fallback,fallbackReason:failures.join('；')};
   throw new Error(failures.join('；'));
  };
 }

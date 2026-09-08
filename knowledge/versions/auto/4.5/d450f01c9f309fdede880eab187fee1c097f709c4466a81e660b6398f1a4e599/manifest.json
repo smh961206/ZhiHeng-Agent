@@ -1,0 +1,230 @@
+{
+  "schemaVersion": 1,
+  "id": "d450f01c9f309fdede880eab187fee1c097f709c4466a81e660b6398f1a4e599",
+  "createdAt": "2026-09-08T08:16:18.774Z",
+  "version": "4.5",
+  "files": [
+    {
+      "name": "ENTRY.md",
+      "bytes": 854,
+      "version": "4.5",
+      "sha256": "f3eb69419581070ad3da4069a75047b2d14035a482f00f08e0fb27bd370870b5"
+    },
+    {
+      "name": "modules.json",
+      "bytes": 119681,
+      "version": "4.5",
+      "sha256": "d606bf17859d7201db2910e609aeebb3dc2a9fe0fab65d1d0f23a47f823f668f"
+    },
+    {
+      "name": "modules/rules/00-overview.md",
+      "bytes": 1891,
+      "version": "4.5",
+      "sha256": "269d08d6dcadaaff13718ac32e44459ef9fb7bb6682b94834a4ca585e9b40564"
+    },
+    {
+      "name": "modules/rules/01-router.md",
+      "bytes": 43,
+      "version": "4.5",
+      "sha256": "ab65c0b85e0228e965ca10160fa026df4f507c17c082529155e07127f45c5945"
+    },
+    {
+      "name": "modules/rules/01-routing-principles.md",
+      "bytes": 376,
+      "version": "4.5",
+      "sha256": "3e3d4799305ffd6f761cb69eb9f1d28c7160f5bda778c6338f8a3309038c3f7f"
+    },
+    {
+      "name": "modules/rules/01-mode-a.md",
+      "bytes": 683,
+      "version": "4.5",
+      "sha256": "58aeba993fbc821d0861060b26785edf3aad3218ac76ab99441f1912b0659df6"
+    },
+    {
+      "name": "modules/rules/01-mode-b.md",
+      "bytes": 2348,
+      "version": "4.5",
+      "sha256": "dd477053735c8fb7e4def5c85dff93730c694d2854fc244d4dd523d57b9a7014"
+    },
+    {
+      "name": "modules/rules/01-mode-c.md",
+      "bytes": 2692,
+      "version": "4.5",
+      "sha256": "6cb748aca352401f0d205d0e87e854089ec91d32d9e8dbf44eaa32880ef0f422"
+    },
+    {
+      "name": "modules/rules/01-mode-d.md",
+      "bytes": 2527,
+      "version": "4.5",
+      "sha256": "6b9df56ce2a079dbe85c7405124dc8e6f7712760e3f5a651ee0c430b9d17f774"
+    },
+    {
+      "name": "modules/rules/01-mode-e.md",
+      "bytes": 384,
+      "version": "4.5",
+      "sha256": "74bbf2ef099cb54e0f7bd38a0e06c86add32d9fe02d53d76bc73cccf7ff646ec"
+    },
+    {
+      "name": "modules/rules/01-mode-f.md",
+      "bytes": 438,
+      "version": "4.5",
+      "sha256": "83bb96d0aff9cc3f7a9b3f3ccafe996743c6ed85398845585e28e50734010098"
+    },
+    {
+      "name": "modules/rules/01-routing-links.md",
+      "bytes": 386,
+      "version": "4.5",
+      "sha256": "52a02762b2bf970c520ccf8a1b8be7acb89f4432d0fed4dfb2d17f139a781906"
+    },
+    {
+      "name": "modules/rules/02-execution-graph.md",
+      "bytes": 753,
+      "version": "4.5",
+      "sha256": "acc078e595c7cc5b30c3a31a433dd1d53be4ffe8321bf92a21f6be35d3a623e6"
+    },
+    {
+      "name": "modules/rules/03-data.md",
+      "bytes": 1619,
+      "version": "4.5",
+      "sha256": "24b916211da7951cc443c3b061889977d6a6904f6a370ba51e7cb6f7e285da9e"
+    },
+    {
+      "name": "modules/rules/04-fundamental.md",
+      "bytes": 2925,
+      "version": "4.5",
+      "sha256": "94e4ae42c05b55169376f017ee34eb527476d8080df79fa62526289892e41adb"
+    },
+    {
+      "name": "modules/rules/05-financial.md",
+      "bytes": 3820,
+      "version": "4.5",
+      "sha256": "487e8312179dd2ad7d743776e737a4f03dec2e5cda1c6882e07d4129edb2f355"
+    },
+    {
+      "name": "modules/rules/06-shareholder-return.md",
+      "bytes": 4034,
+      "version": "4.5",
+      "sha256": "e130d798a0aaf522df504df928f6ad62fcdecf16320c3f0883b4fab656288080"
+    },
+    {
+      "name": "modules/rules/07-valuation.md",
+      "bytes": 3482,
+      "version": "4.5",
+      "sha256": "3414387565c5fc6b8252de999c0281e54047ec52583deb04f60a06bd5e40b5f4"
+    },
+    {
+      "name": "modules/rules/08-risk-pricing.md",
+      "bytes": 882,
+      "version": "4.5",
+      "sha256": "b75afd2d38523c115d7373f58a96b35e3088cf2db91cb798dfb9aff8db60247b"
+    },
+    {
+      "name": "modules/rules/09-decision.md",
+      "bytes": 5147,
+      "version": "4.5",
+      "sha256": "3ce22b1666ad965c7e6190486d56276d737655108d7e401fe06d36c0a14acf88"
+    },
+    {
+      "name": "modules/rules/10-scoring.md",
+      "bytes": 1656,
+      "version": "4.5",
+      "sha256": "5460f851b985028c49fd1bc4cddc97694489dfb4248667ade03db1fa4bd3ac70"
+    },
+    {
+      "name": "modules/rules/11-confidence.md",
+      "bytes": 331,
+      "version": "4.5",
+      "sha256": "2e8116f412841ec0e0fe39446a1cadc67ebccedca89c95d7699b73568267f446"
+    },
+    {
+      "name": "modules/rules/12-portfolio.md",
+      "bytes": 3638,
+      "version": "4.5",
+      "sha256": "843ef210545ecde9bcd285a2ecca4bffb1fe8c46f2bc26cd499e6791db475164"
+    },
+    {
+      "name": "modules/rules/13-financial-update.md",
+      "bytes": 1123,
+      "version": "4.5",
+      "sha256": "559818ea123361650a987d2fce67712f8b434e76428392c67fbbc200b94ce488"
+    },
+    {
+      "name": "modules/rules/14-valuation-change.md",
+      "bytes": 366,
+      "version": "4.5",
+      "sha256": "65859eabbd258158218ff4e6a0f423ea2c7cf2abb47bacb5e12bb689b528aba0"
+    },
+    {
+      "name": "modules/rules/15-output.md",
+      "bytes": 52,
+      "version": "4.5",
+      "sha256": "33a13b2f46125d8345e90ae2369ef7a6349cb2233d68d76fb7ec48392dc699bd"
+    },
+    {
+      "name": "modules/rules/15-output-quick.md",
+      "bytes": 1924,
+      "version": "4.5",
+      "sha256": "959f5a3423ad32119b1516036e4e7d7dbe39a58e4ace54b681a625832bf7c561"
+    },
+    {
+      "name": "modules/rules/15-output-standard.md",
+      "bytes": 273,
+      "version": "4.5",
+      "sha256": "a0aac3bc916cd75406cbfcb34c77360b358055fc84ae8822b6ddc34d60e3e034"
+    },
+    {
+      "name": "modules/rules/15-output-deep.md",
+      "bytes": 1865,
+      "version": "4.5",
+      "sha256": "2e3b5af2348f3c59f754994fe89e5b160eb26d5bfeed5d796fb0c0544530211d"
+    },
+    {
+      "name": "modules/rules/15-output-update.md",
+      "bytes": 1068,
+      "version": "4.5",
+      "sha256": "7d81ac5a3932436039705b7421f685ce7fd2803b86a02f2b2c6d5c610813c6d5"
+    },
+    {
+      "name": "modules/rules/15-output-comparison.md",
+      "bytes": 757,
+      "version": "4.5",
+      "sha256": "7d769bed16b45a9ae2276a093b8dc192d60dc78a6cdc4805f38bfb39bc0eb91b"
+    },
+    {
+      "name": "modules/rules/15-output-dividend.md",
+      "bytes": 260,
+      "version": "4.5",
+      "sha256": "5822b8da4cb83f28ddd0784bfaa7e5cdc8337659be404f25f151a063b66564e3"
+    },
+    {
+      "name": "modules/rules/15-output-battle-map.md",
+      "bytes": 817,
+      "version": "4.5",
+      "sha256": "18899af889d57803aca835c442b930fbc142142aaab3e409303eeaee66846b6e"
+    },
+    {
+      "name": "modules/rules/16-audit.md",
+      "bytes": 3699,
+      "version": "4.5",
+      "sha256": "90966f0cff6f1ed43ef5b36f39639921845b26e6d392112afcdc699913f28164"
+    },
+    {
+      "name": "modules/rules/17-prohibitions.md",
+      "bytes": 1752,
+      "version": "4.5",
+      "sha256": "4f88a767c4ca39260c95e2f86fd36ba8ea5ce94ee9d2fd3df374c61e7fdeac35"
+    },
+    {
+      "name": "modules/rules/18-principles.md",
+      "bytes": 712,
+      "version": "4.5",
+      "sha256": "c607f8fc497d61bc49067d68888b6f8f380ec38dc8307e22eaf13fa46564322c"
+    },
+    {
+      "name": "modules/rules/19-glossary.md",
+      "bytes": 924,
+      "version": "4.5",
+      "sha256": "873cb1c66342c2269cc7856ee30ea08e4c01af0b61a41e0afcb0a4ce5ad501a0"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "bdd6d1e1bc88937b0b58287412cfed591282c2ca7b3cd69be43da0f13767cf4e",
+  "createdAt": "2026-09-08T06:30:37.516Z",
+  "version": "4.2",
+  "files": [
+    {
+      "name": "CORE.md",
+      "bytes": 60661,
+      "version": "4.2-core",
+      "sha256": "fe73d7f744f95b07bdcd5b32292c818ebea852f0b740bc6d719eef4fbd5b2607"
+    },
+    {
+      "name": "FULL.md",
+      "bytes": 84340,
+      "version": "4.2",
+      "sha256": "41594d1d1fe514ad7575e2a67f699fc6d9d50922cfa6eddd8daeefd4dc9a571c"
+    }
+  ]
+}

@@ -6,6 +6,7 @@ dist/
 backups/
 .deploy/
 data/
+outputs/
 *.log
 
 .env.*

@@ -7,15 +7,18 @@ import {prohibitions,principles,terms} from '../config/research-reference';
 import ResearchStandards,{ResearchScoring} from './ResearchStandards';
 import ResearchDataSources from './ResearchDataSources';
 import './research-reference.css';
+import {executionGuideCards,executionBoundary} from '../../shared/execution-discipline.mjs';
+import './execution-ui.css';
 
 const boundaries=[
  {title:'基本面判断',summary:'不凭涨跌、单一指标或管理层说法判断公司。',start:0,end:8},
  {title:'证据与交易纪律',summary:'不机械补仓、不用传闻、不编造数据或迎合股价。',start:8,end:16},
  {title:'估值与股东回报',summary:'不把评分、高股息或一次性分红当作买入信号。',start:16,end:23},
  {title:'模型与研究范围',summary:'不重复折价、不混用模型、不脱离组合约束。',start:23,end:30},
+ {title:'组合执行与交易复盘',summary:'区分研究退出与组合减仓，不因卖出后上涨追买，不把催化直接计入长期价值。',start:30,end:33},
 ];
 const termGroups=[
- {id:'valuation',label:'估值指标',items:[...terms.slice(13),...terms.slice(8,11)]},
+ {id:'valuation',label:'估值指标',items:terms.slice(8,11)},
  {id:'cash-flow',label:'财务现金流',items:terms.slice(0,8)},
  {id:'actions',label:'研究与组合',items:terms.slice(11,13)},
 ];
@@ -35,8 +38,13 @@ export function ResearchDiscipline(){
   <ResearchDataSources/>
   <ResearchStandards/>
   <ResearchScoring/>
+  <section className="fw-section" aria-labelledby="execution-discipline-title">
+   <div className="fw-section-heading"><h2 id="execution-discipline-title">组合执行与交易复盘</h2><p>{executionBoundary}</p></div>
+   <p>涉及减仓、清空、重新买入或交易复盘时，报告补充执行记录，审计逐项说明以下检查的依据、限制或不适用原因。</p>
+   <ol className="execution-guide-cards">{executionGuideCards.map(item=><li key={item.title}><h3>{item.title}</h3><p>{item.text}</p></li>)}</ol>
+  </section>
   <section id="fw-prohibitions" className="fw-section" aria-labelledby="fw-prohibitions-title">
-   <div className="fw-section-heading"><h2 id="fw-prohibitions-title">30 条禁止事项</h2><p>30 条研究纪律，按四类展开查看。</p></div>
+   <div className="fw-section-heading"><h2 id="fw-prohibitions-title">{prohibitions.length} 条禁止事项</h2><p>{prohibitions.length} 条研究纪律，按五类展开查看。</p></div>
    <div className="fw-boundary-grid">{boundaries.map(group=><Collapsible key={group.title} className="fw-boundary-group">
     <CollapsibleTrigger asChild><Button variant="ghost" className="fw-reference-trigger"><span><span className="fw-reference-label"><ShieldCheck size={18}/><strong>{group.title}</strong><Badge variant="outline">{group.end-group.start} 条</Badge></span><span className="fw-reference-summary">{group.summary}</span></span><ChevronDown size={18}/></Button></CollapsibleTrigger>
     <CollapsibleContent><ol start={group.start+1} className="fw-prohibition-list">{prohibitions.slice(group.start,group.end).map(item=><li key={item.number} value={item.number}>{item.text}</li>)}</ol></CollapsibleContent>

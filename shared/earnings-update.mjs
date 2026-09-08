@@ -45,3 +45,17 @@ export function eligibleUpdateBaselines(jobs=[],securities=[]){
   return securities.every(s=>keys.has(baselineSecurityKey(s)));
  });
 }
+
+export function updateBaselineSelection(input={},securities=[],state={}){
+ const selected=input.baselineJobId;
+ if(!selected)return {status:input.previousResearch?.trim()?'external':'none',blocking:false};
+ const job=state.jobs?.find(item=>item.id===selected);
+ if(job&&securities.length){
+  if(eligibleUpdateBaselines([job],securities).length)return {status:'ready',blocking:false};
+  return {status:'mismatch',blocking:true,message:'所选对照研究未完成或未覆盖当前标的，请重新选择对照'};
+ }
+ if(!job&&state.jobsLoading)return {status:'checking',blocking:true,pending:true,message:'正在核对所选对照研究，请稍候'};
+ if(!job&&state.jobsError)return {status:'error',blocking:true,message:'暂时无法核对所选对照，请刷新研究记录，或取消选择并填写外部旧结论'};
+ if(!job&&Array.isArray(state.jobs))return {status:'missing',blocking:true,message:'所选对照研究已不在可用记录中，请重新选择或建立本期基线'};
+ return {status:'unverified',blocking:false};
+}

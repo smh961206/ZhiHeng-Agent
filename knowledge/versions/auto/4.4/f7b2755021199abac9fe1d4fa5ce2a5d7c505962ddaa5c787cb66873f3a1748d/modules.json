@@ -1,0 +1,2818 @@
+{
+  "schemaVersion": 1,
+  "version": "4.4",
+  "updatedAt": "2026-09-08",
+  "sources": [
+    {
+      "id": "core",
+      "originalPath": "knowledge/versions/v4.3.0/V4.3.0_CORE_SKILL.md",
+      "originalSha256": "b3fa02efe5ff3f9eca90b9a940763dfa52503ae6ccb1acf7ad41514586e98203",
+      "bytes": 35987
+    },
+    {
+      "id": "full",
+      "originalPath": "knowledge/versions/v4.3.0/V4.3.0_FULL_SKILL.md",
+      "originalSha256": "9b6be5e9a6bb58da1c3b33df488cba9888ada023bcf555722c67e42b6f1611c5",
+      "bytes": 58241
+    }
+  ],
+  "modules": [
+    {
+      "id": "core-00-overview",
+      "source": "core",
+      "chapter": 0,
+      "title": "定位与核心原则",
+      "path": "knowledge/modules/core/00-overview.md",
+      "bytes": 2191,
+      "sha256": "7ce2cbeb50d3b87bd1fef5ad4f4c361870d1ce09ae0f1be16042327a54fd1f72",
+      "originalLine": 1,
+      "sections": [
+        {
+          "level": 1,
+          "title": "Value Investment Analysis V4.3 Core",
+          "line": 12,
+          "endLine": 12,
+          "index": 11
+        },
+        {
+          "level": 1,
+          "title": "价值投资 Agent 核心执行 Skill",
+          "line": 13,
+          "endLine": 50,
+          "index": 12
+        },
+        {
+          "level": 2,
+          "title": "0. ROLE & OBJECTIVE",
+          "line": 15,
+          "endLine": 50,
+          "index": 14
+        },
+        {
+          "level": 3,
+          "title": "核心原则",
+          "line": 30,
+          "endLine": 44,
+          "index": 29
+        },
+        {
+          "level": 3,
+          "title": "V4.3 执行范围",
+          "line": 45,
+          "endLine": 50,
+          "index": 44
+        }
+      ]
+    },
+    {
+      "id": "core-01-router",
+      "source": "core",
+      "chapter": 1,
+      "title": "1. ROUTER",
+      "path": "knowledge/modules/core/01-router.md",
+      "bytes": 197,
+      "sha256": "64177c342a4f210a63f56f595eb1cc2f5ea9763690003703dc150eddf950cd3e",
+      "originalLine": 51,
+      "sections": [
+        {
+          "level": 1,
+          "title": "1. ROUTER",
+          "line": 1,
+          "endLine": 13,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-01-router-02",
+      "source": "core",
+      "chapter": 1,
+      "title": "MODE A — Quick Screen",
+      "path": "knowledge/modules/core/01-router-02.md",
+      "bytes": 1304,
+      "sha256": "50604e16bc08523b0b037eadb019372e3207814f49b0a8a5e78d30ac3cb6b31a",
+      "originalLine": 64,
+      "sections": [
+        {
+          "level": 2,
+          "title": "MODE A — Quick Screen",
+          "line": 1,
+          "endLine": 21,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-01-router-03",
+      "source": "core",
+      "chapter": 1,
+      "title": "MODE B — Deep Research",
+      "path": "knowledge/modules/core/01-router-03.md",
+      "bytes": 1578,
+      "sha256": "7470a5b5a603b5e6ba193136ff8335687f35163dd334315cfc4c73de2a5c8f9c",
+      "originalLine": 85,
+      "sections": [
+        {
+          "level": 2,
+          "title": "MODE B — Deep Research",
+          "line": 1,
+          "endLine": 15,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-01-router-04",
+      "source": "core",
+      "chapter": 1,
+      "title": "MODE C — Earnings Update",
+      "path": "knowledge/modules/core/01-router-04.md",
+      "bytes": 1873,
+      "sha256": "02efb469405a33d691bf7e789e1b8356e5ce0cc55a19ff6d83aca74389409776",
+      "originalLine": 100,
+      "sections": [
+        {
+          "level": 2,
+          "title": "MODE C — Earnings Update",
+          "line": 1,
+          "endLine": 23,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-01-router-05",
+      "source": "core",
+      "chapter": 1,
+      "title": "MODE D — Comparison",
+      "path": "knowledge/modules/core/01-router-05.md",
+      "bytes": 1613,
+      "sha256": "c69b82033ebc375fdd00d1b88c69b42112cb8c41e2ddbbd465f603bd45b8aada",
+      "originalLine": 123,
+      "sections": [
+        {
+          "level": 2,
+          "title": "MODE D — Comparison",
+          "line": 1,
+          "endLine": 20,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-01-router-06",
+      "source": "core",
+      "chapter": 1,
+      "title": "MODE E — Portfolio",
+      "path": "knowledge/modules/core/01-router-06.md",
+      "bytes": 115,
+      "sha256": "17b57ee7011f0de49cc28174471ffac3781412c1f6d6b2866a6f5c3915873515",
+      "originalLine": 143,
+      "sections": [
+        {
+          "level": 2,
+          "title": "MODE E — Portfolio",
+          "line": 1,
+          "endLine": 6,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-01-router-07",
+      "source": "core",
+      "chapter": 1,
+      "title": "MODE F — Dividend / Shareholder Return",
+      "path": "knowledge/modules/core/01-router-07.md",
+      "bytes": 262,
+      "sha256": "60fe56b2026407e6765b174727b6afb3d6c27ca166ee2ea85ff2268a0efec36a",
+      "originalLine": 149,
+      "sections": [
+        {
+          "level": 2,
+          "title": "MODE F — Dividend / Shareholder Return",
+          "line": 1,
+          "endLine": 7,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-01-router-08",
+      "source": "core",
+      "chapter": 1,
+      "title": "联动规则",
+      "path": "knowledge/modules/core/01-router-08.md",
+      "bytes": 279,
+      "sha256": "d0c7ece087bad0d8a4e5e8a8cd7424c6343b8d5a7f55399eb1ecb5940594133b",
+      "originalLine": 156,
+      "sections": [
+        {
+          "level": 2,
+          "title": "联动规则",
+          "line": 1,
+          "endLine": 9,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-02-data",
+      "source": "core",
+      "chapter": 2,
+      "title": "2. DATA LAYER",
+      "path": "knowledge/modules/core/02-data.md",
+      "bytes": 1168,
+      "sha256": "b53614db4bc7fd08d293e7705b8a32f52f168a5342fc1284f565d08734718186",
+      "originalLine": 165,
+      "sections": [
+        {
+          "level": 1,
+          "title": "2. DATA LAYER",
+          "line": 1,
+          "endLine": 46,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "2.1 来源优先级",
+          "line": 3,
+          "endLine": 14,
+          "index": 2
+        },
+        {
+          "level": 2,
+          "title": "2.2 数据快照",
+          "line": 15,
+          "endLine": 33,
+          "index": 14
+        },
+        {
+          "level": 2,
+          "title": "2.3 口径规则",
+          "line": 34,
+          "endLine": 46,
+          "index": 33
+        }
+      ]
+    },
+    {
+      "id": "core-03-fundamental",
+      "source": "core",
+      "chapter": 3,
+      "title": "3. FUNDAMENTAL ENGINE",
+      "path": "knowledge/modules/core/03-fundamental.md",
+      "bytes": 1816,
+      "sha256": "8531c28cac55485000cb5b0a116faf05f165e547c665e224546d09bbe14b9d0d",
+      "originalLine": 211,
+      "sections": [
+        {
+          "level": 1,
+          "title": "3. FUNDAMENTAL ENGINE",
+          "line": 1,
+          "endLine": 87,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "3.1 一句话商业模型",
+          "line": 3,
+          "endLine": 12,
+          "index": 2
+        },
+        {
+          "level": 2,
+          "title": "3.2 产品与增长",
+          "line": 13,
+          "endLine": 22,
+          "index": 12
+        },
+        {
+          "level": 2,
+          "title": "3.3 护城河与定价权",
+          "line": 23,
+          "endLine": 43,
+          "index": 22
+        },
+        {
+          "level": 2,
+          "title": "3.4 渠道与制造",
+          "line": 44,
+          "endLine": 57,
+          "index": 43
+        },
+        {
+          "level": 2,
+          "title": "3.5 行业",
+          "line": 58,
+          "endLine": 75,
+          "index": 57
+        },
+        {
+          "level": 2,
+          "title": "3.6 战略与管理层",
+          "line": 76,
+          "endLine": 87,
+          "index": 75
+        }
+      ]
+    },
+    {
+      "id": "core-04-financial",
+      "source": "core",
+      "chapter": 4,
+      "title": "4. FINANCIAL ENGINE",
+      "path": "knowledge/modules/core/04-financial.md",
+      "bytes": 2571,
+      "sha256": "cb6050f2e9e62e345cb89c0168057cbf4cc199d758d41853290db3339f8856c6",
+      "originalLine": 298,
+      "sections": [
+        {
+          "level": 1,
+          "title": "4. FINANCIAL ENGINE",
+          "line": 1,
+          "endLine": 124,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "4.1 资产负债表顺序",
+          "line": 7,
+          "endLine": 20,
+          "index": 6
+        },
+        {
+          "level": 2,
+          "title": "4.2 利润与现金流",
+          "line": 21,
+          "endLine": 33,
+          "index": 20
+        },
+        {
+          "level": 2,
+          "title": "4.3 利润质量四问",
+          "line": 34,
+          "endLine": 40,
+          "index": 33
+        },
+        {
+          "level": 2,
+          "title": "4.4 ROE",
+          "line": 41,
+          "endLine": 48,
+          "index": 40
+        },
+        {
+          "level": 2,
+          "title": "4.5 ROIC",
+          "line": 49,
+          "endLine": 64,
+          "index": 48
+        },
+        {
+          "level": 2,
+          "title": "4.6 FCF",
+          "line": 65,
+          "endLine": 92,
+          "index": 64
+        },
+        {
+          "level": 3,
+          "title": "Quick FCF",
+          "line": 67,
+          "endLine": 74,
+          "index": 66
+        },
+        {
+          "level": 3,
+          "title": "FCFF",
+          "line": 75,
+          "endLine": 82,
+          "index": 74
+        },
+        {
+          "level": 3,
+          "title": "FCFE",
+          "line": 83,
+          "endLine": 92,
+          "index": 82
+        },
+        {
+          "level": 2,
+          "title": "4.7 正常化",
+          "line": 93,
+          "endLine": 106,
+          "index": 92
+        },
+        {
+          "level": 2,
+          "title": "4.8 红旗",
+          "line": 107,
+          "endLine": 124,
+          "index": 106
+        }
+      ]
+    },
+    {
+      "id": "core-05-shareholder-return",
+      "source": "core",
+      "chapter": 5,
+      "title": "5. SHAREHOLDER RETURN ENGINE",
+      "path": "knowledge/modules/core/05-shareholder-return.md",
+      "bytes": 2249,
+      "sha256": "0562dfbf213829fcea15dd14e2678609afc1c0dbae09d09ea9341e0efabf4ee3",
+      "originalLine": 422,
+      "sections": [
+        {
+          "level": 1,
+          "title": "5. SHAREHOLDER RETURN ENGINE",
+          "line": 1,
+          "endLine": 101,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "5.1 基础顺序",
+          "line": 3,
+          "endLine": 15,
+          "index": 2
+        },
+        {
+          "level": 2,
+          "title": "5.2 回购分类",
+          "line": 16,
+          "endLine": 23,
+          "index": 15
+        },
+        {
+          "level": 2,
+          "title": "5.3 MODE F：8年历史",
+          "line": 24,
+          "endLine": 36,
+          "index": 23
+        },
+        {
+          "level": 2,
+          "title": "5.4 分红承诺",
+          "line": 37,
+          "endLine": 49,
+          "index": 36
+        },
+        {
+          "level": 2,
+          "title": "5.5 可分配现金优先",
+          "line": 50,
+          "endLine": 62,
+          "index": 49
+        },
+        {
+          "level": 2,
+          "title": "5.6 收益率锚",
+          "line": 63,
+          "endLine": 77,
+          "index": 62
+        },
+        {
+          "level": 2,
+          "title": "5.7 3年滚动与敏感性",
+          "line": 78,
+          "endLine": 92,
+          "index": 77
+        },
+        {
+          "level": 2,
+          "title": "5.8 资本配置",
+          "line": 93,
+          "endLine": 101,
+          "index": 92
+        }
+      ]
+    },
+    {
+      "id": "core-06-valuation",
+      "source": "core",
+      "chapter": 6,
+      "title": "6. VALUATION ENGINE",
+      "path": "knowledge/modules/core/06-valuation.md",
+      "bytes": 2487,
+      "sha256": "583d3cbfe69aa5ffae61ef78fb064912c8f69c77bdb9413c29b515ce5f581004",
+      "originalLine": 523,
+      "sections": [
+        {
+          "level": 1,
+          "title": "6. VALUATION ENGINE",
+          "line": 1,
+          "endLine": 129,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "6.1 方法匹配",
+          "line": 3,
+          "endLine": 16,
+          "index": 2
+        },
+        {
+          "level": 2,
+          "title": "6.2 DCF Protocol",
+          "line": 17,
+          "endLine": 81,
+          "index": 16
+        },
+        {
+          "level": 3,
+          "title": "① 现金流口径",
+          "line": 19,
+          "endLine": 26,
+          "index": 18
+        },
+        {
+          "level": 3,
+          "title": "② 基准现金流",
+          "line": 27,
+          "endLine": 30,
+          "index": 26
+        },
+        {
+          "level": 3,
+          "title": "③ 显性期",
+          "line": 31,
+          "endLine": 36,
+          "index": 30
+        },
+        {
+          "level": 3,
+          "title": "④ 折现率",
+          "line": 37,
+          "endLine": 52,
+          "index": 36
+        },
+        {
+          "level": 3,
+          "title": "⑤ 终值",
+          "line": 53,
+          "endLine": 58,
+          "index": 52
+        },
+        {
+          "level": 3,
+          "title": "⑥ EV → Equity",
+          "line": 59,
+          "endLine": 73,
+          "index": 58
+        },
+        {
+          "level": 3,
+          "title": "⑦ 每股价值",
+          "line": 74,
+          "endLine": 81,
+          "index": 73
+        },
+        {
+          "level": 2,
+          "title": "6.3 相对估值",
+          "line": 82,
+          "endLine": 95,
+          "index": 81
+        },
+        {
+          "level": 2,
+          "title": "6.4 三情景",
+          "line": 96,
+          "endLine": 109,
+          "index": 95
+        },
+        {
+          "level": 2,
+          "title": "6.5 敏感性",
+          "line": 110,
+          "endLine": 116,
+          "index": 109
+        },
+        {
+          "level": 2,
+          "title": "6.6 股息锚冲突",
+          "line": 117,
+          "endLine": 129,
+          "index": 116
+        }
+      ]
+    },
+    {
+      "id": "core-07-risk-pricing",
+      "source": "core",
+      "chapter": 7,
+      "title": "7. RISK PRICING PROTOCOL",
+      "path": "knowledge/modules/core/07-risk-pricing.md",
+      "bytes": 594,
+      "sha256": "88b760bed7b952e9f8b618f69f4927fdd779d3cc448d3489ea19e4bb4ed68344",
+      "originalLine": 652,
+      "sections": [
+        {
+          "level": 1,
+          "title": "7. RISK PRICING PROTOCOL",
+          "line": 1,
+          "endLine": 18,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-08-decision",
+      "source": "core",
+      "chapter": 8,
+      "title": "8. DECISION ENGINE",
+      "path": "knowledge/modules/core/08-decision.md",
+      "bytes": 4398,
+      "sha256": "289f17cae578e74eb714928cf3512b994002fd60495a4235e5d8f31e62045040",
+      "originalLine": 670,
+      "sections": [
+        {
+          "level": 1,
+          "title": "8. DECISION ENGINE",
+          "line": 1,
+          "endLine": 78,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "8.1 四层证据链",
+          "line": 3,
+          "endLine": 13,
+          "index": 2
+        },
+        {
+          "level": 2,
+          "title": "8.2 Research Action",
+          "line": 14,
+          "endLine": 26,
+          "index": 13
+        },
+        {
+          "level": 2,
+          "title": "8.3 Portfolio Action",
+          "line": 27,
+          "endLine": 39,
+          "index": 26
+        },
+        {
+          "level": 2,
+          "title": "8.4 行为规则",
+          "line": 40,
+          "endLine": 64,
+          "index": 39
+        },
+        {
+          "level": 3,
+          "title": "V4.2 执行纪律：研究状态与组合执行",
+          "line": 54,
+          "endLine": 64,
+          "index": 53
+        },
+        {
+          "level": 2,
+          "title": "8.5 证伪条件",
+          "line": 65,
+          "endLine": 78,
+          "index": 64
+        }
+      ]
+    },
+    {
+      "id": "core-09-scoring-confidence",
+      "source": "core",
+      "chapter": 9,
+      "title": "9. SCORING & CONFIDENCE",
+      "path": "knowledge/modules/core/09-scoring-confidence.md",
+      "bytes": 1176,
+      "sha256": "7a6bcb899942785b3c9b6260f99d2642013b0f17bcd3f8036e6c9ae4c2552fcf",
+      "originalLine": 748,
+      "sections": [
+        {
+          "level": 1,
+          "title": "9. SCORING & CONFIDENCE",
+          "line": 1,
+          "endLine": 53,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "9.1 100分结构",
+          "line": 3,
+          "endLine": 29,
+          "index": 2
+        },
+        {
+          "level": 3,
+          "title": "公司质量25",
+          "line": 12,
+          "endLine": 14,
+          "index": 11
+        },
+        {
+          "level": 3,
+          "title": "成长战略15",
+          "line": 15,
+          "endLine": 17,
+          "index": 14
+        },
+        {
+          "level": 3,
+          "title": "财务25",
+          "line": 18,
+          "endLine": 20,
+          "index": 17
+        },
+        {
+          "level": 3,
+          "title": "估值20",
+          "line": 21,
+          "endLine": 23,
+          "index": 20
+        },
+        {
+          "level": 3,
+          "title": "股东回报5",
+          "line": 24,
+          "endLine": 26,
+          "index": 23
+        },
+        {
+          "level": 3,
+          "title": "风险10",
+          "line": 27,
+          "endLine": 29,
+          "index": 26
+        },
+        {
+          "level": 2,
+          "title": "9.2 离散评分锚",
+          "line": 30,
+          "endLine": 39,
+          "index": 29
+        },
+        {
+          "level": 2,
+          "title": "9.3 研究置信度",
+          "line": 40,
+          "endLine": 53,
+          "index": 39
+        }
+      ]
+    },
+    {
+      "id": "core-10-portfolio",
+      "source": "core",
+      "chapter": 10,
+      "title": "10. PORTFOLIO ENGINE",
+      "path": "knowledge/modules/core/10-portfolio.md",
+      "bytes": 972,
+      "sha256": "bd7d7d74a4e2004eba3e8b1994a75110dd5f4a62e8cd321160a14645bec04c98",
+      "originalLine": 801,
+      "sections": [
+        {
+          "level": 1,
+          "title": "10. PORTFOLIO ENGINE",
+          "line": 1,
+          "endLine": 33,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "V4.2 减仓执行记录",
+          "line": 28,
+          "endLine": 33,
+          "index": 27
+        }
+      ]
+    },
+    {
+      "id": "core-11-financial-update",
+      "source": "core",
+      "chapter": 11,
+      "title": "11. UPDATE & CHANGE LOG",
+      "path": "knowledge/modules/core/11-financial-update.md",
+      "bytes": 1143,
+      "sha256": "f8c154fa7fb59b2442f9f951b52ffed2b14df2f15da73cb1c836c4c3e288a876",
+      "originalLine": 834,
+      "sections": [
+        {
+          "level": 1,
+          "title": "11. UPDATE & CHANGE LOG",
+          "line": 1,
+          "endLine": 41,
+          "index": 0
+        },
+        {
+          "level": 3,
+          "title": "V4.2 交易复盘记录",
+          "line": 36,
+          "endLine": 41,
+          "index": 35
+        }
+      ]
+    },
+    {
+      "id": "core-12-output",
+      "source": "core",
+      "chapter": 12,
+      "title": "12. OUTPUT SCHEMAS",
+      "path": "knowledge/modules/core/12-output.md",
+      "bytes": 22,
+      "sha256": "cfbe8d505bbe051fb85f74cec329d48b181079eb0ffecf72db2a0a0c10628959",
+      "originalLine": 875,
+      "sections": [
+        {
+          "level": 1,
+          "title": "12. OUTPUT SCHEMAS",
+          "line": 1,
+          "endLine": 2,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-12-output-20",
+      "source": "core",
+      "chapter": 12,
+      "title": "Quick",
+      "path": "knowledge/modules/core/12-output-20.md",
+      "bytes": 141,
+      "sha256": "89591b6225c39f9fafddd8cee347d567722c406d82c99839244217c72d0e9343",
+      "originalLine": 877,
+      "sections": [
+        {
+          "level": 2,
+          "title": "Quick",
+          "line": 1,
+          "endLine": 10,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-12-output-21",
+      "source": "core",
+      "chapter": 12,
+      "title": "Standard",
+      "path": "knowledge/modules/core/12-output-21.md",
+      "bytes": 189,
+      "sha256": "951d95431061588f77d337f11041dd14da1ceac14ecdb71ef45ce9933b3b6197",
+      "originalLine": 887,
+      "sections": [
+        {
+          "level": 2,
+          "title": "Standard",
+          "line": 1,
+          "endLine": 12,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-12-output-22",
+      "source": "core",
+      "chapter": 12,
+      "title": "Deep",
+      "path": "knowledge/modules/core/12-output-22.md",
+      "bytes": 313,
+      "sha256": "4fc2173fa85778ace8f0c6c28ff710d4d098432cb971327721b5a9401653a696",
+      "originalLine": 899,
+      "sections": [
+        {
+          "level": 2,
+          "title": "Deep",
+          "line": 1,
+          "endLine": 19,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-12-output-23",
+      "source": "core",
+      "chapter": 12,
+      "title": "Update",
+      "path": "knowledge/modules/core/12-output-23.md",
+      "bytes": 79,
+      "sha256": "db8210eb14627032c8c10f5c8de25b535136f5a5db3cb31b8de694a257ae1daa",
+      "originalLine": 918,
+      "sections": [
+        {
+          "level": 2,
+          "title": "Update",
+          "line": 1,
+          "endLine": 4,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-12-output-24",
+      "source": "core",
+      "chapter": 12,
+      "title": "Comparison",
+      "path": "knowledge/modules/core/12-output-24.md",
+      "bytes": 77,
+      "sha256": "a96de84d455058ca3bb81cf3e9b34071698c868d0fca53ea1aa0b3fe36c20283",
+      "originalLine": 922,
+      "sections": [
+        {
+          "level": 2,
+          "title": "Comparison",
+          "line": 1,
+          "endLine": 4,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-12-output-25",
+      "source": "core",
+      "chapter": 12,
+      "title": "Dividend",
+      "path": "knowledge/modules/core/12-output-25.md",
+      "bytes": 165,
+      "sha256": "8e4d22c6a3ad7ddb8b8bc5d93ef726b84fc1415a9f56fca7d7c337fe6dfe3416",
+      "originalLine": 926,
+      "sections": [
+        {
+          "level": 2,
+          "title": "Dividend",
+          "line": 1,
+          "endLine": 5,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-12-output-26",
+      "source": "core",
+      "chapter": 12,
+      "title": "Battle Map",
+      "path": "knowledge/modules/core/12-output-26.md",
+      "bytes": 585,
+      "sha256": "53f427522263f667b8f39d9377a0152286e05b612de550ce3ef9556ef7a002a3",
+      "originalLine": 931,
+      "sections": [
+        {
+          "level": 2,
+          "title": "Battle Map",
+          "line": 1,
+          "endLine": 11,
+          "index": 0
+        },
+        {
+          "level": 3,
+          "title": "V4.2 执行输出联动",
+          "line": 6,
+          "endLine": 11,
+          "index": 5
+        }
+      ]
+    },
+    {
+      "id": "core-13-audit",
+      "source": "core",
+      "chapter": 13,
+      "title": "13. AUDIT ENGINE",
+      "path": "knowledge/modules/core/13-audit.md",
+      "bytes": 3219,
+      "sha256": "5bebff7584f43a22c15f402613a3fbd79910175c76186d5a666e34c6a1399a22",
+      "originalLine": 942,
+      "sections": [
+        {
+          "level": 1,
+          "title": "13. AUDIT ENGINE",
+          "line": 1,
+          "endLine": 68,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "Data Audit",
+          "line": 5,
+          "endLine": 11,
+          "index": 4
+        },
+        {
+          "level": 2,
+          "title": "Fundamental Audit",
+          "line": 12,
+          "endLine": 16,
+          "index": 11
+        },
+        {
+          "level": 2,
+          "title": "Cash Flow Audit",
+          "line": 17,
+          "endLine": 22,
+          "index": 16
+        },
+        {
+          "level": 2,
+          "title": "Shareholder Return Audit",
+          "line": 23,
+          "endLine": 30,
+          "index": 22
+        },
+        {
+          "level": 2,
+          "title": "Valuation Audit",
+          "line": 31,
+          "endLine": 39,
+          "index": 30
+        },
+        {
+          "level": 2,
+          "title": "Risk Double-count Audit",
+          "line": 40,
+          "endLine": 46,
+          "index": 39
+        },
+        {
+          "level": 2,
+          "title": "Decision Audit",
+          "line": 47,
+          "endLine": 68,
+          "index": 46
+        },
+        {
+          "level": 3,
+          "title": "V4.2 Execution Audit",
+          "line": 54,
+          "endLine": 68,
+          "index": 53
+        }
+      ]
+    },
+    {
+      "id": "core-14-prohibitions",
+      "source": "core",
+      "chapter": 14,
+      "title": "14. PROHIBITIONS",
+      "path": "knowledge/modules/core/14-prohibitions.md",
+      "bytes": 1419,
+      "sha256": "d7a68d705c5084326492798afe53ea8d444cd972bd40de8efdd2880f6da4b5d0",
+      "originalLine": 1010,
+      "sections": [
+        {
+          "level": 1,
+          "title": "14. PROHIBITIONS",
+          "line": 1,
+          "endLine": 37,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-15-principles",
+      "source": "core",
+      "chapter": 15,
+      "title": "15. FINAL PRINCIPLE",
+      "path": "knowledge/modules/core/15-principles.md",
+      "bytes": 635,
+      "sha256": "cd6d7469e97403776c35757de308cf2f1e783371c10d8cea9ae3c423a5bd38cc",
+      "originalLine": 1047,
+      "sections": [
+        {
+          "level": 1,
+          "title": "15. FINAL PRINCIPLE",
+          "line": 1,
+          "endLine": 32,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "core-16-history",
+      "source": "core",
+      "chapter": 16,
+      "title": "16. V4.2→V4.3 更新摘要",
+      "path": "knowledge/modules/core/16-history.md",
+      "bytes": 1157,
+      "sha256": "dd2908c9ba6449c1b9717e057971d69b6e69c29f9fedf7ca66012bc3e3686620",
+      "originalLine": 1079,
+      "sections": [
+        {
+          "level": 1,
+          "title": "16. V4.2→V4.3 更新摘要",
+          "line": 1,
+          "endLine": 10,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-00-overview",
+      "source": "full",
+      "chapter": 0,
+      "title": "定位与核心原则",
+      "path": "knowledge/modules/full/00-overview.md",
+      "bytes": 3016,
+      "sha256": "7e0737f719edc813638a1571613f367103777877cbb8bf84e3955419e4a60f54",
+      "originalLine": 1,
+      "sections": [
+        {
+          "level": 1,
+          "title": "Value Investment Analysis V4.3",
+          "line": 14,
+          "endLine": 14,
+          "index": 13
+        },
+        {
+          "level": 1,
+          "title": "价值投资 × 股东回报 × Agent 化投资研究系统",
+          "line": 15,
+          "endLine": 63,
+          "index": 14
+        },
+        {
+          "level": 2,
+          "title": "0. 核心定位",
+          "line": 17,
+          "endLine": 63,
+          "index": 16
+        },
+        {
+          "level": 3,
+          "title": "0.1 核心原则",
+          "line": 31,
+          "endLine": 45,
+          "index": 30
+        },
+        {
+          "level": 3,
+          "title": "0.2 三个最终问题",
+          "line": 46,
+          "endLine": 57,
+          "index": 45
+        },
+        {
+          "level": 3,
+          "title": "V4.3 执行范围",
+          "line": 58,
+          "endLine": 63,
+          "index": 57
+        }
+      ]
+    },
+    {
+      "id": "full-01-router",
+      "source": "full",
+      "chapter": 1,
+      "title": "1. ROUTER：任务识别与执行路由",
+      "path": "knowledge/modules/full/01-router.md",
+      "bytes": 43,
+      "sha256": "ab65c0b85e0228e965ca10160fa026df4f507c17c082529155e07127f45c5945",
+      "originalLine": 64,
+      "sections": [
+        {
+          "level": 1,
+          "title": "1. ROUTER：任务识别与执行路由",
+          "line": 1,
+          "endLine": 2,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-01-router-02",
+      "source": "full",
+      "chapter": 1,
+      "title": "1.1 第一原则",
+      "path": "knowledge/modules/full/01-router-02.md",
+      "bytes": 376,
+      "sha256": "3e3d4799305ffd6f761cb69eb9f1d28c7160f5bda778c6338f8a3309038c3f7f",
+      "originalLine": 66,
+      "sections": [
+        {
+          "level": 2,
+          "title": "1.1 第一原则",
+          "line": 1,
+          "endLine": 18,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-01-router-03",
+      "source": "full",
+      "chapter": 1,
+      "title": "1.2 MODE A：快速筛选",
+      "path": "knowledge/modules/full/01-router-03.md",
+      "bytes": 495,
+      "sha256": "2e32f914fb8d395b9bab88fe030ee3e3d7a6c4fec22f7fca020006319ffbef68",
+      "originalLine": 84,
+      "sections": [
+        {
+          "level": 2,
+          "title": "1.2 MODE A：快速筛选",
+          "line": 1,
+          "endLine": 27,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-01-router-04",
+      "source": "full",
+      "chapter": 1,
+      "title": "1.3 MODE B：深度研究",
+      "path": "knowledge/modules/full/01-router-04.md",
+      "bytes": 2324,
+      "sha256": "30cff35d9a967d55e25d6fef6b51e00f72e27717a25d0b91170f4e571839addb",
+      "originalLine": 111,
+      "sections": [
+        {
+          "level": 2,
+          "title": "1.3 MODE B：深度研究",
+          "line": 1,
+          "endLine": 25,
+          "index": 0
+        },
+        {
+          "level": 3,
+          "title": "MODE B 公开验证与交付协议",
+          "line": 18,
+          "endLine": 25,
+          "index": 17
+        }
+      ]
+    },
+    {
+      "id": "full-01-router-05",
+      "source": "full",
+      "chapter": 1,
+      "title": "1.4 MODE C：财报更新",
+      "path": "knowledge/modules/full/01-router-05.md",
+      "bytes": 2692,
+      "sha256": "6cb748aca352401f0d205d0e87e854089ec91d32d9e8dbf44eaa32880ef0f422",
+      "originalLine": 136,
+      "sections": [
+        {
+          "level": 2,
+          "title": "1.4 MODE C：财报更新",
+          "line": 1,
+          "endLine": 27,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-01-router-06",
+      "source": "full",
+      "chapter": 1,
+      "title": "1.5 MODE D：多公司比较",
+      "path": "knowledge/modules/full/01-router-06.md",
+      "bytes": 2440,
+      "sha256": "8cc0921c73465970689c49a31486cf9f9cf7e02f1f16cb98b7da8fe46795e3dc",
+      "originalLine": 163,
+      "sections": [
+        {
+          "level": 2,
+          "title": "1.5 MODE D：多公司比较",
+          "line": 1,
+          "endLine": 34,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-01-router-07",
+      "source": "full",
+      "chapter": 1,
+      "title": "1.6 MODE E：组合分析",
+      "path": "knowledge/modules/full/01-router-07.md",
+      "bytes": 384,
+      "sha256": "74bbf2ef099cb54e0f7bd38a0e06c86add32d9fe02d53d76bc73cccf7ff646ec",
+      "originalLine": 197,
+      "sections": [
+        {
+          "level": 2,
+          "title": "1.6 MODE E：组合分析",
+          "line": 1,
+          "endLine": 21,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-01-router-08",
+      "source": "full",
+      "chapter": 1,
+      "title": "1.7 MODE F：股息 / 分红 / 目标收益率专项",
+      "path": "knowledge/modules/full/01-router-08.md",
+      "bytes": 438,
+      "sha256": "83bb96d0aff9cc3f7a9b3f3ccafe996743c6ed85398845585e28e50734010098",
+      "originalLine": 218,
+      "sections": [
+        {
+          "level": 2,
+          "title": "1.7 MODE F：股息 / 分红 / 目标收益率专项",
+          "line": 1,
+          "endLine": 20,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-01-router-09",
+      "source": "full",
+      "chapter": 1,
+      "title": "1.8 模式联动优先级",
+      "path": "knowledge/modules/full/01-router-09.md",
+      "bytes": 386,
+      "sha256": "52a02762b2bf970c520ccf8a1b8be7acb89f4432d0fed4dfb2d17f139a781906",
+      "originalLine": 238,
+      "sections": [
+        {
+          "level": 2,
+          "title": "1.8 模式联动优先级",
+          "line": 1,
+          "endLine": 16,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-02-execution-graph",
+      "source": "full",
+      "chapter": 2,
+      "title": "2. EXECUTION GRAPH：Agent 执行图",
+      "path": "knowledge/modules/full/02-execution-graph.md",
+      "bytes": 753,
+      "sha256": "acc078e595c7cc5b30c3a31a433dd1d53be4ffe8321bf92a21f6be35d3a623e6",
+      "originalLine": 254,
+      "sections": [
+        {
+          "level": 1,
+          "title": "2. EXECUTION GRAPH：Agent 执行图",
+          "line": 1,
+          "endLine": 36,
+          "index": 0
+        },
+        {
+          "level": 3,
+          "title": "Gate 规则",
+          "line": 27,
+          "endLine": 36,
+          "index": 26
+        }
+      ]
+    },
+    {
+      "id": "full-03-data",
+      "source": "full",
+      "chapter": 3,
+      "title": "3. DATA LAYER：数据、来源、时点与口径",
+      "path": "knowledge/modules/full/03-data.md",
+      "bytes": 1573,
+      "sha256": "8f1a74369b0a0bccf83d4e45eaea97cf16d752c79fed0bdc59e4da42a6cc20c0",
+      "originalLine": 290,
+      "sections": [
+        {
+          "level": 1,
+          "title": "3. DATA LAYER：数据、来源、时点与口径",
+          "line": 1,
+          "endLine": 89,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "3.1 数据来源优先级",
+          "line": 3,
+          "endLine": 46,
+          "index": 2
+        },
+        {
+          "level": 3,
+          "title": "A级：法定披露",
+          "line": 5,
+          "endLine": 13,
+          "index": 4
+        },
+        {
+          "level": 3,
+          "title": "B级：权威经营/行业数据",
+          "line": 14,
+          "endLine": 19,
+          "index": 13
+        },
+        {
+          "level": 3,
+          "title": "C级：一手调研",
+          "line": 20,
+          "endLine": 29,
+          "index": 19
+        },
+        {
+          "level": 3,
+          "title": "D级：管理层 / 主流媒体",
+          "line": 30,
+          "endLine": 38,
+          "index": 29
+        },
+        {
+          "level": 3,
+          "title": "E级：传闻",
+          "line": 39,
+          "endLine": 46,
+          "index": 38
+        },
+        {
+          "level": 2,
+          "title": "3.2 正式研究的数据快照",
+          "line": 47,
+          "endLine": 64,
+          "index": 46
+        },
+        {
+          "level": 2,
+          "title": "3.3 口径锁定",
+          "line": 65,
+          "endLine": 79,
+          "index": 64
+        },
+        {
+          "level": 2,
+          "title": "3.4 缺失数据处理",
+          "line": 80,
+          "endLine": 89,
+          "index": 79
+        }
+      ]
+    },
+    {
+      "id": "full-04-fundamental",
+      "source": "full",
+      "chapter": 4,
+      "title": "4. FUNDAMENTAL ENGINE：业务、产品、行业、护城河、战略",
+      "path": "knowledge/modules/full/04-fundamental.md",
+      "bytes": 2907,
+      "sha256": "fd73a2c729d9d9e846fa09f6d6f0eb8bf0c9e8097847407c45b3e6e48e50c831",
+      "originalLine": 379,
+      "sections": [
+        {
+          "level": 1,
+          "title": "4. FUNDAMENTAL ENGINE：业务、产品、行业、护城河、战略",
+          "line": 1,
+          "endLine": 148,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "4.1 一句话商业模型",
+          "line": 3,
+          "endLine": 13,
+          "index": 2
+        },
+        {
+          "level": 2,
+          "title": "4.2 产品矩阵",
+          "line": 14,
+          "endLine": 29,
+          "index": 13
+        },
+        {
+          "level": 2,
+          "title": "4.3 产品竞争优势",
+          "line": 30,
+          "endLine": 44,
+          "index": 29
+        },
+        {
+          "level": 2,
+          "title": "4.4 定价权证据链",
+          "line": 45,
+          "endLine": 62,
+          "index": 44
+        },
+        {
+          "level": 2,
+          "title": "4.5 销售、渠道与制造",
+          "line": 63,
+          "endLine": 89,
+          "index": 62
+        },
+        {
+          "level": 2,
+          "title": "4.6 商业模式判断",
+          "line": 90,
+          "endLine": 105,
+          "index": 89
+        },
+        {
+          "level": 2,
+          "title": "4.7 行业分析",
+          "line": 106,
+          "endLine": 126,
+          "index": 105
+        },
+        {
+          "level": 2,
+          "title": "4.8 战略与管理层执行力",
+          "line": 127,
+          "endLine": 148,
+          "index": 126
+        },
+        {
+          "level": 3,
+          "title": "去哪里？",
+          "line": 131,
+          "endLine": 133,
+          "index": 130
+        },
+        {
+          "level": 3,
+          "title": "凭什么赢？",
+          "line": 134,
+          "endLine": 136,
+          "index": 133
+        },
+        {
+          "level": 3,
+          "title": "怎么实现？",
+          "line": 137,
+          "endLine": 148,
+          "index": 136
+        }
+      ]
+    },
+    {
+      "id": "full-05-financial",
+      "source": "full",
+      "chapter": 5,
+      "title": "5. FINANCIAL ENGINE：财务验证系统",
+      "path": "knowledge/modules/full/05-financial.md",
+      "bytes": 3802,
+      "sha256": "c159ef1da138dd88c35e91944e4503a2a0211d3c3fc3ba88abe0abe4f11f0f50",
+      "originalLine": 527,
+      "sections": [
+        {
+          "level": 1,
+          "title": "5. FINANCIAL ENGINE：财务验证系统",
+          "line": 1,
+          "endLine": 203,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "5.1 核心原则",
+          "line": 3,
+          "endLine": 11,
+          "index": 2
+        },
+        {
+          "level": 2,
+          "title": "5.2 资产负债表顺序",
+          "line": 12,
+          "endLine": 68,
+          "index": 11
+        },
+        {
+          "level": 3,
+          "title": "现金",
+          "line": 24,
+          "endLine": 29,
+          "index": 23
+        },
+        {
+          "level": 3,
+          "title": "应收",
+          "line": 30,
+          "endLine": 40,
+          "index": 29
+        },
+        {
+          "level": 3,
+          "title": "存货",
+          "line": 41,
+          "endLine": 47,
+          "index": 40
+        },
+        {
+          "level": 3,
+          "title": "固定资产 / 在建工程",
+          "line": 48,
+          "endLine": 54,
+          "index": 47
+        },
+        {
+          "level": 3,
+          "title": "商誉",
+          "line": 55,
+          "endLine": 61,
+          "index": 54
+        },
+        {
+          "level": 3,
+          "title": "负债",
+          "line": 62,
+          "endLine": 68,
+          "index": 61
+        },
+        {
+          "level": 2,
+          "title": "5.3 利润表与现金流",
+          "line": 69,
+          "endLine": 86,
+          "index": 68
+        },
+        {
+          "level": 2,
+          "title": "5.4 利润质量四问",
+          "line": 87,
+          "endLine": 93,
+          "index": 86
+        },
+        {
+          "level": 2,
+          "title": "5.5 ROE",
+          "line": 94,
+          "endLine": 108,
+          "index": 93
+        },
+        {
+          "level": 2,
+          "title": "5.6 ROIC 标准口径",
+          "line": 109,
+          "endLine": 129,
+          "index": 108
+        },
+        {
+          "level": 2,
+          "title": "5.7 FCF 口径分层",
+          "line": 130,
+          "endLine": 167,
+          "index": 129
+        },
+        {
+          "level": 3,
+          "title": "Quick FCF",
+          "line": 132,
+          "endLine": 140,
+          "index": 131
+        },
+        {
+          "level": 3,
+          "title": "FCFF",
+          "line": 141,
+          "endLine": 150,
+          "index": 140
+        },
+        {
+          "level": 3,
+          "title": "FCFE",
+          "line": 151,
+          "endLine": 159,
+          "index": 150
+        },
+        {
+          "level": 3,
+          "title": "金融企业",
+          "line": 160,
+          "endLine": 167,
+          "index": 159
+        },
+        {
+          "level": 2,
+          "title": "5.8 正常化利润 / 正常化现金流",
+          "line": 168,
+          "endLine": 185,
+          "index": 167
+        },
+        {
+          "level": 2,
+          "title": "5.9 财务红旗",
+          "line": 186,
+          "endLine": 203,
+          "index": 185
+        }
+      ]
+    },
+    {
+      "id": "full-06-shareholder-return",
+      "source": "full",
+      "chapter": 6,
+      "title": "6. SHAREHOLDER RETURN ENGINE：股东回报与资本配置",
+      "path": "knowledge/modules/full/06-shareholder-return.md",
+      "bytes": 3977,
+      "sha256": "0645ab2ee918def40aa53e840e728041b5c17faf78f51fb7d3fe76415e94cc2b",
+      "originalLine": 730,
+      "sections": [
+        {
+          "level": 1,
+          "title": "6. SHAREHOLDER RETURN ENGINE：股东回报与资本配置",
+          "line": 1,
+          "endLine": 181,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "6.1 基础验证",
+          "line": 3,
+          "endLine": 17,
+          "index": 2
+        },
+        {
+          "level": 2,
+          "title": "6.2 回购分类",
+          "line": 18,
+          "endLine": 25,
+          "index": 17
+        },
+        {
+          "level": 2,
+          "title": "6.3 8 年股息专项",
+          "line": 26,
+          "endLine": 56,
+          "index": 25
+        },
+        {
+          "level": 3,
+          "title": "盈利与分红",
+          "line": 32,
+          "endLine": 39,
+          "index": 31
+        },
+        {
+          "level": 3,
+          "title": "现金流",
+          "line": 40,
+          "endLine": 45,
+          "index": 39
+        },
+        {
+          "level": 3,
+          "title": "资产负债",
+          "line": 46,
+          "endLine": 51,
+          "index": 45
+        },
+        {
+          "level": 3,
+          "title": "股东回报",
+          "line": 52,
+          "endLine": 56,
+          "index": 51
+        },
+        {
+          "level": 2,
+          "title": "6.4 分红承诺",
+          "line": 57,
+          "endLine": 73,
+          "index": 56
+        },
+        {
+          "level": 2,
+          "title": "6.5 可分配现金优先原则",
+          "line": 74,
+          "endLine": 100,
+          "index": 73
+        },
+        {
+          "level": 3,
+          "title": "Earnings-to-Distributable-Cash Conversion Factor",
+          "line": 85,
+          "endLine": 100,
+          "index": 84
+        },
+        {
+          "level": 2,
+          "title": "6.6 收益率锚公式",
+          "line": 101,
+          "endLine": 125,
+          "index": 100
+        },
+        {
+          "level": 3,
+          "title": "DPS 口径",
+          "line": 103,
+          "endLine": 108,
+          "index": 102
+        },
+        {
+          "level": 3,
+          "title": "正常化利润口径",
+          "line": 109,
+          "endLine": 116,
+          "index": 108
+        },
+        {
+          "level": 3,
+          "title": "可分配现金口径",
+          "line": 117,
+          "endLine": 125,
+          "index": 116
+        },
+        {
+          "level": 2,
+          "title": "6.7 3年滚动",
+          "line": 126,
+          "endLine": 137,
+          "index": 125
+        },
+        {
+          "level": 2,
+          "title": "6.8 股息敏感性",
+          "line": 138,
+          "endLine": 148,
+          "index": 137
+        },
+        {
+          "level": 2,
+          "title": "6.9 ROIC / WACC 与资本配置",
+          "line": 149,
+          "endLine": 160,
+          "index": 148
+        },
+        {
+          "level": 2,
+          "title": "6.10 股息可持续性评分（0–10）",
+          "line": 161,
+          "endLine": 181,
+          "index": 160
+        }
+      ]
+    },
+    {
+      "id": "full-07-valuation",
+      "source": "full",
+      "chapter": 7,
+      "title": "7. VALUATION ENGINE：估值方法选择与计算协议",
+      "path": "knowledge/modules/full/07-valuation.md",
+      "bytes": 3482,
+      "sha256": "7b65d0ea5f8e77546ba86e8ed2464fb2d40653d9043db1233cd9eacb53c75389",
+      "originalLine": 911,
+      "sections": [
+        {
+          "level": 1,
+          "title": "7. VALUATION ENGINE：估值方法选择与计算协议",
+          "line": 1,
+          "endLine": 209,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "7.1 先选模型，再算价格",
+          "line": 3,
+          "endLine": 59,
+          "index": 2
+        },
+        {
+          "level": 3,
+          "title": "稳定消费 / 成熟龙头",
+          "line": 7,
+          "endLine": 11,
+          "index": 6
+        },
+        {
+          "level": 3,
+          "title": "高成长公司",
+          "line": 12,
+          "endLine": 17,
+          "index": 11
+        },
+        {
+          "level": 3,
+          "title": "银行",
+          "line": 18,
+          "endLine": 23,
+          "index": 17
+        },
+        {
+          "level": 3,
+          "title": "保险",
+          "line": 24,
+          "endLine": 29,
+          "index": 23
+        },
+        {
+          "level": 3,
+          "title": "公用事业",
+          "line": 30,
+          "endLine": 34,
+          "index": 29
+        },
+        {
+          "level": 3,
+          "title": "周期股",
+          "line": 35,
+          "endLine": 40,
+          "index": 34
+        },
+        {
+          "level": 3,
+          "title": "资源股",
+          "line": 41,
+          "endLine": 48,
+          "index": 40
+        },
+        {
+          "level": 3,
+          "title": "科技平台",
+          "line": 49,
+          "endLine": 56,
+          "index": 48
+        },
+        {
+          "level": 3,
+          "title": "多元化集团",
+          "line": 57,
+          "endLine": 59,
+          "index": 56
+        },
+        {
+          "level": 2,
+          "title": "7.2 至少两种方法",
+          "line": 60,
+          "endLine": 66,
+          "index": 59
+        },
+        {
+          "level": 2,
+          "title": "7.3 DCF 计算协议",
+          "line": 67,
+          "endLine": 140,
+          "index": 66
+        },
+        {
+          "level": 3,
+          "title": "Step 1：选择现金流口径",
+          "line": 69,
+          "endLine": 74,
+          "index": 68
+        },
+        {
+          "level": 3,
+          "title": "Step 2：建立基准现金流",
+          "line": 75,
+          "endLine": 77,
+          "index": 74
+        },
+        {
+          "level": 3,
+          "title": "Step 3：预测显性期",
+          "line": 78,
+          "endLine": 91,
+          "index": 77
+        },
+        {
+          "level": 3,
+          "title": "Step 4：折现率",
+          "line": 92,
+          "endLine": 109,
+          "index": 91
+        },
+        {
+          "level": 3,
+          "title": "Step 5：终值",
+          "line": 110,
+          "endLine": 117,
+          "index": 109
+        },
+        {
+          "level": 3,
+          "title": "Step 6：EV → Equity Bridge",
+          "line": 118,
+          "endLine": 132,
+          "index": 117
+        },
+        {
+          "level": 3,
+          "title": "Step 7：每股价值",
+          "line": 133,
+          "endLine": 140,
+          "index": 132
+        },
+        {
+          "level": 2,
+          "title": "7.4 相对估值协议",
+          "line": 141,
+          "endLine": 160,
+          "index": 140
+        },
+        {
+          "level": 2,
+          "title": "7.5 三情景估值",
+          "line": 161,
+          "endLine": 181,
+          "index": 160
+        },
+        {
+          "level": 2,
+          "title": "7.6 敏感性分析",
+          "line": 182,
+          "endLine": 195,
+          "index": 181
+        },
+        {
+          "level": 2,
+          "title": "7.7 收益率锚与主估值冲突",
+          "line": 196,
+          "endLine": 209,
+          "index": 195
+        }
+      ]
+    },
+    {
+      "id": "full-08-risk-pricing",
+      "source": "full",
+      "chapter": 8,
+      "title": "8. RISK PRICING PROTOCOL：防止重复折价",
+      "path": "knowledge/modules/full/08-risk-pricing.md",
+      "bytes": 840,
+      "sha256": "6d0aaea827e3bb273187ff38d06cb3af8e974ee2309b5d2ad91f3c7e0507f79d",
+      "originalLine": 1120,
+      "sections": [
+        {
+          "level": 1,
+          "title": "8. RISK PRICING PROTOCOL：防止重复折价",
+          "line": 1,
+          "endLine": 25,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "8.1 一项风险只设一个“主要定价位置”",
+          "line": 3,
+          "endLine": 14,
+          "index": 2
+        },
+        {
+          "level": 2,
+          "title": "8.2 禁止重复保守",
+          "line": 15,
+          "endLine": 25,
+          "index": 14
+        }
+      ]
+    },
+    {
+      "id": "full-09-decision",
+      "source": "full",
+      "chapter": 9,
+      "title": "9. DECISION ENGINE：从研究结论到研究动作",
+      "path": "knowledge/modules/full/09-decision.md",
+      "bytes": 5076,
+      "sha256": "c2d51d881e1410f90696595a97359b245091eb930ca8339902b5884791eba49e",
+      "originalLine": 1145,
+      "sections": [
+        {
+          "level": 1,
+          "title": "9. DECISION ENGINE：从研究结论到研究动作",
+          "line": 1,
+          "endLine": 121,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "9.1 四层证据链",
+          "line": 3,
+          "endLine": 13,
+          "index": 2
+        },
+        {
+          "level": 2,
+          "title": "9.2 安全边际",
+          "line": 14,
+          "endLine": 31,
+          "index": 13
+        },
+        {
+          "level": 2,
+          "title": "9.3 Research Action 与 Portfolio Action 分离",
+          "line": 32,
+          "endLine": 61,
+          "index": 31
+        },
+        {
+          "level": 3,
+          "title": "Research Action",
+          "line": 34,
+          "endLine": 45,
+          "index": 33
+        },
+        {
+          "level": 3,
+          "title": "Portfolio Action",
+          "line": 46,
+          "endLine": 61,
+          "index": 45
+        },
+        {
+          "level": 2,
+          "title": "9.4 买入/加仓/减仓/退出",
+          "line": 62,
+          "endLine": 105,
+          "index": 61
+        },
+        {
+          "level": 3,
+          "title": "买入候选",
+          "line": 64,
+          "endLine": 69,
+          "index": 63
+        },
+        {
+          "level": 3,
+          "title": "加仓候选",
+          "line": 70,
+          "endLine": 77,
+          "index": 69
+        },
+        {
+          "level": 3,
+          "title": "减仓候选",
+          "line": 78,
+          "endLine": 84,
+          "index": 77
+        },
+        {
+          "level": 3,
+          "title": "退出候选",
+          "line": 85,
+          "endLine": 94,
+          "index": 84
+        },
+        {
+          "level": 3,
+          "title": "V4.2 执行纪律：研究状态与组合执行",
+          "line": 95,
+          "endLine": 105,
+          "index": 94
+        },
+        {
+          "level": 2,
+          "title": "9.5 证伪条件",
+          "line": 106,
+          "endLine": 121,
+          "index": 105
+        }
+      ]
+    },
+    {
+      "id": "full-10-scoring",
+      "source": "full",
+      "chapter": 10,
+      "title": "10. SCORING ENGINE：100 分研究仪表盘",
+      "path": "knowledge/modules/full/10-scoring.md",
+      "bytes": 1567,
+      "sha256": "37cbee17270d2492761782b1b1c786adbec1f38ad9c2cf32b24622c23ac260d6",
+      "originalLine": 1266,
+      "sections": [
+        {
+          "level": 1,
+          "title": "10. SCORING ENGINE：100 分研究仪表盘",
+          "line": 1,
+          "endLine": 81,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "10.1 总分结构",
+          "line": 3,
+          "endLine": 40,
+          "index": 2
+        },
+        {
+          "level": 3,
+          "title": "A. 公司质量：25",
+          "line": 5,
+          "endLine": 11,
+          "index": 4
+        },
+        {
+          "level": 3,
+          "title": "B. 成长与战略：15",
+          "line": 12,
+          "endLine": 17,
+          "index": 11
+        },
+        {
+          "level": 3,
+          "title": "C. 财务质量：25",
+          "line": 18,
+          "endLine": 24,
+          "index": 17
+        },
+        {
+          "level": 3,
+          "title": "D. 估值与安全边际：20",
+          "line": 25,
+          "endLine": 30,
+          "index": 24
+        },
+        {
+          "level": 3,
+          "title": "E. 股东回报：5",
+          "line": 31,
+          "endLine": 37,
+          "index": 30
+        },
+        {
+          "level": 3,
+          "title": "F. 风险：10",
+          "line": 38,
+          "endLine": 40,
+          "index": 37
+        },
+        {
+          "level": 2,
+          "title": "10.2 评分锚",
+          "line": 41,
+          "endLine": 65,
+          "index": 40
+        },
+        {
+          "level": 3,
+          "title": "对 5 分项",
+          "line": 45,
+          "endLine": 52,
+          "index": 44
+        },
+        {
+          "level": 3,
+          "title": "对 4 分项",
+          "line": 53,
+          "endLine": 59,
+          "index": 52
+        },
+        {
+          "level": 3,
+          "title": "对 3 分项",
+          "line": 60,
+          "endLine": 65,
+          "index": 59
+        },
+        {
+          "level": 2,
+          "title": "10.3 评分原则",
+          "line": 66,
+          "endLine": 72,
+          "index": 65
+        },
+        {
+          "level": 2,
+          "title": "10.4 评分解释",
+          "line": 73,
+          "endLine": 81,
+          "index": 72
+        }
+      ]
+    },
+    {
+      "id": "full-11-confidence",
+      "source": "full",
+      "chapter": 11,
+      "title": "11. CONFIDENCE ENGINE：研究置信度",
+      "path": "knowledge/modules/full/11-confidence.md",
+      "bytes": 331,
+      "sha256": "2e8116f412841ec0e0fe39446a1cadc67ebccedca89c95d7699b73568267f446",
+      "originalLine": 1347,
+      "sections": [
+        {
+          "level": 1,
+          "title": "11. CONFIDENCE ENGINE：研究置信度",
+          "line": 1,
+          "endLine": 21,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-12-portfolio",
+      "source": "full",
+      "chapter": 12,
+      "title": "12. PORTFOLIO ENGINE：组合分析",
+      "path": "knowledge/modules/full/12-portfolio.md",
+      "bytes": 3638,
+      "sha256": "843ef210545ecde9bcd285a2ecca4bffb1fe8c46f2bc26cd499e6791db475164",
+      "originalLine": 1368,
+      "sections": [
+        {
+          "level": 1,
+          "title": "12. PORTFOLIO ENGINE：组合分析",
+          "line": 1,
+          "endLine": 69,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "12.1 虚拟集团公司",
+          "line": 5,
+          "endLine": 23,
+          "index": 4
+        },
+        {
+          "level": 2,
+          "title": "12.2 仓位判断变量",
+          "line": 24,
+          "endLine": 39,
+          "index": 23
+        },
+        {
+          "level": 2,
+          "title": "12.3 V4.2 分批减仓与退出分流",
+          "line": 40,
+          "endLine": 52,
+          "index": 39
+        },
+        {
+          "level": 2,
+          "title": "12.4 V4.2 近端事件与执行记录",
+          "line": 53,
+          "endLine": 69,
+          "index": 52
+        }
+      ]
+    },
+    {
+      "id": "full-13-financial-update",
+      "source": "full",
+      "chapter": 13,
+      "title": "13. FINANCIAL UPDATE ENGINE：财报持续跟踪",
+      "path": "knowledge/modules/full/13-financial-update.md",
+      "bytes": 1123,
+      "sha256": "559818ea123361650a987d2fce67712f8b434e76428392c67fbbc200b94ce488",
+      "originalLine": 1437,
+      "sections": [
+        {
+          "level": 1,
+          "title": "13. FINANCIAL UPDATE ENGINE：财报持续跟踪",
+          "line": 1,
+          "endLine": 38,
+          "index": 0
+        },
+        {
+          "level": 3,
+          "title": "V4.2 交易复盘记录",
+          "line": 33,
+          "endLine": 38,
+          "index": 32
+        }
+      ]
+    },
+    {
+      "id": "full-14-valuation-change",
+      "source": "full",
+      "chapter": 14,
+      "title": "14. VALUATION CHANGE LOG：估值参数变更日志",
+      "path": "knowledge/modules/full/14-valuation-change.md",
+      "bytes": 366,
+      "sha256": "65859eabbd258158218ff4e6a0f423ea2c7cf2abb47bacb5e12bb689b528aba0",
+      "originalLine": 1475,
+      "sections": [
+        {
+          "level": 1,
+          "title": "14. VALUATION CHANGE LOG：估值参数变更日志",
+          "line": 1,
+          "endLine": 25,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-15-output",
+      "source": "full",
+      "chapter": 15,
+      "title": "15. OUTPUT ENGINE：按任务选择输出 Schema",
+      "path": "knowledge/modules/full/15-output.md",
+      "bytes": 52,
+      "sha256": "33a13b2f46125d8345e90ae2369ef7a6349cb2233d68d76fb7ec48392dc699bd",
+      "originalLine": 1500,
+      "sections": [
+        {
+          "level": 1,
+          "title": "15. OUTPUT ENGINE：按任务选择输出 Schema",
+          "line": 1,
+          "endLine": 2,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-15-output-24",
+      "source": "full",
+      "chapter": 15,
+      "title": "15.1 Quick Output",
+      "path": "knowledge/modules/full/15-output-24.md",
+      "bytes": 1924,
+      "sha256": "959f5a3423ad32119b1516036e4e7d7dbe39a58e4ace54b681a625832bf7c561",
+      "originalLine": 1502,
+      "sections": [
+        {
+          "level": 2,
+          "title": "15.1 Quick Output",
+          "line": 1,
+          "endLine": 41,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-15-output-25",
+      "source": "full",
+      "chapter": 15,
+      "title": "15.2 Standard Output",
+      "path": "knowledge/modules/full/15-output-25.md",
+      "bytes": 273,
+      "sha256": "a0aac3bc916cd75406cbfcb34c77360b358055fc84ae8822b6ddc34d60e3e034",
+      "originalLine": 1543,
+      "sections": [
+        {
+          "level": 2,
+          "title": "15.2 Standard Output",
+          "line": 1,
+          "endLine": 15,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-15-output-26",
+      "source": "full",
+      "chapter": 15,
+      "title": "15.3 Deep Output",
+      "path": "knowledge/modules/full/15-output-26.md",
+      "bytes": 1865,
+      "sha256": "2e3b5af2348f3c59f754994fe89e5b160eb26d5bfeed5d796fb0c0544530211d",
+      "originalLine": 1558,
+      "sections": [
+        {
+          "level": 2,
+          "title": "15.3 Deep Output",
+          "line": 1,
+          "endLine": 108,
+          "index": 0
+        },
+        {
+          "level": 3,
+          "title": "一、投资结论",
+          "line": 5,
+          "endLine": 15,
+          "index": 4
+        },
+        {
+          "level": 3,
+          "title": "二、公司一句话",
+          "line": 16,
+          "endLine": 21,
+          "index": 15
+        },
+        {
+          "level": 3,
+          "title": "三、业务与产品",
+          "line": 22,
+          "endLine": 27,
+          "index": 21
+        },
+        {
+          "level": 3,
+          "title": "四、行业",
+          "line": 28,
+          "endLine": 35,
+          "index": 27
+        },
+        {
+          "level": 3,
+          "title": "五、护城河与定价权",
+          "line": 36,
+          "endLine": 43,
+          "index": 35
+        },
+        {
+          "level": 3,
+          "title": "六、战略与管理层",
+          "line": 44,
+          "endLine": 49,
+          "index": 43
+        },
+        {
+          "level": 3,
+          "title": "七、财务质量",
+          "line": 50,
+          "endLine": 64,
+          "index": 49
+        },
+        {
+          "level": 3,
+          "title": "八、财务红旗",
+          "line": 65,
+          "endLine": 68,
+          "index": 64
+        },
+        {
+          "level": 3,
+          "title": "九、股东回报",
+          "line": 69,
+          "endLine": 78,
+          "index": 68
+        },
+        {
+          "level": 3,
+          "title": "十、估值",
+          "line": 79,
+          "endLine": 88,
+          "index": 78
+        },
+        {
+          "level": 3,
+          "title": "十一、安全边际",
+          "line": 89,
+          "endLine": 93,
+          "index": 88
+        },
+        {
+          "level": 3,
+          "title": "十二、100分评分",
+          "line": 94,
+          "endLine": 95,
+          "index": 93
+        },
+        {
+          "level": 3,
+          "title": "十三、Research Action",
+          "line": 96,
+          "endLine": 97,
+          "index": 95
+        },
+        {
+          "level": 3,
+          "title": "十四、Portfolio Action",
+          "line": 98,
+          "endLine": 100,
+          "index": 97
+        },
+        {
+          "level": 3,
+          "title": "十五、风险与证伪",
+          "line": 101,
+          "endLine": 102,
+          "index": 100
+        },
+        {
+          "level": 3,
+          "title": "十六、最终一句话",
+          "line": 103,
+          "endLine": 108,
+          "index": 102
+        }
+      ]
+    },
+    {
+      "id": "full-15-output-27",
+      "source": "full",
+      "chapter": 15,
+      "title": "15.4 Update Output",
+      "path": "knowledge/modules/full/15-output-27.md",
+      "bytes": 1068,
+      "sha256": "7d81ac5a3932436039705b7421f685ce7fd2803b86a02f2b2c6d5c610813c6d5",
+      "originalLine": 1666,
+      "sections": [
+        {
+          "level": 2,
+          "title": "15.4 Update Output",
+          "line": 1,
+          "endLine": 12,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-15-output-28",
+      "source": "full",
+      "chapter": 15,
+      "title": "15.5 Comparison Output",
+      "path": "knowledge/modules/full/15-output-28.md",
+      "bytes": 757,
+      "sha256": "7d769bed16b45a9ae2276a093b8dc192d60dc78a6cdc4805f38bfb39bc0eb91b",
+      "originalLine": 1678,
+      "sections": [
+        {
+          "level": 2,
+          "title": "15.5 Comparison Output",
+          "line": 1,
+          "endLine": 17,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-15-output-29",
+      "source": "full",
+      "chapter": 15,
+      "title": "15.6 Dividend Output",
+      "path": "knowledge/modules/full/15-output-29.md",
+      "bytes": 260,
+      "sha256": "5822b8da4cb83f28ddd0784bfaa7e5cdc8337659be404f25f151a063b66564e3",
+      "originalLine": 1695,
+      "sections": [
+        {
+          "level": 2,
+          "title": "15.6 Dividend Output",
+          "line": 1,
+          "endLine": 14,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-15-output-30",
+      "source": "full",
+      "chapter": 15,
+      "title": "15.7 Investment Battle Map",
+      "path": "knowledge/modules/full/15-output-30.md",
+      "bytes": 817,
+      "sha256": "18899af889d57803aca835c442b930fbc142142aaab3e409303eeaee66846b6e",
+      "originalLine": 1709,
+      "sections": [
+        {
+          "level": 2,
+          "title": "15.7 Investment Battle Map",
+          "line": 1,
+          "endLine": 23,
+          "index": 0
+        },
+        {
+          "level": 3,
+          "title": "V4.2 执行输出联动",
+          "line": 18,
+          "endLine": 23,
+          "index": 17
+        }
+      ]
+    },
+    {
+      "id": "full-16-audit",
+      "source": "full",
+      "chapter": 16,
+      "title": "16. AUDIT ENGINE：正式输出前强制检查",
+      "path": "knowledge/modules/full/16-audit.md",
+      "bytes": 3665,
+      "sha256": "6e157b6f64e8fee525d8708f3ca380df9883a2e02b4bae7e9568e1ccfd7ff425",
+      "originalLine": 1732,
+      "sections": [
+        {
+          "level": 1,
+          "title": "16. AUDIT ENGINE：正式输出前强制检查",
+          "line": 1,
+          "endLine": 78,
+          "index": 0
+        },
+        {
+          "level": 2,
+          "title": "16.1 Data Audit",
+          "line": 3,
+          "endLine": 11,
+          "index": 2
+        },
+        {
+          "level": 2,
+          "title": "16.2 Fundamental Audit",
+          "line": 12,
+          "endLine": 18,
+          "index": 11
+        },
+        {
+          "level": 2,
+          "title": "16.3 Cash Flow Audit",
+          "line": 19,
+          "endLine": 25,
+          "index": 18
+        },
+        {
+          "level": 2,
+          "title": "16.4 Shareholder Return Audit",
+          "line": 26,
+          "endLine": 34,
+          "index": 25
+        },
+        {
+          "level": 2,
+          "title": "16.5 Valuation Audit",
+          "line": 35,
+          "endLine": 45,
+          "index": 34
+        },
+        {
+          "level": 2,
+          "title": "16.6 Risk Double-count Audit",
+          "line": 46,
+          "endLine": 55,
+          "index": 45
+        },
+        {
+          "level": 2,
+          "title": "16.7 Decision Audit",
+          "line": 56,
+          "endLine": 78,
+          "index": 55
+        },
+        {
+          "level": 3,
+          "title": "V4.2 Execution Audit",
+          "line": 64,
+          "endLine": 78,
+          "index": 63
+        }
+      ]
+    },
+    {
+      "id": "full-17-prohibitions",
+      "source": "full",
+      "chapter": 17,
+      "title": "17. 禁止事项",
+      "path": "knowledge/modules/full/17-prohibitions.md",
+      "bytes": 1752,
+      "sha256": "4f88a767c4ca39260c95e2f86fd36ba8ea5ce94ee9d2fd3df374c61e7fdeac35",
+      "originalLine": 1810,
+      "sections": [
+        {
+          "level": 1,
+          "title": "17. 禁止事项",
+          "line": 1,
+          "endLine": 40,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-18-principles",
+      "source": "full",
+      "chapter": 18,
+      "title": "18. 最终原则",
+      "path": "knowledge/modules/full/18-principles.md",
+      "bytes": 712,
+      "sha256": "c607f8fc497d61bc49067d68888b6f8f380ec38dc8307e22eaf13fa46564322c",
+      "originalLine": 1850,
+      "sections": [
+        {
+          "level": 1,
+          "title": "18. 最终原则",
+          "line": 1,
+          "endLine": 30,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-19-glossary",
+      "source": "full",
+      "chapter": 19,
+      "title": "19. 术语速查",
+      "path": "knowledge/modules/full/19-glossary.md",
+      "bytes": 924,
+      "sha256": "873cb1c66342c2269cc7856ee30ea08e4c01af0b61a41e0afcb0a4ce5ad501a0",
+      "originalLine": 1880,
+      "sections": [
+        {
+          "level": 1,
+          "title": "19. 术语速查",
+          "line": 1,
+          "endLine": 19,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-20-history-v4",
+      "source": "full",
+      "chapter": 20,
+      "title": "20. V3 → V4 重构摘要",
+      "path": "knowledge/modules/full/20-history-v4.md",
+      "bytes": 986,
+      "sha256": "ee75ec7b14bb09efc8a3d50202eced153488ffdba09205bca4f12d24532831cd",
+      "originalLine": 1899,
+      "sections": [
+        {
+          "level": 1,
+          "title": "20. V3 → V4 重构摘要",
+          "line": 1,
+          "endLine": 23,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "full-21-history-v43",
+      "source": "full",
+      "chapter": 21,
+      "title": "21. V4.2→V4.3 更新摘要",
+      "path": "knowledge/modules/full/21-history-v43.md",
+      "bytes": 1157,
+      "sha256": "58a499c79b065d6f2df857767e13762236045d064f176f1415906daf91e9bfa5",
+      "originalLine": 1922,
+      "sections": [
+        {
+          "level": 1,
+          "title": "21. V4.2→V4.3 更新摘要",
+          "line": 1,
+          "endLine": 10,
+          "index": 0
+        }
+      ]
+    }
+  ]
+}

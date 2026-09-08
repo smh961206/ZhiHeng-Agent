@@ -9,13 +9,14 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 import {createResearchPlan, frameworkVersion, modes, researchStages, resolveMode, portfolioFields} from '../shared/research-framework.mjs';
 import {reviewFixture} from './fixtures/research-review.mjs';
+import {validateReview} from '../server/research-output.mjs';
 import {prepareResearchRetry} from '../server/research-retry.mjs';
 import {materialDocx,materialXlsx,materialPptx,materialPdf} from './fixtures/material-files.mjs';
 import {materialUploadResponse} from './fixtures/material-upload-response.mjs';
 
 const baseURL = new URL(process.env.UI_BASE_URL || 'http://127.0.0.1:5173').origin;
 assert.ok(['127.0.0.1', 'localhost', '[::1]'].includes(new URL(baseURL).hostname), 'UI_BASE_URL must be loopback');
-const artifacts = new URL('../artifacts/', import.meta.url);
+const artifacts = new URL('../artifacts/'+(process.env.UI_ARTIFACT_SUBDIR?process.env.UI_ARTIFACT_SUBDIR+'/':''), import.meta.url);
 const timeout = 10_000;
 const longToken = `fixture-${'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.repeat(5)}`;
 const security = {market: 'CN', symbol: '600519', name: '贵州茅台'};
@@ -225,7 +226,8 @@ function positionsUnchanged(before, after, label) {
 }
 async function actionLayout(panel, vertical = true) {
   const names = ['阅读模式', '复用研究输入', '导出报告'];
-  await shadcnButtons(panel.getByRole('button'));
+  await shadcnButtons(panel.getByRole('button').filter({hasNotText:'导出报告'}));
+  await shadcnButtons(panel.getByRole('button',{name:'导出报告',exact:true}),'popover-trigger');
   const boxes = [];
   for (const name of names) {
     const button = panel.getByRole('button', {name, exact: true});
@@ -270,6 +272,7 @@ async function traceChecks(page) {
   await textIncludes(data, '返回结果');
   await textIncludes(data, 'S1');
   await collapsible(data, false);
+  await trace.getByRole('button',{name:'查看详细执行记录',exact:true}).click();
   await choose(page, '事件筛选', '工具调用');
   await count(trace.locator('.rd-event'), 1);
   await textIncludes(trace.locator('.rd-event'), '已读取合成资料');
@@ -559,7 +562,7 @@ test('semantic-path-network-fallback',{failures:{'POST /api/research/path':1}},a
 screenJob.result.researchSummary=reviewFixture(screenJob.input).researchSummary;
 screenJob.plan.knowledge=[{path:'knowledge/CORE.md',version:'4.1-core',sha256:'a'.repeat(64)},{path:'knowledge/FULL.md',version:'4.1',sha256:'b'.repeat(64)}];
 for(const width of [320,1440])test(`quick-screen-fixed-scope-${width}`,{viewport:{width,height:1000}},async({page,requests,hold})=>{
- await workbench(page);await choose(page,'财报历史范围','近 8 年');await choose(page,'报告深度','完整展开');await page.locator('#question').fill('快速筛选贵州茅台');
+ await workbench(page);await page.locator('#question').fill('研究贵州茅台的长期投资价值');await choose(page,'财报历史范围','近 8 年');await choose(page,'报告深度','完整展开');await page.locator('#question').fill('快速筛选贵州茅台');
  await textIncludes(page.locator('.security-chip'),'600519');
  await count(page.getByRole('combobox',{name:'报告深度'}),0);await count(page.getByRole('combobox',{name:'财报历史范围'}),0);
  await count(page.locator('.screen-scope,.research-plan'),0);
@@ -569,7 +572,7 @@ for(const width of [320,1440])test(`quick-screen-fixed-scope-${width}`,{viewport
  assert.equal(requests('POST','/api/jobs').length,0);
  await page.getByRole('combobox',{name:'研究路径',exact:true}).click();await page.getByRole('option',{name:'深度研究',exact:true}).click();await enabled(page.getByRole('combobox',{name:'财报历史范围'}));
  await textIncludes(page.getByRole('combobox',{name:'财报历史范围'}),'近 8 年');await textIncludes(page.getByRole('combobox',{name:'报告深度'}),'完整展开');assert.equal(await page.locator('#question').inputValue(),'快速筛选贵州茅台');
- assert.equal(await page.getByRole('textbox',{name:'组合上下文'}).inputValue(),'优先核对现金流与存货（合成关注点）');
+ assert.equal(await page.getByRole('textbox',{name:'研究关注点'}).inputValue(),'优先核对现金流与存货（合成关注点）');
  await page.getByRole('combobox',{name:'研究路径',exact:true}).click();await page.getByRole('option',{name:'自动匹配',exact:true}).click();
  const release=hold('POST /api/jobs');await page.getByRole('button',{name:'开始快速筛选',exact:true}).click();await page.locator('#question').press('Control+Enter');
  await eventually(()=>requests('POST','/api/jobs').length===1,'Quick screen must submit once');const payload=requests('POST','/api/jobs')[0].body;
@@ -597,7 +600,7 @@ for(const width of [320,1440])test(`quick-screen-follow-up-${width}`,{jobs:[scre
  assert.equal(await page.getByRole('textbox',{name:'标的1股票代码',exact:true}).inputValue(),'002594');
  assert.equal(await page.getByRole('textbox',{name:'标的2股票代码',exact:true}).inputValue(),'01211');
  assert.equal(requests('POST','/api/research/plan').length,0);
- assert.match(await page.getByRole('textbox',{name:'组合上下文'}).inputValue(),/上次快筛的待验证事项/);assert.match(await page.getByRole('textbox',{name:'组合上下文'}).inputValue(),/实际用途/);await noOverflow(page,`prepared deep ${width}`);
+ assert.match(await page.getByRole('textbox',{name:'研究关注点'}).inputValue(),/上次快筛的待验证事项/);assert.match(await page.getByRole('textbox',{name:'研究关注点'}).inputValue(),/实际用途/);await noOverflow(page,`prepared deep ${width}`);
 });
 const screenPending=makeJob(907,'running',{mode:'A',question:'快速筛选合成标的'});delete screenPending.liveReport;
 for(const width of [320,780,1440]){
@@ -629,7 +632,7 @@ for(const width of [320,1440])test(`quick-screen-progress-${width}`,{jobs:[scree
  await detail(page,screenPending);await textIncludes(page.locator('.rd-overview'),'正在读取研究资料');
  await count(page.getByRole('button',{name:'查看本次研究计划',exact:true}),0);
  await count(page.getByRole('tab',{name:'研究思路'}),0);await noOverflow(page,`quick progress ${width}`);
- for(const [job,title] of [[screenFailed,'快速筛选未完成'],[screenCancelled,'快速筛选已取消']]){
+ for(const [job,title] of [[screenFailed,screenFailed.error],[screenCancelled,'快速筛选已取消']]){
   await detail(page,job);await textIncludes(page.locator('.rd-overview'),title);await count(page.getByRole('button',{name:'准备深度研究'}),0);await textIncludes(page.locator('.rd-empty'),'输入与执行记录');
   await count(page.getByRole('button',{name:'本次研究范围',exact:true}),0);
   await noOverflow(page,`quick screen detail ${width}`);
@@ -646,7 +649,8 @@ for(const width of [320,1440])test(`quick-screen-reader-export-${width}`,{jobs:[
  await count(page.getByRole('tab',{name:'研究思路'}),0);
  assert.doesNotMatch(await page.locator('.research-detail').innerText(),/internal-rule-fixture|内部查证计划|本次研究规则|knowledge\/(CORE|FULL)/);
  await noOverflow(page,`reader report ${width}`);await screenshot(page,`reader-report-${width}`,'.rd-report-card');
- const actions=await detailActions(page),[download]=await Promise.all([page.waitForEvent('download'),actions.getByRole('button',{name:'导出报告',exact:true}).click()]);
+ const actions=await detailActions(page);
+ const [download]=await Promise.all([page.waitForEvent('download'),downloadReport(page,actions,'报告、审计与来源')]);
  const exported=await readFile(await download.path(),'utf8');
  assert.match(exported,/合成研究报告/);assert.match(exported,/审计记录/);assert.match(exported,/来源目录/);
  assert.doesNotMatch(exported,/internal-rule-fixture|knowledge\/(CORE|FULL)|研究计划与证据判断|实际工具调用与资料获取/);
@@ -665,7 +669,7 @@ for(const width of [320,1440])test(`audit-coverage-${width}`,{jobs:[auditCoverag
  await textIncludes(coverage,'计算返回成功不代表参数已核实');
  await textIncludes(coverage,'重复片段不累加为新增证据');
  await noOverflow(page,`audit coverage ${width}`);await screenshot(page,`audit-coverage-${width}`,'.rd-validation');
- const actions=await detailActions(page),[download]=await Promise.all([page.waitForEvent('download'),actions.getByRole('button',{name:'导出报告',exact:true}).click()]);
+ const actions=await detailActions(page),[download]=await Promise.all([page.waitForEvent('download'),downloadReport(page,actions)]);
  const text=await readFile(await download.path(),'utf8');
  assert.match(text,/补证复核收到 3\/3 段完整证据/);assert.match(text,/计算返回成功不代表参数已核实/);
  assert.equal(requests('POST','/api/jobs').length,0);
@@ -839,17 +843,17 @@ for (const trigger of ['button', 'ctrl-enter']) test(`submit-${trigger}`, {}, as
     assert.equal(await page.getByRole('textbox', {name: '标的1股票代码', exact: true}).inputValue(), 'AAPL');
     await page.getByRole('combobox',{name:'研究路径',exact:true}).click();
     await page.getByRole('option',{name:'股东回报',exact:true}).click();
-    await enabled(page.getByRole('combobox', {name: '财报历史范围'}), false);
-    await textIncludes(page.getByRole('combobox', {name: '财报历史范围'}), '近 8 年');
+    await count(page.getByRole('combobox', {name: '财报历史范围'}), 0);
+    await textIncludes(page.locator('.settings-fixed'), '近 8 年');
     await page.getByRole('combobox',{name:'研究路径',exact:true}).click();
     await page.getByRole('option',{name:'深度研究',exact:true}).click();
     await choose(page, '报告深度', '完整展开');
     await choose(page, '财报历史范围', '近 3 年');
 
-    await page.getByRole('textbox', {name: '组合上下文'}).fill('UI合成背景：持有三年，关注现金回报。');
+    await page.getByRole('textbox', {name: '研究关注点'}).fill('UI合成背景：持有三年，关注现金回报。');
     await textIncludes(page.getByRole('combobox',{name:'财报历史范围'}),'近 3 年');
   } else {
-    await page.getByRole('button', {name: '现金流质量', exact: false}).click();
+    await page.locator('#question').fill('分析贵州茅台的现金流质量');
     await textIncludes(page.locator('.security-chip'), '600519');
     await enabled(page.getByRole('button', {name: /^开始(?:深度)?研究$/, exact: true}));
   }
@@ -1166,7 +1170,8 @@ for (const width of [1024, 1440]) test(`detail-sticky-desktop-${width}`, {
   await count(header.getByText('研究详情', {exact: true}), 0);
   await count(header.locator('h1'), 1);
   await textIncludes(header.locator('h1'), scrollingJob.input.question);
-  await textIncludes(header.locator('.rd-status'), '已完成');
+  await count(header.locator('.rd-status'), 0);
+  assert.equal(await page.locator('.rd-overview').getAttribute('data-progress-state'),'completed');
   assert.equal(await header.evaluate(element => getComputedStyle(element).position), 'sticky', 'Detail title header must be sticky');
   assert.equal(await page.locator('.rd-layout').evaluate(element => getComputedStyle(element).display), 'grid');
   const outline = await openDirectory(page);
@@ -1188,7 +1193,7 @@ for (const width of [1024, 1440]) test(`detail-sticky-desktop-${width}`, {
   // Move beyond each element's original position, then scroll a second time.
   // A position:sticky declaration alone cannot satisfy this check.
   await wheelReport(page, 1100);
-  const selectors = {title: '.rd-header h1', status: '.rd-header .rd-status', outline: '.rd-content-toolbar', actions: '.rd-desktop-tools .rd-action-panel'};
+  const selectors = {title: '.rd-header h1', outline: '.rd-content-toolbar', actions: '.rd-desktop-tools .rd-action-panel'};
   const before = await stickyPositions(page, selectors);
   const reportBefore = await page.locator('.rd-markdown').boundingBox();
   await wheelReport(page, 850);
@@ -1201,7 +1206,7 @@ for (const width of [1024, 1440]) test(`detail-sticky-desktop-${width}`, {
   assert.ok(after.outline.y >= headerBox.y + headerBox.height - 1 && after.outline.y + after.outline.height <= page.viewportSize().height + 1, 'Outline must remain visible below the sticky header');
   assert.ok(Math.abs(after.actions.y+after.actions.height/2-after.title.y-after.title.height/2)<=2, 'Actions must share the title row');
   assert.ok(Math.abs(after.actions.x+after.actions.width-headerBox.x-headerBox.width)<=2, 'Actions must align to the right edge of the sticky header');
-  assert.ok(after.status.x+after.status.width+12<=after.actions.x, 'Title and status must not overlap the action buttons');
+  assert.ok(after.title.x+after.title.width+12<=after.actions.x, 'Title must not overlap the action buttons');
   await page.screenshot({path: fileURLToPath(new URL(`ui-sticky-scrolled-${width}.png`, artifacts)), animations: 'disabled'});
   await openDirectory(page);
   await jumpToHeading(page, nav, '滚动定位验证 08');
@@ -1219,7 +1224,10 @@ for (const width of [320, 390, 768, 1023]) test(`detail-sticky-mobile-sheets-${w
   await count(header.getByText('研究详情', {exact: true}), 0);
   await textIncludes(header.locator('h1'), scrollingJob.input.question);
   assert.equal(await header.evaluate(element => getComputedStyle(element).position), 'sticky');
+  // The directory appears after entering the report body, not over the summary.
+  await wheelReport(page,1100);
   const outlineTrigger = page.getByRole('button', {name: '打开报告目录', exact: true});
+  await enabled(outlineTrigger);
   const actionTrigger = header.getByRole('button', {name: '打开研究操作', exact: true});
   await shadcnButtons(outlineTrigger, 'sheet-trigger');
   await shadcnButtons(actionTrigger, 'sheet-trigger');
@@ -1231,7 +1239,7 @@ for (const width of [320, 390, 768, 1023]) test(`detail-sticky-mobile-sheets-${w
   assert.ok(traceBox.y >= reportBox.y + reportBox.height - 1, 'Mobile trace must follow the report body');
   await noOverflow(page, `mobile detail ${width}`);
   await wheelReport(page, 1100);
-  const selectors = {title: '.rd-header h1', status: '.rd-header .rd-status', outline: '.rd-reading-tools button[aria-label="打开报告目录"]', actions: '.rd-header button[aria-label="打开研究操作"]'};
+  const selectors = {title: '.rd-header h1', outline: '.rd-reading-tools button[aria-label="打开报告目录"]', actions: '.rd-header button[aria-label="打开研究操作"]'};
   const before = await stickyPositions(page, selectors);
   await wheelReport(page, 850);
   const after = await stickyPositions(page, selectors);
@@ -1271,9 +1279,7 @@ for (const width of [320, 768, 1440]) test(`detail-contextual-layout-${width}`, 
 }, async ({page}) => {
   await detail(page, contextualJob);
   await enabled(page.getByRole('button',{name:'打开报告目录',exact:true}));
-  const title = await page.locator('.rd-title-row h1').boundingBox();
-  const status = await page.locator('.rd-title-row .rd-status').boundingBox();
-  assert.ok(status.x >= title.x+title.width && status.x-title.x-title.width <= 14, 'Status must follow a short title instead of aligning to the page edge');
+  await count(page.locator('.rd-title-row .rd-status'),0);
   const original = await page.locator('.rd-report-card').boundingBox();
   for(const tab of ['审计记录','证据来源']){
     await page.getByRole('tab',{name:new RegExp('^'+tab)}).click();
@@ -1317,7 +1323,7 @@ for (const width of [768, 1440]) test(`detail-export-reuse-${width}`, {jobs: [re
   await detail(page, reusableJob);
   let actions = await detailActions(page);
   const downloaded = page.waitForEvent('download');
-  await actions.getByRole('button', {name: '导出报告', exact: true}).click();
+  await downloadReport(page,actions);
   const download = await downloaded;
   assert.match(download.suggestedFilename(), /\.md$/);
   assert.equal(await download.failure(), null, 'Fixture report export must succeed');
@@ -1410,7 +1416,7 @@ for(const job of [savingDelivery,failedDelivery])job.workflow.stages.forEach(sta
 failedDelivery.error='合成的保存失败，结果仍在当前服务暂存。';
 for(const width of [320,1440]){
  test(`delivery-saving-${width}`,{jobs:[savingDelivery],viewport:{width,height:1000}},async({page,requests,finishJob})=>{
-  await detail(page,savingDelivery);await textIncludes(page.locator('.rd-header .rd-status'),'保存中');
+  await detail(page,savingDelivery);assert.equal(await page.locator('.rd-overview').getAttribute('data-progress-state'),'saving');
   await page.getByRole('heading',{name:'正在保存研究结果',exact:true}).waitFor();
   await count(page.getByRole('heading',{name:'合成实时草稿',exact:true}),0);
   const actions=await detailActions(page);await enabled(actions.getByRole('button',{name:'导出报告',exact:true}),false);await enabled(actions.getByRole('button',{name:'正在保存',exact:true}),false);
@@ -1420,7 +1426,7 @@ for(const width of [320,1440]){
   assert.equal(requests('POST','/api/jobs').length,0);
  });
  test(`delivery-save-retry-${width}`,{jobs:[failedDelivery],viewport:{width,height:1000},failures:{[`POST /api/jobs/${failedDelivery.id}/save`]:1}},async({page,requests,db,hold})=>{
-  await detail(page,failedDelivery);await textIncludes(page.locator('.rd-header .rd-status'),'待保存');
+  await detail(page,failedDelivery);assert.equal(await page.locator('.rd-overview').getAttribute('data-progress-state'),'save-pending');
   await page.getByRole('heading',{name:'研究已复核，结果待保存',exact:true}).waitFor();
   await count(page.getByRole('button',{name:'重试研究',exact:true}),0);
   const action=page.locator('.rd-empty').getByRole('button',{name:'重试保存',exact:true});await action.click();
@@ -1470,14 +1476,14 @@ for(const {width,job,entry} of [{width:320,job:failedUpdate,entry:'empty'},{widt
   await screenshot(page,'retry-pending-'+width);
   const previousURL=page.url();
   release();
-  await textIncludes(page.locator('.rd-header .rd-status'),'研究中');
+  assert.equal(await page.locator('.rd-overview').getAttribute('data-progress-state'),'running');
   assert.equal(page.url(),previousURL,'Retry must retain the URL, including the selected tab');
   assert.equal(db.size,2,'Retry must not add a history record');
   assert.equal(db.get(job.id).id,oldJob.id);assert.equal(db.get(job.id).createdAt,oldJob.createdAt);
-  assert.equal(db.get(job.id).retryCount,1);assert.equal(db.get(job.id).error,undefined);assert.deepEqual(db.get(job.id).input.sources,[]);
+  assert.equal(db.get(job.id).retryCount,1);assert.equal(db.get(job.id).error,undefined);assert.deepEqual(db.get(job.id).input.sources,oldJob.input.sources);assert.equal(db.get(job.id).resume.available,true);
   assert.equal(db.get(job.id).mode,oldJob.mode);
-  assert.deepEqual(db.get(job.id).input.securities,oldJob.input.securities.map(({market,symbol})=>({market,symbol})));
-  for(const key of ['question','depth','historyYears','portfolio','previousResearch','baselineJobId','portfolioContext'])assert.deepEqual(db.get(job.id).input[key]??null,oldJob.input[key]??({previousResearch:'',baselineJobId:null,portfolioContext:{}}[key]??null));
+  assert.deepEqual(db.get(job.id).input.securities,oldJob.input.securities);
+  for(const key of ['question','depth','historyYears','portfolio','previousResearch','baselineJobId','portfolioContext'])assert.deepEqual(db.get(job.id).input[key]??null,oldJob.input[key]??null);
   await page.getByRole('tab',{name:'研究报告',exact:true}).click();
   await page.getByRole('heading',{name:'合成实时草稿',exact:true}).waitFor();
   await eventually(()=>requests('GET',`/api/jobs/${job.id}/stream`).length===1,'Retry must reconnect the same record progress stream');
@@ -1485,16 +1491,16 @@ for(const {width,job,entry} of [{width:320,job:failedUpdate,entry:'empty'},{widt
   assert.ok(navigations.every(url=>!new URL(url).pathname.startsWith('/workbench')),'Direct retry must never visit the workbench');
   if(width===320){
    finishJob(job.id,{status:'failed',error:'合成的重试失败'});
-   await textIncludes(page.locator('.rd-header .rd-status'),'失败');
+   assert.equal(await page.locator('.rd-overview').getAttribute('data-progress-state'),'failed');
    await page.locator('.rd-empty').getByRole('button',{name:'重试研究',exact:true}).click();
-   await textIncludes(page.locator('.rd-header .rd-status'),'研究中');
+   assert.equal(await page.locator('.rd-overview').getAttribute('data-progress-state'),'running');
    assert.equal(db.get(job.id).retryCount,2);assert.equal(db.size,2);
    assert.deepEqual(requests('POST',retryPath).at(-1).body,{expectedRetryCount:1});
    await eventually(()=>requests('GET',`/api/jobs/${job.id}/stream`).length===2,'Repeated retries must reconnect again');
   }
   finishJob(job.id,{status:'completed',result:makeJob(28).result});
   await page.getByRole('heading',{name:'合成研究报告',exact:true}).waitFor();
-  await textIncludes(page.locator('.rd-header .rd-status'),'已完成');
+  assert.equal(await page.locator('.rd-overview').getAttribute('data-progress-state'),'completed');
   await count(page.getByRole('button',{name:'重试研究',exact:true}),0);
   await noOverflow(page,'retry completed '+width);
  });
@@ -1635,7 +1641,10 @@ for(const width of [320,1440]) test(`homepage-onboarding-${width}`,{viewport:{wi
  if(width<1024){await page.keyboard.press('Escape');await page.getByRole('dialog',{name:'研究导航'}).waitFor({state:'hidden'});}
  await noOverflow(page,'homepage '+width);
  await screenshot(page,'homepage-hero-'+width);
- await page.getByRole('link',{name:'了解付费方案',exact:true}).click();
+ await page.getByRole('link',{name:'了解研究流程',exact:true}).click();
+ await page.waitForURL('**/handbook?tab=guide');
+ await page.locator('.research-usage').waitFor();await page.getByRole('navigation',{name:'面包屑导航'}).getByRole('link',{name:'首页',exact:true}).click();
+ await page.getByRole('navigation',{name:'首页内容导航',exact:true}).getByRole('link',{name:'服务方案',exact:true}).click();
  const plans=page.locator('#fw-plans');
  await textIncludes(plans,'价格待公布');
  await plans.getByRole('button',{name:'查看开通说明',exact:true}).click();
@@ -1650,8 +1659,8 @@ for(const width of [320,1440]) test(`homepage-onboarding-${width}`,{viewport:{wi
  await screenshot(page,'homepage-plans-'+width,'#fw-plans');
  await page.getByRole('button',{name:'使用这个问题',exact:true}).click();
  await page.waitForURL('**/workbench');
- assert.match(await page.getByLabel('你想研究什么？',{exact:true}).inputValue(),/贵州茅台.*现金流质量/);
- await textIncludes(page.locator('.path-picker'),'深度研究');
+ assert.match(await page.getByLabel('你想研究什么？',{exact:true}).inputValue(),/贵州茅台.*值不值得研究/);
+ await textIncludes(page.locator('.path-picker'),'快速筛选');
  assert.equal(requests('POST','/api/jobs').length,0,'The guide must prepare the question without starting a paid research task');
  if(width<1024)await page.getByRole('button',{name:'打开导航菜单',exact:true}).click();
  await page.getByRole('link',{name:/知衡研究服务.*了解方案与开通方式/}).click();
@@ -1949,7 +1958,7 @@ for(const width of [320,1440])test(`framework-context-${width}`,{jobs:[decisionJ
  await textIncludes(page.locator('.portfolio-context .context-readiness'),'组合信息已齐');
  await noOverflow(page,'portfolio context '+width);
  await screenshot(page,'framework-portfolio-'+width,'.workbench-context');
- await page.getByRole('button',{name:'开始研究',exact:true}).click();
+ await page.getByRole('button',{name:'开始组合分析',exact:true}).click();
  await page.locator('.research-detail').waitFor();
  const portfolio=requests('POST','/api/jobs').at(-1).body;
  assert.equal(portfolio.mode,'E');assert.equal(Object.keys(portfolio.portfolioContext).length,6);assert.equal(portfolio.baselineJobId,undefined);
@@ -1984,9 +1993,9 @@ for(const width of [320,1440])test(`mode-reader-interface-${width}`,{viewport:{w
   await noOverflow(page,`mode ${mode} workbench ${width}`);
   if(mode==='B'){
    await screenshot(page,`workbench-reader-${width}`,'.research-workbench');
-   await page.getByRole('textbox',{name:'组合上下文',exact:true}).waitFor();
+   await page.getByRole('textbox',{name:'研究关注点',exact:true}).waitFor();
    await count(page.locator('.workbench-context>.research-context-content'),0);
-   await count(page.locator('.portfolio-context button[aria-expanded]'),0);
+   await page.getByRole('button',{name:'补充持仓与配置约束',exact:true}).click();
    for(const field of portfolioFields)assert.ok(await page.getByLabel(field.label,{exact:true}).isVisible(),'Portfolio fields remain directly available');
    await screenshot(page,`workbench-flat-settings-${width}`,'.workbench-settings');
    await screenshot(page,`workbench-flat-materials-${width}`,'.research-materials');
@@ -2108,7 +2117,7 @@ test(`audit-evidence-hierarchy-${width}`,{jobs:[deepProcessJob],viewport:{width,
  await page.locator('.rd-audit-research-notes').getByRole('button',{name:/查看依据/}).first().click();
  await queryIs(page,{tab:'sources'});await textIncludes(page.locator('.rd-sources'),'S1');
  await page.getByRole('tab',{name:'研究报告',exact:true}).click();
- const actions=await detailActions(page),[download]=await Promise.all([page.waitForEvent('download'),actions.getByRole('button',{name:'导出报告',exact:true}).click()]);
+ const actions=await detailActions(page),[download]=await Promise.all([page.waitForEvent('download'),downloadReport(page,actions)]);
  const exported=await readFile(await download.path(),'utf8');
  assert.match(exported,/# 一、研究计划与证据判断[\s\S]*# 二、实际工具调用与资料获取[\s\S]*# 三、完整研究结果/);
  assert.match(exported,/synthetic-normalized/);assert.match(exported,/合成资料不足/);
@@ -2146,7 +2155,7 @@ for(const width of [320,1440])test(`report-heading-dedup-${width}`,{jobs:[duplic
  await directory.getByRole('link',{name:'后续验证与判断升级条件',exact:true}).click();
  await eventually(()=>report.getByRole('heading',{name:'后续验证与判断升级条件',exact:true}).evaluate(el=>document.activeElement===el),'Directory must focus the retained heading');
  await textIncludes(report.locator('table'),'利润');await noOverflow(page,`deduplicated report ${width}`);
- const actions=await detailActions(page),[download]=await Promise.all([page.waitForEvent('download'),actions.getByRole('button',{name:'导出报告',exact:true}).click()]);
+ const actions=await detailActions(page),[download]=await Promise.all([page.waitForEvent('download'),downloadReport(page,actions)]);
  const exported=await readFile(await download.path(),'utf8');
  assert.equal((exported.match(/^## 行业与竞争$/gm)||[]).length,1);
  assert.equal((exported.match(/^## 后续验证与判断升级条件$/gm)||[]).length,1);
@@ -2184,7 +2193,7 @@ for(const width of [320,1440])test(`audit-repair-details-${width}`,{jobs:[auditR
  const trace=page.getByRole('complementary',{name:'研究执行轨迹'});
  await trace.scrollIntoViewIfNeeded();
  await textIncludes(trace,'研究动作不符合当前模式');await textIncludes(trace,'数据截止日期无效');await textIncludes(trace,'自动修正已停止');
- await trace.getByRole('combobox',{name:'事件筛选'}).click();await page.getByRole('option',{name:'异常与提示',exact:true}).click();
+ await trace.getByRole('button',{name:'查看详细执行记录',exact:true}).click();await trace.getByRole('combobox',{name:'事件筛选'}).click();await page.getByRole('option',{name:'异常与提示',exact:true}).click();
  await textIncludes(trace,'相同问题修正后仍存在');await noOverflow(page,`audit repairs ${width}`);
  await screenshot(page,`audit-repairs-${width}`,'.rd-audit-issues');
 });
@@ -2252,7 +2261,7 @@ test('job-stream-recovery',{jobs:[syncJob],viewport:{width:1440,height:1000}},as
    emit(type,value){this.handlers[type]?.({data:JSON.stringify(value)});}
   };
  });
- await detail(page,syncJob);const job=db.get(syncJob.id);
+ await detail(page,syncJob);await openProcess(page);const job=db.get(syncJob.id);
  job.events.push({type:'progress',message:'断线期间仍在处理合成资料',time:job.createdAt});
  await page.evaluate(()=>window.__streams.at(-1).onerror());
  await textIncludes(page.locator('.rd-events'),'断线期间仍在处理合成资料');
@@ -2262,7 +2271,7 @@ test('job-stream-recovery',{jobs:[syncJob],viewport:{width:1440,height:1000}},as
  await page.evaluate(()=>window.__streams.at(-1).emit('trace',{type:'progress',message:'比状态请求更新的实时事件'}));
  const response=page.waitForResponse(response=>new URL(response.url()).pathname===path);
  release();await (await response).finished();await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
- await textIncludes(page.locator('.rd-events'),'比状态请求更新的实时事件');
+ await textIncludes(page.locator('.rd-events'),'比状态请求更新的实时事件');await closeProcess(page);
  await page.evaluate(()=>{window.__streams.at(-1).emit('report_delta',{delta:''});});
  job.status='completed';job.result=makeJob(986).result;
  await page.evaluate(()=>{window.__timeOffset+=6000;window.dispatchEvent(new Event('focus'));});
@@ -2521,18 +2530,52 @@ for(const width of [320,1440])test(`company-comparison-workbench-${width}`,{view
  await start.click();await page.locator('.research-detail').waitFor();const submitted=requests('POST','/api/jobs').at(-1).body;assert.equal(submitted.mode,'D');assert.equal(submitted.securities.length,3);
 });
 
-for(const width of [320,1440]){
+for(const width of [320,1440,1920]){
  const job=makeJob(29,'completed',{mode:'D',question:'多公司比较界面验证 · 合成资料',securities:[{market:'CN',symbol:'002594',name:'合成公司甲'},{market:'CN',symbol:'601633',name:'合成公司乙'},{market:'CN',symbol:'601127',name:'合成公司丙'}]});
- const review=reviewFixture(job.input);job.result={...job.result,decision:review.decision,researchSummary:review.researchSummary,comparisonDecisions:review.comparisonDecisions.map((row,index)=>({...row,action:index===1?'深度研究':'观察',sourceIds:index===0?['S1']:[]}))};
+ job.marketData={snapshots:structuredClone(job.input.securities)};job.input.securities=job.input.securities.map(({market,symbol})=>({market,symbol}));job.plan.securities=structuredClone(job.input.securities);
+ const review=reviewFixture(job.input);job.result={...job.result,decision:review.decision,researchSummary:review.researchSummary,comparisonDecisions:review.comparisonDecisions.map((row,index)=>({...row,action:index===1?'深度研究':'观察',sourceIds:Array.from({length:12},(_,i)=>'S'+(index*12+i+1))}))};
+ job.input.sources=Array.from({length:36},(_,index)=>({...sources[0],id:'S'+(index+1),title:'合成比较来源 '+(index+1)}));
  job.events.push({type:'tool_result',toolName:'calculate_comparison',toolCallId:'comparison-ui',time:job.createdAt,result:{checks:[{id:'period',comparable:true,reason:'合成记录的期间一致。'},{id:'roeHistory',comparable:false,reason:'历史窗口不同，不能直接比较ROE稳定性。'}]}});
+ job.result.report += '\n\n## 逐家公司研究判断\n\n'+job.result.comparisonDecisions.map(row=>'### '+row.security+'\n\n'+row.summary+'\n\n依据：[S1]。').join('\n\n');
  test(`company-comparison-detail-${width}`,{jobs:[job],viewport:{width,height:1000}},async({page})=>{
   await detail(page,job);await textIncludes(page.locator('.rd-overview'),'多公司比较已完成');
   const comparison=page.getByRole('region',{name:'多公司比较结果'});await count(comparison.locator('article'),3);await textIncludes(comparison.locator('article').nth(1),'深度研究');
+  for(const [i,name,code] of [[0,'合成公司甲','SZ:002594'],[1,'合成公司乙','SH:601633'],[2,'合成公司丙','SH:601127']]){await textIncludes(comparison.locator('article').nth(i).locator('h4'),name);await textIncludes(comparison.locator('article').nth(i).locator(':scope > small'),code);}
+  for(const title of ['合成公司甲（SZ:002594）','合成公司乙（SH:601633）','合成公司丙（SH:601127）'])await count(page.locator('.rd-markdown').getByRole('heading',{name:title,exact:true}),1);
   await comparison.locator('summary').click();await textIncludes(comparison,'历史窗口不同');
   await openProcess(page);await count(page.locator('.rd-deep-process'),0);await closeProcess(page);
   await page.getByRole('tab',{name:'审计记录',exact:true}).click();await textIncludes(page.locator('.rd-audit-research-notes'),'合成资料不足');
   await page.getByRole('tab',{name:'研究报告',exact:true}).click();await noOverflow(page,'comparison detail '+width);await screenshot(page,'company-comparison-detail-'+width,'.rd-comparison');
-  await comparison.getByRole('button',{name:/查看依据 S1/}).click();await eventually(async()=>await page.getByRole('tab',{name:/证据来源/}).getAttribute('aria-selected')==='true','Company evidence should open the sources tab');
+  for(const card of await comparison.locator('article').all()){
+   const link=card.locator('.rd-comparison-sources');
+   assert.equal(await link.evaluate(node=>node.scrollWidth<=node.clientWidth),true,'Long source lists must wrap inside their button');
+   const outer=await card.boundingBox(),inner=await link.boundingBox();
+   assert.ok(inner.x>=outer.x&&inner.x+inner.width<=outer.x+outer.width+1,'Source buttons stay inside their company card');
+   const refs=await link.innerText();assert.ok(refs.includes('、'),'Exercise multiple source identifiers');
+  }
+  await comparison.locator('.rd-comparison-sources').first().click();await eventually(async()=>await page.getByRole('tab',{name:/证据来源/}).getAttribute('aria-selected')==='true','Company evidence should open the sources tab');
+ });
+}
+
+for(const width of [320,1440]){
+ const listings=[{market:'HK',symbol:'700'},{market:'US',symbol:'AAPL'},{market:'US',symbol:'BRK-B'}];
+ const job=makeJob(31,'completed',{mode:'D',securities:listings});
+ job.marketData={snapshots:listings.map((stock,index)=>({...stock,name:['合成港股公司','合成纳斯达克公司','合成纽交所公司'][index]}))};
+ job.result.comparisonDecisions=listings.map(stock=>({security:stock.market+':'+stock.symbol,action:'观察',confidence:'低',summary:'合成显示验证',unresolved:'合成资料',falsifiers:[],sourceIds:[]}));
+ job.result.report+='\n\n## 逐家公司研究判断\n\n'+job.result.comparisonDecisions.map(row=>'### '+row.security+'\n\n合成判断正文。').join('\n\n');
+ test('comparison-listing-labels-'+width,{jobs:[job],viewport:{width,height:1000}},async({page,requests})=>{
+  await detail(page,job);const cards=page.locator('.rd-comparison-grid article');await count(cards,3);
+  for(const [index,name,code] of [[0,'合成港股公司','HK:00700'],[1,'合成纳斯达克公司','NASDAQ:AAPL'],[2,'合成纽交所公司','NYSE:BRK-B']]){
+   await textIncludes(cards.nth(index).locator('h4'),name);await textIncludes(cards.nth(index).locator(':scope > small'),code);
+   await count(page.locator('.rd-markdown').getByRole('heading',{name:name+'（'+code+'）',exact:true}),1);
+  }
+  if(width<1024)await wheelReport(page,700);
+  const directory=await openDirectory(page);await textIncludes(directory,'合成纳斯达克公司（NASDAQ:AAPL）');
+  await jumpToHeading(page,directory.getByRole('navigation',{name:'报告目录',exact:true}),'合成纳斯达克公司（NASDAQ:AAPL）');
+  await screenshot(page,'company-report-headings-'+width,'.rd-markdown h3');
+  const actions=await detailActions(page);const [download]=await Promise.all([page.waitForEvent('download'),downloadReport(page,actions,'报告、审计与来源')]);
+  const exported=await readFile(await download.path(),'utf8');assert.match(exported,/### 合成纳斯达克公司（NASDAQ:AAPL）/);assert.match(exported,/### 合成纽交所公司（NYSE:BRK-B）/);
+  assert.equal(requests('POST','/api/securities/exchanges').length,1);await noOverflow(page,'comparison listing labels '+width);
  });
 }
 
@@ -2660,7 +2703,7 @@ for(const width of [320,1440])test(`handbook-current-features-${width}`,{viewpor
  await guideEntry.scrollIntoViewIfNeeded();await noOverflow(page,'home guide entry '+width);
  await page.screenshot({path:fileURLToPath(new URL(`ui-home-guide-entry-${width}.png`,artifacts)),animations:'disabled'});
  await guideEntry.focus();await page.keyboard.press('Enter');await page.waitForURL('**/handbook?tab=guide');
- const chapters=page.getByRole('tablist',{name:'研究手册章节'});await count(chapters.getByRole('tab'),3);assert.equal(await chapters.getByRole('tab',{name:'使用指南',exact:true}).getAttribute('aria-selected'),'true');
+ const chapters=page.getByRole('tablist',{name:'研究手册章节'});await count(chapters.getByRole('tab'),4);await count(chapters.getByRole('tab',{name:'研究实例',exact:true}),0);assert.equal(await chapters.getByRole('tab',{name:'使用指南',exact:true}).getAttribute('aria-selected'),'true');
  const topics=page.locator('.usage-topic');await count(topics,6);
  assert.equal(await topics.nth(0).getByRole('button').getAttribute('aria-expanded'),'true');await textIncludes(topics.nth(0),'研究类型和报告深度有什么区别');await topics.nth(1).getByRole('button').click();await textIncludes(topics.nth(1),'最多 6 份');
  await noOverflow(page,'handbook upload '+width);await screenshot(page,'handbook-upload-'+width,'.research-handbook');
@@ -2669,15 +2712,238 @@ for(const width of [320,1440])test(`handbook-current-features-${width}`,{viewpor
  await page.reload();await page.getByRole('heading',{name:'使用指南',exact:true}).waitFor();
  await chapters.getByRole('tab',{name:'术语速查',exact:true}).click();await page.waitForURL('**/handbook?tab=glossary');await page.goBack();await page.waitForURL('**/handbook?tab=guide');
  await chapters.getByRole('tab',{name:'研究纪律',exact:true}).click();await page.waitForURL('**/handbook?tab=discipline');await textIncludes(page.locator('#fw-data-sources'),'用户补充资料');
+ await page.getByRole('heading',{name:'33 条禁止事项',exact:true}).waitFor();
+ const execution=page.locator('section[aria-labelledby="execution-discipline-title"]');
+ await count(execution.locator('li'),6);await textIncludes(execution,'未来约 5 个交易日');
+ await noOverflow(page,'execution discipline '+width);await screenshot(page,'execution-discipline-'+width,'section[aria-labelledby="execution-discipline-title"]');
  await chapters.getByRole('tab',{name:'使用指南',exact:true}).click();assert.equal(requests('POST','/api/jobs').length,0);
 });
+
+const executionUiJob=makeJob(1191,'completed',{mode:'E',question:'复盘贵州茅台卖出后上涨，核对重新买入条件'});
+const executionReview=reviewFixture(executionUiJob.input);
+executionReview.executionAudit[0]={id:'action-separation',status:'passed',reason:'合成公司判断与组合约束分别记录[S1]。'};
+executionReview.executionAudit[5]={id:'near-term-events',status:'not_applicable',reason:'仅复盘历史交易，未要求立即减仓。'};
+executionUiJob.result=validateReview(executionReview,{input:executionUiJob.input,plan:executionUiJob.plan,sources:executionUiJob.input.sources});
+for(const width of [320,1440]){
+ test(`execution-home-workbench-${width}`,{viewport:{width,height:1000},resolvedSecurities:[security]},async({page,requests})=>{
+  await page.goto('/');
+  await page.getByRole('tablist',{name:'研究场景',exact:true}).getByRole('tab',{name:/组合分析/}).click();
+  const tasks=page.getByLabel('组合执行研究场景');await count(tasks.getByRole('button'),3);
+  await tasks.evaluate(element=>element.scrollIntoView({block:'center',behavior:'instant'}));
+  await page.screenshot({path:fileURLToPath(new URL(`ui-execution-home-${width}.png`,artifacts)),animations:'disabled'});
+  await tasks.getByRole('button',{name:/减仓与再平衡/}).click();
+  await page.waitForURL('**/workbench');
+  await textIncludes(page.locator('.preparation-execution'),'本次包含组合执行复核');
+  const background=page.getByRole('textbox',{name:'组合上下文',exact:true});
+  await page.getByRole('button',{name:'补充执行背景',exact:true}).click();
+  await eventually(()=>background.evaluate(element=>element===document.activeElement),'Execution background link focuses the matching input');
+  await background.fill('原有背景：合成持仓集中风险，需要核对。');
+  await page.getByRole('button',{name:'加入填写提纲',exact:true}).click();
+  assert.match(await background.inputValue(),/^原有背景/);
+  assert.match(await background.inputValue(),/交易日期与当时依据/);
+  await enabled(page.getByRole('button',{name:'填写提纲已加入',exact:true}),false);
+  const saved=await background.inputValue();
+  await page.getByRole('link',{name:'查看执行纪律',exact:true}).click();
+  await page.waitForURL('**/handbook?tab=discipline#execution-discipline-title');
+  await eventually(()=>page.locator('#execution-discipline-title').evaluate(element=>element===document.activeElement),'Handbook deep link focuses the execution heading');
+  await page.goBack();await background.waitFor();assert.equal(await background.inputValue(),saved);
+  await page.reload();await background.waitFor();assert.equal(await background.inputValue(),saved);
+  await noOverflow(page,'execution form '+width);await screenshot(page,'execution-workbench-'+width,'.execution-input-guide');
+  await enabled(page.locator('.start-button'));await page.locator('.start-button').click();
+  await page.waitForURL('**/research/*');
+  assert.equal(requests('POST','/api/jobs').length,1);assert.equal(requests('POST','/api/jobs')[0].body.portfolio,saved);
+ });
+ test(`execution-detail-evidence-${width}`,{jobs:[executionUiJob],viewport:{width,height:1000}},async({page,requests})=>{
+  await page.goto(`/research/${executionUiJob.id}`);await page.locator('.rd-header h1').waitFor();
+  await textIncludes(page.getByLabel('组合执行结论'),'条件式框架');
+  await page.getByRole('button',{name:/查看执行复核/}).click();
+  const review=page.getByLabel('执行纪律复核',{exact:true});await review.waitFor();
+  await eventually(()=>review.evaluate(element=>element===document.activeElement),'Summary link focuses execution review');
+  await count(review.locator('.execution-review-item'),10);
+  await textIncludes(review.locator('.execution-review-overview'),'8 项需要关注');
+  assert.equal(await review.locator('.execution-review-item').first().getAttribute('data-status'),'limited');
+  assert.equal(await review.locator('.execution-review-item').last().getAttribute('data-status'),'not_applicable');
+  await review.getByRole('button',{name:'不适用 1',exact:true}).click();
+  await count(review.locator('.execution-review-item'),1);
+  await textIncludes(review.locator('.execution-review-item'),'仅复盘历史交易');
+  await review.getByRole('button',{name:'全部 10',exact:true}).click();
+  await count(review.locator('.execution-review-item'),10);
+  assert.doesNotMatch(await page.locator('.rd-audit-review').innerText(),/执行纪律复核/);
+  await review.getByRole('button',{name:'存在限制 8',exact:true}).click();await count(review.locator('.execution-review-item'),8);
+  await noOverflow(page,'execution review '+width);await screenshot(page,'execution-detail-'+width,'.rd-execution-review');
+  await review.getByRole('button',{name:'已检查 1',exact:true}).click();await count(review.locator('.execution-review-item'),1);
+  await review.getByRole('button',{name:'查看执行复核证据 S1',exact:true}).focus();await page.keyboard.press('Enter');
+  await eventually(async()=>await page.getByRole('tab',{name:/证据来源/}).getAttribute('aria-selected')==='true','Execution evidence opens sources');
+  const source=page.locator('.rd-source').filter({has:page.locator('.rd-source-title',{hasText:executionUiJob.input.sources[0].title})});
+  await eventually(()=>page.locator('.rd-source-trigger:focus').evaluateAll(nodes=>nodes.some(node=>node.textContent.includes('S1'))),'Evidence jump focuses the selected source');
+  await noOverflow(page,'execution source '+width);
+  const actions=await detailActions(page),[download]=await Promise.all([page.waitForEvent('download'),downloadReport(page,actions)]);
+  const exported=await readFile(await download.path(),'utf8');assert.match(exported,/执行纪律复核/);
+  assert.equal(requests('POST','/api/jobs').length,0);
+ });
+}
+
+for(const width of [320,1440]){
+ const historical=makeJob(1430,'completed',{mode:'B',question:'旧版研究记录（合成）'});
+ historical.plan.version='4.2';historical.result.report+='\n\n历史市赚率记录：0.50（仅合成旧记录）。';
+ test(`framework-v43-${width}`,{jobs:[historical],viewport:{width,height:1000}},async({page,requests})=>{
+  await detail(page,historical);await textIncludes(page.getByLabel('报告正文',{exact:true}),'历史市赚率记录：0.50');
+  await page.goto(baseURL+'/handbook?tab=glossary');
+  await textIncludes(page.locator('#fw-glossary'),'13 个术语');
+  const groups=page.getByRole('tablist',{name:'术语分类'});
+  for(const label of ['估值指标','财务现金流','研究与组合']){
+   await groups.getByRole('tab',{name:new RegExp(label)}).click();
+   assert.doesNotMatch(await page.locator('#fw-glossary').innerText(),/市赚率|P2|修正式|行业龙头锚|第二公式|第三公式/);
+  }
+  await groups.getByRole('tab',{name:/估值指标/}).click();
+  await page.getByRole('button',{name:'收益率锚',exact:true}).click();await textIncludes(page.locator('#fw-glossary'),'不等于内在价值');
+  await noOverflow(page,`V4.3 glossary ${width}`);await screenshot(page,`framework-v43-${width}`);
+  await page.getByRole('tab',{name:'研究纪律',exact:true}).click();await textIncludes(page.locator('#execution-discipline-title'),'组合执行与交易复盘');
+  assert.equal(requests('POST','/api/jobs').length,0);
+ });
+}
+
+for(const width of [320,1440]){
+ const current=makeJob(1431,'completed',{question:'当前研究判断（合成）'});
+ current.result.decision=reviewFixture(current.input).decision;
+ current.result.decision.valuation={status:'limited',methods:['DCF','正常化盈利估值'],explanation:'关键参数仍待核实，保留估值限制。'};
+ test(`platform-current-${width}`,{jobs:[current],viewport:{width,height:1000}},async({page,requests})=>{
+  await page.goto(baseURL+'/');
+  await count(page.getByRole('list',{name:'研究判断顺序'}).getByRole('listitem'),4);
+  await screenshot(page,`platform-current-home-${width}`);
+  await page.getByRole('link',{name:'了解当前研究方法'}).click();
+  await textIncludes(page.locator('.research-method'),'当前研究方法 · V'+frameworkVersion);
+  await count(page.getByRole('heading',{name:'研究方法',level:2,exact:true}),1);
+  const methodSteps=page.getByRole('button',{name:'查看研究判断的四个步骤',exact:true});
+  assert.equal(await methodSteps.getAttribute('aria-expanded'),'false');
+  await methodSteps.focus();await page.keyboard.press('Enter');
+  await count(page.getByRole('list',{name:'研究判断顺序'}).getByRole('listitem'),4);
+  await methodSteps.press('Space');
+  await eventually(async()=>await methodSteps.getAttribute('aria-expanded')==='false','Research steps collapse with keyboard');
+  for(const title of ['查看估值使用说明','查看证据核对与结果阅读']){
+   const trigger=page.getByRole('button',{name:new RegExp(title)});
+   await trigger.click();assert.equal(await trigger.getAttribute('aria-expanded'),'true');
+  }
+  await textIncludes(page.locator('.research-method'),'同一模型的情景变化不算第二种方法');
+  await textIncludes(page.locator('.research-method'),'单季与累计、币种、股类和报告期分别核对');
+  await noOverflow(page,'expanded methodology '+width);
+  const openMethodDetails=page.locator('.research-method button[aria-expanded="true"]');
+  while(await openMethodDetails.count())await openMethodDetails.first().click();
+  await noOverflow(page,'current methodology '+width);await screenshot(page,`platform-current-method-${width}`);
+  await page.getByRole('link',{name:'带着问题开始'}).click();
+  await page.getByLabel('你想研究什么？',{exact:true}).fill('分析苹果公司的长期投资价值');
+  await textIncludes(page.getByLabel('当前路径交付'),'验证计划');
+  await page.getByRole('combobox',{name:'研究路径',exact:true}).click();
+  await page.getByRole('option',{name:'股东回报',exact:true}).click();
+  await textIncludes(page.getByLabel('当前路径交付'),'八年现金回报');
+  const delivery=page.getByRole('button',{name:/查看交付范围/});await delivery.click();
+  await textIncludes(page.getByRole('dialog'),'股东回报 · 交付范围');
+  await noOverflow(page,'delivery drawer '+width);await page.keyboard.press('Escape');await count(page.getByRole('dialog'),0);
+  assert.ok(await delivery.evaluate(element=>element===document.activeElement));
+  await page.locator('.path-picker').scrollIntoViewIfNeeded();await screenshot(page,`platform-current-workbench-${width}`);
+  await page.getByRole('combobox',{name:'研究路径',exact:true}).click();await page.getByRole('option',{name:'财报更新',exact:true}).click();
+  await textIncludes(page.getByLabel('当前路径交付'),'本期基线');
+  await detail(page,current);await textIncludes(page.getByLabel('报告版本'),'V'+frameworkVersion);
+  await textIncludes(page.getByLabel('估值适用性'),'估值：存在限制');
+  await page.getByRole('button',{name:'核对估值依据',exact:true}).click();
+  const boundary=page.getByLabel('估值与使用边界详情');await textIncludes(boundary,'关键参数仍待核实');
+  assert.ok(await boundary.evaluate(element=>element===document.activeElement));
+  await noOverflow(page,'valuation drawer '+width);await page.keyboard.press('Escape');
+  await eventually(()=>page.getByRole('button',{name:'核对估值依据',exact:true}).evaluate(element=>element===document.activeElement),'Restore valuation trigger focus');
+  await noOverflow(page,'report '+width);await screenshot(page,`platform-current-detail-${width}`);
+  assert.equal(requests('POST','/api/jobs').length,0);
+ });
+}
+
+for(const width of [320,1440]){
+ test(`workbench-route-progress-${width}`,{viewport:{width,height:1000}},async({page,requests,hold})=>{
+  await workbench(page);const steps=page.getByRole('navigation',{name:'新建研究步骤'});await count(steps.getByRole('button'),4);
+  const release=hold('POST /api/research/path');await page.locator('#question').fill('分析苹果公司的长期投资价值');
+  await eventually(()=>requests('POST','/api/research/path').length>0,'Path request starts');
+  await textIncludes(steps.locator('[aria-current=step]'),'研究路径');
+  await textIncludes(page.getByLabel('本次研究范围'),'正在确认研究路径');
+  await enabled(page.getByRole('button',{name:/查看交付范围/}),false);
+  await steps.getByRole('button',{name:/研究路径/}).click();
+  assert.ok(await page.getByRole('combobox',{name:'研究路径',exact:true}).evaluate(el=>el===document.activeElement));
+  await choose(page,'研究路径','股东回报');release();
+  await textIncludes(page.locator('.composer-intro'),'开启一项股东回报研究');
+  await textIncludes(page.getByLabel('当前路径交付'),'八年');
+  await noOverflow(page,'four step workbench '+width);
+  const positions=await steps.getByRole('button').evaluateAll(items=>items.map(el=>({x:el.offsetLeft,y:el.offsetTop})));
+  if(width===320)assert.equal(new Set(positions.map(p=>p.y)).size,2);else assert.equal(new Set(positions.map(p=>p.y)).size,1);
+  await screenshot(page,`workbench-route-progress-${width}`);
+  assert.equal(requests('POST','/api/jobs').length,0);
+ });
+ const prior=makeJob(3401,'completed',{mode:'B',question:'可恢复的旧报告（合成）',securities:[security]});
+ test(`workbench-baseline-recovery-${width}`,{viewport:{width,height:1000}},async({page,db,hold,requests})=>{
+  await page.addInitScript(input=>sessionStorage.setItem('zhiheng:composer:v1',JSON.stringify({version:1,savedAt:Date.now(),input})),{mode:'C',question:'更新苹果最新财报',manual:true,securities:[security],baselineJobId:prior.id});
+  const release=hold('GET /api/jobs');await workbench(page);
+  await textIncludes(page.getByLabel('对照研究核对'),'正在核对');await enabled(page.locator('button[type=submit]'),false);
+  release();await textIncludes(page.getByLabel('对照研究核对'),'已不在可用记录');
+  await enabled(page.locator('button[type=submit]'),false);
+  db.set(prior.id,structuredClone(prior));await page.getByRole('button',{name:'刷新可用记录',exact:true}).click();
+  await textIncludes(page.locator('.workbench-context .context-readiness'),'将对照旧结论');await enabled(page.locator('button[type=submit]'));
+  db.delete(prior.id);await page.evaluate(()=>window.dispatchEvent(new Event('focus')));
+  await textIncludes(page.getByLabel('对照研究核对'),'已不在可用记录');
+  const notes=page.getByRole('textbox',{name:'上次研究结论'});await notes.fill('保留外部旧结论与利润假设');
+  await noOverflow(page,'baseline correction '+width);await screenshot(page,`workbench-baseline-recovery-${width}`,'.workbench-context');
+  await page.getByRole('button',{name:'取消所选对照',exact:true}).click();
+  assert.equal(await notes.inputValue(),'保留外部旧结论与利润假设');
+  await textIncludes(page.getByRole('combobox',{name:'对照研究',exact:true}),'使用填写的外部旧结论');await enabled(page.locator('button[type=submit]'));
+  assert.equal(requests('POST','/api/jobs').length,0);
+ });
+ const changed=makeJob(3402,'failed',{question:'旧规则任务（合成）'});changed.plan.version='4.2';changed.resume={available:false,reason:'framework_changed',fromVersion:'4.2',toVersion:'4.3'};
+ test(`recovery-rule-change-${width}`,{jobs:[changed],viewport:{width,height:1000}},async({page,requests})=>{
+  await detail(page,changed);await page.getByRole('heading',{name:'按当前规则重新研究',exact:true}).waitFor();
+  await textIncludes(page.locator('.rd-empty'),'重新采集、分析和复核');await textIncludes(page.getByLabel('恢复说明'),'V4.2 更新为 V4.3');
+  await enabled(page.locator('.rd-empty').getByRole('button',{name:'重试研究',exact:true}));
+  await noOverflow(page,'restart explanation '+width);await screenshot(page,`recovery-rule-change-${width}`);
+  assert.equal(requests('POST',`/api/jobs/${changed.id}/retry`).length,0);
+ });
+}
+
+for(const width of [320,768,1024,1440]){
+ const cited=structuredClone(scrollingJob);
+ cited.result.report=cited.result.report.replaceAll('第 6 节、第 3 段：','第 6 节、第 3 段：[S2] ')+ '\n\n缺失引用[S999]，组合引用[S1、S2]。\n\n`代码[S1]`\n\n[外部资料](https://evidence.example.invalid/original)';
+ cited.result.audit+='\n\n'+Array.from({length:20},()=> '核对合成的财报期间和原始证据，保留数据缺口。'.repeat(8)).join('\n\n')+'\n\n审计依据[S1]。';
+ test(`report-citation-return-${width}`,{jobs:[cited],viewport:{width,height:900}},async({page,requests})=>{
+  await detail(page,cited);
+  const article=page.getByRole('article',{name:'报告正文',exact:true}).first();
+  await count(article.locator('code button'),0);await count(article.getByRole('button',{name:'查看证据 S999',exact:true}),0);
+  assert.equal(await article.getByRole('link',{name:'外部资料'}).getAttribute('target'),'_blank');
+  await page.getByRole('tab',{name:/证据来源/}).click();
+  await page.getByRole('searchbox',{name:'搜索证据来源'}).fill('不存在的资料');
+  await page.getByRole('tab',{name:'研究报告',exact:true}).click();
+  const cite=article.getByRole('button',{name:'查看证据 S2',exact:true}).nth(2);
+  await cite.evaluate(node=>node.scrollIntoView({block:'center',behavior:'instant'}));
+  const originalY=(await cite.boundingBox()).y;
+  await cite.focus();await page.keyboard.press('Enter');
+  const source=page.locator('.rd-source-trigger').filter({hasText:'[S2]'});
+  await eventually(()=>source.getAttribute('aria-expanded').then(value=>value==='true'),'Citation must expand the matching source despite an earlier search');
+  await eventually(()=>source.evaluate(node=>node===document.activeElement),'Evidence must receive keyboard focus');
+  assert.equal(await page.getByRole('searchbox',{name:'搜索证据来源'}).inputValue(),'');
+  await noOverflow(page,'citation evidence '+width);await screenshot(page,`citation-evidence-${width}`);
+  await page.getByRole('button',{name:'返回报告原文',exact:true}).click();
+  await eventually(()=>cite.evaluate(node=>node===document.activeElement),'Return must focus the original citation');
+  assert.ok(Math.abs((await cite.boundingBox()).y-originalY)<4,'Return must preserve the reading position');
+  await page.screenshot({path:fileURLToPath(new URL(`ui-citation-return-${width}.png`,artifacts)),animations:'disabled'});
+  await page.getByRole('tab',{name:'审计记录',exact:true}).click();
+  const auditCite=page.locator('.rd-audit-review').getByRole('button',{name:'查看证据 S1',exact:true});
+  await auditCite.evaluate(node=>node.scrollIntoView({block:'center',behavior:'instant'}));
+  const auditY=(await auditCite.boundingBox()).y;await auditCite.click();
+  await page.getByRole('button',{name:'返回审计原文',exact:true}).click();
+  await eventually(()=>auditCite.evaluate(node=>node===document.activeElement),'Audit citation must receive focus after remount');
+  assert.ok(Math.abs((await auditCite.boundingBox()).y-auditY)<4,'Audit reading position must survive remount');
+  await noOverflow(page,'citation return '+width);assert.equal(requests('POST','/api/jobs').length,0);
+ });
+}
 
 async function main() {
   await mkdir(artifacts, {recursive: true});
   // Concurrent agents may have created the components before wiring up App.
   // Report this as pending, never as a passing test or an old-UI regression.
   const app = await readFile(new URL('../src/App.jsx', import.meta.url), 'utf8');
-  const missing = ['ResearchWorkbench', 'ResearchDetail'].filter(name => !new RegExp(`<${name}\\b`).test(app));
+  const missing = ['ResearchWorkbench', 'ResearchDetailPage'].filter(name => !new RegExp(`<${name}\\b`).test(app));
   if (missing.length) {
     console.error(`NOT READY: App has not integrated ${missing.join(', ')}. Script is ready; rerun after UI integration.`);
     process.exitCode = 2;
@@ -2725,10 +2991,71 @@ async function main() {
   console.log(`${results.filter(result => result.status === 'passed').length}/${selectedScenarios.length} scenarios passed. API traffic used in-memory fixtures only. Screenshots: artifacts/ui-*.png`);
 }
 
+for(const width of [320,1440])test('export-options-popup-'+width,{jobs:[makeJob(5200)],viewport:{width,height:1000}},async({page,requests})=>{
+ let downloads=0;page.on('download',()=>downloads++);
+ await detail(page,makeJob(5200));const actions=await detailActions(page),trigger=actions.getByRole('button',{name:'导出报告',exact:true});
+ assert.equal(await page.getByRole('combobox',{name:'导出内容'}).count(),0);
+ await trigger.focus();await page.keyboard.press('Enter');const choices=page.getByRole('dialog',{name:'下载选项',exact:true});await choices.waitFor();
+ assert.equal(await choices.getByRole('radio').count(),2);assert.equal(downloads,0);
+ await page.keyboard.press('Escape');await choices.waitFor({state:'hidden'});assert.equal(await trigger.evaluate(node=>node===document.activeElement),true);assert.equal(downloads,0);
+ await trigger.click();await choices.getByRole('radio',{name:/^报告、审计与来源/}).check();
+ await noOverflow(page,'export popup '+width);await screenshot(page,'export-options-'+width);
+ const [download]=await Promise.all([page.waitForEvent('download'),choices.getByRole('button',{name:'开始下载',exact:true}).click()]);
+ assert.match(await readFile(await download.path(),'utf8'),/合成研究报告/);assert.equal(downloads,1);assert.equal(requests('POST','/api/jobs').length,0);
+ await choices.waitFor({state:'hidden'});
+});
+
+const {registerRightRailScenarios}=await import('./right-rail-ui-scenarios.mjs');
+registerRightRailScenarios({test,makeJob,detail,noOverflow,screenshot});
+const {registerSidebarScenarios}=await import('./sidebar-ui-scenarios.mjs');
+registerSidebarScenarios({test,makeJob,count,noOverflow,screenshot});
 const {registerWorkflowScenarios}=await import('./workflow-ui-scenarios.mjs');
 registerWorkflowScenarios({test,workbench,manualInput,enabled,textIncludes,count,collapsible,noOverflow,screenshot});
 const {registerRecoveryScenarios}=await import('./recovery-ui-scenarios.mjs');
 registerRecoveryScenarios({test,makeJob,detail,detailActions,textIncludes,count,enabled,noOverflow,screenshot});
 const {registerReportFirstScenarios}=await import('./report-first-ui-scenarios.mjs');
 registerReportFirstScenarios({test,makeJob,detail,textIncludes,count,enabled,noOverflow,screenshot});
+const {registerKnowledgePlatformScenarios}=await import('./knowledge-platform-ui-scenarios.mjs');
+registerKnowledgePlatformScenarios({test,makeJob,detail,workbench,manualInput,textIncludes,noOverflow,screenshot});
+const {registerPlatformRecoveryScenarios}=await import('./platform-recovery-ui-scenarios.mjs');
+registerPlatformRecoveryScenarios({test,makeJob,detail,workbench,textIncludes});
+const {registerAgentCapabilityScenarios}=await import('./agent-capabilities-ui-scenarios.mjs');
+registerAgentCapabilityScenarios({test,makeJob,detail,detailActions,downloadReport,textIncludes,count,noOverflow,screenshot});
+for(const width of [320,1440])test('path-settings-switch-'+width,{viewport:{width,height:1000}},async({page,requests})=>{
+ await workbench(page);await page.locator('#question').fill('研究贵州茅台的长期投资价值');
+ await textIncludes(page.locator('.path-picker'),'语义识别');
+ const setting=page.getByRole('region',{name:'研究设置',exact:true});
+ const labels={A:'快速筛选',B:'深度研究',C:'财报更新',D:'多公司比较',E:'组合分析',F:'股东回报研究'};
+ const options={B:'完整展开',C:'详细展开',D:'详细比较',E:'详细分析',F:'详细研究'};
+ for(const mode of Object.keys(labels)){
+  await choose(page,'研究路径',modes[mode].name);
+  await textIncludes(setting.locator('.settings-path-label'),modes[mode].name);
+  await textIncludes(page.locator('button[type=submit]'),'开始'+labels[mode]);
+  if(mode==='A'){await count(setting.getByRole('combobox'),0);await textIncludes(setting,'近 5 年');}
+  else {await choose(page,'报告深度',options[mode]);await textIncludes(setting.getByRole('combobox',{name:'报告深度'}),options[mode]);}
+  if(mode==='F'){await count(setting.getByRole('combobox',{name:'财报历史范围'}),0);await textIncludes(setting,'近 8 年');}
+  if(mode==='B')await choose(page,'财报历史范围','近 3 年');
+  await noOverflow(page,'path settings '+mode+' '+width);
+ }
+ await choose(page,'研究路径','深度研究');await textIncludes(setting.getByRole('combobox',{name:'财报历史范围'}),'近 3 年');
+ await page.getByRole('button',{name:'恢复自动识别',exact:true}).click();await textIncludes(page.locator('.path-picker'),'语义识别');
+ await textIncludes(page.locator('button[type=submit]'),'开始深度研究');
+ await screenshot(page,'path-settings-'+width,'.workbench-settings');assert.equal(requests('POST','/api/jobs').length,0);
+});
+for(const [mode,label] of Object.entries({A:'快速筛选',B:'深度研究',C:'财报更新',D:'多公司比较',E:'组合分析',F:'股东回报研究'}))test('path-settings-auto-submit-'+mode,{pathResponse:async()=>({mode}),resolvedSecurities:[{symbol:'600519',market:'CN',name:'贵州茅台'},{symbol:'002594',market:'CN',name:'比亚迪'}]},async({page,requests})=>{
+ await workbench(page);await page.locator('#question').fill('研究贵州茅台和比亚迪');
+ await textIncludes(page.locator('.path-picker'),'语义识别');
+ const start=page.getByRole('button',{name:'开始'+label,exact:true});await enabled(start);await start.click();await page.waitForURL(/\/research\//);
+ const request=requests('POST','/api/jobs').at(-1).body;assert.equal(request.mode,'auto');assert.ok(request.pathDecisionId);
+ if(mode==='A'){assert.equal(request.depth,'Quick');assert.equal(request.historyYears,5);}
+ if(mode==='F')assert.equal(request.historyYears,8);
+});
+const {registerContextSettingsScenarios}=await import('./context-settings-ui-scenarios.mjs');
+registerContextSettingsScenarios({test,workbench,choose,textIncludes,count,noOverflow,screenshot,enabled});
 await main().catch(error => { console.error(error.stack || error); process.exitCode = 1; });
+
+async function downloadReport(page,actions,scope='完整研究记录'){
+ await actions.getByRole('button',{name:'导出报告',exact:true}).click();
+ const choices=page.getByRole('dialog',{name:'下载选项',exact:true});await choices.getByRole('radio',{name:new RegExp('^'+scope)}).check();
+ await choices.getByRole('button',{name:'开始下载',exact:true}).click();
+}

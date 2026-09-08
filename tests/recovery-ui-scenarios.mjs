@@ -4,6 +4,23 @@ import assert from 'node:assert/strict';
 // server or contacts a real research API.
 export function registerRecoveryScenarios({test,makeJob,detail,detailActions,textIncludes,count,enabled,noOverflow,screenshot}) {
   for (const width of [320,1440]) {
+    const resumable=makeJob(2510,'failed',{mode:'B',question:'中断研究续跑（合成）'});
+    resumable.resume={available:true,phase:'review',origin:'checkpoint',sourceCount:12,toolCount:8,calculationCount:3};
+    test(`recovery-continuation-${width}`,{jobs:[resumable],viewport:{width,height:1000}},async({page,db,requests})=>{
+      await detail(page,resumable);
+      await page.locator('.rd-empty').getByRole('heading',{name:'从复核阶段继续',exact:true}).waitFor();
+      await textIncludes(page.locator('.rd-resume-retained'),'12 条资料 · 8 项工具结果 · 3 项成功计算');
+      assert.match(await page.locator('.rd-empty').getByRole('button',{name:'重试研究',exact:true}).getAttribute('title'),/从最近保存的复核进度继续/);
+      if(width===320)assert.ok((await page.locator('.rd-recovery-guide').boundingBox()).width>=210,'Recovery content must not reserve the unused report directory gutter');
+      await count(page.locator('.rd-recovery-guide button[aria-expanded]'),0);
+      await noOverflow(page,`continuation ${width}`);await screenshot(page,`recovery-continuation-${width}`);
+      db.get(resumable.id).resume.origin='history';await page.reload();
+      await textIncludes(page.locator('.rd-recovery-body'),'未保存完整的执行现场');
+      db.get(resumable.id).resume={available:false};await page.reload();
+      await count(page.locator('.rd-resume-retained'),0);
+      await textIncludes(page.locator('.rd-recovery-body'),'尚无可恢复的执行进度');
+      assert.equal(requests('POST',`/api/jobs/${resumable.id}/retry`).length,0);
+    });
     const supplement=makeJob(2501,'running',{mode:'A',question:'补证与再次复核（合成）'});
     supplement.liveReport={phase:'supplement',text:'# 补证草稿\n\n合成待核对内容。'};
     test(`recovery-supplement-${width}`,{jobs:[supplement],viewport:{width,height:1000}},async({page,db,requests})=>{
@@ -27,8 +44,9 @@ export function registerRecoveryScenarios({test,makeJob,detail,detailActions,tex
     const failed=makeJob(2502,'failed',{mode:'C',question:'失败后的恢复与轨迹定位（合成）'});
     test(`recovery-diagnostics-${width}`,{jobs:[failed],viewport:{width,height:1000}},async({page,requests})=>{
       await detail(page,failed);
-      await textIncludes(page.locator('.rd-recovery-body'),'不会从中断处续跑');
-      await textIncludes(page.locator('.rd-recovery-body'),failed.error);
+      await textIncludes(page.locator('.rd-recovery-body'),'最近保存的执行进度继续');
+      await textIncludes(page.locator('.rd-progress-error'),failed.error);
+      await count(page.locator('.rd-recovery-error'),0);
       await (await detailActions(page)).getByRole('button',{name:'阅读模式',exact:true}).click();
       await page.locator('.rd-recovery-links').getByRole('button',{name:'查看执行轨迹',exact:true}).click();
       await page.waitForFunction(()=>document.activeElement?.classList.contains('rd-trace-trigger'));
@@ -48,7 +66,7 @@ export function registerRecoveryScenarios({test,makeJob,detail,detailActions,tex
       await detail(page,unsaved);
       await textIncludes(page.locator('.rd-empty'),'保存成功不代表研究完成');
       await textIncludes(page.locator('.rd-recovery-body'),'不重新采集资料、不调用模型');
-      await textIncludes(page.locator('.rd-recovery-body'),'原执行已取消');
+      await textIncludes(page.getByLabel('研究进展',{exact:true}),'原执行已取消');
       await count(page.getByRole('button',{name:'重试研究',exact:true}),0);
       await enabled(page.locator('.rd-empty').getByRole('button',{name:'重试保存',exact:true}));
       await noOverflow(page,`execution save ${width}`);await screenshot(page,`recovery-execution-save-${width}`,'.rd-empty');

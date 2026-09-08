@@ -1,7 +1,8 @@
 import {createResearchPlan} from '../shared/research-framework.mjs';
-import {knowledgeManifest} from './knowledge.mjs';
+import {bindKnowledge} from './knowledge.mjs';
 import {validateInput,route} from './router.mjs';
 import {attachResearchBaseline} from './research-baseline.mjs';
+import {researchResume,resumeSummary} from './research-resume.mjs';
 
 const failure=(status,message)=>Object.assign(new Error(message),{status});
 export async function prepareResearchRetry(job,loadJob,now=new Date().toISOString()){
@@ -9,17 +10,27 @@ export async function prepareResearchRetry(job,loadJob,now=new Date().toISOStrin
  if(!['failed','cancelled'].includes(job.status))throw failure(409,'只有失败或已取消的研究可以重试');
  if(job.delivery?.recoverable)throw failure(409,'已有待保存结果，请先重试保存，无须重新研究');
  const original=job.input??{};
+ const checkpoint=researchResume(job);
+ if(checkpoint){
+  const next=structuredClone(job),retryCount=(job.retryCount??0)+1;
+  for(const key of ['error','finishedAt','result','researchOutcome','delivery','liveReport'])delete next[key];
+  Object.assign(next,{status:'queued',retryCount,lastRetriedAt:now,checkpoint,resume:{available:true,phase:checkpoint.phase,origin:checkpoint.origin||'checkpoint'}});
+  next.events??=[];next.events.push({time:now,type:'progress',message:`第${retryCount}次重试，从已保存的${checkpoint.phase==='review'?'复核':'研究'}进度继续；保留已有资料与计算结果。`});
+  return next;
+ }
  // Rebuild execution data from saved inputs, without feeding old evidence back into a new run.
  let input=validateInput({...original,mode:job.mode||original.mode,sources:[]});
  const mode=route(input);
  if(mode==='C'&&original.baseline?.jobId===input.baselineJobId){
   input.baseline=structuredClone(original.baseline);
  }else input=await attachResearchBaseline(input,mode,loadJob);
- const plan=createResearchPlan(input,mode);plan.knowledge=structuredClone(knowledgeManifest);
+ const plan=createResearchPlan(input,mode);bindKnowledge(plan);
  input.depth=plan.depth;input.historyYears=plan.historyYears;
  const retryCount=(job.retryCount??0)+1;
+ const recovery=resumeSummary(job);
+ const restartReason=recovery.reason==='framework_changed'?`研究规则从 V${recovery.fromVersion} 更新为 V${recovery.toVersion}`:recovery.reason==='rules_changed'?'研究规则内容已更新':'未找到可用续跑进度';
  return {id:job.id,createdAt:job.createdAt,...(job.submission?{submission:structuredClone(job.submission)}:{}),input,mode,plan,status:'queued',retryCount,lastRetriedAt:now,
-  events:[{time:now,type:'progress',message:`第${retryCount}次重试，重新执行本次研究。`}]};
+  events:[{time:now,type:'progress',message:`第${retryCount}次重试，因${restartReason}，本轮重新采集、分析与复核。`,restartReason:recovery.reason||'no_checkpoint'}]};
 }
 
 export function createResearchRetrier({storage,jobs,controllers,pendingStarts,mutations,execute,configured,maxConcurrent=3}){

@@ -1,0 +1,434 @@
+{
+  "schemaVersion": 1,
+  "id": "f7b2755021199abac9fe1d4fa5ce2a5d7c505962ddaa5c787cb66873f3a1748d",
+  "createdAt": "2026-09-08T08:02:22.440Z",
+  "version": "4.4",
+  "files": [
+    {
+      "name": "CORE.md",
+      "bytes": 2674,
+      "version": "4.4-core",
+      "sha256": "678f1912d04c84073cb499d4d085ca30a659bdaff142ead293f367616daba648"
+    },
+    {
+      "name": "FULL.md",
+      "bytes": 3700,
+      "version": "4.4",
+      "sha256": "1b49ed4c220a6ed8e899721c7ebf0ffcf83e0f7743edeb31a73f803d77216ea7"
+    },
+    {
+      "name": "modules.json",
+      "bytes": 68531,
+      "version": "4.4",
+      "sha256": "7ee03186d6a89854d3afe48ffcffb70d6bd36fc1a91697093cf7e77d46225c44"
+    },
+    {
+      "name": "modules/core/00-overview.md",
+      "bytes": 2191,
+      "version": "4.4",
+      "sha256": "7ce2cbeb50d3b87bd1fef5ad4f4c361870d1ce09ae0f1be16042327a54fd1f72"
+    },
+    {
+      "name": "modules/core/01-router.md",
+      "bytes": 197,
+      "version": "4.4",
+      "sha256": "64177c342a4f210a63f56f595eb1cc2f5ea9763690003703dc150eddf950cd3e"
+    },
+    {
+      "name": "modules/core/01-router-02.md",
+      "bytes": 1304,
+      "version": "4.4",
+      "sha256": "50604e16bc08523b0b037eadb019372e3207814f49b0a8a5e78d30ac3cb6b31a"
+    },
+    {
+      "name": "modules/core/01-router-03.md",
+      "bytes": 1578,
+      "version": "4.4",
+      "sha256": "7470a5b5a603b5e6ba193136ff8335687f35163dd334315cfc4c73de2a5c8f9c"
+    },
+    {
+      "name": "modules/core/01-router-04.md",
+      "bytes": 1873,
+      "version": "4.4",
+      "sha256": "02efb469405a33d691bf7e789e1b8356e5ce0cc55a19ff6d83aca74389409776"
+    },
+    {
+      "name": "modules/core/01-router-05.md",
+      "bytes": 1613,
+      "version": "4.4",
+      "sha256": "c69b82033ebc375fdd00d1b88c69b42112cb8c41e2ddbbd465f603bd45b8aada"
+    },
+    {
+      "name": "modules/core/01-router-06.md",
+      "bytes": 115,
+      "version": "4.4",
+      "sha256": "17b57ee7011f0de49cc28174471ffac3781412c1f6d6b2866a6f5c3915873515"
+    },
+    {
+      "name": "modules/core/01-router-07.md",
+      "bytes": 262,
+      "version": "4.4",
+      "sha256": "60fe56b2026407e6765b174727b6afb3d6c27ca166ee2ea85ff2268a0efec36a"
+    },
+    {
+      "name": "modules/core/01-router-08.md",
+      "bytes": 279,
+      "version": "4.4",
+      "sha256": "d0c7ece087bad0d8a4e5e8a8cd7424c6343b8d5a7f55399eb1ecb5940594133b"
+    },
+    {
+      "name": "modules/core/02-data.md",
+      "bytes": 1168,
+      "version": "4.4",
+      "sha256": "b53614db4bc7fd08d293e7705b8a32f52f168a5342fc1284f565d08734718186"
+    },
+    {
+      "name": "modules/core/03-fundamental.md",
+      "bytes": 1816,
+      "version": "4.4",
+      "sha256": "8531c28cac55485000cb5b0a116faf05f165e547c665e224546d09bbe14b9d0d"
+    },
+    {
+      "name": "modules/core/04-financial.md",
+      "bytes": 2571,
+      "version": "4.4",
+      "sha256": "cb6050f2e9e62e345cb89c0168057cbf4cc199d758d41853290db3339f8856c6"
+    },
+    {
+      "name": "modules/core/05-shareholder-return.md",
+      "bytes": 2249,
+      "version": "4.4",
+      "sha256": "0562dfbf213829fcea15dd14e2678609afc1c0dbae09d09ea9341e0efabf4ee3"
+    },
+    {
+      "name": "modules/core/06-valuation.md",
+      "bytes": 2487,
+      "version": "4.4",
+      "sha256": "583d3cbfe69aa5ffae61ef78fb064912c8f69c77bdb9413c29b515ce5f581004"
+    },
+    {
+      "name": "modules/core/07-risk-pricing.md",
+      "bytes": 594,
+      "version": "4.4",
+      "sha256": "88b760bed7b952e9f8b618f69f4927fdd779d3cc448d3489ea19e4bb4ed68344"
+    },
+    {
+      "name": "modules/core/08-decision.md",
+      "bytes": 4398,
+      "version": "4.4",
+      "sha256": "289f17cae578e74eb714928cf3512b994002fd60495a4235e5d8f31e62045040"
+    },
+    {
+      "name": "modules/core/09-scoring-confidence.md",
+      "bytes": 1176,
+      "version": "4.4",
+      "sha256": "7a6bcb899942785b3c9b6260f99d2642013b0f17bcd3f8036e6c9ae4c2552fcf"
+    },
+    {
+      "name": "modules/core/10-portfolio.md",
+      "bytes": 972,
+      "version": "4.4",
+      "sha256": "bd7d7d74a4e2004eba3e8b1994a75110dd5f4a62e8cd321160a14645bec04c98"
+    },
+    {
+      "name": "modules/core/11-financial-update.md",
+      "bytes": 1143,
+      "version": "4.4",
+      "sha256": "f8c154fa7fb59b2442f9f951b52ffed2b14df2f15da73cb1c836c4c3e288a876"
+    },
+    {
+      "name": "modules/core/12-output.md",
+      "bytes": 22,
+      "version": "4.4",
+      "sha256": "cfbe8d505bbe051fb85f74cec329d48b181079eb0ffecf72db2a0a0c10628959"
+    },
+    {
+      "name": "modules/core/12-output-20.md",
+      "bytes": 141,
+      "version": "4.4",
+      "sha256": "89591b6225c39f9fafddd8cee347d567722c406d82c99839244217c72d0e9343"
+    },
+    {
+      "name": "modules/core/12-output-21.md",
+      "bytes": 189,
+      "version": "4.4",
+      "sha256": "951d95431061588f77d337f11041dd14da1ceac14ecdb71ef45ce9933b3b6197"
+    },
+    {
+      "name": "modules/core/12-output-22.md",
+      "bytes": 313,
+      "version": "4.4",
+      "sha256": "4fc2173fa85778ace8f0c6c28ff710d4d098432cb971327721b5a9401653a696"
+    },
+    {
+      "name": "modules/core/12-output-23.md",
+      "bytes": 79,
+      "version": "4.4",
+      "sha256": "db8210eb14627032c8c10f5c8de25b535136f5a5db3cb31b8de694a257ae1daa"
+    },
+    {
+      "name": "modules/core/12-output-24.md",
+      "bytes": 77,
+      "version": "4.4",
+      "sha256": "a96de84d455058ca3bb81cf3e9b34071698c868d0fca53ea1aa0b3fe36c20283"
+    },
+    {
+      "name": "modules/core/12-output-25.md",
+      "bytes": 165,
+      "version": "4.4",
+      "sha256": "8e4d22c6a3ad7ddb8b8bc5d93ef726b84fc1415a9f56fca7d7c337fe6dfe3416"
+    },
+    {
+      "name": "modules/core/12-output-26.md",
+      "bytes": 585,
+      "version": "4.4",
+      "sha256": "53f427522263f667b8f39d9377a0152286e05b612de550ce3ef9556ef7a002a3"
+    },
+    {
+      "name": "modules/core/13-audit.md",
+      "bytes": 3219,
+      "version": "4.4",
+      "sha256": "5bebff7584f43a22c15f402613a3fbd79910175c76186d5a666e34c6a1399a22"
+    },
+    {
+      "name": "modules/core/14-prohibitions.md",
+      "bytes": 1419,
+      "version": "4.4",
+      "sha256": "d7a68d705c5084326492798afe53ea8d444cd972bd40de8efdd2880f6da4b5d0"
+    },
+    {
+      "name": "modules/core/15-principles.md",
+      "bytes": 635,
+      "version": "4.4",
+      "sha256": "cd6d7469e97403776c35757de308cf2f1e783371c10d8cea9ae3c423a5bd38cc"
+    },
+    {
+      "name": "modules/core/16-history.md",
+      "bytes": 1157,
+      "version": "4.4",
+      "sha256": "dd2908c9ba6449c1b9717e057971d69b6e69c29f9fedf7ca66012bc3e3686620"
+    },
+    {
+      "name": "modules/full/00-overview.md",
+      "bytes": 3016,
+      "version": "4.4",
+      "sha256": "7e0737f719edc813638a1571613f367103777877cbb8bf84e3955419e4a60f54"
+    },
+    {
+      "name": "modules/full/01-router.md",
+      "bytes": 43,
+      "version": "4.4",
+      "sha256": "ab65c0b85e0228e965ca10160fa026df4f507c17c082529155e07127f45c5945"
+    },
+    {
+      "name": "modules/full/01-router-02.md",
+      "bytes": 376,
+      "version": "4.4",
+      "sha256": "3e3d4799305ffd6f761cb69eb9f1d28c7160f5bda778c6338f8a3309038c3f7f"
+    },
+    {
+      "name": "modules/full/01-router-03.md",
+      "bytes": 495,
+      "version": "4.4",
+      "sha256": "2e32f914fb8d395b9bab88fe030ee3e3d7a6c4fec22f7fca020006319ffbef68"
+    },
+    {
+      "name": "modules/full/01-router-04.md",
+      "bytes": 2324,
+      "version": "4.4",
+      "sha256": "30cff35d9a967d55e25d6fef6b51e00f72e27717a25d0b91170f4e571839addb"
+    },
+    {
+      "name": "modules/full/01-router-05.md",
+      "bytes": 2692,
+      "version": "4.4",
+      "sha256": "6cb748aca352401f0d205d0e87e854089ec91d32d9e8dbf44eaa32880ef0f422"
+    },
+    {
+      "name": "modules/full/01-router-06.md",
+      "bytes": 2440,
+      "version": "4.4",
+      "sha256": "8cc0921c73465970689c49a31486cf9f9cf7e02f1f16cb98b7da8fe46795e3dc"
+    },
+    {
+      "name": "modules/full/01-router-07.md",
+      "bytes": 384,
+      "version": "4.4",
+      "sha256": "74bbf2ef099cb54e0f7bd38a0e06c86add32d9fe02d53d76bc73cccf7ff646ec"
+    },
+    {
+      "name": "modules/full/01-router-08.md",
+      "bytes": 438,
+      "version": "4.4",
+      "sha256": "83bb96d0aff9cc3f7a9b3f3ccafe996743c6ed85398845585e28e50734010098"
+    },
+    {
+      "name": "modules/full/01-router-09.md",
+      "bytes": 386,
+      "version": "4.4",
+      "sha256": "52a02762b2bf970c520ccf8a1b8be7acb89f4432d0fed4dfb2d17f139a781906"
+    },
+    {
+      "name": "modules/full/02-execution-graph.md",
+      "bytes": 753,
+      "version": "4.4",
+      "sha256": "acc078e595c7cc5b30c3a31a433dd1d53be4ffe8321bf92a21f6be35d3a623e6"
+    },
+    {
+      "name": "modules/full/03-data.md",
+      "bytes": 1573,
+      "version": "4.4",
+      "sha256": "8f1a74369b0a0bccf83d4e45eaea97cf16d752c79fed0bdc59e4da42a6cc20c0"
+    },
+    {
+      "name": "modules/full/04-fundamental.md",
+      "bytes": 2907,
+      "version": "4.4",
+      "sha256": "fd73a2c729d9d9e846fa09f6d6f0eb8bf0c9e8097847407c45b3e6e48e50c831"
+    },
+    {
+      "name": "modules/full/05-financial.md",
+      "bytes": 3802,
+      "version": "4.4",
+      "sha256": "c159ef1da138dd88c35e91944e4503a2a0211d3c3fc3ba88abe0abe4f11f0f50"
+    },
+    {
+      "name": "modules/full/06-shareholder-return.md",
+      "bytes": 3977,
+      "version": "4.4",
+      "sha256": "0645ab2ee918def40aa53e840e728041b5c17faf78f51fb7d3fe76415e94cc2b"
+    },
+    {
+      "name": "modules/full/07-valuation.md",
+      "bytes": 3482,
+      "version": "4.4",
+      "sha256": "7b65d0ea5f8e77546ba86e8ed2464fb2d40653d9043db1233cd9eacb53c75389"
+    },
+    {
+      "name": "modules/full/08-risk-pricing.md",
+      "bytes": 840,
+      "version": "4.4",
+      "sha256": "6d0aaea827e3bb273187ff38d06cb3af8e974ee2309b5d2ad91f3c7e0507f79d"
+    },
+    {
+      "name": "modules/full/09-decision.md",
+      "bytes": 5076,
+      "version": "4.4",
+      "sha256": "c2d51d881e1410f90696595a97359b245091eb930ca8339902b5884791eba49e"
+    },
+    {
+      "name": "modules/full/10-scoring.md",
+      "bytes": 1567,
+      "version": "4.4",
+      "sha256": "37cbee17270d2492761782b1b1c786adbec1f38ad9c2cf32b24622c23ac260d6"
+    },
+    {
+      "name": "modules/full/11-confidence.md",
+      "bytes": 331,
+      "version": "4.4",
+      "sha256": "2e8116f412841ec0e0fe39446a1cadc67ebccedca89c95d7699b73568267f446"
+    },
+    {
+      "name": "modules/full/12-portfolio.md",
+      "bytes": 3638,
+      "version": "4.4",
+      "sha256": "843ef210545ecde9bcd285a2ecca4bffb1fe8c46f2bc26cd499e6791db475164"
+    },
+    {
+      "name": "modules/full/13-financial-update.md",
+      "bytes": 1123,
+      "version": "4.4",
+      "sha256": "559818ea123361650a987d2fce67712f8b434e76428392c67fbbc200b94ce488"
+    },
+    {
+      "name": "modules/full/14-valuation-change.md",
+      "bytes": 366,
+      "version": "4.4",
+      "sha256": "65859eabbd258158218ff4e6a0f423ea2c7cf2abb47bacb5e12bb689b528aba0"
+    },
+    {
+      "name": "modules/full/15-output.md",
+      "bytes": 52,
+      "version": "4.4",
+      "sha256": "33a13b2f46125d8345e90ae2369ef7a6349cb2233d68d76fb7ec48392dc699bd"
+    },
+    {
+      "name": "modules/full/15-output-24.md",
+      "bytes": 1924,
+      "version": "4.4",
+      "sha256": "959f5a3423ad32119b1516036e4e7d7dbe39a58e4ace54b681a625832bf7c561"
+    },
+    {
+      "name": "modules/full/15-output-25.md",
+      "bytes": 273,
+      "version": "4.4",
+      "sha256": "a0aac3bc916cd75406cbfcb34c77360b358055fc84ae8822b6ddc34d60e3e034"
+    },
+    {
+      "name": "modules/full/15-output-26.md",
+      "bytes": 1865,
+      "version": "4.4",
+      "sha256": "2e3b5af2348f3c59f754994fe89e5b160eb26d5bfeed5d796fb0c0544530211d"
+    },
+    {
+      "name": "modules/full/15-output-27.md",
+      "bytes": 1068,
+      "version": "4.4",
+      "sha256": "7d81ac5a3932436039705b7421f685ce7fd2803b86a02f2b2c6d5c610813c6d5"
+    },
+    {
+      "name": "modules/full/15-output-28.md",
+      "bytes": 757,
+      "version": "4.4",
+      "sha256": "7d769bed16b45a9ae2276a093b8dc192d60dc78a6cdc4805f38bfb39bc0eb91b"
+    },
+    {
+      "name": "modules/full/15-output-29.md",
+      "bytes": 260,
+      "version": "4.4",
+      "sha256": "5822b8da4cb83f28ddd0784bfaa7e5cdc8337659be404f25f151a063b66564e3"
+    },
+    {
+      "name": "modules/full/15-output-30.md",
+      "bytes": 817,
+      "version": "4.4",
+      "sha256": "18899af889d57803aca835c442b930fbc142142aaab3e409303eeaee66846b6e"
+    },
+    {
+      "name": "modules/full/16-audit.md",
+      "bytes": 3665,
+      "version": "4.4",
+      "sha256": "6e157b6f64e8fee525d8708f3ca380df9883a2e02b4bae7e9568e1ccfd7ff425"
+    },
+    {
+      "name": "modules/full/17-prohibitions.md",
+      "bytes": 1752,
+      "version": "4.4",
+      "sha256": "4f88a767c4ca39260c95e2f86fd36ba8ea5ce94ee9d2fd3df374c61e7fdeac35"
+    },
+    {
+      "name": "modules/full/18-principles.md",
+      "bytes": 712,
+      "version": "4.4",
+      "sha256": "c607f8fc497d61bc49067d68888b6f8f380ec38dc8307e22eaf13fa46564322c"
+    },
+    {
+      "name": "modules/full/19-glossary.md",
+      "bytes": 924,
+      "version": "4.4",
+      "sha256": "873cb1c66342c2269cc7856ee30ea08e4c01af0b61a41e0afcb0a4ce5ad501a0"
+    },
+    {
+      "name": "modules/full/20-history-v4.md",
+      "bytes": 986,
+      "version": "4.4",
+      "sha256": "ee75ec7b14bb09efc8a3d50202eced153488ffdba09205bca4f12d24532831cd"
+    },
+    {
+      "name": "modules/full/21-history-v43.md",
+      "bytes": 1157,
+      "version": "4.4",
+      "sha256": "58a499c79b065d6f2df857767e13762236045d064f176f1415906daf91e9bfa5"
+    }
+  ]
+}

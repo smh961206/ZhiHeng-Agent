@@ -48,6 +48,9 @@ test('only explicit provider format incompatibility permits fallback',()=>{
  const format=reviewResponseFormat(plan,'auto');
  assert.equal(unsupportedReviewFormat(400,{error:{param:'response_format',message:'json_schema is not supported'}},format),true);
  assert.equal(unsupportedReviewFormat(422,{error:{param:'response_format',code:'unsupported_parameter'}},format),true);
+ assert.equal(unsupportedReviewFormat(400,{error:{message:'This response_format type is unavailable now',type:'invalid_request_error',param:null,code:'invalid_request_error'}},format),true);
+ assert.equal(unsupportedReviewFormat(400,{error:{message:'Model is unavailable now'}},format),false);
+ assert.equal(unsupportedReviewFormat(503,{error:{message:'This response_format type is unavailable now'}},format),false);
  for(const [status,message] of [[401,'json_schema is not supported'],[429,'json_schema is not supported'],[400,'Invalid schema: additionalProperties is required'],[400,'context length exceeded']]){
   assert.equal(unsupportedReviewFormat(status,{error:{message}},format),false);
  }
@@ -69,6 +72,26 @@ test('structured output falls back on capability rejection only and keeps the sa
   global.fetch=async()=>{seen.push(1);return Response.json({error:{message:'Invalid schema: required field missing'}},{status:400});};
   await assert.rejects(completion(messages,undefined,new AbortController().signal,undefined,{responseFormat:reviewResponseFormat(plan,'auto'),allowFormatFallback:true}),/HTTP 400/);
   assert.equal(seen.length,1);
+ }finally{global.fetch=old;}
+});
+
+test('DeepSeek unavailable format response recovers quick-screen review without restarting research',async()=>{
+ const old=global.fetch,seen=[],events=[];
+ const quickInput={...structuredClone(input),mode:'A',depth:'Quick'},job={mode:'A',input:quickInput};
+ try{
+  global.fetch=async(_url,options)=>{
+   const body=JSON.parse(options.body);seen.push(body);
+   if(seen.length===1)return response('合成快筛草稿[S1]');
+   if(seen.length===2)return Response.json({error:{message:'This response_format type is unavailable now',type:'invalid_request_error',param:null,code:'invalid_request_error'}},{status:400});
+   assert.equal(body.response_format.type,'json_object');
+   assert.deepEqual(body.messages,seen[1].messages,'Fallback must preserve the original review evidence and draft');
+   return response(JSON.stringify(reviewFixture(quickInput)));
+  };
+  const result=await runAgent(job,(type,message,details)=>events.push({type,message,...details}),new AbortController().signal);
+  assert.ok(result.report);assert.equal(seen.length,3);
+  assert.equal(job.workflow.stages.find(stage=>stage.id==='review').status,'completed');
+  assert.equal(events.filter(event=>event.type==='audit_format'&&event.format==='json_object').length,1);
+  assert.equal(events.filter(event=>event.type==='audit_validation').length,0,'Transport fallback must not spend evidence repair attempts');
  }finally{global.fetch=old;}
 });
 

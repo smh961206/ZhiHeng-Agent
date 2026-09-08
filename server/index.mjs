@@ -1,5 +1,6 @@
 import {createResearchPlan,frameworkVersion,researchStages} from '../shared/research-framework.mjs';
-import {knowledgeManifest} from './knowledge.mjs';
+import {bindKnowledge,currentKnowledge} from './knowledge.mjs';
+import {knowledgeExcerpt} from './knowledge-excerpt.mjs';
 import {attachResearchBaseline} from './research-baseline.mjs';
 import {interruptWorkflow} from './research-workflow.mjs';
 import {createJobStreams,publicJob} from './job-stream.mjs';
@@ -47,7 +48,7 @@ const createResearch=createResearchCreator({storage,jobs,controllers,pendingStar
  input=await attachResearchBaseline(input,mode,id=>storage.getJob(id));
  if(!(process.env.LLM_API_KEY&&process.env.LLM_MODEL))throw new Error('请先在.env配置LLM_API_KEY和LLM_MODEL');
  const job={id,input,mode,status:'queued',createdAt:new Date().toISOString(),events:[]};
- job.plan=createResearchPlan(input,mode);job.plan.knowledge=structuredClone(knowledgeManifest);
+ job.plan=createResearchPlan(input,mode);bindKnowledge(job.plan);
  job.input.depth=job.plan.depth;job.input.historyYears=job.plan.historyYears;return job;
 }});
 function send(res,status,value){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(value));}
@@ -55,7 +56,7 @@ async function body(req){const chunks=[];let size=0;for await(const chunk of req
 async function execute(job){
  const control=new AbortController();controllers.set(job.id,control);job.status='running';
  let outcome;
- const checkpoints=createJobCheckpoints({save:()=>save(job),onError:()=>emit('warning','阶段进度暂未保存，研究仍在继续；结束时将再次保存。')});
+ const checkpoints=createJobCheckpoints({save:()=>save(job),maxWrites:Infinity,onError:()=>emit('warning','阶段进度暂未保存，研究仍在继续；结束时将再次保存。')});
  const emit=(type,message,details)=>{
   if(type==='workflow'){streams.publish(job.id,'workflow',details.workflow);checkpoints.request();return;}
   if(type==='report_reset'){job.liveReport={text:'',phase:'research'};streams.publish(job.id,'report_reset',job.liveReport);return;}
@@ -63,9 +64,9 @@ async function execute(job){
   if(type==='report_phase'){job.liveReport.phase=message;streams.publish(job.id,'report_phase',{phase:message});return;}
   if(['research','evidence_followup','web_search'].includes(type))streams.publish(job.id,'snapshot',publicJob(job));
   const event={time:new Date().toISOString(),type,message,...details};job.events.push(event);streams.publish(job.id,'trace',event);
-  if(['tool_result','audit_validation','audit_context','evidence_followup','research_input'].includes(type))checkpoints.request();
+  if(['tool_result','audit_validation','audit_context','evidence_followup','research_input','knowledge_read'].includes(type))checkpoints.request();
  };
- try{await save(job);const result=await withVisualBudget(()=>runAgent(job,emit,control.signal));control.signal.throwIfAborted();outcome={status:'completed',result,researchOutcome:{action:result.decision.action,confidence:result.decision.confidence,summary:result.decision.summary}};}
+ try{await save(job);const result=await withVisualBudget(()=>runAgent(job,emit,control.signal,{onCheckpoint:async()=>{checkpoints.request();await checkpoints.flush();}}));control.signal.throwIfAborted();delete job.checkpoint;outcome={status:'completed',result,researchOutcome:{action:result.decision.action,confidence:result.decision.confidence,summary:result.decision.summary}};}
  catch(e){const status=control.signal.aborted?'cancelled':'failed';outcome={status,error:control.signal.aborted?'任务已取消':e.message};interruptWorkflow(job,status);}
  finally{await checkpoints.close();try{await delivery.finish(job,outcome);}finally{controllers.delete(job.id);streams.finish(job);}}
 }
@@ -86,12 +87,12 @@ const server=http.createServer(async(req,res)=>{
     const result=await readDocument(Buffer.concat(chunks),{name,signal:control.signal,upload:true});return send(res,200,result);
    }finally{clearTimeout(timeout);activeVisualImports--;}
   }
-  if(url.pathname==='/api/config')return send(res,200,{configured:!!(process.env.LLM_API_KEY&&process.env.LLM_MODEL),model:process.env.LLM_MODEL||null,modes,knowledgeVersion:frameworkVersion,knowledge:knowledgeManifest,researchStages,dataProvider:'行情与股本：长桥优先，多源备用；官方财报与公告：巨潮、港交所、SEC正文/XBRL；三市场结构化财务：Tushare；历史估值与股东回报：Tushare及长桥基本面；原文归档与缺口核验；网页补充：先查资料、按缺口定位原始正文',dataProviders:providerStatus(),webSearch:webSearchStatus(),markets:['CN','HK','US'],secUserAgentConfigured:!!process.env.SEC_USER_AGENT});
+  if(url.pathname==='/api/config')return send(res,200,{configured:!!(process.env.LLM_API_KEY&&process.env.LLM_MODEL),model:process.env.LLM_MODEL||null,modes,knowledgeVersion:frameworkVersion,...currentKnowledge(),researchStages,dataProvider:'行情与股本：长桥优先，多源备用；官方财报与公告：巨潮、港交所、SEC正文/XBRL；三市场结构化财务：Tushare；历史估值与股东回报：Tushare及长桥基本面；原文归档与缺口核验；网页补充：先查资料、按缺口定位原始正文',dataProviders:providerStatus(),webSearch:webSearchStatus(),markets:['CN','HK','US'],secUserAgentConfigured:!!process.env.SEC_USER_AGENT});
   if(url.pathname==='/api/research/path'&&req.method==='POST'){
    const {question}=await body(req),control=new AbortController();res.on('close',()=>{if(!res.writableEnded)control.abort();});
    return send(res,200,await researchPathResolver.recommend(question,{signal:control.signal}));
   }
-  if(url.pathname==='/api/research/plan'&&req.method==='POST'){const payload=await body(req),decision=await researchPathResolver.resolve(payload),mode=decision.mode;let input=validateInput({...payload,mode});input=await attachResearchBaseline(input,mode,id=>storage.getJob(id));return send(res,200,{...createResearchPlan(input,mode),knowledge:knowledgeManifest});}
+  if(url.pathname==='/api/research/plan'&&req.method==='POST'){const payload=await body(req),decision=await researchPathResolver.resolve(payload),mode=decision.mode;let input=validateInput({...payload,mode});input=await attachResearchBaseline(input,mode,id=>storage.getJob(id));return send(res,200,{...createResearchPlan(input,mode),...currentKnowledge()});}
   if(url.pathname==='/api/securities/resolve'&&req.method==='POST'){
    const {question}=await body(req);const control=new AbortController();
    res.on('close',()=>{if(!res.writableEnded)control.abort();});
@@ -111,7 +112,7 @@ const server=http.createServer(async(req,res)=>{
   if(url.pathname==='/api/health'&&req.method==='GET'){try{await storage.ping();return send(res,200,{ok:true,storage:'mongodb'});}catch{return send(res,503,{ok:false,storage:'mongodb'});}}
   if(url.pathname==='/api/jobs'&&req.method==='GET'){
    const summaries=new Map((await storage.listJobs()).map(j=>[j.id,j]));
-   for(const {input,result,events,draft,liveReport,marketData,submission,...j} of jobs.values())summaries.set(j.id,{...j,question:input.question,sourceCount:input.sources.length});
+   for(const {input,result,events,draft,liveReport,marketData,submission,checkpoint,knowledgeUsage,...j} of jobs.values())summaries.set(j.id,{...j,question:input.question,sourceCount:input.sources.length});
    return send(res,200,[...summaries.values()].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)));
   }
   if(url.pathname==='/api/jobs'&&req.method==='POST'){
@@ -119,6 +120,11 @@ const server=http.createServer(async(req,res)=>{
    return send(res,replayed?200:201,publicJob(job));
   }
   const retryMatch=url.pathname.match(/^\/api\/jobs\/([\da-f-]+)\/retry$/);
+  const ruleMatch=url.pathname.match(/^\/api\/jobs\/([\da-f-]+)\/rules$/);
+  if(ruleMatch&&req.method==='GET'){
+   const id=ruleMatch[1],stored=jobs.get(id)??await storage.getJob(id),job=jobs.get(id)??stored;
+   return send(res,200,knowledgeExcerpt(job,url.searchParams.get('record')));
+  }
   if(retryMatch&&req.method==='POST'){
    const payload=await body(req);
    const job=await retryResearch(retryMatch[1],payload?.expectedRetryCount);

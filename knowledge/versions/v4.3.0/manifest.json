@@ -1,0 +1,26 @@
+{
+  "version": "4.3.0",
+  "frameworkVersion": "4.3",
+  "createdAt": "2026-09-08T06:47:54.656Z",
+  "parentVersion": "4.2.0",
+  "removedDelta": {
+    "from": "4.0",
+    "to": "4.1.0"
+  },
+  "files": [
+    {
+      "path": "V4.3.0_CORE_SKILL.md",
+      "bytes": 35987,
+      "sha256": "b3fa02efe5ff3f9eca90b9a940763dfa52503ae6ccb1acf7ad41514586e98203",
+      "basedOn": "../v4.2.0/V4.2.0_CORE_SKILL.md",
+      "parentSha256": "fe73d7f744f95b07bdcd5b32292c818ebea852f0b740bc6d719eef4fbd5b2607"
+    },
+    {
+      "path": "V4.3.0_FULL_SKILL.md",
+      "bytes": 58241,
+      "sha256": "9b6be5e9a6bb58da1c3b33df488cba9888ada023bcf555722c67e42b6f1611c5",
+      "basedOn": "../v4.2.0/V4.2.0_FULL_SKILL.md",
+      "parentSha256": "41594d1d1fe514ad7575e2a67f699fc6d9d50922cfa6eddd8daeefd4dc9a571c"
+    }
+  ]
+}

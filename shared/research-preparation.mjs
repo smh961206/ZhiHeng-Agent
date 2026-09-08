@@ -1,6 +1,7 @@
+import {knowledgeAvailability} from './research-knowledge.mjs';
 import {createResearchPlan,resolveMode} from './research-framework.mjs';
 import {validateSecurities} from './security-input.mjs';
-import {eligibleUpdateBaselines} from './earnings-update.mjs';
+import {updateBaselineSelection} from './earnings-update.mjs';
 
 export function researchPreparation(input={},resolution={},state={}){
  const mode=resolveMode(input),issues=[],notes=[];
@@ -21,14 +22,15 @@ export function researchPreparation(input={},resolution={},state={}){
  }
  if(state.materialsReading)issue('materials','正在读取补充资料，请稍候');
  else if(state.materialsPending||state.materialEditDraft||state.materialDraft?.trim())issue('materials','请先保存资料修改，或将待加入的文字加入 / 清空');
- if(state.config?.configured===false)issue('service','研究服务尚未配置，请完成模型连接后再开始');
- const selectedBaseline=mode==='C'&&input.baselineJobId&&state.jobs?.find(job=>job.id===input.baselineJobId);
- if(selectedBaseline&&securities.length&&!eligibleUpdateBaselines([selectedBaseline],securities).length)issue('context','所选对照研究未完成或未覆盖当前标的，请重新选择对照');
+ if('config' in state&&knowledgeAvailability(state.config).blocking)issue('service',knowledgeAvailability(state.config).description);
+ else if(state.config?.configured===false)issue('service','研究服务尚未配置，请完成模型连接后再开始');
+ const baseline=mode==='C'?updateBaselineSelection(input,securities,state):null;
+ if(baseline?.blocking)issue('context',baseline.message);
  const plan=createResearchPlan({...input,securities},mode);
  if(mode==='C'&&!plan.baseline.provided)notes.push('未提供旧研究，本次建立财报基线；后续可沿用报告核对变化。');
  if(mode==='E'&&!plan.portfolio.complete)notes.push('组合信息尚缺 '+plan.portfolio.missing.join('、')+'；仍可分析已知风险，本次不输出具体仓位。');
  if(securities.length&&(resolution.securities??input.securities??[]).length>securities.length)notes.push('重复代码将合并为同一标的，避免重复采集。');
  if(state.config?.webSearch?.configured===false)notes.push('网页补充尚未连接，将使用已读取的行情、财报与公告，未解决的资料缺口会保留。');
- return {ready:issues.length===0,issues,notes,plan,securities,
+ return {ready:issues.length===0,issues,notes,plan,securities,baseline,
   message:state.busy?'正在创建研究，请稍候':issues[0]?.message||`${securities.length} 个标的已就绪，可以开始${mode==='A'?'快速筛选':'研究'}`};
 }

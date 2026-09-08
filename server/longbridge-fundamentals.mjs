@@ -31,7 +31,7 @@ export function brokerValuationWindows(data){
   return [key,{value:current,percentile:current===null||!values.length?null:100*values.filter(value=>value<=current).length/values.length,validObservations:values.length,excludedObservations:sample.length-values.length,
    asOf:new Date(latest.timestamp*1000).toISOString(),firstObservation:sample.length?new Date(sample[0].timestamp*1000).toISOString():null,medianSpacingDays:spacing,shortHistory:!sample.length||(sample[0].timestamp*1000-start.getTime())/86400000>spacing*1.5+3}];
  })),method:'来源采样点中的经验分位（小于等于该值的有效样本占比），独立保留来源时间戳；不与A股每日样本静默比较',
- notice:'PE的FY/TTM盈利口径未由接口明确，不能直接拿来进行市赚率公式等价验证；以实际返回范围为准，缺少PB/PS或五年历史时不补造'}));
+ notice:'PE的FY/TTM盈利口径未由接口明确，须核实后再用于估值与跨公司比较；以实际返回范围为准，缺少PB/PS或五年历史时不补造'}));
 }
 export function validateBrokerFundamental(method,data,security){
  const symbol=longbridgeSymbol(security);

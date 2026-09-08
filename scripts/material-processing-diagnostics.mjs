@@ -1,12 +1,12 @@
 // Read-only replay of previously failed arithmetic against the saved evidence.
 // No model calls, market refreshes, report edits or database writes.
 import {MongoClient,GridFSBucket} from 'mongodb';
-import {calculationBasis,p2,dcf,dividend} from '../server/calculations.mjs';
+import {calculationBasis,dcf,dividend} from '../server/calculations.mjs';
 import {quickScreenMetrics} from '../server/quick-screen.mjs';
 import {normalizedEarnings} from '../server/normalized-earnings.mjs';
 const ids=process.argv.slice(2);
 if(!ids.length||ids.some(id=>!/^\w{8}-(?:\w{4}-){3}\w{12}$/.test(id)))throw new Error('请传入需要回放的研究ID');
-const functions={calculate_p2:p2,calculate_dcf:dcf,calculate_dividend:dividend,calculate_screen_metrics:quickScreenMetrics,calculate_normalized_earnings:normalizedEarnings};
+const functions={calculate_dcf:dcf,calculate_dividend:dividend,calculate_screen_metrics:quickScreenMetrics,calculate_normalized_earnings:normalizedEarnings};
 const client=new MongoClient(process.env.MONGODB_URI||'mongodb://127.0.0.1:27017');
 try{
  await client.connect();const db=client.db(process.env.MONGODB_DATABASE||'zhiheng_agent'),bucket=new GridFSBucket(db,{bucketName:'job_payloads'}),results=[];

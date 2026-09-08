@@ -5,6 +5,19 @@ import {createResearchCreator,submissionIdentity} from '../server/research-creat
 import {createSubmissionTracker} from '../src/lib/research-submission.mjs';
 const deferred=()=>{let resolve;const promise=new Promise(done=>{resolve=done;});return {promise,resolve};};
 const payload={question:'合成研究',securities:[{market:'CN',symbol:'600519'}]};
+
+test('renewed path receipts replay the original request after an uncertain submission and reload',()=>{
+ const memory=new Map(),storage={getItem:key=>memory.get(key),setItem:(key,value)=>memory.set(key,value),removeItem:key=>memory.delete(key)};
+ const original={...payload,mode:'auto',pathDecisionId:'first-receipt'};
+ const first=createSubmissionTracker({storage}).requestFor(original);
+ const restored=createSubmissionTracker({storage});
+ const next=restored.requestFor({...original,pathDecisionId:'renewed-receipt'});
+ assert.equal(next.key,first.key);assert.deepEqual(next.payload,original);
+ assert.deepEqual(submissionIdentity(next.payload,next.key),submissionIdentity(first.payload,first.key));
+ const fallback=restored.requestFor({...payload,mode:'auto',pathRuleFallback:true});assert.deepEqual(fallback,first);
+ const changed=restored.requestFor({...original,mode:'F'});assert.notEqual(changed.key,first.key);
+ restored.clear();assert.notEqual(restored.requestFor(original).key,first.key);
+});
 function setup(){
  const db=new Map(),deleted=new Set(),jobs=new Map(),controllers=new Map(),pendingStarts=new Set(),mutations=new Set(),runs=[];let preparations=0;
  const storage={async getJob(id){return structuredClone(db.get(id));},async isJobDeleted(id){return deleted.has(id);},async createJob(job){if(db.has(job.id))throw new Error('duplicate');db.set(job.id,structuredClone(job));}};

@@ -1,3 +1,4 @@
+import {useEffect,useRef} from 'react';
 import {Link} from 'react-router';
 import {Check, ChevronRight, CircleAlert, Clock3, LoaderCircle, Minus} from 'lucide-react';
 import {Button} from './ui/button';
@@ -30,6 +31,24 @@ export default function RecentResearch({jobs = [], currentId, onNavigate}) {
     if (!Number.isFinite(second)) return -1;
     return second - first;
   }).slice(0, 4);
+  const list=useRef(null);
+  const recentIds=recent.map(job=>job.id).join(',');
+  useEffect(()=>{
+    const container=list.current;
+    if(!container)return;
+    function revealCurrent(){
+      const active=container.querySelector('[aria-current="page"]');
+      if(!active||!container.clientHeight)return;
+      const bounds=container.getBoundingClientRect(),item=active.getBoundingClientRect();
+      // Scroll only the recent list; keep the page and fixed navigation in place.
+      if(item.height>bounds.height-12||item.top<bounds.top+6)container.scrollTop+=item.top-bounds.top-6;
+      else if(item.bottom>bounds.bottom-6)container.scrollTop+=item.bottom-bounds.bottom+6;
+    }
+    revealCurrent();
+    const resize=new ResizeObserver(revealCurrent);
+    resize.observe(container);
+    return()=>resize.disconnect();
+  },[currentId,recentIds]);
   if (!recent.length) return null;
   const now = new Date();
 
@@ -42,7 +61,7 @@ export default function RecentResearch({jobs = [], currentId, onNavigate}) {
 
   return <section className="recent-research" aria-label="最近研究">
     <div className="rr-heading"><h2>最近研究</h2><Button asChild variant="ghost" size="sm"><Link to="/history" onClick={afterNavigation} aria-label="查看全部研究记录">全部<ChevronRight size={14} aria-hidden="true"/></Link></Button></div>
-    <ul className="rr-list">
+    <ul ref={list} className="rr-list" tabIndex={0} aria-label="最近研究列表">
       {recent.map(job => {
         const state = statuses[job.status] || {label: '状态未知', Icon: Clock3};
         const label=deliveryProgress(job)?.label||state.label,Icon=state.Icon;

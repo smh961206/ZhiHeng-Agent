@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useRef,useState} from 'react';
 import {ArrowUpRight,BarChart3,RefreshCw,Target} from 'lucide-react';
 import {Button} from './ui/button';
 import {Badge} from './ui/badge';
@@ -6,6 +6,7 @@ import {Card,CardContent} from './ui/card';
 import {Sheet,SheetTrigger,SheetContent,SheetHeader,SheetTitle,SheetDescription} from './ui/sheet';
 import {modeOf} from '../lib/research-mode';
 import './research-decision.css';
+import './execution-ui.css';
 
 const gateLabels={data:'数据口径',quality:'公司质量',valuation:'估值适配',risk:'风险定价'};
 const gateStates={passed:'已检查',limited:'存在限制',not_applicable:'不适用',failed:'未通过'};
@@ -30,21 +31,25 @@ function ScoreSummary({scores}){
   })}</div><p className="rd-score-note">评分用于研究比较；未核实的维度保留缺口，不按零分处理。</p></div>
  </section>;
 }
-export default function ResearchDecision({job,onUpdate,onDeepen}){
+export default function ResearchDecision({job,onUpdate,onDeepen,onExecutionAudit}){
  const [expanded,setExpanded]=useState(false);
+ const focusValuation=useRef(false),valuationTrigger=useRef(null);
+ const valuationSection=useRef(null);
  const decision=job.result?.decision;
  const quick=modeOf(job)==='A',update=modeOf(job)==='C';
  if(!decision)return onUpdate?<div className="rd-follow-up"><Button variant="outline" size="sm" onClick={onUpdate}><RefreshCw size={15}/>以本报告更新财报</Button></div>:null;
  return <Sheet open={expanded} onOpenChange={setExpanded}><Card className="rd-decision rd-decision-compact rd-decision-readable rd-decision-digest"><CardContent>
   <div className="rd-decision-heading"><strong><Target size={19}/>{quick?'筛选摘要':update?'财报更新摘要':modeOf(job)==='D'?'比较总览':'研究摘要'}</strong><div className="rd-decision-tags"><Badge className="rd-action-tag">{decision.action}</Badge><Badge variant="outline" className="rd-confidence-tag" data-confidence={decision.confidence}>置信度 · {decision.confidence}</Badge>{decision.baselineStatus==='new_baseline'&&<Badge variant="secondary">本期基线</Badge>}</div>{decision.dataAsOf&&<span>数据截至 {decision.dataAsOf}</span>}</div>
   <p className="rd-decision-summary">{decision.summary}</p>
+  {decision.valuation&&<div className="rd-valuation-inline" data-status={decision.valuation.status} aria-label="估值适用性"><strong>{({supported:'估值：已列方法',limited:'估值：存在限制',not_applicable:'估值：不适用'})[decision.valuation.status]||'估值待核实'}</strong><span>{decision.valuation.methods?.slice(0,3).join(' · ')||'尚无可用方法'}{decision.valuation.methods?.length>3?' 等 '+decision.valuation.methods.length+' 项':''}</span><SheetTrigger asChild><Button type="button" variant="link" ref={valuationTrigger} onClick={()=>{focusValuation.current=true;}}>核对估值依据<ArrowUpRight size={14}/></Button></SheetTrigger></div>}
+  {job.result?.executionAudit?.length>0&&<section className="rd-execution-summary" aria-label="组合执行结论"><div><strong>组合动作与适用边界</strong>{decision.portfolio?.status==='insufficient'&&<small>组合信息不足 · 条件式框架</small>}</div><p>{decision.portfolio?.summary}</p><p>“{decision.action}”表示标的研究状态，不直接等于减仓、清空或重新买入。</p>{onExecutionAudit&&<Button variant="link" type="button" onClick={onExecutionAudit}>查看执行复核 · {job.result.executionAudit.filter(item=>item.status==='limited').length} 项存在限制<ArrowUpRight size={14}/></Button>}</section>}
    <div className="rd-decision-actions">
-    <SheetTrigger asChild><Button type="button" variant="outline" className="rd-decision-disclosure"><span className="rd-disclosure-copy"><span>判断依据与验证条件</span>{decision.missingData?.length>0&&<span className="rd-disclosure-count">{decision.missingData.length} 项待核实</span>}</span><span className="rd-disclosure-state">展开<ArrowUpRight size={14} aria-hidden="true"/></span></Button></SheetTrigger>
+    <SheetTrigger asChild><Button type="button" variant="outline" className="rd-decision-disclosure" onClick={()=>{focusValuation.current=false;}}><span className="rd-disclosure-copy"><span>判断依据与验证条件</span>{decision.missingData?.length>0&&<span className="rd-disclosure-count">{decision.missingData.length} 项待核实</span>}</span><span className="rd-disclosure-state">查看<ArrowUpRight size={14} aria-hidden="true"/></span></Button></SheetTrigger>
     {quick&&decision.action==='深度研究'&&onDeepen&&<Button variant="default" size="sm" onClick={onDeepen} title="将标的与待验证问题载入工作台，提交后才开始新任务">准备深度研究<ArrowUpRight size={15}/></Button>}
     {onUpdate&&<Button variant="ghost" size="sm" onClick={onUpdate} title="沿用本报告作为对照，载入工作台后提交才开始新任务"><RefreshCw size={15}/>以本报告更新财报</Button>}
    </div>
  </CardContent></Card>
- <SheetContent className="research-detail rd-decision-sheet">
+ <SheetContent className="research-detail rd-decision-sheet" onOpenAutoFocus={event=>{if(focusValuation.current&&valuationSection.current){event.preventDefault();valuationSection.current.focus();}}} onCloseAutoFocus={event=>{if(focusValuation.current){event.preventDefault();valuationTrigger.current?.focus();focusValuation.current=false;}}}>
   <SheetHeader><SheetTitle>判断依据与验证条件</SheetTitle><SheetDescription>摘要的补充说明，完整分析请阅读报告正文。</SheetDescription></SheetHeader>
   <div className="rd-decision-sheet-body"><div className="rd-decision-readable rd-decision-evidence">
    <ScoreSummary scores={decision.scores}/>
@@ -62,7 +67,7 @@ export default function ResearchDecision({job,onUpdate,onDeepen}){
     <p className="rd-summary-section-intro">这些资料仍待核实，阅读结论时请一并考虑。</p><ul>{decision.missingData.map((item,index)=><li key={`${index}:${item}`}>{item}</li>)}</ul>
    </SummarySection>}
    {(decision.valuation?.explanation||decision.portfolio?.summary)&&<SummarySection number="04" title="估值与使用边界">
-    <div className="rd-summary-boundaries">{decision.valuation?.explanation&&<div><h4>估值边界</h4><p>{decision.valuation.explanation}</p></div>}{decision.portfolio?.summary&&<div><h4>组合与仓位</h4><p className="rd-decision-boundary">{decision.portfolio.summary}</p></div>}</div>
+    <div className="rd-summary-boundaries" ref={valuationSection} tabIndex={-1} aria-label="估值与使用边界详情">{decision.valuation?.explanation&&<div><h4>估值边界</h4>{decision.valuation.methods?.length>0&&<p>本次方法：{decision.valuation.methods.join(' · ')}</p>}<p>{decision.valuation.explanation}</p></div>}{decision.portfolio?.summary&&<div><h4>组合与仓位</h4><p className="rd-decision-boundary">{decision.portfolio.summary}</p></div>}</div>
    </SummarySection>}
    <small className="rd-summary-footnote">模型复核意见与程序结构校验共同保留；不代表事实被独立证实。</small>
    </div></div></div>

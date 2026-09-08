@@ -11,7 +11,7 @@ export function registerReportFirstScenarios({test,makeJob,detail,textIncludes,c
    const nav=page.getByRole('navigation',{name:'报告目录',exact:true});
    const scroller=page.locator('.page-scroll');
    const url=page.url();
-   await count(trigger,0);
+   await count(trigger,width<1024?0:1);
    async function visibleCurrent(index){
     await page.waitForFunction(label=>{
      const nav=document.querySelector('nav[aria-label="报告目录"]'),link=nav?.querySelector('[aria-current="location"]');
@@ -48,13 +48,14 @@ export function registerReportFirstScenarios({test,makeJob,detail,textIncludes,c
    await page.keyboard.press('Escape');await nav.waitFor({state:'hidden'});
    for(const name of ['审计记录','证据来源']){
     await page.getByRole('tab',{name:new RegExp(name)}).click();
-    await count(trigger,0);await nav.waitFor({state:'hidden'});
+    await count(trigger,width<1024?0:1);await nav.waitFor({state:'hidden'});
    }
    await page.getByRole('tab',{name:'研究报告',exact:true}).click();
    await scrollToSection(12);await trigger.click();await visibleCurrent(12);
-   if(width<1024){await page.keyboard.press('Escape');await nav.waitFor({state:'hidden'});}
+   await page.keyboard.press('Escape');await nav.waitFor({state:'hidden'});
    await scroller.evaluate(element=>element.scrollTo({top:0,behavior:'instant'}));
-   await trigger.waitFor({state:'hidden'});await nav.waitFor({state:'hidden'});
+   if(width<1024)await trigger.waitFor({state:'hidden'});else await enabled(trigger);
+   await nav.waitFor({state:'hidden'});
    assert.equal(requests('POST','/api/jobs').length,0);
   });
  }
@@ -69,15 +70,15 @@ export function registerReportFirstScenarios({test,makeJob,detail,textIncludes,c
    const article=page.getByRole('article',{name:'报告正文'}),body=await article.boundingBox();
    assert.ok(body.y<(width<640?740:610),`Report should begin in first viewport: y=${body.y}`);
    assert.ok(await article.getByRole('heading',{name:'合成研究报告',exact:true}).isVisible());
-   assert.equal(await page.locator('.rd-warning-summary').getAttribute('open'),null);
+   assert.equal(await page.getByRole('dialog',{name:'阅读提示',exact:true}).count(),0);
    await count(page.locator('.rd-main-column .research-progress,.rd-main-column .rd-meta,.rd-main-column .rd-deep-process,.rd-main-column .rd-document-reading'),0);
    const intro=await page.locator('.rd-report-intro').boundingBox();assert.ok(intro.y+intro.height<=body.y);
    await count(page.locator('.rd-decision'),1);await count(page.locator('.rd-aftercare'),0);
    await textIncludes(page.locator('.rd-decision-disclosure'),'判断依据与验证条件');
    await textIncludes(page.locator('.rd-disclosure-count'),'1 项待核实');
-   await textIncludes(page.locator('.rd-disclosure-state'),'展开');
-   await count(page.getByRole('button',{name:'打开报告目录',exact:true}),0);
-   const notice=await page.locator('.rd-warning-summary').boundingBox(),content=await page.locator('.rd-reading-body').boundingBox();
+   await textIncludes(page.locator('.rd-disclosure-state'),'查看');
+   await count(page.getByRole('button',{name:'打开报告目录',exact:true}),width<1024?0:1);
+   const notice=await page.locator('.rd-warning-strip').boundingBox(),content=await page.locator('.rd-reading-body').boundingBox();
    assert.ok(Math.abs(notice.x-content.x)<1&&Math.abs(notice.width-content.width)<1,'Reading notice must span the entire content width');
    assert.equal(await page.locator('.rd-decision-disclosure').getAttribute('aria-expanded'),'false');
    await noOverflow(page,`report first ${width}`);await screenshot(page,`report-first-${width}`);
@@ -88,14 +89,16 @@ export function registerReportFirstScenarios({test,makeJob,detail,textIncludes,c
    await noOverflow(page,`process drawer ${width}`);await screenshot(page,`report-process-${width}`);
    await page.keyboard.press('Escape');await drawer.waitFor({state:'hidden'});
    assert.equal(await trigger.evaluate(element=>element===document.activeElement),true);
-   await page.locator('.rd-warning-summary>summary').click();await textIncludes(page.locator('.rd-warning-summary'),'部分资料尚待核对');
+   await page.getByRole('button',{name:/查看阅读提示/}).click();const warningDialog=page.getByRole('dialog',{name:'阅读提示',exact:true});await warningDialog.getByRole('tab',{name:/数据说明/}).click();await textIncludes(warningDialog,'部分资料尚待核对');await page.keyboard.press('Escape');await warningDialog.waitFor({state:'hidden'});
    await trigger.click();await drawer.locator('.rd-document-reading>summary').click();
    await drawer.locator('.rd-document-footer').getByRole('button',{name:'查看证据来源'}).click();
    await drawer.waitFor({state:'hidden'});await page.waitForURL('**?tab=sources');
    await page.waitForFunction(()=>document.activeElement?.getAttribute('role')==='tab'&&document.activeElement.textContent.includes('证据来源'));
    await count(page.locator('.rd-web-source-note'),0);
    await page.getByRole('tab',{name:'审计记录',exact:true}).click();
-   await textIncludes(page.locator('.rd-audit-research-notes'),'一项合成资料缺口');
+   await count(page.locator('.rd-audit-research-notes'),0);
+   await page.getByRole('tab',{name:'研究报告',exact:true}).click();await page.locator('.rd-decision-disclosure').click();
+   await textIncludes(page.getByRole('dialog',{name:'判断依据与验证条件',exact:true}),'一项合成资料缺口');await page.keyboard.press('Escape');
    assert.equal(requests('POST','/api/jobs').length,0);
   });
  }
@@ -121,14 +124,18 @@ export function registerReportFirstScenarios({test,makeJob,detail,textIncludes,c
    async function checkFloatingControls(){
     await page.waitForFunction(()=>{
      const body=document.querySelector('.rd-reading-body').getBoundingClientRect(),toolbar=document.querySelector('.rd-content-toolbar').getBoundingClientRect();
-     const directory=document.querySelector('.rd-reading-tools .rd-directory-trigger').getBoundingClientRect(),top=document.querySelector('.rd-back-to-top').getBoundingClientRect();
+     const directory=document.querySelector('.rd-directory-trigger').getBoundingClientRect(),top=document.querySelector('.rd-back-to-top').getBoundingClientRect();
      const viewport=document.querySelector('.page-scroll').getBoundingClientRect();
-     return directory.left>=body.left&&directory.right<=body.right&&Math.abs(directory.top-toolbar.bottom-12)<2&&top.left>=body.left&&top.right<=body.right&&top.bottom<=viewport.bottom&&top.bottom>viewport.bottom-40;
+     const article=document.querySelector('.rd-reading-body [role=tabpanel]:not([hidden]) article[aria-label=报告正文]');
+     const clearText=innerWidth<640||!article||article.getBoundingClientRect().right<=top.left;
+     const directoryPosition=innerWidth>=1024?directory.top>=toolbar.top&&directory.bottom<=toolbar.bottom:innerWidth<640?directory.bottom<=viewport.bottom&&directory.bottom>viewport.bottom-40:Math.abs(directory.top-toolbar.bottom-12)<2;
+     return directory.left>=body.left&&directory.right<=body.right&&directoryPosition&&top.left>=body.left&&top.right<=body.right&&top.bottom<=viewport.bottom&&top.bottom>viewport.bottom-40&&clearText;
     });
-    assert.equal(await page.locator('.rd-content-toolbar .rd-directory-trigger').count(),0,'Directory remains floating beside the report');
+    assert.equal(await page.locator('.rd-content-toolbar .rd-directory-trigger').count(),width>=1024?1:0,'Desktop directory stays in the toolbar; mobile directory floats while reading');
     const backToTop=await top.boundingBox();
     const text=await page.getByRole('article',{name:'报告正文'}).boundingBox();
-    assert.ok(text.x+text.width<=backToTop.x,'Back-to-top must not cover the report text');
+    if(width>=640)assert.ok(text.x+text.width<=backToTop.x,'Back-to-top must not cover the report text');
+    else assert.ok(backToTop.width>=44&&backToTop.height>=44,'Mobile dock keeps a usable touch target');
    }
    await checkFloatingControls();
    const initial=await top.boundingBox();

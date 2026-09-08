@@ -1,7 +1,8 @@
+import {valuationIssues} from '../shared/valuation-policy.mjs';
 import {requiresResearchSummary} from '../shared/deep-research.mjs';
 import {reportSectionBody} from '../shared/report-headings.mjs';
 import {scoring,confidenceLevels,portfolioReadiness} from '../shared/research-framework.mjs';
-import {referenceContract,normalizeReviewReferences,validateReportReferences,isResearchEvidence} from './research-references.mjs';
+import {referenceContract,normalizeReviewReferences,normalizeSourceReferences,sourceReferenceIds,validateReportReferences,isResearchEvidence} from './research-references.mjs';
 
 const text=value=>typeof value==='string'&&Boolean(value.trim());
 const needsCompanyDecisions=plan=>plan.mode==='D'&&plan.contractVersion>=6&&(plan.securities?.length??0)>=2;
@@ -17,12 +18,13 @@ export function reviewContract(plan,sources=[]){
   fieldRules:{action:{allowed:plan.output.actions,instruction:'只选一个完整枚举值，不填写多个动作或同义词'},confidence:{allowed:confidenceLevels},dataAsOf:{format:'YYYY-MM-DD',instruction:'仅填写合法日期，时点说明放在正文'},scores:{instruction:'分值为number或null，不写分数字符串；不得为补齐字段伪造评分'}},
   references:referenceContract(sources),
   schema:{sections:[{id:'按上方section id',text:'章节Markdown；事实或数字旁写[S1]，表格逐行在来源列写[S1]；无依据写数据不足'}],audit:'复核过程、限制和未核实事项',
+   ...(plan.execution?{executionAudit:plan.execution.checks.map(item=>({id:item.id,status:'passed / limited / not_applicable / failed',reason:item.requirement+' 逐项说明证据与限制，引用本次来源；不适用须说明原因，资料不足用limited并降低结论强度，failed须修正报告后再评价。'}))}:{}),
    ...(needsCompanyDecisions(plan)?{comparisonDecisions:plan.securities.map(company=>({security:company.market+':'+company.symbol,action:plan.output.actions.join(' / '),confidence:confidenceLevels.join(' / '),summary:'这家公司的有条件判断，区分公司质量与当前价格',sourceIds:['该证券本次真实证据ID；不足可为空'],unresolved:'该公司未解问题；没有额外问题写无',falsifiers:['至少1条这家公司可检验的证伪条件']}))}:{}),
    ...(requiresResearchSummary(plan)?{researchSummary:{checks:[{topic:'关键研究问题（3至8项）',assessment:'用简短证据判断说明结论或数据不足，不描述内部思维链',sourceIds:['实际来源ID，例如S1；不足时可为空'],unresolved:'仍待核实的部分；已无额外疑问可写无'}]}}:{}),
    decision:{action:plan.output.actions.join(' / '),summary:'有条件的核心判断',confidence:confidenceLevels.join(' / '),dataAsOf:'YYYY-MM-DD：本次研究截止日期，不冒充行情日期',
     falsifiers:['至少3条具体可检验的证伪条件'],missingData:['缺失信息与影响；无缺失可用空数组'],
     gates:['data','quality','valuation','risk'].map(id=>({id,status:'passed / limited / not_applicable / failed',reason:'资料不足但已披露影响并收敛结论时用limited；failed表示报告仍有实质错误，须修正相关正文、结论及依据后重新评价，不能只改状态'})),
-    valuation:{status:'supported / limited / not_applicable',methods:['实际使用的方法；市赚率变式不是独立估值'],explanation:'模型适配、三情景和敏感性，或不能可靠估值的原因'},
+    valuation:{status:'supported / limited / not_applicable',methods:['实际使用的适配主估值；倍数变式、现金流口径与情景不是独立方法；收益率锚仅作辅助'],explanation:'模型适配、三情景和敏感性，或不能可靠估值的原因'},
     portfolio:{status:'reviewed / insufficient / not_applicable',summary:'组合分析边界与结论；信息不全不得给具体仓位'},
     ...(plan.output.schema==='Deep'?{scores:scoring.map(item=>({id:item.id,score:'0至'+item.max+'；资料不足为null',reason:'评分依据或无法评分的原因'}))}:{})}},
   constraints:plan.constraints,
@@ -34,6 +36,22 @@ export function validateReview(value,{input,plan,sources}){
  const reject=()=>{if(issues.length)throw Object.assign(new Error([...new Set(issues.map(issue=>issue.message))].join('；')),{code:'review_validation',validationIssues:issues});};
  if(!value||typeof value!=='object'||Array.isArray(value)){check('response',()=>fail('审计结果须为对象'));reject();}
  check('audit',()=>{if(!text(value.audit))fail('审计结果缺少检查记录');});
+ let executionAudit;
+ const auditNarrative=typeof value.audit==='string'?normalizeSourceReferences(value.audit):'';
+ if(plan.execution){
+  const rows=check('executionAudit',()=>{
+   if(!Array.isArray(value.executionAudit)||value.executionAudit.length!==plan.execution.checks.length)fail('执行审计须完整记录10项检查');
+   return plan.execution.checks.map(expected=>{
+    const matches=value.executionAudit.filter(item=>item?.id===expected.id),item=matches[0];
+    if(matches.length!==1||!['passed','limited','not_applicable','failed'].includes(item.status)||!text(item.reason)||item.reason.length>4000)fail('执行审计项目缺失、重复或没有有效依据：'+expected.title);
+    if(item.status==='failed')fail('执行审计未通过：'+expected.title+'；'+item.reason);
+    if(expected.id==='action-separation'&&item.status==='not_applicable')fail('执行任务必须区分研究状态与组合动作');
+    const reason=normalizeSourceReferences(item.reason.trim());
+    return {id:expected.id,title:expected.title,status:item.status,reason,sourceIds:sourceReferenceIds(reason)};
+   });
+  });
+  if(rows&&text(value.audit)){executionAudit=rows;value={...value,audit:value.audit+'\n\n## 执行纪律复核\n\n'+rows.map(row=>'### '+row.title+'\n\n'+({passed:'已检查',limited:'存在限制',not_applicable:'不适用'})[row.status]+'：'+row.reason).join('\n\n')};}
+ }
  const normalized=normalizeReviewReferences(value);value=normalized.value;
  let researchSummary;
  if(requiresResearchSummary(plan)){
@@ -90,11 +108,10 @@ export function validateReview(value,{input,plan,sources}){
  const methods=check('decision.valuation',()=>{
  if(!valuation||!['supported','limited','not_applicable'].includes(valuation.status)||!text(valuation.explanation))fail('须说明估值适配、交叉验证或无法估值的原因');
  const methods=list(valuation.methods,'估值方法');
+ const policyIssues=valuationIssues({...valuation,methods},plan);
+ if(policyIssues.length)fail(policyIssues.join('；'));
  if(valuation.status==='supported'&&!methods.length)fail('估值已有依据时须列出实际方法');
- if(plan.mode==='B'&&plan.depth==='Deep'&&valuation.status==='supported'){
-  const families=new Set(methods.map(method=>/P2|市赚率|市盈率|市净率|^PE$|^PB$/i.test(method)?'multiples':method.trim().toLowerCase()));
-  if(families.size<2)fail('深度研究须独立方法交叉验证；仅一法时标记limited并解释例外，市赚率变式不算独立方法');
- }
+
  return methods;
  });
  check('decision.portfolio',()=>{
@@ -137,7 +154,7 @@ export function validateReview(value,{input,plan,sources}){
  const report='# '+input.question.replace(/[\r\n]+/g,' ')+'\n\n'+reportBody;
  if(report.length>500000||value.audit.length>100000)fail('报告或审计内容超出交付上限');
  const cited=validateReportReferences({reportBody,audit:value.audit,decision,sections,researchSummary},sources);
- return {report,audit:value.audit.trim(),decision,sections,...(researchSummary?{researchSummary}:{}),...(comparisonDecisions?{comparisonDecisions}:{}),
-  validation:{checkedAt:new Date().toISOString(),checks:[{id:'sections',label:'按主模式交付报告章节',passed:true},{id:'decision',label:'研究动作、置信度与证伪条件完整',passed:true},{id:'portfolio',label:'组合信息与动作权限一致',passed:true},{id:'references',label:'正文引用已关联资料，来源编号有效',passed:true}],citedSourceIds:cited,referenceFormatNormalized:normalized.changed,
+ return {report,audit:value.audit.trim(),...(executionAudit?{executionAudit,auditNarrative}:{}),decision,sections,...(researchSummary?{researchSummary}:{}),...(comparisonDecisions?{comparisonDecisions}:{}),
+  validation:{checkedAt:new Date().toISOString(),checks:[{id:'sections',label:'按主模式交付报告章节',passed:true},{id:'decision',label:'研究动作、置信度与证伪条件完整',passed:true},{id:'valuation',label:'估值方法与交叉验证边界已检查',passed:true},{id:'portfolio',label:'组合信息与动作权限一致',passed:true},{id:'references',label:'正文引用已关联资料，来源编号有效',passed:true}],citedSourceIds:cited,referenceFormatNormalized:normalized.changed,
    scope:'程序校验交付结构、动作边界与来源编号；各项证据评价来自模型复核，不等于事实被独立证实'}};
 }

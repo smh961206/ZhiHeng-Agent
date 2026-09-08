@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {prepareResearchRetry,createResearchRetrier} from '../server/research-retry.mjs';
+import {knowledgeManifest} from '../server/knowledge.mjs';
 
 const fixture=()=>({id:'00000000-0000-4000-8000-000000000025',createdAt:'2026-09-01T00:00:00Z',status:'failed',mode:'C',
  input:{question:'更新贵州茅台财报',mode:'auto',depth:'Deep',historyYears:8,securities:[{market:'CN',symbol:'600519'}],portfolio:'原有备注',portfolioContext:{holdings:'原持仓'},previousResearch:'原结论',
@@ -21,7 +22,7 @@ test('retry retains identity and input context, uses the stored baseline and res
  for(const key of ['question','depth','historyYears','securities','portfolio','portfolioContext','previousResearch','baselineJobId'])assert.deepEqual(next.input[key],prior.input[key]);
  assert.deepEqual(next.input.sources,[]);
  for(const key of ['error','result','researchOutcome','draft','liveReport','marketData','workflow','finishedAt'])assert.ok(!(key in next),'Old '+key+' must not survive a restart');
- assert.match(next.events[0].message,/重试/);assert.equal(next.events.length,1);assert.equal(next.plan.knowledge.length,2);
+ assert.match(next.events[0].message,/重试/);assert.equal(next.events.length,1);assert.equal(next.plan.knowledge.length,knowledgeManifest.length);
  assert.deepEqual(prior,original,'Preparing a retry must not mutate the failed job before persistence succeeds');
 });
 

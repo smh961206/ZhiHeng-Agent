@@ -72,7 +72,7 @@ export async function readImageMaterial(bytes,signal,{read=readVisionImages,rend
 export async function visualAuditContext(input,{signal,load=loadVisualAsset,read=readVisionImages,enabled=visionStatus().enabled,maxPages=6}={}){
  const content=[],included=[],omitted=[];let used=0,bytes=0;const seen=new Set();
  const reviewSignal=AbortSignal.any([...(signal?[signal]:[]),AbortSignal.timeout(90000)]);
- const items=[...(input.referenceMaterials||[]).filter(m=>m.visualAttachment).map(m=>({id:m.id,attachmentId:m.visualAttachment,material:m})),...(input.sources||[]).filter(s=>s.visualReading?.attachmentId).map(s=>({id:s.id,...s.visualReading}))];
+ const items=[...(input.referenceMaterials||[]).filter(m=>m.visualAttachment).map(m=>({id:m.id,attachmentId:m.visualAttachment,material:m})),...(input.sources||[]).flatMap(s=>[...(s.visualReading?.attachmentId?[{id:s.id,...s.visualReading}]:[]),...(s.agentVisualReadings??[]).filter(r=>r.attachmentId).map(r=>({id:s.id,...r}))])];
  for(const item of items){
   signal?.throwIfAborted();
   if(!enabled){omitted.push({id:item.id,reason:'当前模型未启用视觉输入'});continue;}

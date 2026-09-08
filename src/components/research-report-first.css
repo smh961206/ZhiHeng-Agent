@@ -1,11 +1,15 @@
 /* Report content owns the main column. Operational detail lives in the drawer. */
+.research-detail .rd-markdown .rd-citation{display:inline;height:auto;min-height:24px;padding:2px 3px;border:0;border-radius:4px;background:transparent;color:#25694f;font-size:.86em;font-weight:600;line-height:inherit;vertical-align:baseline;white-space:nowrap;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;box-shadow:none}
+.research-detail .rd-markdown .rd-citation:hover{background:#eaf3ed;text-decoration-style:solid}
+.research-detail .rd-markdown .rd-citation:focus-visible{outline:2px solid #42815f;outline-offset:2px;background:#eaf3ed}
+.research-detail .rd-content-toolbar .rd-return-reading{min-height:40px;height:auto;padding:8px 10px;color:#285843;font-size:13px;gap:6px}
+.research-detail .rd-content-toolbar:has(.rd-return-reading) .rd-directory-trigger>span,.research-detail .rd-content-toolbar:has(.rd-return-reading) .rd-directory-trigger>svg:last-child{display:none}
+@media(max-width:639px){.research-detail .rd-content-toolbar:has(.rd-return-reading){flex-wrap:wrap}.research-detail .rd-content-toolbar:has(.rd-return-reading) .rd-tab-list{flex-basis:100%}.research-detail .rd-content-toolbar .rd-return-reading{min-height:44px;margin-left:auto}}
 .research-detail .rd-context-strip.rd-overview{--progress-accent:#28634c;--progress-tint:#edf5ef;display:flex;align-items:center;gap:14px;margin:0 0 14px;padding:18px 20px;min-height:88px;border:1px solid #d5e4d9;border-radius:12px;background:var(--progress-tint);box-shadow:none;flex-wrap:nowrap}
 .research-detail .rd-context-strip .rd-overview-icon{display:grid;place-items:center;flex-shrink:0;width:42px;height:42px;border:1px solid #dce7df;border-radius:12px;background:#fff;color:var(--progress-accent)}
 .research-detail .rd-context-strip .rd-overview-copy{flex:1;min-width:0;flex-basis:auto}
 .research-detail .rd-context-strip .rd-progress-label{display:flex;align-items:center;gap:7px;margin-bottom:4px;color:var(--progress-accent);font-size:12px;line-height:1.5}
 .research-detail .rd-context-strip .rd-overview-copy>strong{font-size:16px;line-height:1.55;font-weight:600;color:#244c3c;display:block;overflow-wrap:anywhere}
-.research-detail .rd-context-strip .rd-progress-error{display:block;margin-top:7px;color:#854b2c;font-size:13px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}
-.research-detail .rd-context-strip .rd-progress-error>b{font-weight:600}
 .research-detail .rd-context-strip .rd-process-trigger{flex-shrink:0;gap:8px;min-height:40px;height:auto;color:#285640;font-size:13px;padding:9px 12px;border:1px solid #c5d8ca;border-radius:9px;background:#fff;box-shadow:0 1px 2px #244c3c08;transition:background-color .15s,border-color .15s}
 .research-detail .rd-context-strip .rd-process-trigger:hover{background:#f8fcf9;border-color:#71977e}
 .research-detail .rd-context-strip .rd-process-trigger[data-state=open]{background:#e3eee6;border-color:#71977e}
@@ -131,3 +135,20 @@
   .research-detail .rd-audit-question .rd-audit-evidence-link{min-height:44px}
 }
 @media(max-width:639px){.research-detail .rd-context-strip.rd-overview{gap:10px;padding:14px;flex-wrap:wrap}.research-detail .rd-context-strip .rd-overview-icon{width:36px;height:36px;border-radius:10px}.research-detail .rd-context-strip .rd-overview-copy{flex-basis:calc(100% - 46px)}.research-detail .rd-context-strip .rd-overview-copy>strong{font-size:14px}.research-detail .rd-context-strip .rd-process-trigger{width:100%;justify-content:center;min-height:42px;margin-top:2px}.research-detail .rd-warning-summary>summary{padding-inline:16px}.research-detail .rd-warning-summary>div{padding-inline:16px}.rd-process-body{padding-inline:14px}.rd-process-sheet>[data-slot=sheet-header]{padding-left:16px}.research-detail.rd-process-sheet .rd-meta{gap:12px}.research-detail .rd-report-followup{margin-top:28px;padding-top:20px}}
+
+.research-detail .rd-context-strip .rd-progress-error{display:inline;font-size:14px;font-weight:400;line-height:inherit;color:inherit;overflow-wrap:anywhere}
+/* Narrow screens give the report its full measure; reading controls dock below. */
+@media(max-width:639px){
+ .research-detail .rd-reading-body>.rd-panel{padding:20px 16px 88px}
+ .research-detail .rd-reading-tools{top:auto!important;bottom:12px;height:44px!important;flex-direction:row;align-items:center;justify-content:flex-end;gap:10px}
+ .research-detail .rd-reading-tools .rd-back-to-top{margin-top:0}
+ .research-detail .rd-body-heading>span{display:none}
+}
+
+/* Keep the task status legible without pushing the report below the first screen. */
+@media(max-width:639px){.research-detail .rd-context-strip.rd-overview{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;min-height:76px;padding:12px}.research-detail .rd-context-strip .rd-overview-icon{display:none}.research-detail .rd-context-strip .rd-process-trigger{width:auto;min-width:88px;min-height:44px;margin:0;padding:8px;font-size:12px}.research-detail .rd-context-strip .rd-process-trigger>svg{display:none}.research-detail .rd-context-strip .rd-progress-label{gap:4px;font-size:11px}.research-detail .rd-context-strip .rd-overview-copy>strong{font-size:14px}}
+
+/* Download choices open beside the export action without occupying the toolbar. */
+.rd-export-popover{width:340px;max-width:calc(100vw - 24px);max-height:var(--radix-popover-content-available-height);overflow:auto;border-radius:14px;padding:18px}
+.rd-export-popover h3{font-size:16px;font-weight:600;margin:0 0 6px}.rd-export-popover>p{font-size:12px;line-height:1.7;color:var(--muted-foreground);margin:0 0 14px}
+.rd-export-popover fieldset{display:grid;gap:10px;min-width:0}.rd-export-option{display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid var(--border);border-radius:10px;cursor:pointer}.rd-export-option:has(input:checked){background:var(--muted);border-color:#689780}.rd-export-option:focus-within{outline:2px solid #42815f;outline-offset:2px}.rd-export-option input{margin-top:4px;accent-color:#215440;flex-shrink:0}.rd-export-option strong{font-size:13px;font-weight:600}.rd-export-option small{display:block;font-size:12px;line-height:1.7;color:var(--muted-foreground);margin-top:4px}.rd-export-popover .rd-export-confirm{margin-top:16px;width:100%;min-height:44px}

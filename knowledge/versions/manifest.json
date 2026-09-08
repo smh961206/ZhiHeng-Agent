@@ -1,0 +1,57 @@
+[
+  {
+    "path": "v2.1/V2_1_SKILL.md",
+    "bytes": 21625,
+    "sha256": "dbfb6ad9522f53c7c3d120e5a5a115da2d716a29b4da629a09989ec94fcc094b"
+  },
+  {
+    "path": "v2.2/V2_2_SKILL.md",
+    "bytes": 32771,
+    "sha256": "f56d669ff72e170cd4b7eeed4e54baed2b5bb1f48a940b55a919f1e2411a9e8d"
+  },
+  {
+    "path": "v3/V3_SKILL.md",
+    "bytes": 40532,
+    "sha256": "4f62438f28bb123b6f75f9c4602be13a4a2e1e036141bcb88d77aaee797ac43f"
+  },
+  {
+    "path": "v4.0/V4.0_CORE_SKILL.md",
+    "bytes": 22709,
+    "sha256": "88c38f7bc349afc4dcd4d312ae53dc7093c47a9f6408dfac374b8b0af97942a5"
+  },
+  {
+    "path": "v4.0/V4.0_FULL_SKILL.md",
+    "bytes": 38475,
+    "sha256": "3089e9d0c2909ebe106d2c486686c07f7db38f0712f217df998914aaa7f3becb"
+  },
+  {
+    "path": "v4.1.0/V4.1.0_CORE_SKILL.md",
+    "bytes": 47481,
+    "sha256": "2b62e8625199fe4f79ea02cfb6bde12650040eb107ee8df190bbef3d75e37d2c"
+  },
+  {
+    "path": "v4.1.0/V4.1.0_FULL_SKILL.md",
+    "bytes": 64680,
+    "sha256": "0a3f474d832221c0a86e11da17fd17e8caa678b947e505d8b99b65b6b8b98a17"
+  },
+  {
+    "path": "v4.1.1/V4.1.1_CORE_SKILL.md",
+    "bytes": 51370,
+    "sha256": "31a4fe45d23c22b1b042020aa0065c21e8ee8f5116afe6b845620b3140c5e0a1"
+  },
+  {
+    "path": "v4.1.1/V4.1.1_FULL_SKILL.md",
+    "bytes": 71729,
+    "sha256": "6c94c051619e78d0be1c65e51a3cd1c2fefc6a64d8fcddddc134b67d7f3fb34a"
+  },
+  {
+    "path": "v4.2.0/V4.2.0_CORE_SKILL.md",
+    "bytes": 60661,
+    "sha256": "fe73d7f744f95b07bdcd5b32292c818ebea852f0b740bc6d719eef4fbd5b2607"
+  },
+  {
+    "path": "v4.2.0/V4.2.0_FULL_SKILL.md",
+    "bytes": 84340,
+    "sha256": "41594d1d1fe514ad7575e2a67f699fc6d9d50922cfa6eddd8daeefd4dc9a571c"
+  }
+]

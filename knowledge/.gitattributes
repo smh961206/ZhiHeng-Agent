@@ -1,0 +1,4 @@
+# Preserve runtime fingerprints across checkout; historical bytes live in versions/.
+ENTRY.md -text
+modules.json -text
+modules/** -text

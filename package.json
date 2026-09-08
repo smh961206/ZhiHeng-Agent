@@ -8,8 +8,10 @@
   },
   "scripts": {
     "dev": "node scripts/dev.mjs",
-    "build": "vite build",
+    "build": "node scripts/backup-knowledge.mjs && vite build",
     "start": "node --env-file-if-exists=.env server/index.mjs",
+    "knowledge:backup": "node scripts/backup-knowledge.mjs",
+    "knowledge:index": "node scripts/index-knowledge.mjs",
     "test": "node --test tests/*.test.mjs",
     "test:mongodb": "node --env-file-if-exists=.env --test tests/storage.integration.mjs tests/schema.integration.mjs tests/jobs-delete.integration.mjs tests/jobs-retry.integration.mjs tests/jobs-delivery.integration.mjs tests/jobs-create.integration.mjs",
     "db:up": "docker compose up -d --wait",

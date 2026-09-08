@@ -12,6 +12,7 @@ export function reviewJsonSchema(plan) {
  return object({
   sections:array(object({id:enumeration(plan.output.sections.map(section=>section.id)),text:string}),{minItems:plan.output.sections.length,maxItems:plan.output.sections.length}),
   audit:string,
+  ...(plan.execution?{executionAudit:array(object({id:enumeration(plan.execution.checks.map(item=>item.id)),status:enumeration(['passed','limited','not_applicable','failed']),reason:string}),{minItems:10,maxItems:10})}:{}),
   ...(requiresResearchSummary(plan)?{researchSummary:object({checks:array(object({topic:string,assessment:string,sourceIds:array(string),unresolved:string}),{minItems:3,maxItems:8})})}:{}),
   decision:object({
    action:enumeration(plan.output.actions),summary:string,confidence:enumeration(confidenceLevels),
@@ -85,5 +86,5 @@ export function unsupportedReviewFormat(status,error,format) {
  const detail=error?.error||error||{},message=typeof detail.message==='string'?detail.message:'';
  if(/invalid.*schema|schema.*invalid|missing|required|additionalProperties/i.test(message)||detail.code==='invalid_json_schema')return false;
  return /response_format|json_schema|json_object|structured.?outputs?/i.test(String(detail.param||'')+' '+message)
-  && (/not supported|unsupported|not available|unknown parameter|unrecognized|not permitted|not allowed|不支持/i.test(message)||detail.code==='unsupported_parameter'||detail.code==='unsupported_value');
+  && (/not supported|unsupported|not available|\bunavailable\b|unknown parameter|unrecognized|not permitted|not allowed|不支持/i.test(message)||detail.code==='unsupported_parameter'||detail.code==='unsupported_value');
 }

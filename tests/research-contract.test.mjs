@@ -2,12 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {createResearchPlan,modes,portfolioFields,portfolioReadiness} from '../shared/research-framework.mjs';
+import {createResearchPlan,modes,portfolioFields,portfolioReadiness,frameworkVersion} from '../shared/research-framework.mjs';
 import {knowledgeManifest,searchRules,indexRules,planRuleContext} from '../server/knowledge.mjs';
 import {validateInput,route} from '../server/router.mjs';
 import {validateReview} from '../server/research-output.mjs';
 import {attachResearchBaseline} from '../server/research-baseline.mjs';
-import {calculationBasis,p2} from '../server/calculations.mjs';
+import {calculationBasis} from '../server/calculations.mjs';
 import {runAgent} from '../server/agent.mjs';
 import {reviewFixture} from './fixtures/research-review.mjs';
 
@@ -16,14 +16,14 @@ const base={question:'合成测试研究',mode:'B',depth:'Standard',securities:[
 const sources=[{id:'S1',title:'合成证据',text:'合成财务数据，仅测试',type:'financial-report'}];
 const validate=(review,input=base)=>validateReview(review,{input,plan:createResearchPlan(input),sources});
 
-test('CORE/FULL原文版本与校验摘要可追溯，章节检索保留完整上下文',()=>{
+test('单一规则库版本与校验摘要可追溯，章节检索保留完整上下文',()=>{
  for(const source of knowledgeManifest){
-  assert.match(source.version,/^4\.1(?:-core)?$/);
+  assert.equal(source.version.replace(/-core$/,''),frameworkVersion);
   assert.equal(source.sha256,createHash('sha256').update(readFileSync(new URL('../'+source.path,import.meta.url))).digest('hex'));
  }
  const indexed=indexRules('# 1. Main\nintro\n## Child\nbody\n```text\n# fake\n```\n# 2. Next\nend','test');
  assert.equal(indexed.length,3);assert.match(indexed[0].content,/body/);assert.doesNotMatch(indexed[0].content,/# 2/);
- const rules=searchRules('修正式P2',{limit:1});assert.match(rules.sections[0].heading,/修正式P2/);assert.equal(rules.sections[0].source,'knowledge/FULL.md');
+ const rules=searchRules('DCF 计算协议',{limit:1});assert.match(rules.sections[0].heading,/DCF 计算协议/);assert.equal(rules.sections[0].source,'knowledge/modules/rules/07-valuation.md');
  for(const [mode,title] of [['A','Quick Output'],['B','Standard Output'],['C','Update Output'],['D','Comparison Output'],['E','PORTFOLIO ENGINE'],['F','Dividend Output']])assert.ok(JSON.parse(planRuleContext(createResearchPlan({...base,mode}))).sections[0].heading.includes(title));
  assert.match(JSON.parse(planRuleContext(createResearchPlan({...base,depth:'Quick'}))).sections[0].heading,/Quick Output/);
 });
@@ -90,9 +90,9 @@ test('用户问题中的来源标记不充作报告证据，也不误判为模�
  assert.throws(()=>validate(uncited,{...base,question:'研究测试[S1]'}),/正文未关联/);
 });
 
-test('深度研究不把P2变式当独立模型，评分未知不记零且报告与结构化分值一致',()=>{
+test('深度研究不把同类倍数当独立模型，评分未知不记零且报告与结构化分值一致',()=>{
  const input={...base,depth:'Deep'},review=reviewFixture(input);
- review.decision.valuation={status:'supported',methods:['P2 F1','P2 F2','P2 F3'],explanation:'仅合成测试'};
+ review.decision.valuation={status:'supported',methods:['PE','PB'],explanation:'仅合成测试'};
  assert.throws(()=>validate(review,input),/独立方法/);
  review.decision.valuation.methods.push('FCFF');assert.equal(validate(review,input).decision.valuation.status,'supported');
  review.sections.find(section=>section.id==='scores').text='虚构总分100';
@@ -100,17 +100,12 @@ test('深度研究不把P2变式当独立模型，评分未知不记零且报告
  review.decision.scores[0].score=26;assert.throws(()=>validate(review,input),/分值/);
 });
 
-test('计算必须关联实际来源和口径，周期股N修正仅在有条件说明时启用',()=>{
+test('计算必须关联实际来源和口径',()=>{
  const basis={currency:'CNY',period:'FY2025',shareBasis:'普通股',assumptions:'合成正常化参数',sourceIds:['S1']};
  assert.equal(calculationBasis(basis,sources).period,'FY2025');
  assert.throws(()=>calculationBasis({...basis,period:''},sources),/期间/);
  assert.throws(()=>calculationBasis({...basis,sourceIds:['S99']},sources),/实际资料/);
  assert.throws(()=>calculationBasis(basis,[{id:'S1',type:'filing-index'}]),/目录/);
- const cycle={formula:'F2',sector:'cycle',pb:1,roe:.1,payout:.4,qualityVerified:true,basisVerified:true,correctionVerified:true};
- assert.equal(p2(cycle).adjusted,null);assert.equal(p2({...cycle,cycleCorrection:true}).adjusted,null);
- const corrected=p2({...cycle,cycleCorrection:true,correctionReason:'已验证完整周期与分红稳定性（仅测试）'});
- assert.ok(Math.abs(corrected.adjusted-1.25)<1e-10);assert.equal(corrected.payoutSensitivity.length,3);
- assert.equal(p2({...cycle,sector:'growth',cycleCorrection:true,correctionReason:'测试'}).adjusted,null);
 });
 
 test('一次交付修正成功才发布，失败不会被包装成审计通过',async()=>{
@@ -123,6 +118,6 @@ test('一次交付修正成功才发布，失败不会被包装成审计通过',
   else{assert.match(JSON.parse(options.body).messages.at(-1).content,/证伪/);content=JSON.stringify(reviewFixture(base));}
   return Response.json({choices:[{message:{role:'assistant',content}}]});
  };
- try{const result=await runAgent(job,(...event)=>events.push(event),new AbortController().signal);assert.equal(calls,3);assert.equal(result.framework.knowledge.length,2);assert.equal(job.workflow.stages.at(-1).status,'completed');assert.equal(events.filter(event=>event[0]==='audit_validation').length,1);}
+ try{const result=await runAgent(job,(...event)=>events.push(event),new AbortController().signal);assert.equal(calls,3);assert.equal(result.framework.knowledge.length,knowledgeManifest.length);assert.equal(job.workflow.stages.at(-1).status,'completed');assert.equal(events.filter(event=>event[0]==='audit_validation').length,1);}
  finally{global.fetch=previous;}
 });

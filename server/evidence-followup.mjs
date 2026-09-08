@@ -24,7 +24,7 @@ export function followupTopic(description){
 const usableMatch=(match,source)=>usableEvidenceBlock(source,match);
 
 export function createEvidenceFollowup({job,web,assess,emit=()=>{},limit=6}){
- const state={status:'pending',checks:[],limit,attempted:0};job.evidenceFollowup=state;
+ const state=structuredClone(job.resume?.available&&job.checkpoint?.followupState?.status==='completed'?job.checkpoint.followupState:{status:'pending',checks:[],limit,attempted:0});job.evidenceFollowup=state;
  const securities=(job.input.securities||[]).filter(s=>['CN','HK','US'].includes(s.market)&&/^[A-Z0-9.-]{1,12}$/i.test(s.symbol));
  const records=[];
  const notify=record=>emit('evidence_followup',`${record.id} 关键缺口补证：${record.reason}`,{check:{...record}});

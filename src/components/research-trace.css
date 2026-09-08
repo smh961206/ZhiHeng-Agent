@@ -1,0 +1,79 @@
+.research-detail .rd-right-rail { max-height:none; overflow:visible; }
+
+.research-detail .rd-trace { overflow: hidden; border-color: #dce5df; }
+.research-detail .rd-trace > [data-slot=collapsible] { display: flex; flex-direction: column; max-height: max(300px, calc(100dvh - var(--rd-header-height) - 100px)); }
+.research-detail .rd-trace-trigger { flex-shrink: 0; border-radius: 0; padding: 14px 16px; }
+.research-detail .rd-trace-body { display: flex; flex-direction: column; min-height: 0; padding: 0 16px 12px; }
+.research-detail .rd-trace-body[hidden], .research-detail .rd-trace-controls[hidden] { display: none; }
+.research-detail .rd-trace-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 8px; flex-shrink: 0; }
+.research-detail .rd-trace-toolbar > span { color: var(--rd-muted); font-size: 12px; }
+.research-detail .rd-trace-detail-toggle { margin: 0; min-height: 34px; padding: 6px 8px; font-size: 13px; color: #38634f; }
+.research-detail .rd-trace-detail-toggle[aria-expanded=true] { background: #edf4f0; }
+.research-detail .rd-trace-controls { display: grid; gap: 8px; flex-shrink: 0; }
+.research-detail .rd-trace-search { position: relative; min-width: 0; }
+.research-detail .rd-trace-search > svg { position: absolute; left: 10px; top: 12px; color: var(--rd-muted); pointer-events: none; }
+.research-detail .rd-trace-search input { min-height: 40px; padding: 8px 36px 8px 32px; font-size: 14px; box-shadow: none; }
+.research-detail .rd-trace-search > button { position: absolute; top: 3px; right: 3px; width: 34px; height: 34px; }
+.research-detail .rd-trace-filter { display: block; padding: 0; border: 0; }
+.research-detail .rd-trace-filter [data-slot=select-trigger] { min-height: 38px; background: #f7faf8; }
+.research-detail .rd-trace-count { display: flex; align-items: center; justify-content: space-between; min-height: 38px; margin: 0; padding: 8px 0; font-size: 12px; flex-shrink: 0; border-bottom: 1px solid #e8eeea; }
+.research-detail .rd-trace-count > button { height: 26px; padding: 2px 6px; font-size: 12px; }
+.research-detail .rd-events { min-height: 0; max-height: none; overflow-y: auto; overflow-x: hidden; overscroll-behavior-y: contain; scrollbar-gutter: stable; padding: 14px 5px 4px 1px; }
+.research-detail .rd-events > ol { padding-left: 6px; }
+.research-detail .rd-event { padding: 0 0 20px 15px; }
+.research-detail .rd-event > p { line-height: 1.7; margin-top: 7px; }
+.research-detail .rd-event-meta { align-items: center; line-height: 1.5; }
+.research-detail .rd-event-meta .rd-call-status { margin: 0; display: inline-flex; font-size: 13px; padding: 1px 6px; border-radius: 5px; background: #eff5f1; color: #52735f; }
+.research-detail .rd-event-meta .rd-call-failed { background: #fff0e7; color: #97522f; }
+.research-detail .rd-event-meta .rd-call-pending { background: #edf3fa; color: #456586; }
+.research-detail .rd-event-meta .rd-call-unrecorded { background: #f6f2e9; color: #806932; }
+.research-detail .rd-event-data > button { width: 100%; justify-content: space-between; border-radius: 6px; padding: 7px 8px; margin-left: -8px; }
+.research-detail .rd-event-data > [data-slot=collapsible-content] { padding: 10px; background: #f7f9f7; border: 1px solid #e4ebe5; border-radius: 8px; font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.research-detail .rd-event-data pre { background: #fff; border: 1px solid #e6ece7; font-size: 12px; line-height: 1.7; }
+.research-detail .rd-events > button { width: 100%; margin-top: 14px; min-height: 38px; }
+@media (min-width: 1280px) { .research-detail:not(.rd-reading) .rd-layout { grid-template-columns: minmax(0, 1fr) 300px; } }
+@media (max-width: 1023px) {
+  .research-detail .rd-trace > [data-slot=collapsible] { max-height: 600px; }
+  .research-detail .rd-trace-detail-toggle, .research-detail .rd-event-data > button { min-height: 42px; }
+  .research-detail .rd-trace-search input { font-size: 16px; }
+}
+
+/* Both card headers use the same button, disclosure direction and hit area. */
+.research-detail .rd-rail-trigger {
+  display:flex; align-items:center; justify-content:flex-start; gap:8px; width:100%;
+  min-height:54px; height:auto; flex-shrink:0; padding:14px 16px; border-radius:0;
+  color:var(--rd-ink); font-size:14px; white-space:nowrap;
+}
+.research-detail .rd-rail-trigger strong { min-width:0; font-size:14px; font-weight:600; }
+.research-detail .rd-rail-trigger > span { margin-left:auto; padding:2px 6px; border:0; border-radius:5px; background:#f0f5f2; font-size:10px; line-height:1.5; color:#60766b; }
+.research-detail .rd-rail-trigger > svg { flex-shrink:0; }
+.research-detail .rd-rail-trigger > svg:last-child { transition:transform .15s ease; }
+.research-detail .rd-rail-trigger[data-state=open] > svg:last-child { transform:rotate(180deg); }
+@media(min-width:1024px) {
+  .research-detail .rd-right-rail {
+    display:grid; grid-template-rows:minmax(0,1fr) minmax(0,1fr); gap:16px;
+    height:calc(100dvh - var(--rd-header-height) - 96px); max-height:none; overflow:visible;
+  }
+  .research-detail .rd-right-rail:has(>.research-execution-checks[data-state=closed]) { grid-template-rows:auto minmax(0,1fr); }
+  .research-detail .rd-right-rail:has(>.rd-trace-aside[data-state=closed]) { grid-template-rows:minmax(0,1fr) auto; }
+  .research-detail .rd-right-rail:has(>.research-execution-checks[data-state=closed]):has(>.rd-trace-aside[data-state=closed]) { grid-template-rows:auto auto; height:auto; }
+  .research-detail .rd-right-rail > *, .research-detail .execution-checks-disclosure,
+  .research-detail .rd-trace, .research-detail .rd-trace > [data-slot=collapsible] { min-height:0; height:100%; max-height:none; }
+  .research-detail .execution-checks-content, .research-detail .rd-trace-body { flex:1; }
+  .research-detail .execution-checks-body { flex:1; max-height:none; }
+  .research-detail .rd-events { flex:1; }
+}
+@media(min-width:1024px) and (max-height:740px) {
+  /* Keep card headings visible when controls fill a short viewport. */
+  .research-detail .rd-trace-body { overflow-y:auto; overscroll-behavior-y:contain; scrollbar-width:thin; }
+  .research-detail .rd-events { flex:none; overflow:visible; }
+  .research-detail .execution-checks-content { overflow-y:auto; overscroll-behavior-y:contain; scrollbar-width:thin; }
+  .research-detail .execution-checks-body { flex:none; overflow:visible; }
+}
+@media(prefers-reduced-motion:reduce) { .research-detail .rd-rail-trigger > svg:last-child { transition:none; } }
+
+@media(min-width:1024px) and (max-width:1279px) {
+ .research-detail .rd-rail-trigger { padding-inline:12px; gap:5px; }
+ .research-detail .rd-rail-trigger strong { font-size:12px; }
+ .research-detail .rd-rail-trigger > span { font-size:9px; padding-inline:4px; }
+}

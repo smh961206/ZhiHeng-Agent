@@ -23,7 +23,7 @@ test('MODE B计划要求问题、模型分歧及跟踪，摘要拒绝伪来源�
  for(const id of ['thesis','synthesis','monitoring'])assert.ok(plan.output.sections.some(s=>s.id===id));
  assert.match(plan.researchApproach.scope.period,/完整年度.*单季/);
  assert.match(plan.constraints.join(' '),/汇率.*来源和日期/);
- assert.match(deepResearchCopy.example,/比亚迪.*A\/H/);
+ assert.match(deepResearchCopy.example,/比亚迪A股.*普通股权益/);
  const review=reviewFixture(input);
  const validate=value=>validateReview(value,{input,plan,sources:input.sources});
  assert.ok(validate(review).researchSummary.checks.length);

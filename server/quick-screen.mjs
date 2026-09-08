@@ -1,5 +1,6 @@
 // Deterministic arithmetic on explicitly supplied, comparable observations.
 // Provenance is checked by calculationBasis; this does not verify input figures.
+import {financialCoverage} from '../shared/financial-coverage.mjs';
 const numbers=['revenue','netIncome','adjustedNetIncome','grossProfit','costOfRevenue','overseasRevenue','ocf','capex','roe'];
 const stockNumbers=['cash','unrestrictedCash','shortDebt','receivables','inventory','construction','contractLiabilities','assets','liabilities','currentAssets','currentLiabilities'];
 const finite=value=>typeof value==='number'&&Number.isFinite(value);
@@ -16,6 +17,7 @@ const finiteResults=value=>{
 };
 const fieldDescriptions={adjustedNetIncome:'扣非归母净利润，金额；不与归母混用',grossProfit:'毛利金额，不是毛利率',costOfRevenue:'与收入对应的营业成本金额，用于存货周转',overseasRevenue:'同一披露定义下的海外收入金额，定义变化先统一口径',roe:'ROE小数，不是百分数或金额'};
 export const screenToolProperties={
+ cashFlowScope:{type:'string',enum:['operating-company','includes-financial-subsidiary','unknown'],description:'合并OCF是否包含财务子公司资金流；未查明则unknown，不能以主营行业推定'},
  sector:{type:'string',enum:['non-financial','bank','insurance','other-financial'],description:'银行、保险等金融企业不套用工业企业OCF-Capex或短债现金覆盖'},
  amountUnit:{type:'string',description:'所有金额统一单位，例如人民币元或人民币亿元；禁止跨币种或单位混算'},
  roeBasis:{type:'string',description:'所有ROE统一定义，例如加权平均归母ROE；ROE用小数。无ROE时写未提供'},
@@ -24,6 +26,8 @@ export const screenToolProperties={
 };
 export function quickScreenMetrics(args,{sources}={}){
  const {periods=[],balances=[],basis,amountUnit,roeBasis,sector}=args;
+ const cashFlowScope=args.cashFlowScope??'unknown';
+ if(!['operating-company','includes-financial-subsidiary','unknown'].includes(cashFlowScope))fail('现金流合并范围无效');
  if(typeof amountUnit!=='string'||!amountUnit.trim()||typeof roeBasis!=='string'||!roeBasis.trim())fail('须明确金额单位及ROE定义');
  if(!['non-financial','bank','insurance','other-financial'].includes(sector))fail('须明确金融或非金融行业口径');
  const industrial=sector==='non-financial';
@@ -100,7 +104,7 @@ export function quickScreenMetrics(args,{sources}={}){
   cagr:Object.fromEntries(['revenue','netIncome','ocf'].map(key=>[key,{value:years>0&&first[key]>0&&last[key]>0?(last[key]/first[key])**(1/years)-1:null,years,notice:'按实际起止年度年化；基数或终值非正、单一年份时不计算。'}])),
   roe:{basis:roeBasis,count:values.length,mean,median:values.length?(values[Math.floor((values.length-1)/2)]+values[Math.floor(values.length/2)])/2:null,
    populationStdDev:values.length?Math.sqrt(values.reduce((sum,value)=>sum+(value-mean)**2,0)/values.length):null,sourceIds:[...new Set(roes.flatMap(row=>row.sourceIds))],
-   notice:'最近五份年度中的可用ROE历史统计；缺失不补零，不构成正常化ROE。敏感性仍须按市赚率工具的质量与口径门槛单独计算。'}};
+   notice:'最近五份年度中的可用ROE历史统计；缺失不补零，不构成正常化ROE。估值情景仍须独立核验质量、正常化假设与模型适用性。'}};
  const stockDates=new Set();
  for(const row of balances){validate(row,stockNumbers);if(!date(row.date)||stockDates.has(row.date))fail('余额日期无效或重复，须先解决口径和修订');stockDates.add(row.date);}
  const stock=[...balances].sort((a,b)=>a.date.localeCompare(b.date)).map((row,index,rows)=>{
@@ -120,8 +124,10 @@ export function quickScreenMetrics(args,{sources}={}){
    formula:'存货天数=(期初存货+期末存货)/2÷本期营业成本×本期实际天数；应收天数=(期初应收+期末应收)/2÷本期收入×本期实际天数。',
    notice:industrial?'期初须为期间首日前一日，期末须为报告期末；缺少匹配余额或正分母时保留null。使用实际天数，不再年化；应收范围、成本范围须统一，与公司披露口径不同需解释。':'金融企业不适用此工业企业营运资金周转公式。'};
  });
- const result={sector,amountUnit,currency:basis?.currency,shareBasis:basis?.shareBasis,financial,derivedQuarters,quarterlyComparisons,conflicts,trend,balances:stock,workingCapital,
+ const result={sector,amountUnit,currency:basis?.currency,shareBasis:basis?.shareBasis,cashFlowScope,financial,derivedQuarters,quarterlyComparisons,conflicts,trend,balances:stock,workingCapital,
+  cashFlowScopeNotice:cashFlowScope==='includes-financial-subsidiary'?'合并现金流含财务子公司资金项目；Quick FCF及现金利润比仅供诊断，不能解释为主营现金或可分配现金。按需先做现金流桥接（calculate_cashflow_bridge）。':cashFlowScope==='unknown'?'尚未确认是否存在财务子公司资金流，使用合并现金流前须核查合并范围与附注。':'已声明为经营主体口径，仍须核对限制、营运资金及资本支出。',
   cashFlowApplicability:industrial?'仅作为非金融企业现金流代理，待核对':'金融企业不适用工业企业OCF-Capex、现金利润比、流动比率及短债现金覆盖；相应结果保留null，需资本、承保或信贷质量证据。',
   limitations:['计算仅验证运算与输入格式，财务数字和统一口径仍须逐项回到原文核实。','Quick FCF = 经营现金流 − 购建长期资产支出，只是现金流代理，不等于FCFF、FCFE或可分配现金。','年度与半年流量不可直接比较改善幅度；余额较年末变化与收入同比不可冒充同口径趋势。','合同负债上升、资本开支或存货变动只构成待验证线索，不能直接推断订单质量、扩张用途或因果关系。']};
+ result.coverage=financialCoverage(result);
  finiteResults(result);return result;
 }

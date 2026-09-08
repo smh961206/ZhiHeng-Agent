@@ -32,3 +32,21 @@ export function securityDisplayLabel(value, usExchanges = {}) {
  const exchange = item.exchange || (item.market === 'US' ? normalizedExchange(usExchanges[tickerKey(item.symbol)]?.exchange) : null);
  return `${exchange || item.market ? (exchange || item.market) + ':' : ''}${item.symbol}`;
 }
+
+// Research input validation keeps identifiers only. Recover display metadata from
+// the same saved research, matching listing identities rather than array order.
+export function researchSecurityDisplay(job, value, usExchanges = {}) {
+ const identity = securityDisplayParts(value);
+ const records = [job?.input?.securities, job?.plan?.securities, job?.securities, job?.marketData?.snapshots, job?.marketData?.coverage]
+  .flatMap(items => Array.isArray(items) ? items : [])
+  .map(item => {
+   const listing = securityDisplayParts(item?.security || item);
+   return {...listing, name: item?.name || listing.name, exchange: normalizedExchange(item?.exchange) || listing.exchange};
+  })
+  .filter(item => item.market === identity.market && tickerKey(item.symbol) === tickerKey(identity.symbol));
+ const candidates = [identity, ...records];
+ const name = candidates.map(item => typeof item.name === 'string' ? item.name.trim() : '')
+  .find(name => name && ![identity.symbol, `${identity.market}:${identity.symbol}`, securityDisplayLabel(identity)].includes(name.toUpperCase()));
+ const stock = {...identity, name: name || '名称未记录', exchange: identity.exchange || records.find(item => item.exchange)?.exchange};
+ return {...stock, code: securityDisplayLabel(stock, usExchanges)};
+}

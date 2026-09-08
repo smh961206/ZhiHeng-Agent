@@ -32,13 +32,24 @@ export function useSectionNavigation(sectionIds){
  useEffect(()=>{
   const id=location.hash.slice(1);
   if(!sectionIds.includes(id))return;
-  const frame=requestAnimationFrame(()=>{
+  let frame=0,stopped=false;
+  const position=()=>{
+   if(stopped)return;
    const root=rootRef.current,nav=navRef.current,scroller=root?.closest('.page-scroll'),section=root?.querySelector('#'+id);
    if(!scroller||!section||!nav)return;
    const top=scroller.scrollTop+section.getBoundingClientRect().top-scroller.getBoundingClientRect().top-nav.offsetHeight-18;
    scroller.scrollTo({top:Math.max(0,top),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
-  });
-  return()=>cancelAnimationFrame(frame);
+  };
+  const schedule=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(position);};
+  // Service status and fonts may settle after a deep link first renders.
+  // Correct that initial layout shift, but yield immediately to user scrolling.
+  const observer=new ResizeObserver(schedule);
+  for(const element of [rootRef.current,navRef.current])if(element)observer.observe(element);
+  const stop=()=>{stopped=true;observer.disconnect();cancelAnimationFrame(frame);};
+  const scroller=rootRef.current?.closest('.page-scroll');
+  for(const event of ['wheel','touchstart','pointerdown','keydown'])scroller?.addEventListener(event,stop,{passive:true,once:true});
+  const timer=setTimeout(stop,2000);schedule();
+  return()=>{stop();clearTimeout(timer);for(const event of ['wheel','touchstart','pointerdown','keydown'])scroller?.removeEventListener(event,stop);};
  },[location.key,location.hash,sectionIds]);
 
  useEffect(()=>{

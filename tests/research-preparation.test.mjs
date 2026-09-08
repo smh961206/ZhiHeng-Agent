@@ -66,3 +66,17 @@ test('update baselines match equivalent Hong Kong codes without crossing markets
  // the server remains authoritative for missing/deleted baselines.
  assert.equal(researchPreparation({...input,mode:'C',baselineJobId:'hk'},resolved).ready,true);
 });
+
+test('deleted, unavailable and still-loading baseline selections cannot claim readiness',()=>{
+ const selection={...input,mode:'C',baselineJobId:'prior',previousResearch:'保留手写的旧结论'};
+ for(const [state,status] of [[{jobs:[],jobsLoading:true},'checking'],[{jobs:[]},'missing'],[{jobs:[],jobsError:'offline'},'error']]){
+  const prepared=researchPreparation(selection,resolved,state);
+  assert.equal(prepared.ready,false);assert.equal(prepared.baseline.status,status);assert.equal(prepared.issues.at(-1).id,'context');
+ }
+ const jobs=[{id:'prior',status:'completed',plan:{securities:[security]}}];
+ assert.equal(researchPreparation(selection,resolved,{jobs}).baseline.status,'ready');
+ const external=researchPreparation({...selection,baselineJobId:''},resolved,{jobs:[],jobsError:'offline'});
+ assert.equal(external.ready,true);assert.equal(external.baseline.status,'external');assert.deepEqual(external.plan.output.actions,['升级','维持','降级','剔除']);
+ const fresh=researchPreparation({...selection,baselineJobId:'',previousResearch:''},resolved,{jobs:[]});
+ assert.equal(fresh.ready,true);assert.deepEqual(fresh.plan.output.actions,['建立基线']);
+});

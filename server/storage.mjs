@@ -15,7 +15,7 @@ export async function createStorage({uri=process.env.MONGODB_URI||'mongodb://127
     // Serialize before awaiting: running jobs can continue emitting events.
     const {liveReport,...stored}=job;
     const bytes=Buffer.from(JSON.stringify(stored));
-    const {input,result,events,draft,marketData,...summary}=stored;
+    const {input,result,events,draft,marketData,checkpoint,knowledgeUsage,...summary}=stored;
     const upload=bucket.openUploadStream(job.id+'.json');
     await pipeline(Readable.from([bytes]),upload);
     try{

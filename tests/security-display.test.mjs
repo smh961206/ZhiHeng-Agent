@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {securityDisplayLabel} from '../shared/security-display.mjs';
+import {securityDisplayLabel, researchSecurityDisplay} from '../shared/security-display.mjs';
 import {createExchangeLookup, secExchangeSource} from '../server/security-exchanges.mjs';
 import {createRemoteClient} from '../server/market-request.mjs';
 
@@ -14,6 +14,19 @@ test('stock labels preserve leading zeroes, exchange prefixes and share classes'
  ]) assert.equal(securityDisplayLabel(security), expected);
  assert.equal(securityDisplayLabel({market:'US',symbol:'BRK.B'},{'BRK-B':{exchange:'NYSE'}}),'NYSE:BRK.B');
  assert.equal(securityDisplayLabel({market:'US',symbol:'AAPL'},{AAPL:{exchange:'Nasdaq'}}),'NASDAQ:AAPL');
+});
+
+test('comparison cards recover names from saved records and keep each listing distinct', () => {
+ const job={input:{securities:[{market:'CN',symbol:'002594'},{market:'CN',symbol:'601633',name:'CN:601633'}]},marketData:{
+  snapshots:[{market:'HK',symbol:'1211',name:'比亚迪股份'},{market:'CN',symbol:'002594',name:'比亚迪'}],
+  coverage:[{security:'CN:601633',name:'长城汽车'},{security:'CN:601127',name:'赛力斯'},{security:'US:BRK-B',name:'Berkshire Hathaway',exchange:'NYSE'}],
+ }};
+ for(const [key,name,code] of [['CN:002594','比亚迪','SZ:002594'],['SH:601633','长城汽车','SH:601633'],['CN:601127','赛力斯','SH:601127'],['HK:01211','比亚迪股份','HK:01211'],['US:BRK.B','Berkshire Hathaway','NYSE:BRK.B']]){
+  const stock=researchSecurityDisplay(job,key);assert.equal(stock.name,name);assert.equal(stock.code,code);
+ }
+ assert.equal(researchSecurityDisplay({plan:{securities:[{market:'US',symbol:'AAPL',name:'Apple'}]}},'US:AAPL',{AAPL:{exchange:'NASDAQ'}}).code,'NASDAQ:AAPL');
+ assert.equal(researchSecurityDisplay(job,'US:UNKNOWN').name,'名称未记录');
+ assert.equal(researchSecurityDisplay(job,'US:UNKNOWN').code,'US:UNKNOWN');
 });
 
 test('official exchange lookup reads fields by name and shares the cached directory', async () => {

@@ -2,23 +2,6 @@ import {evidenceBlocks} from './evidence-search.mjs';
 import {usableEvidenceBlock} from './document-layout.mjs';
 const finite = x => typeof x === 'number' && Number.isFinite(x);
 const positive = x => finite(x) && x > 0;
-export function correction(d) {
-  if (!finite(d) || d < 0) return null;
-  return d >= .5 ? 1 : d > .25 ? .5/d : 2;
-}
-export function p2(x) {
-  const { formula='F1', pe, pb, roe, payout, sector='mature', qualityVerified=false, basisVerified=false, correctionVerified=false }=x;
-  if(!['F1','F2','F3'].includes(formula)) throw new Error('未知市赚率公式');
-  if(!['mature','cycle','growth','buyback','index','bank','insurance'].includes(sector))throw new Error('未知市赚率行业适配类型');
-  if(!qualityVerified || !basisVerified) return {status:'Data Insufficient', reason:'需要验证正利润、正且非极小权益、ROE质量及期间/权益/股类口径'};
-  if((formula!=='F3' && (!positive(roe) || roe>1)) || (formula!=='F2' && !positive(pe)) || (formula!=='F1' && !positive(pb))) return {status:'Not Applicable',reason:'盈利、权益或ROE无效/异常，需要人工复核'};
-  const value=formula==='F1'?pe/(100*roe):formula==='F2'?pb/(100*roe**2):pe**2/(100*pb);
-  if(!positive(value))return {status:'Not Applicable',reason:'计算超出有效数值范围，须复核输入单位与正常化ROE'};
-  const cycleException=sector==='cycle'&&x.cycleCorrection===true&&typeof x.correctionReason==='string'&&x.correctionReason.trim().length>0;
-  const n=correctionVerified && (!['cycle','growth','buyback','index'].includes(sector)||cycleException)?correction(payout):null;
-  const payoutSensitivity=n===null?[]:[-.1,0,.1].filter(delta=>payout+delta>=0).map(delta=>({payout:payout+delta,n:correction(payout+delta),adjusted:value*correction(payout+delta)}));
-  return {status:'Conditional',formula,ordinary:value,n,adjusted:n===null?null:value*n,correctionReason:cycleException?x.correctionReason:n===null?'未启用修正或不满足支付率/行业适配条件':'支付率及适配性由调用方声明核实',notice:'用户/模型声明口径已核实；市赚率为作者经验指标，价格锚不等于内在价值。行业适配仍需证据。',anchors:positive(x.price)?[.4,.5,.7,1,1.5].map(target=>({target,ordinary:x.price*target/value,adjusted:n===null?null:x.price*target/(value*n)})):[],payoutSensitivity,sensitivity:formula==='F3'?[]:[-.02,0,.02].filter(delta=>roe+delta>0).map(delta=>({roe:roe+delta,p2:formula==='F1'?pe/(100*(roe+delta)):pb/(100*(roe+delta)**2)}))};
-}
 export function dcf(x) {
   const {cashFlow,growth,discount,terminalGrowth,years=5,shares,kind,sector='industrial'}=x;
   if(!['FCFF','FCFE'].includes(kind))throw new Error('必须选择FCFF或FCFE');

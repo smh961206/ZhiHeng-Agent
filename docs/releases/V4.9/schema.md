@@ -1,0 +1,9 @@
+# V4.9 Schema
+
+Optional Vision telemetry metadata only; no research data semantic change.
+
+## General rules
+- Additive first.
+- Historical records are not destructively rewritten.
+- New fields must have safe defaults/absence behavior for old records.
+- Point-in-time/provenance fields cannot be fabricated during backfill.

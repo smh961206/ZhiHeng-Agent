@@ -1,0 +1,20 @@
+# Debugging / Root Cause Classification
+
+Before changing Knowledge or model tier, classify failures:
+
+- DATA_FAILURE
+- RETRIEVAL_FAILURE
+- PARSER_FAILURE
+- FACT_FAILURE
+- TOOL_FAILURE
+- MODEL_FAILURE
+- KNOWLEDGE_GAP
+- ONTOLOGY_GAP
+- PLAYBOOK_GAP
+- METHODOLOGY_GAP
+- VALIDATION_FAILURE
+- POINT_IN_TIME_FAILURE
+- PROVENANCE_FAILURE
+- DECISION_POLICY_FAILURE
+
+Do not repair one layer by weakening another.

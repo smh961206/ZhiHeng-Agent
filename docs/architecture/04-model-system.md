@@ -38,3 +38,5 @@ Only repeatable capability/reasoning failures may justify model-tier escalation.
 ## H0 calibration
 
 CURRENT: provider-configured research/review, path classification, security intent, Vision and their distinct transport guards. FUTURE: stable slots/catalog/Gateway, health/cost policy, escalation and cross-provider state compatibility. Do not enforce the target Gateway boundary against current call sites in H0.
+
+The [V4.8.0 call inventory](../releases/V4.8/model-call-inventory.md) now records exact current transports, parameters, semantic callers, private state and guard differences. Static inventory checks track the existing direct endpoints until their authorized migration; they do not claim the target Gateway boundary is enforced.

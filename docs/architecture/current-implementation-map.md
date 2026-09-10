@@ -22,6 +22,8 @@ Tests: `tests/model-request.test.mjs`, `tests/model-deadline.test.mjs`, `tests/s
 
 FUTURE: V4.8 Gateway, policy/health/tier/usage platform; V4.9 canonical Vision. Reuse existing transport protections, not a second stream parser. Cross-provider continuation is not currently guaranteed.
 
+V4.8.0 refines this baseline with [four production transports and ten purpose/caller entries](../releases/V4.8/model-call-inventory.md), including both router purposes, forced-draft completion, supplementary review, four Vision readers and separate live diagnostic requests. This is inventory completion, not Gateway implementation; runtime owners remain unchanged.
+
 ## Research orchestration — CURRENT
 
 Owners: `server/index.mjs`, `server/router.mjs`, `server/research-create.mjs`, `server/research-path.mjs`, `server/agent.mjs`, `server/agent-execution.mjs`, `server/research-workflow.mjs`, `server/research-context.mjs`, `server/research-baseline.mjs`.

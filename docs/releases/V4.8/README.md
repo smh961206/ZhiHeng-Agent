@@ -2,6 +2,10 @@
 
 Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
+## Accepted progress
+
+V4.8.0 call inventory is complete: [inventory](model-call-inventory.md), [acceptance report](V4_8_0-completion-report.md). V4.8.1–V4.8.11 remain FUTURE; no Gateway, profile, model policy or runtime migration is implemented yet. CURRENT remains V4.8.
+
 ## Goal
 
 Move all real LLM requests behind a legacy-compatible Model Gateway; add capability profiles, dry-run policy, telemetry and safe Main→Pro escalation without changing research rules.

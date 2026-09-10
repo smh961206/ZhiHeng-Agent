@@ -2,7 +2,7 @@
   "harnessVersion": "3.0.0",
   "normalizedTemplateSections": 26,
   "executableSubreleases": 197,
-  "fileCount": 452,
+  "fileCount": 457,
   "files": [
     {
       "path": "AGENTS.md",
@@ -176,8 +176,8 @@
     },
     {
       "path": "docs/architecture/04-model-system.md",
-      "bytes": 1049,
-      "sha256": "b17a775eefc3e3a5951bd1cb5064369489531e90c1a2dc2631c34fc8431a89b9"
+      "bytes": 1378,
+      "sha256": "b5ea2e0bcc9e5ea26fc6c670c24726f5ae1cdb0c53d4a8bf2c1aa7034dd6ed43"
     },
     {
       "path": "docs/architecture/05-knowledge-system.md",
@@ -216,8 +216,8 @@
     },
     {
       "path": "docs/architecture/current-implementation-map.md",
-      "bytes": 17502,
-      "sha256": "0f61d3755a857a4953825f0039f2b960b351ef7536ef52685d0a1fbe582428c8"
+      "bytes": 17869,
+      "sha256": "91687a250e67791cf8072ddfb688a332576414fd246b30bc51c1c45a4ab0c8e2"
     },
     {
       "path": "docs/contracts/README.md",
@@ -506,8 +506,8 @@
     },
     {
       "path": "docs/releases/V4.8/DETAILED_INDEX.md",
-      "bytes": 1346,
-      "sha256": "d7a2cc4215193baac97c4f5968468673d53ad5e899b4922c003ce0cc53b03ac9"
+      "bytes": 1478,
+      "sha256": "36ad81d8fc2265d6dbbfc854659663197f291b9034c9a4b6d406472971404764"
     },
     {
       "path": "docs/releases/V4.8/NORMALIZED_EXECUTION.md",
@@ -516,8 +516,13 @@
     },
     {
       "path": "docs/releases/V4.8/README.md",
-      "bytes": 1970,
-      "sha256": "e0e8f666468bc65e54d465bb53a5f3933d51b95618c62e655a0393c973b5d5c9"
+      "bytes": 2245,
+      "sha256": "c1f2c0fee2ce8efd6d74ce97366e6e192afd935028d7c2f2267077bb02afa19f"
+    },
+    {
+      "path": "docs/releases/V4.8/V4_8_0-completion-report.md",
+      "bytes": 11092,
+      "sha256": "b8ab4aa9fb63b4cb9ca8c3d8ccf085a8d8141bf4a14420c334538958f8d06bbc"
     },
     {
       "path": "docs/releases/V4.8/acceptance.md",
@@ -545,9 +550,19 @@
       "sha256": "d5899c86965be9a6d2a1a0bd58f2b5db4b708a1bbd7ef29ba21db7af4d9a2459"
     },
     {
+      "path": "docs/releases/V4.8/model-call-inventory.json",
+      "bytes": 6883,
+      "sha256": "32ce3e633dd0ed98b936323d44e4d94f893ec2cda9da22aac7269a99e9f00d5c"
+    },
+    {
+      "path": "docs/releases/V4.8/model-call-inventory.md",
+      "bytes": 13495,
+      "sha256": "125b8333f2fd43d507007224f00b5054abe2e76f45e5f81e9ec1de6bd2f970f0"
+    },
+    {
       "path": "docs/releases/V4.8/rollback.md",
-      "bytes": 357,
-      "sha256": "e3596d388f2c64c9220fc1e5e7f49fb21027b698dc8626e8163b0de5b801848f"
+      "bytes": 763,
+      "sha256": "d6502ce2208a886e8820abba4e4024bad01432aa4264363a66e652f5ea23b824"
     },
     {
       "path": "docs/releases/V4.8/schema.md",
@@ -556,8 +571,8 @@
     },
     {
       "path": "docs/releases/V4.8/subreleases/V4_8_0-llm-call-inventory.md",
-      "bytes": 6158,
-      "sha256": "ecda93ee36c118b5bdbd6db9e0e25a910f5986e3299e9eee4a0802d7c95ed5f8"
+      "bytes": 6527,
+      "sha256": "b423429674db4cf6506ca38e32b7468e534d4afeec973f5c7da665edc48dbd7e"
     },
     {
       "path": "docs/releases/V4.8/subreleases/V4_8_1-model-catalog-legacy-profiles.md",
@@ -2260,9 +2275,19 @@
       "sha256": "255288f6b1f4d33c7e322e7a4d67c6555b3c22a7ded12e577019c3f237b810ea"
     },
     {
+      "path": "scripts/check-model-call-inventory.mjs",
+      "bytes": 7096,
+      "sha256": "97edf3dd2b137333a05c7c089b00155a4a0bf31b76f4a5867fe2f72516af65fc"
+    },
+    {
       "path": "tests/harness.test.mjs",
       "bytes": 4692,
       "sha256": "5afa972c58318acc4349767fff95dcc0110b7bf294fc08d5860048ae24cf5024"
+    },
+    {
+      "path": "tests/model-call-inventory.test.mjs",
+      "bytes": 5598,
+      "sha256": "80aa8c1499cb215220ac85bfeefc27dabc238a9a3b3824b0a89931ea825f38d2"
     }
   ]
 }

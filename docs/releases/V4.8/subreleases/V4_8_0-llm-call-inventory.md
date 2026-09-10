@@ -1,7 +1,7 @@
 # V4.8.0 — LLM call inventory
 
 Release: `V4.8`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT — inventory accepted; see [completion report](../V4_8_0-completion-report.md). Runtime behavior is unchanged. Later Gateway/Profile capabilities remain FUTURE.
 
 ## 1. Why
 
@@ -110,7 +110,7 @@ additive → dual-read if needed → new-write → verified backfill → cutover
 
 ## 16. Resume / Recovery
 
-New checkpoints may add modelState additively; old checkpoints map to Legacy Profile and preserve original research cutoff/evidence/tool state.
+V4.8.0 does not change checkpoints or resume. Inventory current private state and configuration coupling. Additive modelState and old-checkpoint Legacy Profile mapping belong to V4.8.9, not this inventory subrelease.
 
 This subrelease is incomplete if interruption/retry can duplicate completed work, lose evidence, change data cutoff, or corrupt the prior validated state.
 
@@ -122,13 +122,13 @@ No future-information contamination is allowed.
 
 ## 18. Provenance
 
-Persist profile/policy/routing decision/usage metadata, never hidden reasoning.
+Record source owners/anchors and baseline hashes in the inventory, never keys or hidden reasoning. Runtime profile/policy/routing/usage persistence belongs to later subreleases.
 
 Every newly introduced derived/canonical object must be able to answer “where did this come from?” at the semantic level appropriate to this release.
 
 ## 19. Feature Flag
 
-Use MODEL_ROUTING_MODE and release-specific flags/config; legacy remains an immediate fallback until acceptance.
+No feature flag or config is added in V4.8.0. MODEL_ROUTING_MODE and Legacy Profiles remain future subrelease work; this inventory cannot be rolled back using an unimplemented switch.
 
 High-risk behavior should be observable in disabled/dry-run/dual-run mode before becoming canonical where practical.
 
@@ -152,7 +152,7 @@ If this subrelease does not itself introduce a benchmarkable behavior, it must a
 
 ## 23. Rollout
 
-legacy → dry-run → policy/internal → partial production → default only after benchmark gate.
+Publish the verified inventory and static search baseline without runtime rollout. The later release rollout remains legacy → dry-run → policy/internal → partial production → default only after benchmark gate.
 
 Codex must not skip directly to default-on if the release specifies dry-run/dual-run/benchmark stages.
 

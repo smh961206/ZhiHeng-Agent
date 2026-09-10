@@ -1,0 +1,229 @@
+{
+  "version": 1,
+  "subrelease": "V4.8.0",
+  "status": "CURRENT inventory; Gateway FUTURE",
+  "baselineCommit": "087e74ec3a5b5fcba4bb40ad0c9ad1a8a214c9ae",
+  "scanRoots": [
+    "server",
+    "scripts",
+    "src",
+    "shared"
+  ],
+  "scanExtensions": [
+    ".mjs",
+    ".js",
+    ".jsx"
+  ],
+  "limitations": "Lexical discovery plus manual call tracing, not a whole-program proof for computed endpoints or dynamically loaded SDKs. Baseline hashes are provenance, not a permanent runtime freeze.",
+  "transports": [
+    {
+      "id": "analysis",
+      "file": "server/agent.mjs",
+      "scope": "production",
+      "owner": "completion",
+      "transport": "fetchModel",
+      "stream": "stream:true",
+      "purposes": [
+        "research",
+        "review",
+        "followup"
+      ],
+      "endpoint": "/chat/completions",
+      "endpointOccurrences": 1,
+      "baselineSha256": "42d756f3993dc22547430390e4bde3876feea9595312c2f630c673d85a1f8c14"
+    },
+    {
+      "id": "path",
+      "file": "server/research-path.mjs",
+      "scope": "production",
+      "owner": "createPathResolver",
+      "transport": "fetchImpl",
+      "stream": "stream:false",
+      "purposes": [
+        "router"
+      ],
+      "endpoint": "/chat/completions",
+      "endpointOccurrences": 1,
+      "baselineSha256": "e39286a96ba4522c750c67e368110474bf6d369b979912b67d61a2b6eb1132a8"
+    },
+    {
+      "id": "security-intent",
+      "file": "server/security-intent.mjs",
+      "scope": "production",
+      "owner": "createSecurityIntentExtractor",
+      "transport": "fetchImpl",
+      "stream": "stream:false",
+      "purposes": [
+        "router"
+      ],
+      "endpoint": "/chat/completions",
+      "endpointOccurrences": 1,
+      "baselineSha256": "0a8dce6083b91a1379da6da40112960456d535dcc3e04823033d08ad50dbd69d"
+    },
+    {
+      "id": "vision",
+      "file": "server/vision-model.mjs",
+      "scope": "production",
+      "owner": "readVisionImages",
+      "transport": "fetcher",
+      "stream": "stream:false",
+      "purposes": [
+        "vision"
+      ],
+      "endpoint": "/chat/completions",
+      "endpointOccurrences": 1,
+      "baselineSha256": "1fb108c4e9a723ddd1f563d6a43ca9e32338bc3f556f771caef43e25f247faf3"
+    },
+    {
+      "id": "diagnostic",
+      "file": "scripts/dual-model-diagnostics.mjs",
+      "scope": "diagnostic",
+      "owner": "phase='pro'",
+      "transport": "fetch",
+      "stream": "stream omitted",
+      "purposes": [
+        "other"
+      ],
+      "endpoint": "/chat/completions",
+      "endpointOccurrences": 1,
+      "baselineSha256": "ad5e26dba8c4d5676ac899386045a70253f0be0f6ec7564cffc71e60a916f7b5"
+    }
+  ],
+  "callers": [
+    {
+      "id": "research-loop",
+      "purpose": "research",
+      "file": "server/agent.mjs",
+      "anchor": "const message=await requestCompletion",
+      "transport": "analysis",
+      "tests": [
+        {
+          "file": "tests/agent.test.mjs",
+          "title": "模型→工具→结果回传→审计报告闭环（模拟接口）"
+        }
+      ]
+    },
+    {
+      "id": "research-budget-exhausted",
+      "purpose": "research",
+      "file": "server/agent.mjs",
+      "anchor": "const finalMessage=await requestCompletion",
+      "transport": "analysis",
+      "tests": [
+        {
+          "file": "tests/agent-capabilities.test.mjs",
+          "title": "tool-loop budget ends with a tool-free draft and still requires independent audit"
+        }
+      ]
+    },
+    {
+      "id": "review-and-repair",
+      "purpose": "review",
+      "file": "server/agent.mjs",
+      "anchor": "review=await requestCompletion",
+      "transport": "analysis",
+      "tests": [
+        {
+          "file": "tests/review-recovery.test.mjs",
+          "title": "one repair receives every independent issue and retains the structured output constraint"
+        }
+      ]
+    },
+    {
+      "id": "followup-assessment",
+      "purpose": "followup",
+      "file": "server/agent.mjs",
+      "anchor": "const answer=await requestCompletion",
+      "transport": "analysis",
+      "tests": [
+        {
+          "file": "tests/evidence-followup.test.mjs",
+          "title": "full agent supplements a preliminary failed data gate, then permits actual calculations before final review"
+        }
+      ]
+    },
+    {
+      "id": "path-classification",
+      "purpose": "router",
+      "file": "server/research-path.mjs",
+      "anchor": "const response=await fetchImpl",
+      "transport": "path",
+      "tests": [
+        {
+          "file": "tests/research-path.test.mjs",
+          "title": "semantic decisions handle rule disagreement and are reused for execution"
+        }
+      ]
+    },
+    {
+      "id": "security-mention-extraction",
+      "purpose": "router",
+      "file": "server/security-intent.mjs",
+      "anchor": "const response=await fetchImpl",
+      "transport": "security-intent",
+      "tests": [
+        {
+          "file": "tests/security-intent.test.mjs",
+          "title": "semantic selection excludes negation and examples before official lookup"
+        }
+      ]
+    },
+    {
+      "id": "pdf-enhancement",
+      "purpose": "vision",
+      "file": "server/visual-reading.mjs",
+      "anchor": "export async function enhancePDFWithVision",
+      "transport": "vision",
+      "tests": [
+        {
+          "file": "tests/visual-reading.test.mjs",
+          "title": "visual enrichment preserves native text and adds separately marked non-calculable searchable evidence"
+        }
+      ]
+    },
+    {
+      "id": "image-material",
+      "purpose": "vision",
+      "file": "server/visual-reading.mjs",
+      "anchor": "export async function readImageMaterial",
+      "transport": "vision",
+      "tests": [
+        {
+          "file": "tests/visual-reading.test.mjs",
+          "title": "full research-to-audit request carries validated original images and stores coverage without image payloads"
+        }
+      ]
+    },
+    {
+      "id": "audit-original-reread",
+      "purpose": "vision",
+      "file": "server/visual-reading.mjs",
+      "anchor": "export async function visualAuditContext",
+      "transport": "vision",
+      "tests": [
+        {
+          "file": "tests/visual-reading.test.mjs",
+          "title": "audit attaches exact originals but rejects edited text, unavailable archives and excessive pages"
+        }
+      ]
+    },
+    {
+      "id": "targeted-page-read",
+      "purpose": "vision",
+      "file": "server/agent-page-reader.mjs",
+      "anchor": "await readVision(images",
+      "transport": "vision",
+      "tests": [
+        {
+          "file": "tests/agent-capabilities.test.mjs",
+          "title": "requested visual pages return transcription and discrepancies without storing images in job records"
+        }
+      ]
+    }
+  ],
+  "diagnostics": [
+    "scripts/dual-model-diagnostics.mjs",
+    "scripts/vision-input-diagnostics.mjs"
+  ],
+  "hashNormalization": "utf8-lf"
+}

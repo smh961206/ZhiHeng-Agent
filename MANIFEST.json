@@ -2,7 +2,7 @@
   "harnessVersion": "3.0.0",
   "normalizedTemplateSections": 26,
   "executableSubreleases": 197,
-  "fileCount": 457,
+  "fileCount": 458,
   "files": [
     {
       "path": "AGENTS.md",
@@ -76,8 +76,8 @@
     },
     {
       "path": "docs/adr/ADR-002-model-gateway.md",
-      "bytes": 855,
-      "sha256": "b7ec69609f9af105c5db97ebb1001be4207aedba1dfb6c006426355393ab3b55"
+      "bytes": 1347,
+      "sha256": "aa7569997311da50d6c631b07ece0d34346bb3e27ca60ed2a691f72573d7dc83"
     },
     {
       "path": "docs/adr/ADR-003-hybrid-not-vector-only.md",
@@ -176,8 +176,8 @@
     },
     {
       "path": "docs/architecture/04-model-system.md",
-      "bytes": 1378,
-      "sha256": "b5ea2e0bcc9e5ea26fc6c670c24726f5ae1cdb0c53d4a8bf2c1aa7034dd6ed43"
+      "bytes": 2289,
+      "sha256": "e5d5ac83ad208d27aaf8b9df18741ca3e0fea3edb7d0f0c48366a037c2fceb56"
     },
     {
       "path": "docs/architecture/05-knowledge-system.md",
@@ -216,8 +216,8 @@
     },
     {
       "path": "docs/architecture/current-implementation-map.md",
-      "bytes": 17869,
-      "sha256": "91687a250e67791cf8072ddfb688a332576414fd246b30bc51c1c45a4ab0c8e2"
+      "bytes": 20021,
+      "sha256": "1f43cf476ddb326953276367482124aba646749e828f8a788f2acd47f169d851"
     },
     {
       "path": "docs/contracts/README.md",
@@ -296,8 +296,8 @@
     },
     {
       "path": "docs/contracts/model-gateway.contract.md",
-      "bytes": 1216,
-      "sha256": "6a62ce1978b4ae3fc7eaf98964b09ac05ea1a01d5d9181e889d72cdd6a72e587"
+      "bytes": 5921,
+      "sha256": "5c37fc9f616a8fcd8c9dbdaf43e81f06a22b3ff574bf3c86db7c9550acb6b8f3"
     },
     {
       "path": "docs/contracts/outcome.contract.md",
@@ -396,8 +396,8 @@
     },
     {
       "path": "docs/invariants/model.invariants.md",
-      "bytes": 1185,
-      "sha256": "6f88fd7ef0f66d36a35c42280a7dd7c95659ffc5d1f56343da694ba653ce397c"
+      "bytes": 1708,
+      "sha256": "c8fa9e1b751c7bbcf5dc780f8f9564bdc7f2448fe517d5327b62370aca55db25"
     },
     {
       "path": "docs/invariants/point-in-time.invariants.md",
@@ -506,8 +506,8 @@
     },
     {
       "path": "docs/releases/V4.8/DETAILED_INDEX.md",
-      "bytes": 1478,
-      "sha256": "36ad81d8fc2265d6dbbfc854659663197f291b9034c9a4b6d406472971404764"
+      "bytes": 1610,
+      "sha256": "5e05e56f732d4dd8d3a7cc41768919a2f0819d27944a655018827dc475b7a2c0"
     },
     {
       "path": "docs/releases/V4.8/NORMALIZED_EXECUTION.md",
@@ -516,13 +516,18 @@
     },
     {
       "path": "docs/releases/V4.8/README.md",
-      "bytes": 2245,
-      "sha256": "c1f2c0fee2ce8efd6d74ce97366e6e192afd935028d7c2f2267077bb02afa19f"
+      "bytes": 2391,
+      "sha256": "04ef7d2c62f97441158f84e794993552baf028c3119c9ec3954bd2f21f6afe26"
     },
     {
       "path": "docs/releases/V4.8/V4_8_0-completion-report.md",
       "bytes": 11092,
       "sha256": "b8ab4aa9fb63b4cb9ca8c3d8ccf085a8d8141bf4a14420c334538958f8d06bbc"
+    },
+    {
+      "path": "docs/releases/V4.8/V4_8_1-completion-report.md",
+      "bytes": 19359,
+      "sha256": "aee987bd730d650c3386629c7241018a10329a42b3c6cc28a8038e11d5a68f9e"
     },
     {
       "path": "docs/releases/V4.8/acceptance.md",
@@ -546,8 +551,8 @@
     },
     {
       "path": "docs/releases/V4.8/migration.md",
-      "bytes": 433,
-      "sha256": "d5899c86965be9a6d2a1a0bd58f2b5db4b708a1bbd7ef29ba21db7af4d9a2459"
+      "bytes": 821,
+      "sha256": "0ec6c0c2534d0d34d95b0431b8eae65e53d63a6276db5c74637cc53f7d9a52ba"
     },
     {
       "path": "docs/releases/V4.8/model-call-inventory.json",
@@ -561,13 +566,13 @@
     },
     {
       "path": "docs/releases/V4.8/rollback.md",
-      "bytes": 763,
-      "sha256": "d6502ce2208a886e8820abba4e4024bad01432aa4264363a66e652f5ea23b824"
+      "bytes": 1176,
+      "sha256": "14ba6f65c8b7e9801e864b78831e9c904a6be1bf62c22137c842f02aa97b7dbf"
     },
     {
       "path": "docs/releases/V4.8/schema.md",
-      "bytes": 358,
-      "sha256": "65018d439a9102a03688d7125ab23126c5143e7b03736af4cda34348ae5a4369"
+      "bytes": 667,
+      "sha256": "2f96a6a88c8e20ab1c2c912392f59c06bdfab28094b80826ab35e86f37eab013"
     },
     {
       "path": "docs/releases/V4.8/subreleases/V4_8_0-llm-call-inventory.md",
@@ -576,8 +581,8 @@
     },
     {
       "path": "docs/releases/V4.8/subreleases/V4_8_1-model-catalog-legacy-profiles.md",
-      "bytes": 6157,
-      "sha256": "273cc86c150e857b2f0859ba9e2d09415862c317a63bdf2cc0cc8e216b3de8bf"
+      "bytes": 7020,
+      "sha256": "1b57f4a09244b4712c8e005448f78561c338f0b1b46658071d81ac3c58ed443b"
     },
     {
       "path": "docs/releases/V4.8/subreleases/V4_8_10-safe-main-pro-escalation.md",

@@ -1,7 +1,7 @@
 # V4.8.1 — Model Catalog + Legacy Profiles
 
 Release: `V4.8`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT — internal Catalog and Legacy Profiles implemented; see [completion report](../V4_8_1-completion-report.md). Gateway dispatch and caller migration remain FUTURE.
 
 ## 1. Why
 
@@ -29,7 +29,7 @@ If paths or ownership changed, update `docs/architecture/current-implementation-
 
 ## 4. Current Behavior
 
-Before V4.8.1, the owning release capability is either absent, partial, or still on the previous accepted implementation.
+V4.8.0 inventory was accepted at `deedc24bf2c9d7717c9cd3119e4cbb39fa6ff360`. Existing direct transports use `modelRouting` and separate legacy Vision capability checks; no Catalog existed. V4.8.1 now adds configuration metadata without migrating those callers.
 
 ## 5. Target Behavior
 
@@ -110,7 +110,7 @@ additive → dual-read if needed → new-write → verified backfill → cutover
 
 ## 16. Resume / Recovery
 
-New checkpoints may add modelState additively; old checkpoints map to Legacy Profile and preserve original research cutoff/evidence/tool state.
+No checkpoint or resume change in V4.8.1. Additive modelState and old-checkpoint Legacy Profile mapping belong to V4.8.9. Catalog identities are not job/model pins and do not establish cross-provider continuation safety.
 
 This subrelease is incomplete if interruption/retry can duplicate completed work, lose evidence, change data cutoff, or corrupt the prior validated state.
 
@@ -122,13 +122,13 @@ No future-information contamination is allowed.
 
 ## 18. Provenance
 
-Persist profile/policy/routing decision/usage metadata, never hidden reasoning.
+Catalog metadata records `source: legacy-env` and safe connection references, with unknown provider/pricing/limits explicitly null. No persistence or routing decision/usage history is added. ModelCall telemetry belongs to V4.8.7 and checkpoint modelState to V4.8.9. Never expose hidden reasoning.
 
 Every newly introduced derived/canonical object must be able to answer “where did this come from?” at the semantic level appropriate to this release.
 
 ## 19. Feature Flag
 
-Use MODEL_ROUTING_MODE and release-specific flags/config; legacy remains an immediate fallback until acceptance.
+No new environment variable or feature flag is introduced. Existing transports stay active. MODEL_ROUTING_MODE and dry-run/policy rollout belong to later authorized subreleases, not this Catalog API.
 
 High-risk behavior should be observable in disabled/dry-run/dual-run mode before becoming canonical where practical.
 
@@ -156,13 +156,15 @@ If this subrelease does not itself introduce a benchmarkable behavior, it must a
 
 ## 23. Rollout
 
-legacy → dry-run → policy/internal → partial production → default only after benchmark gate.
+This subrelease adds an internal configuration API only; it does not activate a new routing mode. Future routing rollout remains legacy → dry-run → policy/internal → partial production → default only after benchmark gates.
 
 Codex must not skip directly to default-on if the release specifies dry-run/dual-run/benchmark stages.
 
 ## 24. Rollback
 
 Disable/revert only this subrelease path while preserving additive data; fall back to the previous accepted subrelease.
+
+Revert the new Catalog/test files, documentation/manifest changes and the behavior-equivalent Vision predicate extraction. No database, configuration, checkpoint or external API rollback is required.
 
 Rollback must not require deleting evidence, historical research, verified facts, audit/provenance data, or user work.
 

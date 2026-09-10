@@ -17,3 +17,7 @@ Business logic expresses capabilities/purpose. Model/provider identity and API d
 Implementation Status: FUTURE. Direct provider/model configuration persists; V4.8 owns Gateway.
 
 The ACCEPTED decision above is unchanged. Implementation status describes evidence, not permission to reverse the decision. See [implementation map](../architecture/current-implementation-map.md) and [gap register](../releases/H0/audit-findings.md).
+
+## V4.8.1 implementation assessment
+
+Implementation Status: PARTIAL. ModelProfile v1 and legacy configuration Catalog now exist, reusing current configuration and Vision capability owners. No provider adapter or business-call migration has occurred. Model-name checks remain isolated legacy compatibility facts, not evidence that the target business boundary is enforced. The accepted decision is unchanged; later subreleases must extend this Catalog and the existing request/stream guards.

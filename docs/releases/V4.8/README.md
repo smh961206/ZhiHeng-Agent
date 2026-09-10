@@ -4,7 +4,7 @@ Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next autho
 
 ## Accepted progress
 
-V4.8.0 call inventory is complete: [inventory](model-call-inventory.md), [acceptance report](V4_8_0-completion-report.md). V4.8.1–V4.8.11 remain FUTURE; no Gateway, profile, model policy or runtime migration is implemented yet. CURRENT remains V4.8.
+V4.8.0 call inventory is complete: [inventory](model-call-inventory.md), [acceptance report](V4_8_0-completion-report.md). V4.8.1 internal Catalog and Legacy Profiles are implemented: [acceptance report](V4_8_1-completion-report.md). V4.8.2–V4.8.11 remain FUTURE; no Gateway dispatch, model policy or caller migration is implemented yet. CURRENT remains V4.8; next is V4.8.2 after authorization.
 
 ## Goal
 

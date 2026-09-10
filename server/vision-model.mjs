@@ -1,8 +1,11 @@
 // Capability is deliberately exact: a name containing "vision" is not proof.
 import {modelRouting,publicModelRouting} from './model-routing.mjs';
+export function legacyVisionImageInput(model,inputMode){
+ return inputMode!=='off'&&(model==='deepseek-v4-flash-vision-exp'||inputMode==='images');
+}
 export function visionStatus(env=process.env){
  const {visionModel:model,visionKey}=modelRouting(env);
- const enabled=env.LLM_VISION_INPUT!=='off'&&!!visionKey&&(model==='deepseek-v4-flash-vision-exp'||env.LLM_VISION_INPUT==='images');
+ const enabled=!!visionKey&&legacyVisionImageInput(model,env.LLM_VISION_INPUT);
  return {enabled,model,...publicModelRouting(env),documentPipeline:true,transport:'image_url',pdfDirect:false,pdfMode:'selective-page-images',
   message:enabled?'普通文档提取后交给 Pro；扫描页、图表与截图先由 Vision 读取，再由 Pro 分析与审计':'普通文档交给 Pro；Vision 未启用，图像内容保留识别缺口'};
 }

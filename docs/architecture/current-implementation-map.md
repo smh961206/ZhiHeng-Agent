@@ -4,6 +4,8 @@ Status: CURRENT — calibrated during H0 against checkout `b7592abc4b888e218bbdf
 
 Runtime: React 19 / Vite 6, Node >=22.13, MongoDB / GridFS. `shared/research-framework.mjs` declares framework 4.7 and contract version 7. The Harness CURRENT pointer is separate from runtime/Knowledge versions. No Model Gateway exists.
 
+V4.8.1 update: internal legacy configuration Catalog is implemented below; Gateway dispatch remains FUTURE. The H0 inventory and V4.8.0 call inventory remain historical baselines.
+
 ## Status and evidence
 
 CURRENT describes an implemented behavior; PARTIAL describes an existing predecessor of an incomplete target contract; FUTURE is a design reservation. DEPRECATED requires an approved migration: H0 newly deprecates nothing. Archived Knowledge and legacy readers remain compatibility assets.
@@ -23,6 +25,18 @@ Tests: `tests/model-request.test.mjs`, `tests/model-deadline.test.mjs`, `tests/s
 FUTURE: V4.8 Gateway, policy/health/tier/usage platform; V4.9 canonical Vision. Reuse existing transport protections, not a second stream parser. Cross-provider continuation is not currently guaranteed.
 
 V4.8.0 refines this baseline with [four production transports and ten purpose/caller entries](../releases/V4.8/model-call-inventory.md), including both router purposes, forced-draft completion, supplementary review, four Vision readers and separate live diagnostic requests. This is inventory completion, not Gateway implementation; runtime owners remain unchanged.
+
+## Model Catalog and Legacy Profiles — CURRENT; Gateway contract PARTIAL
+
+Owner: `server/model-catalog.mjs` adds a pure internal metadata API and validated, immutable ModelProfile v1. It reuses `server/model-routing.mjs` for model defaults and `server/vision-model.mjs` for the shared legacy image capability predicate. Existing callers still dispatch through their original transports; no duplicate provider client, request parser or routing system was added.
+
+Three stable legacy identities describe analysis (research/review/followup), router (path and security intent, including its model override), and Vision. Router and analysis reference the same existing connection owner. Catalog serialization excludes credentials, connection URLs and unrelated environment fields. Capabilities describe configured usage; provider identity, optional structured/reasoning support, pricing and provider token limits remain unknown where not established. Vision readiness still separately requires credentials.
+
+Tests: `tests/model-catalog.test.mjs`, `tests/visual-reading.test.mjs`, and the existing model/router/stream regressions. Catalog metadata is not a provider certification, health signal, job pin or working Gateway. Schema version 1 belongs to configuration; no research/checkpoint schema or runtime/framework version changes.
+
+V4.8.1 review tightened metadata validation: dense purpose lists and enumerable data-only records prevent accepted values from changing or disappearing during copying/serialization. Accessor properties and array overrides are rejected; normal legacy profiles and transport behavior remain compatible.
+
+FUTURE: V4.8.2 normalizes requests/responses; V4.8.3/V4.8.4 migrate existing callers. Credential resolution remains with `modelRouting`; future adapters must use the catalog and existing transport guards rather than recreate them. Stable policy slots, telemetry, health, escalation and model-state persistence remain later subreleases.
 
 ## Research orchestration — CURRENT
 

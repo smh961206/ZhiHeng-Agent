@@ -1,0 +1,95 @@
+import {modelRouting} from './model-routing.mjs';
+import {legacyVisionImageInput} from './vision-model.mjs';
+
+/**
+ * @typedef {Object} ModelProfile
+ * @property {1} schemaVersion Configuration schema, not a research schema.
+ * @property {string} id Stable configuration identity; not a job/model pin.
+ * @property {'legacy-env'} source
+ * @property {string} model Opaque model ID, preserved verbatim.
+ * @property {string|null} provider Unknown for arbitrary compatible endpoints.
+ * @property {'openai-chat-completions'} protocol Wire family, not provider identity.
+ * @property {'legacy-analysis'|'legacy-vision'} connectionRef Server-only lookup
+ *   through modelRouting; URLs and credentials do not belong in this object.
+ * @property {'legacy'} tier Does not infer MAIN/PRO from a model name.
+ * @property {Array<'research'|'review'|'followup'|'router'|'vision'>} purposes
+ * @property {{textInput:boolean|null,imageInput:boolean|null,streaming:boolean|null,
+ *   toolCalling:boolean|null,jsonObject:boolean|null,jsonSchema:boolean|null,
+ *   reasoningControl:boolean|null}} capabilities Configured transport usage,
+ *   not provider certification. Unknown support is null, never assumed true.
+ * @property {number|null} contextWindow Unknown token limit is null.
+ * @property {number|null} maxOutputTokens Provider limit, not per-request budget.
+ * @property {{currency:string,unit:'per-million-tokens',input:number|null,
+ *   output:number|null,cacheRead:number|null}|null} pricing Unknown is not free.
+ */
+
+const fields=['schemaVersion','id','source','model','provider','protocol','connectionRef','tier','purposes','capabilities','contextWindow','maxOutputTokens','pricing'];
+const capabilityFields=['textInput','imageInput','streaming','toolCalling','jsonObject','jsonSchema','reasoningControl'];
+const purposes=['research','review','followup','router','vision'];
+const invalid=()=>{throw new TypeError('Invalid ModelProfile metadata');};
+// Accept data-only records: spreading accessors after validation can read a
+// different value, and non-enumerable fields silently disappear from snapshots.
+const record=(value,keys)=>{
+ if(!value||Object.getPrototypeOf(value)!==Object.prototype||Reflect.ownKeys(value).length!==keys.length||keys.some(key=>!Object.hasOwn(value,key)))invalid();
+ const result={};
+ for(const key of keys){
+  const descriptor=Object.getOwnPropertyDescriptor(value,key);
+  if(!descriptor?.enumerable||!Object.hasOwn(descriptor,'value'))invalid();
+  result[key]=descriptor.value;
+ }
+ return result;
+};
+const purposeList=value=>{
+ if(!Array.isArray(value)||Object.getPrototypeOf(value)!==Array.prototype||!value.length||value.length>purposes.length)invalid();
+ const descriptors=Object.getOwnPropertyDescriptors(value);
+ if(Reflect.ownKeys(descriptors).length!==value.length+1)invalid();
+ const result=Array.from({length:value.length},(_,index)=>{
+  const descriptor=descriptors[index];
+  if(!descriptor?.enumerable||!Object.hasOwn(descriptor,'value')||!purposes.includes(descriptor.value))invalid();
+  return descriptor.value;
+ });
+ if(new Set(result).size!==result.length)invalid();
+ return result;
+};
+const text=value=>typeof value==='string'&&value.trim().length>0;
+const tokenLimit=value=>value===null||Number.isSafeInteger(value)&&value>0;
+
+/** Validate, copy and deeply freeze a profile. Never attach an env or a secret. */
+export function createModelProfile(input){
+ input=record(input,fields);
+ if(input.schemaVersion!==1||!text(input.id)||input.source!=='legacy-env'||!text(input.model)||
+  !(input.provider===null||text(input.provider))||input.protocol!=='openai-chat-completions'||
+  !['legacy-analysis','legacy-vision'].includes(input.connectionRef)||input.tier!=='legacy')invalid();
+ input.purposes=purposeList(input.purposes);
+ input.capabilities=record(input.capabilities,capabilityFields);
+ if(capabilityFields.some(key=>input.capabilities[key]!==null&&typeof input.capabilities[key]!=='boolean'))invalid();
+ if(!tokenLimit(input.contextWindow)||!tokenLimit(input.maxOutputTokens))invalid();
+ let pricing=null;
+ if(input.pricing!==null){
+  input.pricing=record(input.pricing,['currency','unit','input','output','cacheRead']);
+  if(typeof input.pricing.currency!=='string'||!/^[A-Z]{3}$/.test(input.pricing.currency)||input.pricing.unit!=='per-million-tokens'||
+   ['input','output','cacheRead'].some(key=>input.pricing[key]!==null&&!(typeof input.pricing[key]==='number'&&Number.isFinite(input.pricing[key])&&input.pricing[key]>=0)))invalid();
+  pricing=Object.freeze({...input.pricing});
+ }
+ return Object.freeze({...input,purposes:Object.freeze([...input.purposes]),capabilities:Object.freeze({...input.capabilities}),pricing});
+}
+
+/**
+ * Pure metadata snapshot. Existing transports still own requests/readiness.
+ * Connection refs intentionally omit even base URLs: URLs can contain secrets.
+ * Resolve credentials at the future Gateway boundary, never through serialization.
+ */
+export function createLegacyModelCatalog(env=process.env){
+ const {analysisModel,visionModel}=modelRouting(env);
+ const profile=(id,model,connectionRef,profilePurposes,capabilities)=>createModelProfile({
+  schemaVersion:1,id,source:'legacy-env',model,provider:null,protocol:'openai-chat-completions',
+  connectionRef,tier:'legacy',purposes:profilePurposes,
+  capabilities:{textInput:true,imageInput:false,streaming:false,toolCalling:false,jsonObject:null,jsonSchema:null,reasoningControl:null,...capabilities},
+  contextWindow:null,maxOutputTokens:null,pricing:null,
+ });
+ return Object.freeze({schemaVersion:1,profiles:Object.freeze([
+  profile('legacy-analysis',analysisModel,'legacy-analysis',['research','review','followup'],{streaming:true,toolCalling:true}),
+  profile('legacy-router',env.LLM_ROUTER_MODEL||analysisModel,'legacy-analysis',['router'],{}),
+  profile('legacy-vision',visionModel,'legacy-vision',['vision'],{imageInput:legacyVisionImageInput(visionModel,env.LLM_VISION_INPUT)}),
+ ])});
+}

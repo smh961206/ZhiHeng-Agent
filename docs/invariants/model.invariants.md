@@ -12,3 +12,7 @@
 Current enforcement: model-stream retains reasoning only in private messages; job-stream publicJob removes checkpoints; streaming and research-resume tests cover public leakage. model-request retries pre-response transport failures without tier switching. Cross-provider state isolation and catalog/routing policies remain V4.8 targets. No new model guard is imposed on legacy code in H0.
 
 See [fitness baseline](../development/architecture-fitness.md). No ENFORCED obligation is weakened; unproven coverage is recorded separately.
+
+## V4.8.1 evidence
+
+Catalog serialization and schema tests in `tests/model-catalog.test.mjs` exclude credentials/URLs and require explicit capability fields, preserving unknowns. Vision catalog metadata and runtime readiness reuse the same legacy image predicate, tested against the previous truth table. This does not enforce INV-MDL-001 through INV-MDL-005: business calls are not migrated and state isolation/policy are still future work. INV-MDL-006 remains unchanged; no reasoning or public telemetry field is added.

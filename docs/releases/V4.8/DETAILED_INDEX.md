@@ -4,7 +4,7 @@ Every subrelease below follows `docs/development/NORMALIZED_RELEASE_STANDARD.md`
 
 Codex must execute them in order unless the user explicitly requests one specific subrelease.
 
-Accepted: V4.8.0, documented in the [completion report](V4_8_0-completion-report.md). Next subrelease: V4.8.1; it has not started.
+Accepted: [V4.8.0 inventory](V4_8_0-completion-report.md) and [V4.8.1 Catalog / Legacy Profiles](V4_8_1-completion-report.md). Next subrelease: V4.8.2; it has not started and requires authorization. CURRENT remains V4.8; the complete release is not yet accepted.
 
 - [V4.8.0 — LLM call inventory](subreleases/V4_8_0-llm-call-inventory.md)
 - [V4.8.1 — Model Catalog + Legacy Profiles](subreleases/V4_8_1-model-catalog-legacy-profiles.md)

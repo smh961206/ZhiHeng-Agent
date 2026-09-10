@@ -10,4 +10,4 @@ Execute H0 only.
 6. Run the complete existing test suite.
 7. Report architecture overlaps, stale documentation and risks.
 8. On success, change `docs/releases/CURRENT` from `H0` to `V4.8`.
-9. Stop. Do not implement V4.8 in the same task unless the user explicitly requests it.
+9. Stop. Do not implement V4.8 in this task. The H0 handoff is not authorization to start it.

@@ -1,38 +1,36 @@
 # Investment Domain Object Model
 
-Status labels:
-- CURRENT: canonical implementation exists.
-- PARTIAL: similar capability exists but target contract is incomplete.
-- FUTURE: design reservation only.
-- DEPRECATED: migration away is approved.
+Status: CURRENT — H0 classification of target objects, not a claim that all canonical contracts exist.
 
-| Object | Status at baseline | Target role |
+CURRENT = implemented named behavior; PARTIAL = existing predecessor with incomplete target contract; FUTURE = design reservation; DEPRECATED = approved migration away. No new deprecations in H0.
+
+| Object | Implementation status | Current boundary |
 |---|---|---|
-| Source | PARTIAL | identity of raw external/internal source |
-| Evidence | CURRENT/PARTIAL | source-grounded research evidence |
-| Issuer | FUTURE/PARTIAL | stable legal-economic entity |
-| Security | PARTIAL | instrument identity |
-| Listing | FUTURE/PARTIAL | exchange/ticker/time-bounded listing |
-| ShareClass | FUTURE/PARTIAL | A/H/ADR/ADS/etc. semantics |
-| Metric | PARTIAL | canonical financial/business metric |
-| Fact | PARTIAL | point-in-time normalized fact |
-| Calculation | CURRENT/PARTIAL | deterministic derived result |
-| Assumption | FUTURE | explicit non-fact input |
-| Hypothesis | FUTURE | competing causal explanation |
-| Claim | FUTURE | research proposition to verify |
-| Belief | FUTURE | calibrated confidence in a claim |
-| Forecast | FUTURE | future derived projection |
-| Scenario | PARTIAL/FUTURE | explicit world-state branch |
-| Valuation | CURRENT/PARTIAL | valuation result with lineage |
-| Event | PARTIAL | structured material event |
-| ResearchState | FUTURE/PARTIAL | canonical structured research state |
-| ResearchDelta | FUTURE | structured state change |
-| Mandate | FUTURE | investor constraints/objective |
-| Decision | FUTURE | policy-governed capital action |
-| Position | FUTURE | portfolio holding |
-| Portfolio | FUTURE | capital-allocation state |
-| Outcome | FUTURE | realized decision/research outcome |
-| Failure | FUTURE | structured system failure |
-| KnowledgeRule | PARTIAL | versioned research rule |
+| Source | PARTIAL | Current source objects and hashes; unified time/identity contract future |
+| Evidence | PARTIAL | Current blocks/pages/citations; canonical EvidenceRecord future |
+| Issuer | FUTURE | Directory company/CIK fields are not canonical issuer identity |
+| Security | PARTIAL | Current A/H/US resolution; stable entity contract future |
+| Listing | FUTURE | Current exchange labels are not time-bounded Listing entities |
+| ShareClass | FUTURE | Current share-basis guards are not canonical share-class history |
+| Metric | PARTIAL | Current aliases/provider metrics; ontology future |
+| Fact | PARTIAL | Current observations and original-number checks; verified Fact engine future |
+| Calculation | PARTIAL | Current deterministic tools/records; formula identity and DAG future |
+| Assumption | FUTURE | Current basis text/parameters; registry future |
+| Hypothesis | FUTURE | Current public plan text; canonical entity/evaluation future |
+| Claim | FUTURE | Current citations/audit; canonical claim dependencies future |
+| Belief | FUTURE | Current confidence labels; calibrated belief objects future |
+| Forecast | FUTURE | Current DCF projections; driver Forecast engine future |
+| Scenario | PARTIAL | Current sensitivity/dividend scenarios; canonical world-state branches future |
+| Valuation | PARTIAL | Current math/snapshots/review; unified lineage future |
+| Event | PARTIAL | Current shareholder/disclosure events; general materiality/dependency propagation future |
+| ResearchState | PARTIAL | Current structured jobs/review; canonical company state future |
+| ResearchDelta | FUTURE | Current earnings baseline comparison; canonical delta future |
+| Mandate | FUTURE | Current portfolio constraints; mandate entity future |
+| Decision | FUTURE | Current research action output; decision-policy engine future |
+| Position | FUTURE | No canonical holding engine |
+| Portfolio | FUTURE | Current portfolio research mode; canonical allocation engine future |
+| Outcome | FUTURE | researchOutcome is a summary, not realized attribution |
+| Failure | FUTURE | Current errors/receipts; normalized learning registry future |
+| KnowledgeRule | PARTIAL | Current indexed modules/sections and pinned usage; stable Rule IDs/ontology future |
 
-Do not implement FUTURE objects before the release that owns them.
+See [implementation map](current-implementation-map.md). FUTURE objects must not be implemented before their owning release.

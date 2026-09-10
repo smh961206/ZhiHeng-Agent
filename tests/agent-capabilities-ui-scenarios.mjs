@@ -141,11 +141,11 @@ export function registerAgentCapabilityScenarios({test,makeJob,detail,detailActi
  });
  for(const width of [320,1440]){
   test('agent-capabilities-pages-'+width,{viewport:{width,height:1000}},async({page,requests})=>{
-   await page.goto('/');await textIncludes(page.getByRole('region',{name:'研究执行能力'}),'按原文核对数字');
+   await page.goto('/');await textIncludes(page.getByRole('region',{name:'研究执行能力'}),'回到指定原页');
    assert.equal(await page.getByRole('link',{name:'阅读研究实例',exact:true}).count(),0);
    await noOverflow(page,'capabilities home '+width);await screenshot(page,'agent-home-'+width);
    await page.getByRole('region',{name:'研究执行能力'}).scrollIntoViewIfNeeded();await screenshot(page,'agent-capabilities-'+width,'.agent-capabilities');
-   await page.getByRole('link',{name:'了解研究流程',exact:true}).first().click();
+   await page.getByRole('region',{name:'研究执行能力'}).getByRole('link',{name:'查看取证与复核说明',exact:true}).click();
    await page.locator('.research-usage').waitFor();
    assert.equal(await page.getByRole('tab',{name:'研究实例',exact:true}).count(),0);
    await noOverflow(page,'capabilities handbook '+width);

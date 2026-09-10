@@ -1,12 +1,14 @@
 # V5.4 — Data Contracts / Hybrid Retrieval
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Canonicalize source/evidence metadata and add BM25 + semantic retrieval around existing exact/page retrieval.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V5.4.0 — Source contract:** New writes canonical Source metadata; old reads normalize on access.
 - **V5.4.1 — Evidence contract:** Canonical evidence/page/block/table/extraction metadata.

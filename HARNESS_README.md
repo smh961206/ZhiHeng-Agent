@@ -67,3 +67,7 @@ ZhiHeng 最终不是“集成更多模型的投资 Agent”，而是：
 具体路线见：
 
 `docs/roadmap/MASTER-ROADMAP.md`
+
+## H0 calibrated baseline
+
+The actual runtime framework is 4.7; Harness CURRENT is independent. Use `CODEX_EXECUTION_PROTOCOL.md` and `docs/releases/H0/DETAILED_INDEX.md` for exact execution order. See `docs/architecture/current-implementation-map.md` and `docs/releases/H0/audit-findings.md` for implemented capabilities and unresolved gaps. Accepted ADRs do not imply completed future implementations.

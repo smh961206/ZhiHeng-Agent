@@ -2,6 +2,8 @@
 
 ## Default
 
+CURRENT selects authorized work, not implemented capability status. A newly activated release remains unimplemented until its own acceptance evidence exists. DETAILED_INDEX and linked normalized subreleases determine execution order; historical overview groupings do not override them.
+
 Read `docs/releases/CURRENT`.
 
 If CURRENT is `H0`, execute H0 only.

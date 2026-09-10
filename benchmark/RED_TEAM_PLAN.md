@@ -17,3 +17,7 @@ Build frozen cases for:
 - forecast represented as fact;
 - hidden model reasoning leakage;
 - resume after pending tool/model boundary.
+
+## H0 implementation status
+
+Status: FUTURE — design reservation. This directory has no executable unified benchmark runner/graders. Current synthetic fixtures, regression runners and explicit live diagnostics are mapped in [the implementation map](../docs/architecture/current-implementation-map.md). V5.0 owns the unified benchmark platform; H0 does not implement it.

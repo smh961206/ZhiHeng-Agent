@@ -1,12 +1,14 @@
 # V5.6 — Calculation / Assumption / Claim Dependency DAG
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Wrap existing deterministic math with formula/input lineage; introduce explicit assumptions/claims and dependency-based staleness.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V5.6.0 — Calculation registry:** Canonical calculation output around existing tools.
 - **V5.6.1 — Formula registry:** Version ROIC/FCF/PE/PB/DCF/DDM/SOTP/TSR semantics.

@@ -1,12 +1,14 @@
 # V5.5 — Security Master / Point-in-Time Fact Engine
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Introduce stable entity identity and canonical point-in-time facts by evolving current security/financial observation modules.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V5.5.0 — Security Master domain:** Issuer/Security/Listing/ShareClass additive objects around current resolver.
 - **V5.5.1 — Identifier resolution:** Ticker/name/ISIN/CIK etc. resolve to stable IDs with time validity.

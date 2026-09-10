@@ -24,7 +24,7 @@ It does not mean:
 - current price targets;
 - current thesis conclusions.
 
-## Lifecycle
+## Target governance lifecycle — FUTURE
 
 Production/benchmark issue
 → Root-cause classification
@@ -43,3 +43,7 @@ Natural-language rule
 → executable invariant / deterministic engine where appropriate.
 
 Knowledge should not grow forever as prompt text.
+
+## H0 calibration
+
+CURRENT: ENTRY/modules.json/modules/rules, indexed sections, lazy rule loading, validated complete job snapshots, same-version update handling and exact usage/excerpt provenance. FUTURE: target directory layering, ontology, canonical Rule IDs/K-Series and full proposal/regression/governance lifecycle. Existing snapshot pinning must be reused.

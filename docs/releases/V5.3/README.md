@@ -1,12 +1,14 @@
 # V5.3 — Knowledge Engineering
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Evolve existing Knowledge/snapshot modules into a versioned, testable, scoped and eventually executable knowledge system without rewriting all content at once.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V5.3.0 — Knowledge inventory:** Assign module/section IDs and hashes; map current snapshots.
 - **V5.3.1 — Rule IDs/metadata:** Structure 20–50 highest-impact rules first.

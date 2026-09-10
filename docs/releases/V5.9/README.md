@@ -1,12 +1,14 @@
 # V5.9 — Decision Intelligence
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Separate high-quality company research from investor-specific action using mandates, opportunity cost and robustness.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V5.9.0 — Investment Mandate:** Objective/horizon/return/risk/liquidity/concentration constraints.
 - **V5.9.1 — Decision Readiness:** ready/conditional/not_ready and blocking reasons.

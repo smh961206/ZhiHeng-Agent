@@ -9,3 +9,7 @@ Every contract should state implementation status:
 - DEPRECATED
 
 A FUTURE contract is a design reservation only.
+
+## H0 status interpretation
+
+A PARTIAL contract has implemented predecessors; fields described as mature/eventual/target are not asserted to exist. Each contract has one implementation status. Acceptance of a design is separate from its runtime implementation. See [H0 implementation map](../architecture/current-implementation-map.md).

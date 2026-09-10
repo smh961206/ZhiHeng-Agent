@@ -8,3 +8,9 @@ Reserved fields:
 researchTarget, asOf, mode, hypotheses/claims, evidenceRequirements, methods, constraints, output requirements.
 
 Do not implement Research IR runtime opportunistically in earlier releases.
+
+## H0 implementation evidence
+
+Current research plans and public execution steps do not implement this reserved IR.
+
+See [implementation map](../architecture/current-implementation-map.md) and [audit findings](../releases/H0/audit-findings.md). H0 changes no persisted object, field requirements, API, migration or financial meaning.

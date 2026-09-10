@@ -1,12 +1,14 @@
 # V5.2 — Flagship Pool / Judge
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Use flagship models only for exceptional complexity, critical review or adjudication.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V5.2.0 — Flagship profile pool:** Flagship tier exists but is not default Main.
 - **V5.2.1 — Critical reviewer:** Escalate repeated semantic/review failure.

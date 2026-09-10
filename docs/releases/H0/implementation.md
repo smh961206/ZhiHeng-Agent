@@ -1,70 +1,22 @@
-# H0 Implementation Plan
+# H0 — Harness Calibration
 
-## Release goal
-Install and validate the Codex engineering control plane with zero investment-research runtime behavior change.
+Status: ACTIVE while CURRENT=H0; acceptance is recorded in the completion report.
+
+Zero investment-research runtime change. Follow [DETAILED_INDEX](DETAILED_INDEX.md) and [normalized execution](NORMALIZED_EXECUTION.md).
 
 ## Sequence
-## H0.0 — Repository inventory
 
-### Objective
-Scan current server/src/shared/tests/docs/knowledge/package/env structure and update current implementation map.
+- **H0.0 — Repository inventory**
+- **H0.1 — Harness control-plane validation**
+- **H0.2 — Baseline architecture fitness**
+- **H0.3 — H0 acceptance & CURRENT handoff**
 
-### Required implementation discipline
-- Inspect current equivalent modules before creating new files.
-- Prefer additive/compatible changes.
-- Add/adjust tests at this step.
-- Keep the repository runnable before moving to the next subrelease.
-- Do not implement later subrelease behavior early unless it is a pure compatible prerequisite.
+## Boundaries
 
-### Stop condition
-This subrelease is complete only when its tests pass and no owning invariant is weakened.
-## H0.1 — Control-plane install
+Inspect actual executable code/tests first. Correct Harness paths, status and ownership; do not modify business logic, models/routing, financial algorithms, Evidence, Knowledge content, acquisition, schemas or future features. H0 may add documentation/static checks. The user-approved test-preparation exception adds shared/ to the deployment fixture copy list without changing assertions. The subsequent user instruction to resolve the recorded failures additionally authorizes test-only alignment in workspace-ui.integration.mjs, workflow-ui-scenarios.mjs and agent-capabilities-ui-scenarios.mjs: current UI selectors/copy/preconditions and asynchronous observation waits. Preserve all scenarios and equivalent business, financial, Evidence, privacy and recovery assertions; no product changes. See [failure analysis](test-failure-analysis.md).
 
-### Objective
-Install/validate AGENTS, architecture, ADR, contracts, invariants, roadmap and release folders.
+## Gates
 
-### Required implementation discipline
-- Inspect current equivalent modules before creating new files.
-- Prefer additive/compatible changes.
-- Add/adjust tests at this step.
-- Keep the repository runnable before moving to the next subrelease.
-- Do not implement later subrelease behavior early unless it is a pure compatible prerequisite.
+H0.0 maps current code and test owners; H0.1 aligns contracts/invariants/ADRs/navigation; H0.2 adds safe static checks without enforcing future architecture; H0.3 runs every existing test suite, proves runtime files unchanged and reports. See [testing](../../development/testing.md).
 
-### Stop condition
-This subrelease is complete only when its tests pass and no owning invariant is weakened.
-## H0.2 — Baseline alignment
-
-### Objective
-Mark every future concept CURRENT/PARTIAL/FUTURE; identify overlaps and stale docs.
-
-### Required implementation discipline
-- Inspect current equivalent modules before creating new files.
-- Prefer additive/compatible changes.
-- Add/adjust tests at this step.
-- Keep the repository runnable before moving to the next subrelease.
-- Do not implement later subrelease behavior early unless it is a pure compatible prerequisite.
-
-### Stop condition
-This subrelease is complete only when its tests pass and no owning invariant is weakened.
-## H0.3 — Test baseline
-
-### Objective
-Run full existing suite and record baseline; no production behavior changes.
-
-### Required implementation discipline
-- Inspect current equivalent modules before creating new files.
-- Prefer additive/compatible changes.
-- Add/adjust tests at this step.
-- Keep the repository runnable before moving to the next subrelease.
-- Do not implement later subrelease behavior early unless it is a pure compatible prerequisite.
-
-### Stop condition
-This subrelease is complete only when its tests pass and no owning invariant is weakened.
-
-
-## Cross-cutting requirements
-- Preserve resume/recovery.
-- Preserve evidence safety.
-- Preserve point-in-time behavior.
-- Preserve existing financial formulas unless this release explicitly owns a formula version change.
-- Every persistent schema change requires migration and rollback documentation.
+Only after all acceptance gates pass, set CURRENT=V4.8 and stop. Do not implement V4.8 in this task. Any unresolved failure leaves CURRENT=H0. No schema/API/migration/feature-flag change.

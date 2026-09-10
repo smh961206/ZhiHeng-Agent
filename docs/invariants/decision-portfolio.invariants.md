@@ -5,3 +5,9 @@
 - INV-DEC-003 [TARGET V5.9]: Cash is a valid opportunity.
 - INV-PORT-001 [TARGET V5.10]: position recommendation accounts for portfolio constraints, not company attractiveness alone.
 - INV-PORT-002 [TARGET V5.10]: portfolio risk includes thesis/assumption concentration where available.
+
+## H0 enforcement evidence and limits
+
+Current portfolioContext/readiness and mode-E execution review exist; tests execution-discipline and research-contract cover them. Canonical mandate-linked Decision/Portfolio engines remain future.
+
+See [fitness baseline](../development/architecture-fitness.md). No ENFORCED obligation is weakened; unproven coverage is recorded separately.

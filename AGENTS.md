@@ -160,3 +160,7 @@ Every implementation must report:
 18. Deferred future-release work
 
 Do not report only “done”.
+
+## H0 calibration notes
+
+Use `CODEX_EXECUTION_PROTOCOL.md` and `docs/releases/H0/DETAILED_INDEX.md` for H0 order. The Model Gateway rule is an accepted target boundary: current direct call sites are mapped, not migrated in H0. Runtime framework/Knowledge version 4.7 is distinct from the Harness release pointer. See `docs/releases/H0/audit-findings.md` for current enforcement gaps; permanent rules above are unchanged.

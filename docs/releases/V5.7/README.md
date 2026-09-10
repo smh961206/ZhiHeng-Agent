@@ -1,12 +1,14 @@
 # V5.7 — Hypothesis / Belief / Forecast / Research State
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Move from one-shot report reasoning toward explicit competing hypotheses, calibrated beliefs, driver forecasts/scenarios and canonical Research State.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V5.7.0 — Hypothesis objects:** Multiple competing explanations with support/counter evidence.
 - **V5.7.1 — Belief objects:** Prior/current probability and uncertainty type.

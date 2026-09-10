@@ -5,7 +5,7 @@ source_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 work="$(mktemp -d)"
 project="zhiheng-deploy-test-$(date +%s)-$$"
 cp "$source_dir"/{Dockerfile,.dockerignore,package.json,pnpm-lock.yaml,pnpm-workspace.yaml,index.html,vite.config.js,jsconfig.json,compose.production.yaml,deploy.sh,.env.production.example} "$work/"
-cp -r "$source_dir"/{src,public,server,scripts,knowledge} "$work/"
+cp -r "$source_dir"/{src,public,server,shared,scripts,knowledge} "$work/"
 cd "$work"
 sed -i "s/^name: zhiheng-production/name: $project/" compose.production.yaml
 cp .env.production.example .env.production

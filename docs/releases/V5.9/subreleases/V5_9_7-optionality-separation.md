@@ -1,7 +1,7 @@
 # V5.9.7 — Optionality Separation
 
 Release: `V5.9`
-Status: `FUTURE` unless this release/subrelease is explicitly active under `docs/releases/CURRENT`.
+Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 

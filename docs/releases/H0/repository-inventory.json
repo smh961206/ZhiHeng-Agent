@@ -1,0 +1,5308 @@
+{
+  "baselineCommit": "b7592abc4b888e218bbdfca958230366919ea3bb",
+  "scope": "Tracked executable code, tests, active Knowledge and runtime/deployment inputs. Lexical import/export inventory; not a semantic proof. Historical knowledge/versions remains preserved, outside the active runtime inventory.",
+  "files": [
+    {
+      "path": "Dockerfile",
+      "sha256": "7b9f0e336b1432516bcb95a0049d893b3f4f9d2e01a23b2e55323f76ccc0827d",
+      "area": "Dockerfile",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "compose.production.yaml",
+      "sha256": "af55719fe6c978af3e4491c0eef6bd0d1815b0d57ad8c04b7612fed6546e112a",
+      "area": "compose.production.yaml",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "compose.yaml",
+      "sha256": "483aba185991e33a0cbeb43515d720531078ebea5e8e78af84435d3cff1ffe7f",
+      "area": "compose.yaml",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "deploy.sh",
+      "sha256": "555d30100ee97045cab22992236e87c01b16fd97263eef721400d40d90479e1d",
+      "area": "deploy.sh",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/ENTRY.md",
+      "sha256": "e83f23d3936d5bddeb503edea2df968094a3774c8e3e8af58eeb60f3eb3c5b22",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules.json",
+      "sha256": "8e9644e2ef63a610b45ffcca8c88492652ac49633fc905626a3c1dfd8dcf03bf",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/00-overview.md",
+      "sha256": "269d08d6dcadaaff13718ac32e44459ef9fb7bb6682b94834a4ca585e9b40564",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/01-mode-a.md",
+      "sha256": "58aeba993fbc821d0861060b26785edf3aad3218ac76ab99441f1912b0659df6",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/01-mode-b.md",
+      "sha256": "dd477053735c8fb7e4def5c85dff93730c694d2854fc244d4dd523d57b9a7014",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/01-mode-c.md",
+      "sha256": "6cb748aca352401f0d205d0e87e854089ec91d32d9e8dbf44eaa32880ef0f422",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/01-mode-d.md",
+      "sha256": "6b9df56ce2a079dbe85c7405124dc8e6f7712760e3f5a651ee0c430b9d17f774",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/01-mode-e.md",
+      "sha256": "74bbf2ef099cb54e0f7bd38a0e06c86add32d9fe02d53d76bc73cccf7ff646ec",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/01-mode-f.md",
+      "sha256": "83bb96d0aff9cc3f7a9b3f3ccafe996743c6ed85398845585e28e50734010098",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/01-router.md",
+      "sha256": "ab65c0b85e0228e965ca10160fa026df4f507c17c082529155e07127f45c5945",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/01-routing-links.md",
+      "sha256": "52a02762b2bf970c520ccf8a1b8be7acb89f4432d0fed4dfb2d17f139a781906",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/01-routing-principles.md",
+      "sha256": "3e3d4799305ffd6f761cb69eb9f1d28c7160f5bda778c6338f8a3309038c3f7f",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/02-execution-graph.md",
+      "sha256": "acc078e595c7cc5b30c3a31a433dd1d53be4ffe8321bf92a21f6be35d3a623e6",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/03-data.md",
+      "sha256": "24b916211da7951cc443c3b061889977d6a6904f6a370ba51e7cb6f7e285da9e",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/04-fundamental.md",
+      "sha256": "94e4ae42c05b55169376f017ee34eb527476d8080df79fa62526289892e41adb",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/05-financial.md",
+      "sha256": "487e8312179dd2ad7d743776e737a4f03dec2e5cda1c6882e07d4129edb2f355",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/06-shareholder-return.md",
+      "sha256": "e130d798a0aaf522df504df928f6ad62fcdecf16320c3f0883b4fab656288080",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/07-valuation.md",
+      "sha256": "3414387565c5fc6b8252de999c0281e54047ec52583deb04f60a06bd5e40b5f4",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/08-risk-pricing.md",
+      "sha256": "b75afd2d38523c115d7373f58a96b35e3088cf2db91cb798dfb9aff8db60247b",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/09-decision.md",
+      "sha256": "3ce22b1666ad965c7e6190486d56276d737655108d7e401fe06d36c0a14acf88",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/10-scoring.md",
+      "sha256": "5460f851b985028c49fd1bc4cddc97694489dfb4248667ade03db1fa4bd3ac70",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/11-confidence.md",
+      "sha256": "2e8116f412841ec0e0fe39446a1cadc67ebccedca89c95d7699b73568267f446",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/12-portfolio.md",
+      "sha256": "843ef210545ecde9bcd285a2ecca4bffb1fe8c46f2bc26cd499e6791db475164",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/13-financial-update.md",
+      "sha256": "559818ea123361650a987d2fce67712f8b434e76428392c67fbbc200b94ce488",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/14-valuation-change.md",
+      "sha256": "65859eabbd258158218ff4e6a0f423ea2c7cf2abb47bacb5e12bb689b528aba0",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/15-output-battle-map.md",
+      "sha256": "3b7c989f1f5b9a01f3055e3c2e859ea8813262bf7b5486f1842c32ef14936f68",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/15-output-comparison.md",
+      "sha256": "7d769bed16b45a9ae2276a093b8dc192d60dc78a6cdc4805f38bfb39bc0eb91b",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/15-output-deep.md",
+      "sha256": "2e3b5af2348f3c59f754994fe89e5b160eb26d5bfeed5d796fb0c0544530211d",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/15-output-dividend.md",
+      "sha256": "5822b8da4cb83f28ddd0784bfaa7e5cdc8337659be404f25f151a063b66564e3",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/15-output-execution.md",
+      "sha256": "c81c28b1557fe07c957b66c3431f2d2ed50ee8e822b10aa743efb06d298e5c61",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/15-output-quick.md",
+      "sha256": "959f5a3423ad32119b1516036e4e7d7dbe39a58e4ace54b681a625832bf7c561",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/15-output-standard.md",
+      "sha256": "a0aac3bc916cd75406cbfcb34c77360b358055fc84ae8822b6ddc34d60e3e034",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/15-output-update.md",
+      "sha256": "7d81ac5a3932436039705b7421f685ce7fd2803b86a02f2b2c6d5c610813c6d5",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/15-output.md",
+      "sha256": "33a13b2f46125d8345e90ae2369ef7a6349cb2233d68d76fb7ec48392dc699bd",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/16-audit.md",
+      "sha256": "90966f0cff6f1ed43ef5b36f39639921845b26e6d392112afcdc699913f28164",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/17-prohibitions.md",
+      "sha256": "4f88a767c4ca39260c95e2f86fd36ba8ea5ce94ee9d2fd3df374c61e7fdeac35",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/18-principles.md",
+      "sha256": "c607f8fc497d61bc49067d68888b6f8f380ec38dc8307e22eaf13fa46564322c",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "knowledge/modules/rules/19-glossary.md",
+      "sha256": "873cb1c66342c2269cc7856ee30ea08e4c01af0b61a41e0afcb0a4ce5ad501a0",
+      "area": "knowledge",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "package.json",
+      "sha256": "fcc42b4d2c25807ee0b8f24b7dffcc210bcab97eeac920112d30cd907b1b25a8",
+      "area": "package.json",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "e2107ba1fbcf517d5262f36839e26c7d285b6c06656c45e242b700d409fc2a83",
+      "area": "pnpm-lock.yaml",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "public/brand/README.md",
+      "sha256": "372f988b6901515f01a4628d2aacf982297c879649a10bb33454862156776694",
+      "area": "public",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "public/brand/zhiheng-icon.svg",
+      "sha256": "f4c7af9b535358ecf049dd51bcdf0c41f370a59848a70f980857c4ebb5ca4c94",
+      "area": "public",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "public/brand/zhiheng-symbol.svg",
+      "sha256": "ab454cc950f61a1a06753cd743c60dbb51d4e61a976c871d381f9c8e465b0b2c",
+      "area": "public",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "public/company-logos/README.md",
+      "sha256": "4d4855d8ca6b6ee87e1a906b64080acb21f20dc2db030003f8e0346594ba7490",
+      "area": "public",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "public/company-logos/apple.ico",
+      "sha256": "5493c61cf725cf3a1d63cd9d07de75b0d6faa5564e772f7d0a6074f341442938",
+      "area": "public",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "public/company-logos/byd.ico",
+      "sha256": "90a7e7bc47ed2e7c551147c9a67d29590ef0e7138ae7ca11f5969f1a36fbd83e",
+      "area": "public",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "public/company-logos/gwm.ico",
+      "sha256": "58bd0ab5764b765bb1530945db87ce02a51cee01c38a12e94a64b48e0b013ccb",
+      "area": "public",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "public/company-logos/microsoft.ico",
+      "sha256": "90cdaf487716184e4034000935c605d1633926d348116d198f355a98b8c6cd21",
+      "area": "public",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "public/company-logos/moutai.ico",
+      "sha256": "7d902652f99ecbee9893c81bbbdd0079fd48ecda31d31af352216d7e274c15a1",
+      "area": "public",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "public/company-logos/nvidia.ico",
+      "sha256": "bedcb14e0470ff8abe26405a630e9604ac4fa581b385a7cfb00420c22f541b6e",
+      "area": "public",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "public/company-logos/pingan.png",
+      "sha256": "bb9082bcce55bd7d0935ee6c261e0dec0ba7ea8c9403024f58deefda43ab0b92",
+      "area": "public",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "public/company-logos/seres.ico",
+      "sha256": "c20df9b48eb77658ef197f7ba84492d52224a8c310bbbb9ed0715832c20f4df4",
+      "area": "public",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "public/company-logos/tencent.png",
+      "sha256": "a4f9bdeedcbc3851f15a234da08ed2bd34e84f384e597e59175677601106c924",
+      "area": "public",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "public/company-logos/tesla.ico",
+      "sha256": "aba1b9c85aa6ce15759adcdf3aff2b1001ea26d70156ec93e5b9179bd870c2b4",
+      "area": "public",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "scripts/backup-knowledge.mjs",
+      "sha256": "07b93c2cdfc678b93802c2c3da37a0d60040e4ba97bb71d3d04f1204b7c628fc",
+      "area": "scripts",
+      "imports": [
+        "node:fs",
+        "node:crypto",
+        "node:path",
+        "node:url"
+      ],
+      "exports": [
+        "backupKnowledge",
+        "watchKnowledge"
+      ]
+    },
+    {
+      "path": "scripts/data-diagnostics.mjs",
+      "sha256": "71a0bd2b4a1abe2a964a63ac7898a295ee8708584100a6c733218409ab1f6ba3",
+      "area": "scripts",
+      "imports": [
+        "../server/market-data.mjs",
+        "../server/sec-directory.mjs",
+        "../server/pdf-extractor.mjs",
+        "../server/storage.mjs",
+        "../server/longbridge-quotes.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/data-failover-diagnostics.mjs",
+      "sha256": "c4fe1cf753a8cdf239b014bb3d4697549e3399c952fe5c1637a1b634275a7186",
+      "area": "scripts",
+      "imports": [
+        "node:assert/strict",
+        "node:crypto",
+        "node:fs/promises",
+        "../server/market-data.mjs",
+        "../server/official-reports.mjs",
+        "../server/tushare-client.mjs",
+        "../server/tushare-financials.mjs",
+        "../server/longbridge-fundamentals.mjs",
+        "../server/longbridge-quotes.mjs",
+        "../server/data-provider-config.mjs",
+        "../server/data-archive.mjs",
+        "../server/storage.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/data-provider-diagnostics.mjs",
+      "sha256": "254cdccb5c987ae52e4e01ac92f32d8ba85747420ac97096596ba982197fa727",
+      "area": "scripts",
+      "imports": [
+        "../server/data-provider-config.mjs",
+        "../server/longbridge-quotes.mjs",
+        "../server/tushare-financials.mjs",
+        "../server/storage.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/data-readiness-diagnostics.mjs",
+      "sha256": "9a428a1520c358deb0ca2480f1dd71eaf31e8eb6724e436da0f370389ed6ae08",
+      "area": "scripts",
+      "imports": [
+        "node:fs/promises",
+        "../server/market-data.mjs",
+        "../server/longbridge-quotes.mjs",
+        "../server/longbridge-fundamentals.mjs",
+        "../server/storage.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/data-smoke.mjs",
+      "sha256": "c90ffdfc92629869cadb287584138957731558a71bddcf0fa42a77af5f020486",
+      "area": "scripts",
+      "imports": [
+        "../server/market-data.mjs",
+        "node:fs/promises",
+        "../server/storage.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/deduplicate-knowledge-v45.mjs",
+      "sha256": "3f8364da30bd116f75a7a46f8ba43734c401842c60a3deeb891de1e161b06666",
+      "area": "scripts",
+      "imports": [
+        "node:fs",
+        "node:path",
+        "node:url",
+        "node:crypto",
+        "./backup-knowledge.mjs",
+        "../shared/knowledge-index.mjs",
+        "../shared/knowledge-search.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/dev-source-watch.mjs",
+      "sha256": "a4a151ffc66607251ae495a2cb164118ddd5a790f0c0fc1b820e58ee836338fd",
+      "area": "scripts",
+      "imports": [
+        "node:crypto",
+        "node:fs",
+        "node:path"
+      ],
+      "exports": [
+        "sourceFingerprint",
+        "watchDevelopmentSources"
+      ]
+    },
+    {
+      "path": "scripts/dev.mjs",
+      "sha256": "d21690fbc8f5ff21c6d0cc59bc1f6f41a3914a73ba397ae99f9a33845d0e0aea",
+      "area": "scripts",
+      "imports": [
+        "node:child_process",
+        "./backup-knowledge.mjs",
+        "../server/knowledge-snapshots.mjs",
+        "./dev-source-watch.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/dual-model-diagnostics.mjs",
+      "sha256": "ad5e26dba8c4d5676ac899386045a70253f0be0f6ec7564cffc71e60a916f7b5",
+      "area": "scripts",
+      "imports": [
+        "@napi-rs/canvas",
+        "node:fs/promises",
+        "../server/visual-reading.mjs",
+        "../server/model-routing.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/evidence-followup-diagnostics.mjs",
+      "sha256": "5a540428d207d63cb94db81d2acf134a06510cff2c6bd691e01ad248b8b557ca",
+      "area": "scripts",
+      "imports": [
+        "node:fs/promises",
+        "../server/evidence-followup.mjs",
+        "../server/web-research.mjs",
+        "../server/web-evidence.mjs",
+        "../server/evidence-search.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/index-knowledge.mjs",
+      "sha256": "a7dd8257e71a5f2f6d9d309dd034cd2ab9b8382d75ec6d9b26b8e31b677b5bf8",
+      "area": "scripts",
+      "imports": [
+        "node:fs",
+        "node:crypto",
+        "../shared/knowledge-search.mjs",
+        "../shared/knowledge-index.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/material-ocr-assets.mjs",
+      "sha256": "df55bc576f481f09d640b6b79e6181b89079d768671e7f951eefead2de4d3244",
+      "area": "scripts",
+      "imports": [
+        "node:module",
+        "node:path",
+        "node:fs/promises"
+      ],
+      "exports": [
+        "materialOCRAssets"
+      ]
+    },
+    {
+      "path": "scripts/material-processing-diagnostics.mjs",
+      "sha256": "6d29215411434a2532db9e1555713b0f9af710f0fc246e6562d37a360adda2f3",
+      "area": "scripts",
+      "imports": [
+        "mongodb",
+        "../server/calculations.mjs",
+        "../server/quick-screen.mjs",
+        "../server/normalized-earnings.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/migrate-mongodb.mjs",
+      "sha256": "04ef9ddd9a7a1c6c3daa5bcbc07f50bcbd87b04746f84a554aa6ea212c63209b",
+      "area": "scripts",
+      "imports": [
+        "../server/storage.mjs",
+        "../server/migrate.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/model-data-audit.mjs",
+      "sha256": "aad8d495cddc16481409daa0eaccdf1f6d036cffbc1cba8545b1ccfad777fbf8",
+      "area": "scripts",
+      "imports": [
+        "node:fs/promises",
+        "../server/data-provider-config.mjs",
+        "../server/longbridge-quotes.mjs",
+        "../server/tushare-financials.mjs",
+        "../server/shareholder-data.mjs",
+        "../server/data-basis.mjs",
+        "../server/market-data.mjs",
+        "../server/pdf-extractor.mjs",
+        "../server/storage.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/ocr-numeric-diagnostics.mjs",
+      "sha256": "3fa3683f4a207b846d48ddb3ceaaf2c9b1d1e4c8a840a1d3303e1c7c2da416fd",
+      "area": "scripts",
+      "imports": [
+        "node:assert/strict",
+        "node:fs/promises",
+        "node:path",
+        "@napi-rs/canvas",
+        "../server/pdf-ocr.mjs",
+        "../server/pdf-processing.mjs",
+        "../server/evidence-search.mjs",
+        "../server/calculations.mjs",
+        "../server/document-layout.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/parser-acceptance.mjs",
+      "sha256": "6fc48ccb7c3be670aa9a324e27649ac0560280a6ae5847636a7676e89982c3b6",
+      "area": "scripts",
+      "imports": [
+        "node:fs/promises",
+        "../server/official-reports.mjs",
+        "../server/market-request.mjs",
+        "../server/storage.mjs",
+        "../server/market-data.mjs",
+        "../server/financial-observations.mjs",
+        "../server/document-layout.mjs",
+        "../server/evidence-search.mjs",
+        "node:assert/strict"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/parser-diagnostics.mjs",
+      "sha256": "0b14e628204f70a697f7959d3e34e7ce98f9027a04a1ffeb51c266fb13ad439e",
+      "area": "scripts",
+      "imports": [
+        "node:fs/promises",
+        "../server/pdf-extractor.mjs",
+        "../server/filing-text.mjs",
+        "../server/evidence-search.mjs",
+        "../server/pdf-ocr.mjs",
+        "../server/pdf-options.mjs",
+        "pdfjs-dist/legacy/build/pdf.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/pdf-ocr-diagnostics.mjs",
+      "sha256": "10ccfed5abb3ac77e4825af75cee54b09ac2bc84f12687966ab9934dc7a472f9",
+      "area": "scripts",
+      "imports": [
+        "node:assert/strict",
+        "node:fs/promises",
+        "node:path",
+        "@napi-rs/canvas",
+        "pdfjs-dist/legacy/build/pdf.mjs",
+        "../server/pdf-ocr.mjs",
+        "../server/pdf-options.mjs",
+        "../server/pdf-extractor.mjs",
+        "../server/evidence-search.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/publish-knowledge-v44.mjs",
+      "sha256": "a01439d90e99df5ecff0970ff42b52562b5da47c0ab68e2608f4cbbf3ab72bd1",
+      "area": "scripts",
+      "imports": [
+        "node:fs",
+        "node:path",
+        "node:url",
+        "node:crypto",
+        "./backup-knowledge.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/publish-knowledge.mjs",
+      "sha256": "1ccbe01ad73e76c7a645025c3d8710717ff9f21463e84bec7d2219fe8f6151e4",
+      "area": "scripts",
+      "imports": [
+        "node:fs",
+        "node:path",
+        "node:url",
+        "node:crypto",
+        "./backup-knowledge.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/report-smoke.mjs",
+      "sha256": "8e84288f4bf54fb72405ffe16950993d3b664036478ba318d37a0023c9d765ce",
+      "area": "scripts",
+      "imports": [
+        "node:assert/strict",
+        "node:timers/promises"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/shareholder-data-diagnostics.mjs",
+      "sha256": "0e7e55d080423d13ffd67d988050248360e75ed6df3c098ffbbfdd9e9ec5c6d3",
+      "area": "scripts",
+      "imports": [
+        "../server/storage.mjs",
+        "../server/shareholder-data.mjs",
+        "../server/tushare-financials.mjs",
+        "../server/data-basis.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/smoke.mjs",
+      "sha256": "86a3e53cbf8d88a6a536b97d54fe06413008fba13666bef0828cfbb920787ad6",
+      "area": "scripts",
+      "imports": [
+        "node:assert/strict",
+        "node:fs/promises"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/split-knowledge-v44.mjs",
+      "sha256": "27eabc3a5019e70592ff20ccc661b03a8f78746d8b9497c6a9647e48810b820b",
+      "area": "scripts",
+      "imports": [
+        "node:fs",
+        "node:crypto",
+        "node:url",
+        "node:path",
+        "./backup-knowledge.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/vision-input-diagnostics.mjs",
+      "sha256": "667fe7fb48875ef87b4073d695c0151ea3b606438d7b8d2115740ee565dada5a",
+      "area": "scripts",
+      "imports": [
+        "node:fs/promises",
+        "../server/material-vision.mjs",
+        "../server/visual-reading.mjs",
+        "../server/visual-assets.mjs",
+        "../server/vision-model.mjs",
+        "../tests/fixtures/material-files.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "scripts/web-research-diagnostics.mjs",
+      "sha256": "1240226304ad2a39a0f2abedb4a6b15f744beb2f6c2d3f8b776b7ca3a68ae96a",
+      "area": "scripts",
+      "imports": [
+        "node:assert/strict",
+        "node:fs/promises",
+        "../server/web-search-provider.mjs",
+        "../server/web-evidence.mjs",
+        "../server/data-archive.mjs",
+        "../server/storage.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "server/access.mjs",
+      "sha256": "fa2d577e3321999641e392c77709a58ec471d0a446848666847b204259d1e01f",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "createAccessPolicy"
+      ]
+    },
+    {
+      "path": "server/agent-disclosures.mjs",
+      "sha256": "66d7536a1534aefd277423c8ff6f294d2b342a4a4c582ca9ded8b6797b4a2569",
+      "area": "server",
+      "imports": [
+        "./market-data.mjs",
+        "./official-reports.mjs"
+      ],
+      "exports": [
+        "disclosureProperties",
+        "createDisclosureReader"
+      ]
+    },
+    {
+      "path": "server/agent-execution.mjs",
+      "sha256": "179f2830c4dfc46312d1c820bf151e1b441e518a6b23a377b82b0a63c069cb0b",
+      "area": "server",
+      "imports": [
+        "./research-context.mjs",
+        "../shared/financial-coverage.mjs",
+        "../shared/research-execution-checks.mjs"
+      ],
+      "exports": [
+        "executionProperties",
+        "executionRules",
+        "executionBudget",
+        "updateExecutionPlan",
+        "researchStatus",
+        "compactExecutionContext"
+      ]
+    },
+    {
+      "path": "server/agent-page-reader.mjs",
+      "sha256": "ffd20e5e99cd22dd627ece5ac28722a1bece2a7ac9b74bfdbd3b5db158b56941",
+      "area": "server",
+      "imports": [
+        "node:worker_threads",
+        "node:crypto",
+        "./market-request.mjs",
+        "./visual-reading.mjs",
+        "./vision-model.mjs",
+        "./visual-assets.mjs",
+        "./document-layout.mjs"
+      ],
+      "exports": [
+        "pageReaderProperties",
+        "extractReportPages",
+        "createAgentPageReader"
+      ]
+    },
+    {
+      "path": "server/agent.mjs",
+      "sha256": "42d756f3993dc22547430390e4bde3876feea9595312c2f630c673d85a1f8c14",
+      "area": "server",
+      "imports": [
+        "./model-deadline.mjs",
+        "./model-request.mjs",
+        "./agent-page-reader.mjs",
+        "./research-sensitivity.mjs",
+        "./shareholder-return.mjs",
+        "./agent-disclosures.mjs",
+        "./reinvestment.mjs",
+        "./valuation-review.mjs",
+        "./financial-input-verification.mjs",
+        "../shared/financial-coverage.mjs",
+        "../shared/screen-evidence-rules.mjs",
+        "./valuation-snapshot.mjs",
+        "./agent-execution.mjs",
+        "./evidence-followup.mjs",
+        "./visual-reading.mjs",
+        "./model-routing.mjs",
+        "./research-context.mjs",
+        "../shared/reference-materials.mjs",
+        "./calculation-recovery.mjs",
+        "../shared/deep-research.mjs",
+        "../shared/earnings-update.mjs",
+        "../shared/company-comparison.mjs",
+        "./company-comparison.mjs",
+        "../shared/calculation-progress.mjs",
+        "./normalized-earnings.mjs",
+        "../shared/research-framework.mjs",
+        "./research-workflow.mjs",
+        "./model-stream.mjs",
+        "../shared/report-preview.mjs",
+        "./knowledge.mjs",
+        "./research-output.mjs",
+        "./research-resume.mjs",
+        "./review-format.mjs",
+        "./research-references.mjs",
+        "./calculations.mjs",
+        "./router.mjs",
+        "./market-data.mjs",
+        "./web-research.mjs",
+        "./evidence-search.mjs",
+        "./document-layout.mjs",
+        "./quick-screen.mjs",
+        "./cashflow-bridge.mjs",
+        "./evidence-search.mjs",
+        ","
+      ],
+      "exports": [
+        "toolsForMode",
+        "completion",
+        "runAgent"
+      ]
+    },
+    {
+      "path": "server/bounded-reads.mjs",
+      "sha256": "5a84f84dd6d29e3120cbad606725de376f65f5975901c6b500ca1ef26c327f4b",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "boundedReads"
+      ]
+    },
+    {
+      "path": "server/calculation-recovery.mjs",
+      "sha256": "5750d839694bada5a971be61669562c9f47ee6cba6c7320aeda7b61d92744a15",
+      "area": "server",
+      "imports": [
+        "./document-layout.mjs",
+        "./evidence-search.mjs"
+      ],
+      "exports": [
+        "calculationRecovery"
+      ]
+    },
+    {
+      "path": "server/calculations.mjs",
+      "sha256": "ed9b0296024b3d93258dad65d8becc24d6423acc25685362a01b687485d5cbec",
+      "area": "server",
+      "imports": [
+        "./evidence-search.mjs",
+        "./document-layout.mjs"
+      ],
+      "exports": [
+        "dcf",
+        "dividend",
+        "calculationBasis"
+      ]
+    },
+    {
+      "path": "server/capital-evidence.mjs",
+      "sha256": "ed0fb0dada4682fe935182f754ca7ff1c88a7130838caf6401ec381ad8023617",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "dividendLedger",
+        "capitalEvidence"
+      ]
+    },
+    {
+      "path": "server/cashflow-bridge.mjs",
+      "sha256": "7096025e6531a61e13ef519c45eb954ae8de4c4404c181d7edb347d64020d4ab",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "cashflowBridgeProperties",
+        "cashflowBridgeRules",
+        "cashflowBridge"
+      ]
+    },
+    {
+      "path": "server/company-comparison.mjs",
+      "sha256": "cc8946d8aca9761e2018d8bbcc068e952eaff40acb5e3b77a41d27a21e5536e1",
+      "area": "server",
+      "imports": [
+        "./quick-screen.mjs",
+        "./calculations.mjs"
+      ],
+      "exports": [
+        "comparisonToolProperties",
+        "compareCompanies"
+      ]
+    },
+    {
+      "path": "server/data-archive.mjs",
+      "sha256": "133d0295f01728376ca0671c971fb184cabcd6ee79ebbf156d4683a2ec1bfd45",
+      "area": "server",
+      "imports": [
+        "node:crypto",
+        "./storage.mjs"
+      ],
+      "exports": [
+        "createDataArchive",
+        "dataArchive"
+      ]
+    },
+    {
+      "path": "server/data-basis.mjs",
+      "sha256": "9f8bf76ff71b54c01113f67ab5e4e33381a2c12917735a1ccf7605af36d53c47",
+      "area": "server",
+      "imports": [
+        "./shareholder-data.mjs"
+      ],
+      "exports": [
+        "checkDataBasis"
+      ]
+    },
+    {
+      "path": "server/data-provider-config.mjs",
+      "sha256": "c7e85dce70b54f840627c4ed40b3d2292099e717d7b32c56eeec72a2a0570721",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "providerConfig",
+        "providerStatus",
+        "redactProviderError"
+      ]
+    },
+    {
+      "path": "server/document-integrity.mjs",
+      "sha256": "4aa263baf3241ee6a0e1b8b3a5c74980c9de1b705ab7edd16aee4724bbffbe72",
+      "area": "server",
+      "imports": [
+        "node:crypto"
+      ],
+      "exports": [
+        "digest",
+        "parsedDigest",
+        "validParsedArchive"
+      ]
+    },
+    {
+      "path": "server/document-layout.mjs",
+      "sha256": "fba8aaafe4549983de48a18faa53cf37a2b5e2c27b440aae06dbf738516dbd2e",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "PARSER_VERSION",
+        "needsParsingRetry",
+        "textQuality",
+        "positionedRows",
+        "rowBlocks",
+        "plainBlocks",
+        "sourceSummary",
+        "usableEvidenceBlock",
+        "parsingWarnings",
+        "readableCharacterCount"
+      ]
+    },
+    {
+      "path": "server/document-reader.mjs",
+      "sha256": "ce7c438e789ae07e07186bd9333450077cdf936dd00ff84f15cf819deecb8ab6",
+      "area": "server",
+      "imports": [
+        "../shared/document-text.mjs",
+        "./document-layout.mjs",
+        "./pdf-extractor.mjs",
+        "./material-vision.mjs",
+        "./visual-reading.mjs",
+        "./model-routing.mjs"
+      ],
+      "exports": [
+        "documentKind",
+        "readDocument"
+      ]
+    },
+    {
+      "path": "server/evidence-followup.mjs",
+      "sha256": "205bc4d5dd22b66a719db4b0ab29e856e0b3409107fa822eb8078a808f7704a7",
+      "area": "server",
+      "imports": [
+        "./document-layout.mjs",
+        "./web-research.mjs"
+      ],
+      "exports": [
+        "followupTopic",
+        "createEvidenceFollowup"
+      ]
+    },
+    {
+      "path": "server/evidence-search.mjs",
+      "sha256": "d6c8e2d9560ffeed1ce4cab5c8ce28b6ae24bca898203cfe2668c754e1f3b224",
+      "area": "server",
+      "imports": [
+        "./document-layout.mjs"
+      ],
+      "exports": [
+        "financialRowBlocks",
+        "evidenceBlocks",
+        "searchEvidence"
+      ]
+    },
+    {
+      "path": "server/filing-text.mjs",
+      "sha256": "90fc302f04ccef9c944cbda16c0766a402a6fdf1de57112ccdf9f427c7defa95",
+      "area": "server",
+      "imports": [
+        "htmlparser2",
+        "./document-layout.mjs",
+        "./inline-xbrl.mjs"
+      ],
+      "exports": [
+        "extractHTML",
+        "parseTableRows"
+      ]
+    },
+    {
+      "path": "server/financial-input-verification.mjs",
+      "sha256": "85d7b79ac4a055d24221435f1fdb9d5f179ed92746be30ccf6076efc8b12ae6c",
+      "area": "server",
+      "imports": [
+        "node:crypto",
+        "./evidence-search.mjs",
+        "./document-layout.mjs"
+      ],
+      "exports": [
+        "verificationProperties",
+        "verifyFinancialInputs"
+      ]
+    },
+    {
+      "path": "server/financial-observations.mjs",
+      "sha256": "b5cc666a543695ae7b6b0f7b955e83d65f4d03d6a687a57853c3a240058e4115",
+      "area": "server",
+      "imports": [
+        "./inline-xbrl.mjs"
+      ],
+      "exports": [
+        "coreFactGroups",
+        "factCoverage",
+        "xbrlObservations"
+      ]
+    },
+    {
+      "path": "server/hkex-disclosures.mjs",
+      "sha256": "6a54af4bff892e3f5ac5c2b98cbed8f6bd65b0ea41d8bc274e8d51ffa55455d6",
+      "area": "server",
+      "imports": [
+        "./market-request.mjs",
+        "./market-cache.mjs",
+        "./filing-text.mjs",
+        "./report-periods.mjs"
+      ],
+      "exports": [
+        "parseHKEXCompany",
+        "parseHKEXReports",
+        "createHKEXDisclosures",
+        "hkexDisclosures",
+        "mergeReportAlternatives"
+      ]
+    },
+    {
+      "path": "server/index.mjs",
+      "sha256": "c1c9a1b445ec07723b4d97bf357cc86ec2737b6749b31b2cccfa0c9d50d8725d",
+      "area": "server",
+      "imports": [
+        "../shared/research-framework.mjs",
+        "./knowledge.mjs",
+        "./knowledge-excerpt.mjs",
+        "./research-baseline.mjs",
+        "./research-workflow.mjs",
+        "./job-stream.mjs",
+        "./research-retry.mjs",
+        "./job-checkpoints.mjs",
+        "./research-delivery.mjs",
+        "./research-create.mjs",
+        "./research-path.mjs",
+        "node:http",
+        "node:fs/promises",
+        "node:path",
+        "node:url",
+        "./agent.mjs",
+        "./router.mjs",
+        "./market-data.mjs",
+        "./security-resolver.mjs",
+        "./security-exchanges.mjs",
+        "./data-provider-config.mjs",
+        "./web-search-provider.mjs",
+        "./storage.mjs",
+        "./migrate.mjs",
+        "./access.mjs",
+        "./vision-model.mjs",
+        "./visual-reading.mjs",
+        "./document-reader.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "server/inline-xbrl.mjs",
+      "sha256": "718dc7390e317f841d3a4d016cf579cd5b97de4c2c52618f4c86c39f0cc8f976",
+      "area": "server",
+      "imports": [
+        "htmlparser2"
+      ],
+      "exports": [
+        "validFactDate",
+        "inlineNumber",
+        "extractInlineXBRL"
+      ]
+    },
+    {
+      "path": "server/job-checkpoints.mjs",
+      "sha256": "32ac06c8e76806cc0ca6a90c384964d26dee57749490ed11bf700d5b8108f26a",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "createJobCheckpoints"
+      ]
+    },
+    {
+      "path": "server/job-stream.mjs",
+      "sha256": "4180f2107d678338c2c58cbb898585ebfc3981fb76017ba2f6ad012bf2ceaa2f",
+      "area": "server",
+      "imports": [
+        "./document-layout.mjs",
+        "./research-resume.mjs"
+      ],
+      "exports": [
+        "publicJob",
+        "createJobStreams"
+      ]
+    },
+    {
+      "path": "server/knowledge-excerpt.mjs",
+      "sha256": "6fdbb6ec38b1e431e29172ff4ca9fc2b56e1426d9febc7175e2ad9ee80d34b22",
+      "area": "server",
+      "imports": [
+        "node:crypto",
+        "./knowledge-snapshots.mjs",
+        "../shared/research-knowledge.mjs"
+      ],
+      "exports": [
+        "knowledgeExcerpt"
+      ]
+    },
+    {
+      "path": "server/knowledge-snapshots.mjs",
+      "sha256": "cd2fbe1e811e423b7f51512e089816d5a3917d6992e25bba14f5f78ea22f60b5",
+      "area": "server",
+      "imports": [
+        "node:fs",
+        "node:path",
+        "node:url",
+        "node:crypto",
+        "../scripts/backup-knowledge.mjs",
+        "../shared/knowledge-index.mjs",
+        "../shared/knowledge-search.mjs",
+        "../shared/research-framework.mjs",
+        "../shared/knowledge-loading.mjs"
+      ],
+      "exports": [
+        "createSnapshotManager",
+        "snapshotManager"
+      ]
+    },
+    {
+      "path": "server/knowledge.mjs",
+      "sha256": "6929b66fae98a256c859537bb951a3e4e9f4b0c86873b9ed4be2eb27043e7615",
+      "area": "server",
+      "imports": [
+        "node:crypto",
+        "../shared/research-framework.mjs",
+        "../shared/knowledge-search.mjs",
+        "./knowledge-snapshots.mjs",
+        "../shared/knowledge-loading.mjs",
+        "../shared/knowledge-index.mjs"
+      ],
+      "exports": [
+        "moduleCatalog",
+        "knowledgeManifest",
+        "createRuleStore",
+        "bindKnowledge",
+        "createJobRuleSession",
+        "currentKnowledge",
+        "savedKnowledgeMatches"
+      ]
+    },
+    {
+      "path": "server/longbridge-fundamental-worker.mjs",
+      "sha256": "12ede35e8b30c99b255f97a1d9a2ed452f4fa39425c21eab1fa4c6ba401f73ec",
+      "area": "server",
+      "imports": [
+        "node:module",
+        "./data-provider-config.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "server/longbridge-fundamentals.mjs",
+      "sha256": "b6d1cf46531a74cd79b1091ba8fc5ceccdb42f6e9cf5295fc9ee8ef8ba26b767",
+      "area": "server",
+      "imports": [
+        "node:crypto",
+        "./longbridge-quotes.mjs",
+        "./data-provider-config.mjs",
+        "./market-cache.mjs",
+        "./data-archive.mjs"
+      ],
+      "exports": [
+        "fetchLongbridgeFundamental",
+        "brokerValuationWindows",
+        "validateBrokerFundamental",
+        "createBrokerFundamentals",
+        "fetchBrokerFundamentals"
+      ]
+    },
+    {
+      "path": "server/longbridge-quotes.mjs",
+      "sha256": "946c1104660e06d7a2adebab792ebd7c2b66f7792be344d88706e759c9e6b83e",
+      "area": "server",
+      "imports": [
+        "node:child_process",
+        "node:url",
+        "./data-provider-config.mjs"
+      ],
+      "exports": [
+        "longbridgeSymbol",
+        "parseLongbridge",
+        "createLongbridgeFetcher",
+        "fetchLongbridgeQuote"
+      ]
+    },
+    {
+      "path": "server/longbridge-worker.mjs",
+      "sha256": "c68d7f0a9d0d9f1a1c3b8b577f77e8dc7504c39a538253b165fc3d06cd84f6e0",
+      "area": "server",
+      "imports": [
+        "node:module",
+        "./market-cache.mjs",
+        "./data-provider-config.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "server/market-cache.mjs",
+      "sha256": "f4f0ac53a229861f04fe90f18c797a8742b5684d16ea0b6e2068898dbc485a12",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "createMarketCache"
+      ]
+    },
+    {
+      "path": "server/market-data.mjs",
+      "sha256": "2fae91047234ab1b6c1557b616cd5c046e913a9c5eb47465ee7832e77768d5c8",
+      "area": "server",
+      "imports": [
+        "./market-request.mjs",
+        "./market-cache.mjs",
+        "./bounded-reads.mjs",
+        "./sec-directory.mjs",
+        "./data-provider-config.mjs",
+        "./longbridge-quotes.mjs",
+        "./tushare-financials.mjs",
+        "./shareholder-data.mjs",
+        "./data-basis.mjs",
+        "./valuation-history.mjs",
+        "./report-periods.mjs",
+        "./hkex-disclosures.mjs",
+        "./official-reports.mjs",
+        "./data-archive.mjs",
+        "./capital-evidence.mjs",
+        "./financial-observations.mjs",
+        "./document-layout.mjs",
+        "./longbridge-fundamentals.mjs",
+        "./market-request.mjs",
+        "../shared/security-input.mjs",
+        "../shared/security-input.mjs"
+      ],
+      "exports": [
+        "parseEastmoney",
+        "parseYahoo",
+        "freshness",
+        "newYorkTime",
+        "parseTencent",
+        "createQuoteFetcher",
+        "fetchQuote",
+        "securityCatalog",
+        "selectReports",
+        "cnReportList",
+        "pdfReport",
+        "cnCapitalReports",
+        "selectCapitalReports",
+        "secCompany",
+        "secFactsSources",
+        "secReports",
+        "officialReportList",
+        "collectMarketData"
+      ]
+    },
+    {
+      "path": "server/market-request.mjs",
+      "sha256": "7fd5233e6d2e20220ecad9d6bf27a575abb48afc58a9b20889ed9ee150ceb15d",
+      "area": "server",
+      "imports": [
+        "node:timers/promises"
+      ],
+      "exports": [
+        "createRemoteClient",
+        "remote"
+      ]
+    },
+    {
+      "path": "server/material-vision.mjs",
+      "sha256": "6c819124bcdf8cd3ba031c5afcf623d7ccf2772931d0e17aa1e8ecfd2ada7817",
+      "area": "server",
+      "imports": [
+        "./pdf-extractor.mjs",
+        "./visual-reading.mjs",
+        "./visual-assets.mjs"
+      ],
+      "exports": [
+        "visualFileKind",
+        "readVisualMaterial"
+      ]
+    },
+    {
+      "path": "server/migrate.mjs",
+      "sha256": "ab73556df6f7ec662aaffb2cdfd168883844dca3f7139fa6e637766118cc52fe",
+      "area": "server",
+      "imports": [
+        "node:fs/promises",
+        "node:path",
+        "node:url",
+        "node:crypto"
+      ],
+      "exports": [
+        "migrateLegacy"
+      ]
+    },
+    {
+      "path": "server/model-deadline.mjs",
+      "sha256": "14e0f50131fc8defe79fab8682751248f8ca3f538b76628e906ca651d1209120",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "modelTimeouts",
+        "createModelDeadline"
+      ]
+    },
+    {
+      "path": "server/model-request.mjs",
+      "sha256": "0456d99dfcd662b6741d3d3b11f0176af5ba046ebfc971fc8b5f338607f54e9b",
+      "area": "server",
+      "imports": [
+        "node:timers/promises"
+      ],
+      "exports": [
+        "fetchModel"
+      ]
+    },
+    {
+      "path": "server/model-routing.mjs",
+      "sha256": "f3f600253ba28e426d29827adb67a94d8eeabff864429bbc414082764c629dfd",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "modelRouting",
+        "publicModelRouting"
+      ]
+    },
+    {
+      "path": "server/model-stream.mjs",
+      "sha256": "df25e7e45698cf524909b421ecc8b9510672bb3ca43d72954de4d264805b4ed5",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "readCompletion"
+      ]
+    },
+    {
+      "path": "server/normalized-earnings.mjs",
+      "sha256": "1a20694a2364a2509a004226960e296d2065aa9e45a57d8dcdb3df4a136f1e9a",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "normalizedEarnings"
+      ]
+    },
+    {
+      "path": "server/ocr-image.mjs",
+      "sha256": "3c902310abb0cb54597ae561b93ee1ce6732dcfe1eafe04e00ddb11ac5613826",
+      "area": "server",
+      "imports": [
+        "@napi-rs/canvas"
+      ],
+      "exports": [
+        "prepareOCRCanvas"
+      ]
+    },
+    {
+      "path": "server/official-reports.mjs",
+      "sha256": "588806086642ac142b0dd7997383a71db0ff8c77e6f7c999123002fb17e72ff0",
+      "area": "server",
+      "imports": [
+        "node:crypto",
+        "./storage.mjs",
+        "./market-request.mjs",
+        "./pdf-extractor.mjs",
+        "./filing-text.mjs",
+        "./document-layout.mjs",
+        "./document-integrity.mjs",
+        "./visual-reading.mjs",
+        "./document-reader.mjs"
+      ],
+      "exports": [
+        "createOfficialReportReader",
+        "readOfficialReport",
+        "secAttachments"
+      ]
+    },
+    {
+      "path": "server/pdf-extractor.mjs",
+      "sha256": "7865b7d13ef9f7e96c373fb3db2213e4f29c7b1377650583b5a3074b20c48c77",
+      "area": "server",
+      "imports": [
+        "node:worker_threads",
+        "./document-layout.mjs",
+        "node:fs/promises",
+        "node:os",
+        "node:path",
+        "./visual-reading.mjs",
+        "./vision-model.mjs"
+      ],
+      "exports": [
+        "extractPDF",
+        "extractPDFText"
+      ]
+    },
+    {
+      "path": "server/pdf-ocr.mjs",
+      "sha256": "701eee14ec78c750621728fe39b35dcba75a380e156726a8e4a4c1f4d7b8a283",
+      "area": "server",
+      "imports": [
+        "node:module",
+        "node:fs/promises",
+        "node:path",
+        "node:os",
+        "@napi-rs/canvas",
+        "tesseract.js",
+        "./document-layout.mjs",
+        "./ocr-image.mjs"
+      ],
+      "exports": [
+        "pdfRenderGeometry",
+        "renderPDFPage",
+        "ocrTextResult",
+        "ocrNumberTokens",
+        "ocrDecimalTokens",
+        "selectOCRResult",
+        "createLocalOCR"
+      ]
+    },
+    {
+      "path": "server/pdf-options.mjs",
+      "sha256": "333888d482bf86419e6598c9e4d9ea30167a0de3aeba25bb2d3bac690a041613",
+      "area": "server",
+      "imports": [
+        "node:module",
+        "node:path"
+      ],
+      "exports": [
+        "pdfDocumentOptions"
+      ]
+    },
+    {
+      "path": "server/pdf-processing.mjs",
+      "sha256": "0c78e05103f2d31226d0a541b53a1cdf05345e72d22860003145d6d082ac26f1",
+      "area": "server",
+      "imports": [
+        "./document-layout.mjs"
+      ],
+      "exports": [
+        "pageHasVisualContent",
+        "ocrPriority",
+        "shouldUseOCR",
+        "processPDFDocument"
+      ]
+    },
+    {
+      "path": "server/pdf-worker.mjs",
+      "sha256": "e071eef46c65211a31777447d2e1d0c5ed650228b390e566d3011da054b74df2",
+      "area": "server",
+      "imports": [
+        "node:worker_threads",
+        "./pdf-ocr.mjs",
+        "./pdf-options.mjs",
+        "./pdf-processing.mjs",
+        "pdfjs-dist/legacy/build/pdf.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "server/quick-screen.mjs",
+      "sha256": "802bba6888848d485316677a740447e394a7c422a90908a994c47e76340a5604",
+      "area": "server",
+      "imports": [
+        "../shared/financial-coverage.mjs"
+      ],
+      "exports": [
+        "screenToolProperties",
+        "quickScreenMetrics"
+      ]
+    },
+    {
+      "path": "server/reinvestment.mjs",
+      "sha256": "67efe9ad96baac2ce0cca12823a91a544a920e4dab62602a2f34d78f1777b0a4",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "reinvestmentProperties",
+        "reinvestmentDiagnostics"
+      ]
+    },
+    {
+      "path": "server/report-page-worker.mjs",
+      "sha256": "ce24235fc393818c170bfbfb7a9a1ced5ff4ac5d4678be58477c3a195198f19f",
+      "area": "server",
+      "imports": [
+        "node:worker_threads",
+        "pdfjs-dist/legacy/build/pdf.mjs",
+        "./pdf-options.mjs",
+        "./document-layout.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "server/report-periods.mjs",
+      "sha256": "cc7df5c8a483983c23543e330ac00038d225a5e6842bc926ae0af9397afe273a",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "reportPeriod",
+        "reportCoverage",
+        "chooseReports"
+      ]
+    },
+    {
+      "path": "server/research-baseline.mjs",
+      "sha256": "d2e9eb7faff5b70784699422f68c3a0b13fa368058eceb4c76796cf737bd3b36",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "attachResearchBaseline"
+      ]
+    },
+    {
+      "path": "server/research-context.mjs",
+      "sha256": "5e7b1717a14482c024b8b4e17f59f8c0bc19831d4d057492587eae3f311d7700",
+      "area": "server",
+      "imports": [
+        "./research-references.mjs"
+      ],
+      "exports": [
+        "buildResearchContext"
+      ]
+    },
+    {
+      "path": "server/research-create.mjs",
+      "sha256": "065430969a81ddb83cc12ea06b9dfd9865234e03d2f6589d5227b61ba481f289",
+      "area": "server",
+      "imports": [
+        "node:crypto"
+      ],
+      "exports": [
+        "submissionIdentity",
+        "createResearchCreator"
+      ]
+    },
+    {
+      "path": "server/research-delivery.mjs",
+      "sha256": "9e20fc9cb3f7e3fa06032a8807c5a2ba350cf569428bf484bd21e0286cda4550",
+      "area": "server",
+      "imports": [
+        "node:timers/promises",
+        "./job-stream.mjs"
+      ],
+      "exports": [
+        "createResearchDelivery"
+      ]
+    },
+    {
+      "path": "server/research-output.mjs",
+      "sha256": "9844b998f0705fbacc40d2f2f0ec9efef67ca4e7c2b80c51888619010316eb19",
+      "area": "server",
+      "imports": [
+        "../shared/valuation-policy.mjs",
+        "../shared/deep-research.mjs",
+        "../shared/report-headings.mjs",
+        "../shared/research-framework.mjs",
+        "./research-references.mjs"
+      ],
+      "exports": [
+        "reviewContract",
+        "validateReview"
+      ]
+    },
+    {
+      "path": "server/research-path.mjs",
+      "sha256": "e39286a96ba4522c750c67e368110474bf6d369b979912b67d61a2b6eb1132a8",
+      "area": "server",
+      "imports": [
+        "node:crypto",
+        "../shared/research-framework.mjs",
+        "./model-routing.mjs"
+      ],
+      "exports": [
+        "validatePathQuestion",
+        "parsePathDecision",
+        "createPathResolver",
+        "researchPathResolver"
+      ]
+    },
+    {
+      "path": "server/research-references.mjs",
+      "sha256": "21ab3341ff94371a828a83784b15a46281599d8c8594704104d8c66b5184eeb3",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "isResearchEvidence",
+        "sourceReferenceRules",
+        "referenceContract",
+        "normalizeSourceReferences",
+        "sourceReferenceIds",
+        "normalizeReviewReferences",
+        "validateReportReferences",
+        "reviewRepairMessage"
+      ]
+    },
+    {
+      "path": "server/research-resume.mjs",
+      "sha256": "bdcbb7b76461ae7d923eee05a596e3a383712b5242296cfbd859b8ac6f6baf8e",
+      "area": "server",
+      "imports": [
+        "./knowledge.mjs",
+        "../shared/research-framework.mjs"
+      ],
+      "exports": [
+        "resumeScope",
+        "researchResume",
+        "resumeSummary",
+        "pendingToolCalls"
+      ]
+    },
+    {
+      "path": "server/research-retry.mjs",
+      "sha256": "66ef49986457c34f05dc5d00816224e4155380b9a4086a57c7615721cdf10f67",
+      "area": "server",
+      "imports": [
+        "../shared/research-framework.mjs",
+        "./knowledge.mjs",
+        "./router.mjs",
+        "./research-baseline.mjs",
+        "./research-resume.mjs"
+      ],
+      "exports": [
+        "prepareResearchRetry",
+        "createResearchRetrier"
+      ]
+    },
+    {
+      "path": "server/research-sensitivity.mjs",
+      "sha256": "f1a11f4bd9c71adce22a7d084ebca2703ce07296c0198f3e3d246263141ced33",
+      "area": "server",
+      "imports": [
+        "./calculations.mjs"
+      ],
+      "exports": [
+        "dcfSensitivityProperties",
+        "dividendScenarioProperties",
+        "dcfSensitivity",
+        "dividendScenarios"
+      ]
+    },
+    {
+      "path": "server/research-workflow.mjs",
+      "sha256": "a92819a98d9a38277410b532372a222a99c5b8e5630849f653a7f81b1ffde6a5",
+      "area": "server",
+      "imports": [
+        "../shared/research-framework.mjs"
+      ],
+      "exports": [
+        "updateStage",
+        "interruptWorkflow"
+      ]
+    },
+    {
+      "path": "server/review-format.mjs",
+      "sha256": "6afdf3c7599541126e65d7e0265972716271aa622ba19dd89d2fa78795484906",
+      "area": "server",
+      "imports": [
+        "../shared/deep-research.mjs",
+        "../shared/research-framework.mjs"
+      ],
+      "exports": [
+        "reviewJsonSchema",
+        "reviewResponseFormat",
+        "parseReviewResponse",
+        "unsupportedReviewFormat"
+      ]
+    },
+    {
+      "path": "server/router.mjs",
+      "sha256": "72d5189020dd8a88f6727bced96e09c971f10fc1535489238d62a53fb17edcb3",
+      "area": "server",
+      "imports": [
+        "../shared/research-framework.mjs",
+        "../shared/reference-materials.mjs",
+        "../shared/research-framework.mjs",
+        "./market-data.mjs"
+      ],
+      "exports": [
+        "route",
+        "validateInput"
+      ]
+    },
+    {
+      "path": "server/schema-migrations.mjs",
+      "sha256": "a0c8babeca02686ce36868a1b8400efba31fe1711b0f055e58381bb90ed6236f",
+      "area": "server",
+      "imports": [
+        "node:crypto"
+      ],
+      "exports": [
+        "migrations",
+        "migrateSchema"
+      ]
+    },
+    {
+      "path": "server/sec-directory.mjs",
+      "sha256": "0c9d61855f6d07a2e434b7d7d7e2075668383cd5687c6696926be9bf1848974f",
+      "area": "server",
+      "imports": [
+        "./market-request.mjs",
+        "./market-cache.mjs"
+      ],
+      "exports": [
+        "normalizedTicker",
+        "createSECLookup",
+        "lookupSECCompanies"
+      ]
+    },
+    {
+      "path": "server/security-exchanges.mjs",
+      "sha256": "88f0a475b82e996a4740d2656e197dc7b5e1bb06d99b52c2ea98848fad8246c3",
+      "area": "server",
+      "imports": [
+        "./market-request.mjs",
+        "./market-cache.mjs",
+        "../shared/security-display.mjs"
+      ],
+      "exports": [
+        "secExchangeSource",
+        "createExchangeLookup",
+        "lookupSecurityExchanges"
+      ]
+    },
+    {
+      "path": "server/security-intent.mjs",
+      "sha256": "0a8dce6083b91a1379da6da40112960456d535dcc3e04823033d08ad50dbd69d",
+      "area": "server",
+      "imports": [
+        "node:crypto",
+        "./model-routing.mjs"
+      ],
+      "exports": [
+        "parseSecurityIntent",
+        "createSecurityIntentExtractor",
+        "extractSecurityIntent"
+      ]
+    },
+    {
+      "path": "server/security-resolver.mjs",
+      "sha256": "09a0c25c58f157a2148762bf1162cfd1012476b57ed5dda87dfb1a0554439e31",
+      "area": "server",
+      "imports": [
+        "./market-data.mjs",
+        "./sec-directory.mjs",
+        "./security-intent.mjs"
+      ],
+      "exports": [
+        "localMentions",
+        "resolveSecurities"
+      ]
+    },
+    {
+      "path": "server/shareholder-data.mjs",
+      "sha256": "376a674b27800c382aa5dd0c8689754d7ea49902d75f863be8cf6bccd355f1e4",
+      "area": "server",
+      "imports": [
+        "./tushare-client.mjs",
+        "./tushare-financials.mjs",
+        "./capital-evidence.mjs"
+      ],
+      "exports": [
+        "parseActionTable",
+        "requestedYears",
+        "dividendCoverage",
+        "shareTimeline",
+        "createShareholderFetcher",
+        "fetchShareholderData"
+      ]
+    },
+    {
+      "path": "server/shareholder-return.mjs",
+      "sha256": "10c96379054a15550bcdb6270c2d7d4dc755ec90544f96972bd6f757087d4c31",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "shareholderReturnProperties",
+        "shareholderReturn"
+      ]
+    },
+    {
+      "path": "server/storage.mjs",
+      "sha256": "9bc82ffffae5636b2e643f44b1346ec36b39a5416efaf959384d56fc12952e18",
+      "area": "server",
+      "imports": [
+        "./research-workflow.mjs",
+        "mongodb",
+        "node:stream",
+        "node:stream/promises",
+        "./schema-migrations.mjs"
+      ],
+      "exports": [
+        "createStorage",
+        "getStorage",
+        "closeStorage"
+      ]
+    },
+    {
+      "path": "server/tushare-client.mjs",
+      "sha256": "ac06bc54c115f05dd872b1adbd73c16731fe948c52002bd5fa955bd35c95ba98",
+      "area": "server",
+      "imports": [
+        "node:crypto",
+        "node:timers/promises",
+        "./market-request.mjs",
+        "./market-cache.mjs",
+        "./data-provider-config.mjs",
+        "./data-archive.mjs"
+      ],
+      "exports": [
+        "createTushareClient",
+        "tushareClient"
+      ]
+    },
+    {
+      "path": "server/tushare-financials.mjs",
+      "sha256": "af6ba8d78afcb0cfee59083bcb5b16c87e21fb81e3e3f6f6a4ccb9745e2700e8",
+      "area": "server",
+      "imports": [
+        "./tushare-client.mjs"
+      ],
+      "exports": [
+        "tushareSymbol",
+        "isoDate",
+        "parseTushareTable",
+        "createTushareFinancials",
+        "fetchTushareFinancials"
+      ]
+    },
+    {
+      "path": "server/valuation-history.mjs",
+      "sha256": "e73f92ed606f3153a7060659a284249b36e74a6a22880614fe356aa7997799b8",
+      "area": "server",
+      "imports": [
+        "./tushare-client.mjs",
+        "./tushare-financials.mjs"
+      ],
+      "exports": [
+        "parseValuationHistory",
+        "valuationPercentiles",
+        "createValuationHistory",
+        "fetchValuationHistory"
+      ]
+    },
+    {
+      "path": "server/valuation-review.mjs",
+      "sha256": "699cb8c323e4e43a68cc53f6cb34b0b82c00f9d6548c5b3f7a7a5307726fa481",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "valuationReviewProperties",
+        "reviewValuationModels"
+      ]
+    },
+    {
+      "path": "server/valuation-snapshot.mjs",
+      "sha256": "8f495f66ce2d374bbf694d889692508ccb5386b013953eb1a2b38ecece5ecb7d",
+      "area": "server",
+      "imports": [],
+      "exports": [
+        "valuationSnapshotProperties",
+        "valuationSnapshot"
+      ]
+    },
+    {
+      "path": "server/vision-model.mjs",
+      "sha256": "1fb108c4e9a723ddd1f563d6a43ca9e32338bc3f556f771caef43e25f247faf3",
+      "area": "server",
+      "imports": [
+        "./model-routing.mjs"
+      ],
+      "exports": [
+        "visionStatus",
+        "readVisionImages"
+      ]
+    },
+    {
+      "path": "server/visual-assets.mjs",
+      "sha256": "a83f2f7473b84581e3d5d0c1857cd42a4bc00af3f81ebf42f9e443d8135efc3f",
+      "area": "server",
+      "imports": [
+        "node:fs/promises",
+        "node:crypto",
+        "node:url",
+        "node:path"
+      ],
+      "exports": [
+        "visualDigest",
+        "validVisualId",
+        "saveVisualAsset",
+        "loadVisualAsset"
+      ]
+    },
+    {
+      "path": "server/visual-reading.mjs",
+      "sha256": "df6c812c08d53057df41518ce54b36b9090899330c308d92265f0fbd2941626c",
+      "area": "server",
+      "imports": [
+        "node:worker_threads",
+        "node:async_hooks",
+        "./document-layout.mjs",
+        "./vision-model.mjs",
+        "./visual-assets.mjs"
+      ],
+      "exports": [
+        "withVisualBudget",
+        "visualPDFEnabled",
+        "needsVisualUpgrade",
+        "renderVisualImages",
+        "selectVisualPages",
+        "validateVisualTranscript",
+        "visualNumberChecks",
+        "enhancePDFWithVision",
+        "readImageMaterial",
+        "visualAuditContext"
+      ]
+    },
+    {
+      "path": "server/visual-render-worker.mjs",
+      "sha256": "93b214f0f8c3df90f05ca6b6031548a492b8780e80a8cd5b74b024074ad728b5",
+      "area": "server",
+      "imports": [
+        "node:worker_threads",
+        "@napi-rs/canvas",
+        "./pdf-options.mjs",
+        "pdfjs-dist/legacy/build/pdf.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "server/web-evidence-request.mjs",
+      "sha256": "587fd5a41c5f43060a36572c9cd304a21141775e16751f5fd9f473215b57c29e",
+      "area": "server",
+      "imports": [
+        "node:https",
+        "node:dns/promises",
+        "node:net",
+        "node:zlib",
+        "./market-request.mjs"
+      ],
+      "exports": [
+        "publicAddress",
+        "publicWebURL",
+        "createPublicWebLookup",
+        "createWebDocumentFetcher",
+        "fetchWebDocument"
+      ]
+    },
+    {
+      "path": "server/web-evidence.mjs",
+      "sha256": "e62fd40f69209a4524cdf0e6b248ae59b6653ca0dc7a0b54fff234d365dd488e",
+      "area": "server",
+      "imports": [
+        "node:crypto",
+        "htmlparser2",
+        "./filing-text.mjs",
+        "./document-layout.mjs",
+        "./document-integrity.mjs",
+        "./pdf-extractor.mjs",
+        "./visual-reading.mjs",
+        "./document-reader.mjs",
+        "./web-evidence-request.mjs",
+        "./data-archive.mjs"
+      ],
+      "exports": [
+        "sourceAuthority",
+        "extractWebMetadata",
+        "createWebEvidenceReader",
+        "readWebEvidence"
+      ]
+    },
+    {
+      "path": "server/web-research.mjs",
+      "sha256": "2a7be22bca3fe395a7efea3be266b7eaa0ed7d221b767d4cbfb4e2979329bf8b",
+      "area": "server",
+      "imports": [
+        "./web-search-provider.mjs",
+        "./web-evidence.mjs",
+        "./web-evidence-request.mjs",
+        "./data-archive.mjs",
+        "./document-layout.mjs"
+      ],
+      "exports": [
+        "webGapLabel",
+        "webResearchRules",
+        "createWebResearchSession",
+        "pendingWebGaps",
+        "normalizeWebGapReferences",
+        "validateWebResearchReview"
+      ]
+    },
+    {
+      "path": "server/web-search-provider.mjs",
+      "sha256": "e2f8f33559d6df07f2fa99c63b04dd5dac237e5b2043da03cdf1b728b117ca8f",
+      "area": "server",
+      "imports": [
+        "./data-provider-config.mjs"
+      ],
+      "exports": [
+        "webSearchConfig",
+        "webSearchStatus",
+        "validateSearchQuery",
+        "createWebSearchProvider",
+        "searchWebCandidates"
+      ]
+    },
+    {
+      "path": "shared/agent-capabilities.mjs",
+      "sha256": "9f3c5caf172425fb7fb06f8aa26daa8b02a6c4356409ec6eaeb71fde8cfa7718",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "researchDeliverables",
+        "agentCapabilities"
+      ]
+    },
+    {
+      "path": "shared/audit-coverage.mjs",
+      "sha256": "e04806f57930e3b6ed1377e37de22f72fcdfbcc4670fb25e9d8aed58ebb7a012",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "auditCoverage",
+        "auditCoverageNotice"
+      ]
+    },
+    {
+      "path": "shared/calculation-progress.mjs",
+      "sha256": "9f80927a8a219a6d62c7de633d82b2dcefd8d78748fe27e0abbd9c042017da72",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "summarizeCalculations",
+        "calculationProgress"
+      ]
+    },
+    {
+      "path": "shared/company-comparison.mjs",
+      "sha256": "3d94ef40806b740ef6e0e17e9d5cb3fecba34ac952cf65a1175d2bd204262ccf",
+      "area": "shared",
+      "imports": [
+        "./calculation-progress.mjs"
+      ],
+      "exports": [
+        "comparisonCopy",
+        "comparisonRules",
+        "comparisonReadiness",
+        "comparisonProgress"
+      ]
+    },
+    {
+      "path": "shared/deep-research.mjs",
+      "sha256": "7d6a7b9abcd624bde837eda1f7c023f8214ee0217a7a778f0f503dc1a273d084",
+      "area": "shared",
+      "imports": [
+        "./calculation-progress.mjs"
+      ],
+      "exports": [
+        "deepResearchCopy",
+        "deepResearchRules",
+        "deepCalculationRules",
+        "requiresResearchSummary",
+        "deepResearchProgress"
+      ]
+    },
+    {
+      "path": "shared/document-text.mjs",
+      "sha256": "110ef0314b02bab39850544871edaf7a9f4bd1aa67ef95edd5ffe057c65ee112",
+      "area": "shared",
+      "imports": [
+        "fflate",
+        "htmlparser2",
+        "./reference-materials.mjs"
+      ],
+      "exports": [
+        "decodeMaterialText",
+        "extractOfficeText"
+      ]
+    },
+    {
+      "path": "shared/earnings-update.mjs",
+      "sha256": "d923edec367b34d65f96e152a8dd807d20ddd5c4114a670675d785769e3bde0c",
+      "area": "shared",
+      "imports": [
+        "./calculation-progress.mjs"
+      ],
+      "exports": [
+        "earningsUpdateCopy",
+        "earningsUpdateRules",
+        "earningsUpdateProgress",
+        "eligibleUpdateBaselines",
+        "updateBaselineSelection"
+      ]
+    },
+    {
+      "path": "shared/execution-discipline.mjs",
+      "sha256": "633f2a3568e10214906e438d483e3612de0a73128e6d95e062e683f216f31dbd",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "executionIntent",
+        "executionChecks",
+        "executionPlan",
+        "executionBoundary",
+        "executionTasks",
+        "executionContextTemplate",
+        "executionGuideCards"
+      ]
+    },
+    {
+      "path": "shared/financial-coverage.mjs",
+      "sha256": "2c8b03c2933f99f9c2cc6a0ff8b7fc7c80ff87d09bfd58c8f1f1dd0ddab76196",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "financialCoverage",
+        "recordedFinancialCoverage",
+        "coverageFieldLabels"
+      ]
+    },
+    {
+      "path": "shared/knowledge-index.mjs",
+      "sha256": "7a5b8693d66a4f6ea94abd47cd39cb7c5af6484c1aecc5cd5d4a6cf3594732c8",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "indexRules"
+      ]
+    },
+    {
+      "path": "shared/knowledge-loading.mjs",
+      "sha256": "476a95f84365d8313768bab10c4695d108c6eb677dc9045cfaaa796776e56f24",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "depthSections"
+      ]
+    },
+    {
+      "path": "shared/knowledge-search.mjs",
+      "sha256": "9d5574ffd77e7a24451542a5db24d6a984b454d560d6301e4a3892a44a5966e7",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "bodyFilter",
+        "mayContain"
+      ]
+    },
+    {
+      "path": "shared/quick-screen-copy.mjs",
+      "sha256": "5a8c2469bba7ef98ad2e7ba3284badc08fd32bee801afafd394e11849bc488e0",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "quickScreenCopy"
+      ]
+    },
+    {
+      "path": "shared/reference-materials.mjs",
+      "sha256": "5ff0c88c56b6b6d1da99a5a0baa048bc1bafb70f03896f36553d44045a5f23c9",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "materialLimits",
+        "materialNotice",
+        "normalizeReferenceMaterials"
+      ]
+    },
+    {
+      "path": "shared/report-headings.mjs",
+      "sha256": "808b3b7e9c6ee0d3e7ee917a68559b66f86a38f8f82c1f4a747dd670f062bc13",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "deduplicateReportHeadings",
+        "reportSectionBody"
+      ]
+    },
+    {
+      "path": "shared/report-preview.mjs",
+      "sha256": "77dfdb6a48e20947b6d1c37cf9897520ec4addbb8ae592a745898b4db48d9ad6",
+      "area": "shared",
+      "imports": [
+        "./report-headings.mjs"
+      ],
+      "exports": [
+        "reportPreview"
+      ]
+    },
+    {
+      "path": "shared/report-security-headings.mjs",
+      "sha256": "66a173f536b7e8624a2f4e42104ec9c93ea6b030869cc3734697f63c15c681c4",
+      "area": "shared",
+      "imports": [
+        "./security-display.mjs"
+      ],
+      "exports": [
+        "reportSecurities",
+        "reportSecurityHeadings"
+      ]
+    },
+    {
+      "path": "shared/report-warnings.mjs",
+      "sha256": "8071d6cd7b42c30f547c9a31205ef83233a2c4d579f03b01d41a5188de170d02",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "reportWarningSourceMatches",
+        "reportWarningGroups"
+      ]
+    },
+    {
+      "path": "shared/research-analysis-receipts.mjs",
+      "sha256": "b4ebd33c1b48c337bb6a79d0998fb137586b9c6db6211bf71fa36ed978095f50",
+      "area": "shared",
+      "imports": [
+        "./research-record.mjs"
+      ],
+      "exports": [
+        "analysisToolNames",
+        "researchAnalysisReceipts",
+        "deepExecutionOverview"
+      ]
+    },
+    {
+      "path": "shared/research-approach.mjs",
+      "sha256": "31f97e5933f0a56f0058a2dd7b61100791eb9c24ec2c9050e293e469f7c12dbb",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "createPublicResearchApproach"
+      ]
+    },
+    {
+      "path": "shared/research-data-copy.mjs",
+      "sha256": "1ab2f575e82762e7c03d2b158a7647c63472e455bea4db0ac387cbb358a409d5",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "researchDataCopy",
+        "researchDataSources",
+        "researchDataBoundaries"
+      ]
+    },
+    {
+      "path": "shared/research-delivery.mjs",
+      "sha256": "537e34c854600ad54d3a27585ad33b841aa192981e4014e0c1782f984be2e3f3",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "needsSaveRetry",
+        "isSavingResult",
+        "deliveryProgress"
+      ]
+    },
+    {
+      "path": "shared/research-execution-checks.mjs",
+      "sha256": "7a703a36a06bcd9d4d3f173365be43ab470905addabba599aaad4f4857c045ca",
+      "area": "shared",
+      "imports": [
+        "./research-record.mjs"
+      ],
+      "exports": [
+        "toolResultHasGap",
+        "researchExecutionChecks"
+      ]
+    },
+    {
+      "path": "shared/research-export.mjs",
+      "sha256": "820c3a8f88d0681d5b35a216de04ce1795b1d961bb9172caeef4008ae2efd5b8",
+      "area": "shared",
+      "imports": [
+        "./report-security-headings.mjs",
+        "./report-headings.mjs",
+        "./audit-coverage.mjs",
+        "./research-knowledge.mjs",
+        "./research-record.mjs",
+        "./research-execution-checks.mjs",
+        "./financial-coverage.mjs",
+        "./research-analysis-receipts.mjs"
+      ],
+      "exports": [
+        "knowledgeProvenanceMarkdown",
+        "researchApproachMarkdown",
+        "executionChecksMarkdown",
+        "analysisReceiptsMarkdown",
+        "financialCoverageMarkdown",
+        "exportExecutionMarkdown",
+        "exportResearchMarkdown"
+      ]
+    },
+    {
+      "path": "shared/research-framework.mjs",
+      "sha256": "d296a011c10391a844fe4080f207a19a11226da68d4b7cb41017765aead4f772",
+      "area": "shared",
+      "imports": [
+        "./valuation-policy.mjs",
+        "./research-data-copy.mjs",
+        "./quick-screen-copy.mjs",
+        "./deep-research.mjs",
+        "./earnings-update.mjs",
+        "./company-comparison.mjs",
+        "./research-approach.mjs",
+        "./execution-discipline.mjs"
+      ],
+      "exports": [
+        "frameworkVersion",
+        "contractVersion",
+        "knowledgeSources",
+        "principles",
+        "scoring",
+        "portfolioFields",
+        "researchActions",
+        "confidenceLevels",
+        "modes",
+        "researchStages",
+        "resolveMode",
+        "portfolioReadiness",
+        "outputContract",
+        "createResearchPlan"
+      ]
+    },
+    {
+      "path": "shared/research-knowledge.mjs",
+      "sha256": "b35d3f6eedc48eafecb41e8971426259d2e7e514e7c5dba7f5e3c7c75fe1011b",
+      "area": "shared",
+      "imports": [
+        "./research-framework.mjs"
+      ],
+      "exports": [
+        "knowledgeBenefits",
+        "depthGuidance",
+        "knowledgeAvailability",
+        "ruleUsage",
+        "mergeRuleRead"
+      ]
+    },
+    {
+      "path": "shared/research-preparation.mjs",
+      "sha256": "1e84e14a8bc7562e679df9270814654938097a75380b22c38195379d7c6a0e89",
+      "area": "shared",
+      "imports": [
+        "./research-knowledge.mjs",
+        "./research-framework.mjs",
+        "./security-input.mjs",
+        "./earnings-update.mjs"
+      ],
+      "exports": [
+        "researchPreparation"
+      ]
+    },
+    {
+      "path": "shared/research-progress.mjs",
+      "sha256": "65cc2c7e7d85eb98ad7f1d4534c083007e07595204a00eb0a2ea1a0c97dfdaac",
+      "area": "shared",
+      "imports": [
+        "./calculation-progress.mjs",
+        "./research-delivery.mjs",
+        "./deep-research.mjs",
+        "./earnings-update.mjs",
+        "./company-comparison.mjs"
+      ],
+      "exports": [
+        "researchProgress"
+      ]
+    },
+    {
+      "path": "shared/research-record.mjs",
+      "sha256": "d83dc915f33c8ed93ce5b663c3ee17c7c2749cd2fb5d452b9c9acdbaa5eae56f",
+      "area": "shared",
+      "imports": [
+        "./research-knowledge.mjs"
+      ],
+      "exports": [
+        "recordBoundary",
+        "publicExecutionPlan",
+        "toolLabels",
+        "researchToolCalls",
+        "researchTimeline",
+        "researchRecordSummary"
+      ]
+    },
+    {
+      "path": "shared/research-recovery.mjs",
+      "sha256": "76772c12e2ceb49e1187e332fd6d0672a7aed71077625cf2c7211c662ebbbd12",
+      "area": "shared",
+      "imports": [
+        "./research-delivery.mjs"
+      ],
+      "exports": [
+        "researchRetryNotice",
+        "saveRetryNotice",
+        "researchContinuation",
+        "researchRestart",
+        "retryNotice",
+        "researchRecovery",
+        "researchDraftState"
+      ]
+    },
+    {
+      "path": "shared/screen-evidence-rules.mjs",
+      "sha256": "8d1676454af33ff63ad6b49d7dca26edfbc0bfa2d633f1287db66e7b8d54f80f",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "screenEvidenceRules"
+      ]
+    },
+    {
+      "path": "shared/security-display.mjs",
+      "sha256": "acaccf8850259cf449287467b392a71d19e220c60303120b0e6e02f6f303cb7f",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "normalizedExchange",
+        "tickerKey",
+        "securityDisplayParts",
+        "securityDisplayLabel",
+        "researchSecurityDisplay"
+      ]
+    },
+    {
+      "path": "shared/security-input.mjs",
+      "sha256": "14025eb9d63ba0a7dc7dc955fc18ea44312801d341acf404732b3bf241187ece",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "validateSecurities"
+      ]
+    },
+    {
+      "path": "shared/valuation-policy.mjs",
+      "sha256": "2da456dfca6fe2300cb91273d0385fc61a1602a210cf15dab9f73c240fc59d36",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "researchMethodology",
+        "valuationGuidance",
+        "valuationConstraints",
+        "retiredValuationMethod",
+        "valuationFamily",
+        "valuationIssues"
+      ]
+    },
+    {
+      "path": "shared/web-evidence-progress.mjs",
+      "sha256": "91c7ec09116becb8b09eb74d45cafbfa4f80d6fdf3d7b34bc943f2cc5c7a676b",
+      "area": "shared",
+      "imports": [],
+      "exports": [
+        "webEvidenceProgress"
+      ]
+    },
+    {
+      "path": "src/App.jsx",
+      "sha256": "0113b9022acb4e4b879f63060ca3beb2c96a796b086039dc39be27477a8be08e",
+      "area": "src",
+      "imports": [
+        "./hooks/use-research-config",
+        "./hooks/use-research-path",
+        "react-router",
+        "../shared/research-preparation.mjs",
+        "../shared/research-knowledge.mjs",
+        "./lib/research-mode",
+        "./components/ResearchWorkbench",
+        "./components/ResearchPages",
+        "./components/RecentResearch",
+        "./hooks/use-job-stream",
+        "./hooks/use-composer-draft",
+        "./lib/composer-draft.mjs",
+        "./lib/research-submission.mjs",
+        "./components/Brand",
+        "./components/ResearchFramework",
+        "./components/ResearchHistory",
+        "./components/DeleteResearchDialog",
+        "react",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/sheet",
+        "@/components/ui/alert",
+        "@/lib/api",
+        "@/hooks/use-security-resolution",
+        "../shared/research-framework.mjs",
+        "../shared/research-export.mjs",
+        "../shared/research-delivery.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/DataConnect.jsx",
+      "sha256": "5b72d1735907caf5d730b172457f90d7123440bd22eb1f9d3348500efed9b6a2",
+      "area": "src",
+      "imports": [
+        "../shared/company-comparison.mjs",
+        "react",
+        "lucide-react",
+        "@/components/ui/button",
+        "@/components/ui/badge",
+        "@/components/ui/input",
+        "@/components/ui/select",
+        "@/components/ui/skeleton",
+        "@/components/ui/tabs",
+        "@/lib/api",
+        "../shared/research-data-copy.mjs",
+        "./components/CompanySecurityCard",
+        "./components/MarketQuote",
+        "./components/MultiCompanySelector",
+        "./lib/security-display.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/Brand.jsx",
+      "sha256": "484240f2beec2390e79d239545e69d61e95e412e968cd8f55020f64b765c4571",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/CompanyLogo.jsx",
+      "sha256": "b18274c2eadc87788deaf30a6bd39e751348d2970f5ed688f4ad8cd0dbdf1c04",
+      "area": "src",
+      "imports": [
+        "react",
+        "lucide-react",
+        "../lib/security-display.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/CompanyQuotePreview.jsx",
+      "sha256": "3c6b629ce2d3ab9518dca6d2f7f5cc36d4ae15c97fcc1824f7e45f30ed63b00c",
+      "area": "src",
+      "imports": [
+        "../lib/security-display.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/CompanySecurityCard.jsx",
+      "sha256": "842139201793eb0a994fe2e20f45c5d8536f70b39764478b63b05a52d3c54a7d",
+      "area": "src",
+      "imports": [
+        "lucide-react",
+        "./ui/tabs",
+        "./CompanyLogo",
+        "./CompanyQuotePreview",
+        "../lib/security-display.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ComparisonResults.jsx",
+      "sha256": "f732866869d19e14b55ddda8beffd78b3f8c0a752fc58dcd907fd003c23d23cc",
+      "area": "src",
+      "imports": [
+        "./ui/button",
+        "./ui/badge",
+        "../../shared/security-display.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/DeepExecutionOverview.jsx",
+      "sha256": "2f6e06da42863710c10b2232eeea644a1f130e8d36437ede3486b6f8403df560",
+      "area": "src",
+      "imports": [
+        "react-router",
+        "../../shared/research-analysis-receipts.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/DeepResearchProcess.jsx",
+      "sha256": "ff9c192370ce3328bf07668f0e2e184e374953d53db9e4aed93e310f1b900334",
+      "area": "src",
+      "imports": [
+        "react",
+        "lucide-react",
+        "./ui/button",
+        "./ui/collapsible"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/DeleteResearchDialog.jsx",
+      "sha256": "c6e26d1bb3fa7756d2d9809801d987a6d8698a1dc7516648f669c3a53bef953d",
+      "area": "src",
+      "imports": [
+        "radix-ui",
+        "lucide-react",
+        "./ui/button"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/DocumentReadingSummary.jsx",
+      "sha256": "ef00d073b2d3d4b42f6698e397f1e8514a18ffd290b049aeb22fc44a646c200f",
+      "area": "src",
+      "imports": [
+        "lucide-react",
+        "./ui/button"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ExecutionReview.jsx",
+      "sha256": "403e706978438d9d49c17d92270ad5fba4d649ce595e5f18e72d285b90fe7f03",
+      "area": "src",
+      "imports": [
+        "react",
+        "lucide-react",
+        "./ui/button"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/FinancialCoverage.jsx",
+      "sha256": "c64dc770104f88d5fba44a86c9cb68f02869319fe4b266f34d7d07c7ec32632b",
+      "area": "src",
+      "imports": [
+        "../../shared/financial-coverage.mjs",
+        "../../shared/research-record.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/MarketQuote.jsx",
+      "sha256": "e10a3318ab03b6fa261f03c865810675d013144d1946dd81a4d8105990f02d36",
+      "area": "src",
+      "imports": [
+        "lucide-react",
+        "./ui/button",
+        "../lib/security-display.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/MaterialEditor.jsx",
+      "sha256": "01b87f1bc5fb7a7498a7b8ec4149df9beb93e660f64e05f990526a9bb5cf4f34",
+      "area": "src",
+      "imports": [
+        "react",
+        "lucide-react",
+        "./ui/button",
+        "./ui/input",
+        "./ui/textarea",
+        "../../shared/reference-materials.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/MaterialPreview.jsx",
+      "sha256": "dc48eab2464cf2c5ec8ab24f63cbbac4641308bc456c0d73eb052d16a4509902",
+      "area": "src",
+      "imports": [
+        "react",
+        "lucide-react",
+        "./ui/button",
+        "./ui/input",
+        "../lib/material-search.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/MultiCompanySelector.jsx",
+      "sha256": "028dfac1d7f6b27b6e1fc8ee9de5a753551865af398b94f9b981c1251e3c44e8",
+      "area": "src",
+      "imports": [
+        "./ui/tabs",
+        "./CompanySecurityCard",
+        "../lib/security-display.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/PortfolioConstraints.jsx",
+      "sha256": "a11279d1d8fd8c30df7443d650781c787e15114382b57324ebca015cac7497ff",
+      "area": "src",
+      "imports": [
+        "react",
+        "lucide-react",
+        "../../shared/research-framework.mjs",
+        "./ui/badge",
+        "./ui/button",
+        "./ui/input",
+        "./ui/collapsible"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/RecentResearch.jsx",
+      "sha256": "3e8b821a02e14980e33710ef64090028e66904415a03d5464aa0ed918b2f40b7",
+      "area": "src",
+      "imports": [
+        "react",
+        "react-router",
+        "lucide-react",
+        "./ui/button",
+        "./ui/badge",
+        "../../shared/research-delivery.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ReportWarnings.jsx",
+      "sha256": "9f8a5b90fe4c9a140c258fc5b52b96420a84512d82af8a267ff3a41d60d1364e",
+      "area": "src",
+      "imports": [
+        "react",
+        "lucide-react",
+        "./ui/button",
+        "./ui/sheet",
+        "./ui/tabs",
+        "../../shared/report-warnings.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchAnalysisReceipts.jsx",
+      "sha256": "4b8309882503008d370f356a1905e9b5ef68aaeb9596e7c4544e3324024cc93c",
+      "area": "src",
+      "imports": [
+        "../../shared/research-analysis-receipts.mjs",
+        "react",
+        "./ui/button"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchCapabilities.jsx",
+      "sha256": "606d8d5f54788754ace3673d9155a7c617e4bb5641f3298fe7259bc27e150888",
+      "area": "src",
+      "imports": [
+        "react-router",
+        "../../shared/agent-capabilities.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchContext.jsx",
+      "sha256": "f14b7373f1ecc56cb5f0fa063c5e51971a234e2b45bf9b9e3d4da7a9026970e8",
+      "area": "src",
+      "imports": [
+        "react",
+        "../../shared/earnings-update.mjs",
+        "lucide-react",
+        "./PortfolioConstraints",
+        "../config/research-context",
+        "./ui/textarea",
+        "./ui/select",
+        "../../shared/research-framework.mjs",
+        "../../shared/execution-discipline.mjs",
+        "react-router",
+        "./ui/button"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchDataSources.jsx",
+      "sha256": "8119d845a6b7406be9711f68fdeece50fe3fc500c19627940d29ccdc1681df8e",
+      "area": "src",
+      "imports": [
+        "../../shared/research-data-copy.mjs",
+        "lucide-react",
+        "./ui/button",
+        "./ui/collapsible"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchDecision.jsx",
+      "sha256": "90cf549228cbdce1ae79d84af801e478d1afd071cdcad893ae99541e7e2fbd9d",
+      "area": "src",
+      "imports": [
+        "react",
+        "lucide-react",
+        "./ui/button",
+        "./ui/badge",
+        "./ui/card",
+        "./ui/sheet",
+        "../lib/research-mode"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchDetail.jsx",
+      "sha256": "d598d86c06958a73403ad7146fcc8a828be6d40e2e1d5de59c1dc2984a97c68c",
+      "area": "src",
+      "imports": [
+        "../../shared/report-security-headings.mjs",
+        "../../shared/security-display.mjs",
+        "../hooks/use-security-exchanges",
+        "./ResearchKnowledge",
+        "../../shared/research-record.mjs",
+        "../../shared/research-execution-checks.mjs",
+        "./ResearchExecutionChecks",
+        "./ResearchAnalysisReceipts",
+        "react-router",
+        "./ComparisonResults",
+        "../../shared/company-comparison.mjs",
+        "../../shared/earnings-update.mjs",
+        "../../shared/deep-research.mjs",
+        "./ReportWarnings",
+        "react",
+        "react-markdown",
+        "remark-gfm",
+        "lucide-react",
+        "./ui/button",
+        "./ui/badge",
+        "./ui/alert",
+        "./ui/card",
+        "./ui/input",
+        "./ui/collapsible",
+        "./ui/select",
+        "./ui/sheet",
+        "./ui/popover",
+        "./ui/tabs",
+        "./DocumentReadingSummary",
+        "./ResearchProgress",
+        "../../shared/research-progress.mjs",
+        "./ResearchDecision",
+        "./ExecutionReview",
+        "../../shared/research-framework.mjs",
+        "../lib/report-citations.mjs",
+        "../../shared/report-preview.mjs",
+        "../../shared/report-headings.mjs",
+        "../../shared/audit-coverage.mjs",
+        "../../shared/research-delivery.mjs",
+        "../../shared/research-recovery.mjs",
+        "../lib/research-mode",
+        "../../shared/web-evidence-progress.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchExecutionChecks.jsx",
+      "sha256": "1ccca44f32eaf071dd5b4307c2946e474e5f588009e893bc0c7acc188bc76885",
+      "area": "src",
+      "imports": [
+        "react",
+        "./ui/collapsible",
+        "../../shared/research-execution-checks.mjs",
+        "./ui/button",
+        "lucide-react",
+        "./FinancialCoverage"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchFramework.jsx",
+      "sha256": "d1a7b52645189dd8a82742168290e43b60439396d667c035ae7212a7324ef900",
+      "area": "src",
+      "imports": [
+        "./ResearchKnowledge",
+        "./ResearchCapabilities",
+        "./ResearchMethod",
+        "react",
+        "react-router",
+        "lucide-react",
+        "./ui/button",
+        "./ui/badge",
+        "./ui/card",
+        "./ui/tabs",
+        "./ui/collapsible",
+        "../../shared/research-framework.mjs",
+        "./ResearchService",
+        "./ResearchPrinciplesPreview",
+        "./ResearchScopeSummary",
+        "../config/research-presentation",
+        "../../shared/research-data-copy.mjs",
+        "../hooks/use-tab-autoplay",
+        "../hooks/use-section-navigation",
+        "../../shared/execution-discipline.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchHandbook.jsx",
+      "sha256": "4b3b8a9796ffeca1dd10b18357c5736b7352079868f041036325ddb550319bc3",
+      "area": "src",
+      "imports": [
+        "./ResearchKnowledge",
+        "./ResearchMethod",
+        "react-router",
+        "react",
+        "lucide-react",
+        "./ui/tabs",
+        "./ResearchReference",
+        "./ResearchUsageGuide"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchHistory.jsx",
+      "sha256": "1e65f46e89c1b4f5a76263eb87f1cc87f40fe9f363fc858966535f37e1e7fe09",
+      "area": "src",
+      "imports": [
+        "react",
+        "react-router",
+        "lucide-react",
+        "../lib/research-mode",
+        "./ui/button",
+        "./ui/badge",
+        "./ui/card",
+        "./ui/input",
+        "./ui/select",
+        "./ui/skeleton",
+        "../hooks/use-security-exchanges",
+        "../../shared/security-display.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchKnowledge.jsx",
+      "sha256": "0071582bd31e06d0a8597563b5c05da5d7ded8dbfc9b8eae45c55d905d0806da",
+      "area": "src",
+      "imports": [
+        "react",
+        "react-router",
+        "lucide-react",
+        "./ui/button",
+        "./ui/input",
+        "./ui/collapsible",
+        "../../shared/research-knowledge.mjs",
+        "../lib/api"
+      ],
+      "exports": [
+        "KnowledgeStatus",
+        "KnowledgeHighlights",
+        "DepthScope",
+        "ResearchRuleUsage"
+      ]
+    },
+    {
+      "path": "src/components/ResearchMaterials.jsx",
+      "sha256": "d2c9724d8b844b612fd08c1f7cced85dc15ea2d13e399177676caef0aafa6a67",
+      "area": "src",
+      "imports": [
+        "react",
+        "lucide-react",
+        "./ui/button",
+        "./ui/textarea",
+        "./ui/input",
+        "./ui/tabs",
+        "../../shared/reference-materials.mjs",
+        "../lib/material-file.mjs",
+        "../lib/material-image.mjs",
+        "./MaterialEditor",
+        "./MaterialPreview"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchMethod.jsx",
+      "sha256": "18810ec09c1a39dd5809ef01eb0217674bcf7747a64b8f01bd7bb9997d10645f",
+      "area": "src",
+      "imports": [
+        "./ResearchKnowledge",
+        "../../shared/research-knowledge.mjs",
+        "react-router",
+        "lucide-react",
+        "./ui/button",
+        "./ui/collapsible",
+        "../../shared/research-framework.mjs",
+        "../../shared/valuation-policy.mjs"
+      ],
+      "exports": [
+        "ResearchMethodSteps"
+      ]
+    },
+    {
+      "path": "src/components/ResearchPages.jsx",
+      "sha256": "5ddc216317706cd2629c4fc8c0e6d71ba965dde8069441cec90d37fe3edd8639",
+      "area": "src",
+      "imports": [
+        "react",
+        "react-router",
+        "lucide-react",
+        "./ui/button",
+        "./ResearchDetail",
+        "./ResearchHandbook"
+      ],
+      "exports": [
+        "ResearchDetailPage",
+        "ResearchHandbookPage"
+      ]
+    },
+    {
+      "path": "src/components/ResearchPreparation.jsx",
+      "sha256": "c1ab39429679f2e4fd20f368f0135267c0d7255d41a75169c2edaf767e9a5f2a",
+      "area": "src",
+      "imports": [
+        "./ui/sheet",
+        "lucide-react",
+        "./ui/button",
+        "./ResearchScopeSummary",
+        "../../shared/research-data-copy.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchPrinciplesPreview.jsx",
+      "sha256": "fe3292d2d0aefdce7dcf405452ac897f349f9e6d459a2c582cc285c41a28d317",
+      "area": "src",
+      "imports": [
+        "react-router",
+        "lucide-react",
+        "./ui/button"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchProgress.jsx",
+      "sha256": "e8d2785ca0625979a31839d0c997a55c6c82964df2279eda1d2e976178254efb",
+      "area": "src",
+      "imports": [
+        "lucide-react",
+        "../../shared/research-progress.mjs",
+        "./ui/card"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchReference.jsx",
+      "sha256": "0181f027382eb2293e3e177c771ce6149a8db46c62ff551bcd2e4d817bfd974f",
+      "area": "src",
+      "imports": [
+        "lucide-react",
+        "./ui/button",
+        "./ui/badge",
+        "./ui/tabs",
+        "./ui/collapsible",
+        "../config/research-reference",
+        "./ResearchStandards",
+        "./ResearchDataSources",
+        "../../shared/execution-discipline.mjs"
+      ],
+      "exports": [
+        "ResearchDiscipline",
+        "ResearchGlossary"
+      ]
+    },
+    {
+      "path": "src/components/ResearchScopeSummary.jsx",
+      "sha256": "dd73339069f51e8089475966caab648b083086e3d5eb50f6bb2e58ddf3e9c46d",
+      "area": "src",
+      "imports": [
+        "lucide-react",
+        "../config/research-presentation"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchService.jsx",
+      "sha256": "5efcc6f554667a48e400b42b828544792104fcceed067aafca2b7c75e3b2e116",
+      "area": "src",
+      "imports": [
+        "react",
+        "lucide-react",
+        "./ui/button",
+        "./ui/badge",
+        "./ui/card",
+        "./ui/sheet",
+        "../config/research-service"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchStandards.jsx",
+      "sha256": "1453c56061f5f27559162ed3bbc03779638aea65463f245881c39d22a6d0cab8",
+      "area": "src",
+      "imports": [
+        "lucide-react",
+        "./ui/badge",
+        "./ui/card",
+        "../../shared/research-framework.mjs"
+      ],
+      "exports": [
+        "ResearchScoring"
+      ]
+    },
+    {
+      "path": "src/components/ResearchUsageGuide.jsx",
+      "sha256": "2d86ba93293b647488c9bf4170237aa5e21afda73883714bccd0896d9ca8e4e1",
+      "area": "src",
+      "imports": [
+        "lucide-react",
+        "./ui/button",
+        "./ui/collapsible"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ResearchWorkbench.jsx",
+      "sha256": "3435e2085ac0587deca6ebb09ac28cda78997e109a7f2e3a33edff2f445a2d86",
+      "area": "src",
+      "imports": [
+        "./ResearchKnowledge",
+        "./DeepExecutionOverview",
+        "../config/research-presentation",
+        "../config/research-settings",
+        "../../shared/execution-discipline.mjs",
+        "../../shared/company-comparison.mjs",
+        "../../shared/earnings-update.mjs",
+        "../../shared/deep-research.mjs",
+        "react",
+        "lucide-react",
+        "./ui/button",
+        "./ui/card",
+        "./ui/textarea",
+        "./ui/select",
+        "../DataConnect",
+        "./ResearchContext",
+        "./ResearchMaterials",
+        "./ResearchPreparation",
+        "../../shared/research-preparation.mjs",
+        "../../shared/quick-screen-copy.mjs",
+        "../../shared/research-framework.mjs"
+      ],
+      "exports": [
+        "researchModes"
+      ]
+    },
+    {
+      "path": "src/components/WebEvidenceStatus.jsx",
+      "sha256": "e5626f2fe9a7c6a3f7fe9f975f907ba0e20293729e81de4fa6272d5a315cb5f7",
+      "area": "src",
+      "imports": [
+        "lucide-react",
+        "./ui/button",
+        "../../shared/web-evidence-progress.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/agent-capabilities.css",
+      "sha256": "a2c08ec8efa403cfc4ebbb38082be6fbaccd60eabc2e6d92dcfe4d41ac8cb45c",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/execution-checks.css",
+      "sha256": "e85ec044e5dbc6aaa29d18269af8054e8dbd591e68b1ee7cd9bdd737157741e4",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/execution-ui.css",
+      "sha256": "32cd96073e75b2c3e6c468482d1791bbf11cb2671491ebbd290993bd885166da",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/market-quote.css",
+      "sha256": "e65cd59af19c9f287fb2dbf1240aee7772b714828d01f9099cf615032e8a2404",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/report-warnings.css",
+      "sha256": "d80c57756664fd2fc0f6fe7e5422486ab32bad24f44cbbb2c18cb5121907f91a",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-analysis-receipts.css",
+      "sha256": "b2f8370ecd862054e421df5d0ec3e4f2d143562cb06147d4227d29d4504c0eee",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-context.css",
+      "sha256": "e73660ba50f5a034d703628e268a195e294dcba8b3c050c0eb523828e1de3f1d",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-decision.css",
+      "sha256": "6813590ca2059f06055b18fe3e62a90874e233a03d0ab83545cdaa8bc8daabee",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-detail.css",
+      "sha256": "bf659e41e28d1dfc896d89179f3b381b84527d6d84b21ec7037c34e7ffbb9c85",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-framework.css",
+      "sha256": "7b69bec65e54a682c5bad516e30f9571b6981250d86676bbed4f81a7c53705b9",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-history.css",
+      "sha256": "8e2bfe45d3a4729ac0ce681d129265cbd478e771930ca0abae40ebaede5efa45",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-home.css",
+      "sha256": "149466dc49990ad9473e8ae35c63d2c8fbf356d26227cbd4b1b48b7470274d84",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-knowledge.css",
+      "sha256": "dcaddd53ecbf6d6c05420ce9065b7933df350022057ccf060518167ccd5db1c0",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-materials.css",
+      "sha256": "9137a186fb4a41e9b9c75fd1b7cc7dc8ec5dd9c8d4e9073100767c21c0708139",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-method.css",
+      "sha256": "23eb649ffc20c577aea72c2d82700c71f12f4239f3718d08f1ad2c0cea0fa3c0",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-preparation.css",
+      "sha256": "5b21615e29ef4600dd562b53f300c8bd1630dd5bda92eb19faaa6c5e6f4cae71",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-progress.css",
+      "sha256": "a784c0a0a8ebd7cd3a97bd143dac53ba2de377caae4d294251abf5162f6d7d0f",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-recovery.css",
+      "sha256": "f7649695d62410d4e7ebe3fbcc51bbd9755c06c48ac7fb69a5bfe621c4adce73",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-reference.css",
+      "sha256": "efcfc8c067eb186a15601e377a00357947c1c226438da9a0c57a0389cd58acd3",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-report-first.css",
+      "sha256": "d36872a7598be6290ee7bd4d6d59313274f03e19401dfd472b5883092936c07d",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-scope.css",
+      "sha256": "68f00b1e108a3bc93f173feeac09426310cceb6d60842245a8d2ae8d75b1e70b",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-trace.css",
+      "sha256": "ae663f98784e704ecbe0a08a3f982bec8651d721d104da062c7f4855b74b8143",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-usage.css",
+      "sha256": "476d81686a636647a4fc0c474db7aec4e111c7ccf764f6943aa99a132adabebf",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/research-workbench.css",
+      "sha256": "d8652c5ffdd16a8c0ae3a9170d00896572ac4884ac7badb32dba7be6940c779e",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/sidebar-layout.css",
+      "sha256": "c62ef5ba3d454b1745a04cae9fcad5b34c125f8ef1247bcfe86abc4ccfc49e1f",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/components/ui/alert.jsx",
+      "sha256": "5e05280193aad4e19963d9c846d7303ca4688965773d2cf349fc5272caea362a",
+      "area": "src",
+      "imports": [
+        "react",
+        "class-variance-authority",
+        "@/lib/utils"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ui/badge.jsx",
+      "sha256": "0a8bf6588a560c51143e40829b9c94563e259bc70b92a8e5e9384785b4e027a2",
+      "area": "src",
+      "imports": [
+        "react",
+        "class-variance-authority",
+        "@/lib/utils",
+        "radix-ui"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ui/button.jsx",
+      "sha256": "6bbaf0ae79bc31ac19232478b375226cd77e954a7960647290c55c989e0b231e",
+      "area": "src",
+      "imports": [
+        "react",
+        "class-variance-authority",
+        "@/lib/utils",
+        "radix-ui"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ui/card.jsx",
+      "sha256": "146f16bb8f203688a2f49da12bd57a89c118100b751c8cab1838622d44e38fe9",
+      "area": "src",
+      "imports": [
+        "react",
+        "@/lib/utils"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ui/collapsible.jsx",
+      "sha256": "f55818c7bef4d8234fad014336079d2d4465336f65c74d3d341e6fe09f7f9ee8",
+      "area": "src",
+      "imports": [
+        "radix-ui"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ui/input.jsx",
+      "sha256": "1aa46607778172cc67f719f2f09d1791ed054e93991e4c58b8b1e7095556c0ad",
+      "area": "src",
+      "imports": [
+        "react",
+        "@/lib/utils"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ui/popover.jsx",
+      "sha256": "0649210219f19f06ba4ce5ca13436ab4b4f43250ef839def21af40feb32f0fd6",
+      "area": "src",
+      "imports": [
+        "radix-ui",
+        "@/lib/utils"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ui/select.jsx",
+      "sha256": "1f660f70ea300dd89d66d85e2766901d71bf5d26c748ab28fe6c0ed867f79ef4",
+      "area": "src",
+      "imports": [
+        "react",
+        "@/lib/utils",
+        "lucide-react",
+        "radix-ui"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ui/separator.jsx",
+      "sha256": "3978101cb298cfc1518f1792b1c2eb11cd2a1d93545c88cc1944dabca51ca754",
+      "area": "src",
+      "imports": [
+        "react",
+        "@/lib/utils",
+        "radix-ui"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ui/sheet.jsx",
+      "sha256": "7d4f4f3102131e8f1211ac4163279b15f45abb62f05a9c814393003ff8e3d855",
+      "area": "src",
+      "imports": [
+        "react",
+        "@/lib/utils",
+        "lucide-react",
+        "radix-ui"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ui/skeleton.jsx",
+      "sha256": "43cf42320721ec311994f0b95ea568bb32bf51a8dc6a5e24b4b4f05ff415fe48",
+      "area": "src",
+      "imports": [
+        "@/lib/utils"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ui/tabs.jsx",
+      "sha256": "7ad07b4b49f787267c5db7e538deab693c10d10bffe2160bbe36efdf36781b68",
+      "area": "src",
+      "imports": [
+        "react",
+        "class-variance-authority",
+        "@/lib/utils",
+        "radix-ui"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/ui/textarea.jsx",
+      "sha256": "2b19ea57d98757250fd3fe4dc7ff0e6131ffbc01054a7ca8e389cd5e7fb97108",
+      "area": "src",
+      "imports": [
+        "react",
+        "@/lib/utils"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/components/workbench-layout.css",
+      "sha256": "64954fc120b1f255ac010c3152d826a8898bde1f6f6f9ee59b400d49ebb657c0",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/config/research-context.js",
+      "sha256": "f1ed5bbeed0f202465282c0ca0cab492b632788f8d5aa30a14a4f8ea42b763dc",
+      "area": "src",
+      "imports": [],
+      "exports": [
+        "contextGuidance"
+      ]
+    },
+    {
+      "path": "src/config/research-presentation.js",
+      "sha256": "d8fe9be5888c8db63805024c0141566809e70f8368d39b61e8699ffc8cfe9dee",
+      "area": "src",
+      "imports": [],
+      "exports": [
+        "researchPresentation",
+        "researchOutcomeCopy"
+      ]
+    },
+    {
+      "path": "src/config/research-reference.js",
+      "sha256": "2c4e4d01871c86ac32b5afbe9543de748511b615c0c77cb7713f1f6db193ecd7",
+      "area": "src",
+      "imports": [],
+      "exports": [
+        "prohibitions",
+        "principles",
+        "terms"
+      ]
+    },
+    {
+      "path": "src/config/research-service.js",
+      "sha256": "bfa46c2d4ff8a136d05120702332de5a9f9ac0e01146f8038412ff3c5efb5350",
+      "area": "src",
+      "imports": [],
+      "exports": [
+        "researchService"
+      ]
+    },
+    {
+      "path": "src/config/research-settings.js",
+      "sha256": "f7f54a9f9239509a5fe68641200371371bec81ef5b881f3d2fa3fcbbe3cec711",
+      "area": "src",
+      "imports": [
+        "../../shared/research-data-copy.mjs"
+      ],
+      "exports": [
+        "researchSettings"
+      ]
+    },
+    {
+      "path": "src/hooks/use-composer-draft.js",
+      "sha256": "f864453aa8c4ae81ae229e33efe7fcf9c287af5553950543e215d5e4c2e2fc97",
+      "area": "src",
+      "imports": [
+        "react",
+        "../lib/composer-draft.mjs"
+      ],
+      "exports": [
+        "useComposerDraft"
+      ]
+    },
+    {
+      "path": "src/hooks/use-job-stream.js",
+      "sha256": "33b31ad5ab6ae448d5ac9cbd208eb23a96a5220e78be9b5fa13c8107fcd62a89",
+      "area": "src",
+      "imports": [
+        "../../shared/research-knowledge.mjs",
+        "react",
+        "../lib/api"
+      ],
+      "exports": [
+        "useJobStream"
+      ]
+    },
+    {
+      "path": "src/hooks/use-research-config.js",
+      "sha256": "08aaaa365b0066520bee3194a9441f2cb4e22fb0df7ec405952efc6bd18b1a14",
+      "area": "src",
+      "imports": [
+        "react",
+        "../lib/api"
+      ],
+      "exports": [
+        "useResearchConfig"
+      ]
+    },
+    {
+      "path": "src/hooks/use-research-path.js",
+      "sha256": "695e477f94ebb10928e95923d51c37e53806a7747cdc5b77c9288b8ced4ea253",
+      "area": "src",
+      "imports": [
+        "react",
+        "../lib/api",
+        "../../shared/research-framework.mjs"
+      ],
+      "exports": [
+        "useResearchPath"
+      ]
+    },
+    {
+      "path": "src/hooks/use-section-navigation.js",
+      "sha256": "62e816c5fd467f90b4cddb5ebb46b90e4dbae3a9d6d31ceda33ce9857944244f",
+      "area": "src",
+      "imports": [
+        "react",
+        "react-router"
+      ],
+      "exports": [
+        "useSectionNavigation"
+      ]
+    },
+    {
+      "path": "src/hooks/use-security-exchanges.js",
+      "sha256": "2e059ccfca475117f0e6fe8930cbd5dd05bbcee14929e493abfa4476ba4faf84",
+      "area": "src",
+      "imports": [
+        "react",
+        "../lib/api",
+        "../../shared/security-display.mjs"
+      ],
+      "exports": [
+        "useSecurityExchanges"
+      ]
+    },
+    {
+      "path": "src/hooks/use-security-resolution.js",
+      "sha256": "72911f4e8910d87c6f39ba1f598e0e8abb7e8ab89474213861ff532a806ce5e2",
+      "area": "src",
+      "imports": [
+        "react",
+        "@/lib/api",
+        "../../shared/security-input.mjs"
+      ],
+      "exports": [
+        "useSecurityResolution"
+      ]
+    },
+    {
+      "path": "src/hooks/use-tab-autoplay.js",
+      "sha256": "ed5626f1ae7e193897b3b40141d16505bd37118e525800d2caa6f2cd4cca6479",
+      "area": "src",
+      "imports": [
+        "react"
+      ],
+      "exports": [
+        "useTabAutoplay"
+      ]
+    },
+    {
+      "path": "src/lib/api.js",
+      "sha256": "157d2393fbfdcf8f69c93d11515a89766ee51a4e30fa015e20e357694acca693",
+      "area": "src",
+      "imports": [],
+      "exports": [
+        "api",
+        "post"
+      ]
+    },
+    {
+      "path": "src/lib/composer-draft.mjs",
+      "sha256": "30ae60160ac76a8734ee03bf7489a17a18b308406c62204b951accd9301edfd8",
+      "area": "src",
+      "imports": [
+        "../../shared/reference-materials.mjs",
+        "../../shared/research-framework.mjs"
+      ],
+      "exports": [
+        "composerDraft",
+        "loadComposerDraft",
+        "saveComposerDraft",
+        "clearComposerDraft"
+      ]
+    },
+    {
+      "path": "src/lib/material-file.mjs",
+      "sha256": "23af51848c33996fb7da55d4779b927aaaed0c553042d9f4e714a82d3f1678e7",
+      "area": "src",
+      "imports": [
+        "../../shared/reference-materials.mjs",
+        "./material-image.mjs",
+        "./api.js"
+      ],
+      "exports": [
+        "materialFileExtensions",
+        "materialFileAccept",
+        "materialFileBytes",
+        "validateMaterialFile",
+        "readMaterialFile"
+      ]
+    },
+    {
+      "path": "src/lib/material-image.mjs",
+      "sha256": "68b9003ca4280f64c621eae606d6074eaf90c8e8dc5f7971ea37bc195363a375",
+      "area": "src",
+      "imports": [],
+      "exports": [
+        "materialImageExtensions",
+        "isMaterialImage",
+        "imageFormat"
+      ]
+    },
+    {
+      "path": "src/lib/material-image.worker.mjs",
+      "sha256": "3bd71ca61d670c442bda9c7767417e56eba893c739ab4f0805932a08445f4e43",
+      "area": "src",
+      "imports": [
+        "tesseract.js/dist/tesseract.esm.min.js"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/lib/material-search.mjs",
+      "sha256": "1e53ef66d3a9ed5766225e2646386b433db5e490c24946be8f547995435c0031",
+      "area": "src",
+      "imports": [],
+      "exports": [
+        "materialSearchLimit",
+        "findMaterialMatches"
+      ]
+    },
+    {
+      "path": "src/lib/report-citations.mjs",
+      "sha256": "1c132d1cef8296aa2e45246b8be13524c2e9476e283367d3c6d7de558835625f",
+      "area": "src",
+      "imports": [],
+      "exports": [
+        "remarkReportCitations"
+      ]
+    },
+    {
+      "path": "src/lib/research-mode.js",
+      "sha256": "510114882f22957d0144d6149104a621db53edf468530f2b1622ae6c5b77efaf",
+      "area": "src",
+      "imports": [
+        "../../shared/research-framework.mjs"
+      ],
+      "exports": [
+        "modeLabels",
+        "modeOf",
+        "modeLabel"
+      ]
+    },
+    {
+      "path": "src/lib/research-submission.mjs",
+      "sha256": "207e7e07a72d38ce94083674e941fa80ac47a2f3016b17ec1021696837e9c004",
+      "area": "src",
+      "imports": [],
+      "exports": [
+        "createSubmissionTracker"
+      ]
+    },
+    {
+      "path": "src/lib/security-display.mjs",
+      "sha256": "bf0673d5dd527dd6a9cda2fb5c5b141d8741919780667b4f3986206ff4ed0232",
+      "area": "src",
+      "imports": [],
+      "exports": [
+        "securityIdentity",
+        "companyLogo",
+        "isNumber",
+        "quoteNumber",
+        "quoteAmount",
+        "quoteMovement"
+      ]
+    },
+    {
+      "path": "src/lib/utils.js",
+      "sha256": "a53cdfb69e2d3f3643902a991887a41bb1c255ef02c4cd057ac8c156ad32fa90",
+      "area": "src",
+      "imports": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "exports": [
+        "cn"
+      ]
+    },
+    {
+      "path": "src/main.jsx",
+      "sha256": "ea188e4c70a699cca3327535239075f51b92a60677103b2fc064b69543232606",
+      "area": "src",
+      "imports": [
+        "react",
+        "react-dom/client",
+        "react-router",
+        "./App"
+      ],
+      "exports": []
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "3642df31e4eec281bb15cf301991f45ca096ed23a01bf4ac3f109b593978b1ae",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "src/workbench.css",
+      "sha256": "aad1c5f181980a432f583d4e6282343ad0a421aa8b4d67e6687a827e48a85729",
+      "area": "src",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "tests/access.test.mjs",
+      "sha256": "d49f74379eb29779851d022018de98f0b1532f5977db4992026d1f4d89f39319",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/access.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/agent-capabilities-ui-scenarios.mjs",
+      "sha256": "f61d2b63dd7622a2827ae114cf4adba0a688218c5f42394ecdf4683f2a00bf45",
+      "area": "tests",
+      "imports": [
+        "node:assert/strict",
+        "node:fs/promises",
+        "../server/quick-screen.mjs"
+      ],
+      "exports": [
+        "registerAgentCapabilityScenarios"
+      ]
+    },
+    {
+      "path": "tests/agent-capabilities.test.mjs",
+      "sha256": "75f18febb7e2d90ae58081e94bc1a1a30a14adf69857730260dd460182a22c5d",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:crypto",
+        "../server/agent-page-reader.mjs",
+        "../server/financial-input-verification.mjs",
+        "../server/valuation-snapshot.mjs",
+        "../server/agent-execution.mjs",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs",
+        "./fixtures/material-files.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/agent.test.mjs",
+      "sha256": "276bb3a11d72be9746146ff00fd19ec594029ab9e2ec02705893e058c283acfa",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/byd-agent-alignment.test.mjs",
+      "sha256": "6144631f3585f094ae98cf8e128d7574d75c90e9ac7b9964d65b03fc0271df15",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/agent-disclosures.mjs",
+        "../server/reinvestment.mjs",
+        "../server/valuation-review.mjs",
+        "../server/valuation-snapshot.mjs",
+        "../shared/research-execution-checks.mjs",
+        "../shared/research-export.mjs",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/calculation-progress.test.mjs",
+      "sha256": "7472160f4d349c9a2066c6bb944afe9842feb4e40036a26618effaeb87552b8d",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/calculation-progress.mjs",
+        "../shared/deep-research.mjs",
+        "../server/research-workflow.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/calculations.test.mjs",
+      "sha256": "18d88d38fb7049bd526f229b58cf28a4b57fab6991481eeaa309ff21e465b2b5",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/calculations.mjs",
+        "../server/router.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/cashflow-bridge.test.mjs",
+      "sha256": "7d7de895c02adb1fae5ac4b00a8cf4621079c196f729261876fa3fbb5ebf0a2b",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/cashflow-bridge.mjs",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs",
+        "../server/quick-screen.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/company-comparison.test.mjs",
+      "sha256": "d0baa14ecc75a9298b773eba6bd6abe18a18d204154a1e4119b13a9100ba50cb",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/company-comparison.mjs",
+        "../shared/research-framework.mjs",
+        "../shared/company-comparison.mjs",
+        "../server/router.mjs",
+        "./fixtures/research-review.mjs",
+        "../server/research-output.mjs",
+        "../server/agent.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/composer-recovery.test.mjs",
+      "sha256": "67eefe4a8975dcb01bf019cfd194d8a46e4999a187c25f492a62ab44dbd5aae1",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../src/lib/composer-draft.mjs",
+        "../src/lib/api.js"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/context-settings-ui-scenarios.mjs",
+      "sha256": "d8c117db7820e1e0f7cd5cff3af6a7a053446e58591132b4153400f17e9360b5",
+      "area": "tests",
+      "imports": [
+        "node:assert/strict"
+      ],
+      "exports": [
+        "registerContextSettingsScenarios"
+      ]
+    },
+    {
+      "path": "tests/data-completeness.test.mjs",
+      "sha256": "4a28f2ee3f7c55d79260cef1c1a4936649d43ad313892e4d76d15ad881f894bd",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/valuation-history.mjs",
+        "../server/filing-text.mjs",
+        "../server/hkex-disclosures.mjs",
+        "../server/report-periods.mjs",
+        "../server/official-reports.mjs",
+        "../server/data-archive.mjs",
+        "../server/tushare-client.mjs",
+        "../server/capital-evidence.mjs",
+        "../server/financial-observations.mjs",
+        "../server/market-data.mjs",
+        "../server/market-request.mjs",
+        "../server/longbridge-fundamentals.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/data-providers.test.mjs",
+      "sha256": "14d2c25419fcd60df2284b8ce14f9e474b4e58f1ba11ae318c1022ada0e1cda7",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:events",
+        "../server/data-provider-config.mjs",
+        "../server/longbridge-quotes.mjs",
+        "../server/tushare-financials.mjs",
+        "../server/market-data.mjs",
+        "../server/market-request.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/deep-cash-return-alignment.test.mjs",
+      "sha256": "f01a0887e13799285eb557ff4f2c6971152bd5afadc9918bdce5e41612c28e50",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/research-sensitivity.mjs",
+        "../server/shareholder-return.mjs",
+        "../server/calculations.mjs",
+        "../server/normalized-earnings.mjs",
+        "../server/agent.mjs",
+        "../shared/research-analysis-receipts.mjs",
+        "../shared/research-export.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/deep-research.test.mjs",
+      "sha256": "e18e5a8afc357c25b4bb8003102f23f458bf4342009f4cab63c0254884c4115f",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/research-framework.mjs",
+        "../shared/deep-research.mjs",
+        "../server/normalized-earnings.mjs",
+        "../server/agent.mjs",
+        "../server/research-output.mjs",
+        "../shared/research-export.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/deploy.integration.sh",
+      "sha256": "c8729fad5c50c48ef14c54399bc1ce1e379ef4efcb9b98ab9572a5e3c944cf54",
+      "area": "tests",
+      "imports": [],
+      "exports": []
+    },
+    {
+      "path": "tests/dev-source-watch.test.mjs",
+      "sha256": "0a342b3039d9a487f1b19442028295b5a3aa056d48fcfb7f37c2710b4d40f5a6",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:fs",
+        "node:os",
+        "node:path",
+        "node:timers/promises",
+        "../scripts/dev-source-watch.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/document-parsing.test.mjs",
+      "sha256": "d1e0501e0526e1ee1605680cc699d83dfa0ea3728b74ccbb5fe85b6d6dfc3e85",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:events",
+        "../server/document-layout.mjs",
+        "../server/pdf-options.mjs",
+        "../server/pdf-extractor.mjs",
+        "../server/filing-text.mjs",
+        "../server/inline-xbrl.mjs",
+        "../server/financial-observations.mjs",
+        "../server/evidence-search.mjs",
+        "../server/official-reports.mjs",
+        "../server/web-evidence.mjs",
+        "../server/document-integrity.mjs",
+        "../server/calculations.mjs",
+        "../server/job-stream.mjs",
+        "mongodb"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/document-routing.test.mjs",
+      "sha256": "4992bb41c67f4e631ff99e11b3e4cb2417372919aedf2bb59c6ef9f163b1195d",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/document-reader.mjs",
+        "../server/model-routing.mjs",
+        "../server/pdf-processing.mjs",
+        "../server/visual-reading.mjs",
+        "./fixtures/material-files.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/earnings-update.test.mjs",
+      "sha256": "909837b22f67f5fb9ed892124dcb3bd37cfe989689aa7fffec50fd81e6f6742f",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/research-framework.mjs",
+        "../shared/earnings-update.mjs",
+        "../server/quick-screen.mjs",
+        "../server/research-output.mjs",
+        "./fixtures/research-review.mjs",
+        "../server/agent.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/evidence-followup.test.mjs",
+      "sha256": "51f9f6f6940ba24d650305fce0d2fd118c4fcc1a6710f5b18cf771f1b93bfc73",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/evidence-followup.mjs",
+        "../server/web-research.mjs",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs",
+        "../shared/research-export.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/evidence-integrity.test.mjs",
+      "sha256": "6a7466b6f60faeb3c38d03dfd24696fd758d704b5c5f0662c8a5e8f49a442a0a",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/evidence-search.mjs",
+        "../server/calculations.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/execution-discipline.test.mjs",
+      "sha256": "97e283801b52c950a170bdd6f1d902e950910b1901cd5550cda067510bad944b",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:fs",
+        "../shared/research-framework.mjs",
+        "../server/knowledge.mjs",
+        "../server/research-output.mjs",
+        "../server/review-format.mjs",
+        "./fixtures/research-review.mjs",
+        "../src/config/research-reference.js",
+        "../server/agent.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/fixtures/delivery-api-runtime.mjs",
+      "sha256": "9316d392c4f38a3230a0a19f5f7eccfe8aa7d44386cdebbc309c4b268d1dd1dd",
+      "area": "tests",
+      "imports": [
+        "node:module"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/fixtures/material-files.mjs",
+      "sha256": "586f8865091079b9f6e67afe671a3f7464e0425cbba703e0557cf3d9badea8c6",
+      "area": "tests",
+      "imports": [
+        "fflate"
+      ],
+      "exports": [
+        "officeArchive",
+        "materialDocx",
+        "materialXlsx",
+        "materialPptx",
+        "materialPdf"
+      ]
+    },
+    {
+      "path": "tests/fixtures/material-upload-response.mjs",
+      "sha256": "47129aa63332a6849a16c8a66d70da7d56b5ee15406292e3e02ff368c723115c",
+      "area": "tests",
+      "imports": [
+        "../../shared/document-text.mjs"
+      ],
+      "exports": [
+        "materialUploadResponse"
+      ]
+    },
+    {
+      "path": "tests/fixtures/research-review.mjs",
+      "sha256": "5630eb03a0d7071b7820ada957e7f52af6d834ccfff0d77cd3d9555cb514adb4",
+      "area": "tests",
+      "imports": [
+        "../../shared/research-framework.mjs"
+      ],
+      "exports": [
+        "reviewFixture"
+      ]
+    },
+    {
+      "path": "tests/fixtures/resume-runtime.mjs",
+      "sha256": "a559795ff0c1af71632a9d96e7b1a65e1e51df21833cc8e98d2bf45ce983af46",
+      "area": "tests",
+      "imports": [
+        "node:assert/strict",
+        "../../server/storage.mjs",
+        "../../server/agent.mjs",
+        "../../server/research-retry.mjs",
+        "./research-review.mjs",
+        "../../server/web-research.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/fixtures/retry-api-runtime.mjs",
+      "sha256": "6cce9152e570659b23eb927a5b30581b2cae239fac7e8ee21f1af4862c78fa63",
+      "area": "tests",
+      "imports": [
+        "node:module"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/fixtures/tencent-quotes.mjs",
+      "sha256": "d51e190c1f55c7a729ab64202b0c12277ac2c0884ad1514d52a3cd6e7775065f",
+      "area": "tests",
+      "imports": [],
+      "exports": [
+        "tencentQuotes"
+      ]
+    },
+    {
+      "path": "tests/framework-v43.test.mjs",
+      "sha256": "0e50c5766c7a39310a74cc8bc8c2ebd9fe5c82f0dbc422c1981c13fb0fb1bbe6",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:fs",
+        "node:crypto",
+        "../server/agent.mjs",
+        "../shared/research-framework.mjs",
+        "../server/knowledge.mjs",
+        "../server/research-resume.mjs",
+        "../shared/research-recovery.mjs",
+        "../server/research-output.mjs",
+        "./fixtures/research-review.mjs",
+        "../server/calculations.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/input-checkpoints.test.mjs",
+      "sha256": "41ce66a3e0abb5101a3934c19fe06b161002c56c484db814c993e293c582facc",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/reference-materials.mjs",
+        "../server/router.mjs",
+        "../server/research-retry.mjs",
+        "../server/job-checkpoints.mjs",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/jobs-create.integration.mjs",
+      "sha256": "6324b86627385bb58575dd15cc0e0f9da804173d5835edcc18132081bd4811eb",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "mongodb",
+        "node:crypto",
+        "node:child_process",
+        "node:events",
+        "node:http",
+        "node:net",
+        "node:timers/promises",
+        "../server/storage.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/jobs-delete.integration.mjs",
+      "sha256": "71b95b1101514a3ba91d95095294324afc0e231200d3f67ffc842c4817c0662e",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:child_process",
+        "node:events",
+        "node:net",
+        "node:timers/promises",
+        "node:crypto",
+        "mongodb",
+        "../server/storage.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/jobs-delivery.integration.mjs",
+      "sha256": "4a0ed47af77d344ae1031ec40b6b98290687ddd7fa94f7307fa6e4038a4ebc7e",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "mongodb",
+        "node:crypto",
+        "node:child_process",
+        "node:events",
+        "node:net",
+        "node:timers/promises",
+        "../server/storage.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/jobs-retry.integration.mjs",
+      "sha256": "0d841e13307566e9ddf816d772d251b61c2e87bdf540c7cf7d499994d9c95769",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "mongodb",
+        "node:crypto",
+        "../server/storage.mjs",
+        "node:child_process",
+        "node:events",
+        "node:net",
+        "node:timers/promises"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/knowledge-api.integration.mjs",
+      "sha256": "96df59d46c812d2fbfd27cb1ad5265c0833f2e136dbd76eea9f0b610ea81f6a8",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "mongodb",
+        "node:crypto",
+        "node:child_process",
+        "node:events",
+        "node:net",
+        "node:timers/promises",
+        "../server/storage.mjs",
+        "../shared/research-framework.mjs",
+        "../server/knowledge.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/knowledge-backup.test.mjs",
+      "sha256": "2112f5161c180e6454913f5007222fadbdfff39c4a6fe7d59acf6837d9cf2a14",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:fs",
+        "node:os",
+        "node:path",
+        "node:crypto",
+        "../scripts/backup-knowledge.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/knowledge-modules.test.mjs",
+      "sha256": "797f2db33a8e12545c762de78b39ce932adb3e24dd37e141f0efd8a2a458345b",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:fs",
+        "node:crypto",
+        "../server/knowledge.mjs",
+        "../shared/research-framework.mjs",
+        "../shared/knowledge-search.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/knowledge-platform-ui-scenarios.mjs",
+      "sha256": "3e7c2cba92c79ad1876bd8cfd68f38dbcfff71b75678bd07aca50150c55c9303",
+      "area": "tests",
+      "imports": [
+        "node:assert/strict",
+        "../shared/research-framework.mjs",
+        "../shared/research-knowledge.mjs"
+      ],
+      "exports": [
+        "registerKnowledgePlatformScenarios"
+      ]
+    },
+    {
+      "path": "tests/knowledge-snapshots.test.mjs",
+      "sha256": "8d331756f7251dd910ccded592b42d2c556604320a0de96bb2fbec53b420efc3",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:fs",
+        "node:os",
+        "node:path",
+        "node:crypto",
+        "../server/knowledge-snapshots.mjs",
+        "../server/knowledge.mjs",
+        "../shared/research-framework.mjs",
+        "../shared/knowledge-index.mjs",
+        "../shared/knowledge-search.mjs",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/market-data.test.mjs",
+      "sha256": "f6c61ae442be14767b1db67ccb41dde091f986a1ee7d0b379b0584eae96161d6",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/market-data.mjs",
+        "../server/router.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/market-resilience.test.mjs",
+      "sha256": "d4e7bde493846ef7ecf16445bc47987b252fdf9415d5a2cb281db8dfc0a680e6",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:timers/promises",
+        "../server/market-request.mjs",
+        "../server/market-cache.mjs",
+        "../server/sec-directory.mjs",
+        "../server/market-data.mjs",
+        "./fixtures/tencent-quotes.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/material-file.test.mjs",
+      "sha256": "976d9214ae4b713cef13de132c37d5709bf7fe3795bc236bbe27292ae6631f62",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../src/lib/material-file.mjs",
+        "../shared/document-text.mjs",
+        "./fixtures/material-files.mjs",
+        "../src/lib/material-image.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/material-processing.test.mjs",
+      "sha256": "532bb868752dd2e9f874b098ce2ab15ad075c4110360d6fa3b6a9a911b418857",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/document-layout.mjs",
+        "../server/evidence-search.mjs",
+        "../server/calculations.mjs",
+        "../server/calculation-recovery.mjs",
+        "../server/quick-screen.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/material-search.test.mjs",
+      "sha256": "749a74d1f9cdd327602689f5e587a03c2ee46a7b179d4c9fdc8e9facf9aa80f2",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../src/lib/material-search.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/model-deadline.test.mjs",
+      "sha256": "5e594b650509464e599d8f006be3b622bd653a776e46d574c42e0d9d80498738",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:timers/promises",
+        "../server/model-deadline.mjs",
+        "../server/model-stream.mjs",
+        "../server/agent.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/model-request.test.mjs",
+      "sha256": "ff665ef40f7afa9a2f74848b1945c7d4caaec80ac7746b4067232e44b77c226f",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/model-request.mjs",
+        "../server/agent.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/ocr-image.test.mjs",
+      "sha256": "70fcf6290fa82c05881f9f8baacd2d4288dec5d8ef6dd61e39ec0be20d64de58",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "@napi-rs/canvas",
+        "../server/ocr-image.mjs",
+        "../server/pdf-ocr.mjs",
+        "../server/document-layout.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/pdf-extractor.test.mjs",
+      "sha256": "19acfe654a8f67e4e697c6b8616f823cb8b45536579d45bd425fb621c7012894",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:events",
+        "../server/pdf-extractor.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/pdf-ocr.test.mjs",
+      "sha256": "9c95a8b04fb57b198c91a652956f0a8dc573223b210a05f2871e0cf2c0ba4be7",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:events",
+        "../server/pdf-processing.mjs",
+        "../server/pdf-ocr.mjs",
+        "../server/pdf-extractor.mjs",
+        "../server/document-layout.mjs",
+        "../server/evidence-search.mjs",
+        "../server/calculations.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/pdf-recovery.test.mjs",
+      "sha256": "b5f4529e2afeb45e20edc36d943323580f4d360e6c7f63658082b855c3618e91",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/official-reports.mjs",
+        "../server/document-layout.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/platform-recovery-ui-scenarios.mjs",
+      "sha256": "1f844fa1e705d57bd9ad138eed5e93c3f4940e42b5da902614cb7ae39cc8be9a",
+      "area": "tests",
+      "imports": [
+        "node:assert/strict"
+      ],
+      "exports": [
+        "registerPlatformRecoveryScenarios"
+      ]
+    },
+    {
+      "path": "tests/quick-screen.test.mjs",
+      "sha256": "f2582b9e3dce4f679b4eb4635d45f52ffb6b79abe92b993df5eda918ebdb1fdd",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/quick-screen.mjs",
+        "../shared/research-framework.mjs",
+        "../shared/research-export.mjs",
+        "../server/report-periods.mjs",
+        "../server/data-basis.mjs",
+        "../server/evidence-search.mjs",
+        "../server/research-output.mjs",
+        "../server/agent.mjs",
+        "../server/market-data.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/quote-presentation.test.mjs",
+      "sha256": "758e8d5e8778c27a821ce79b1f8966de78c41eb900c1151532a19449747cddb8",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/longbridge-quotes.mjs",
+        "../server/market-data.mjs",
+        "./fixtures/tencent-quotes.mjs",
+        "../src/lib/security-display.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/recovery-ui-scenarios.mjs",
+      "sha256": "814cd6daa73957035aec036da8aa5fc331e71d18a29f6a733193429439e1c929",
+      "area": "tests",
+      "imports": [
+        "node:assert/strict"
+      ],
+      "exports": [
+        "registerRecoveryScenarios"
+      ]
+    },
+    {
+      "path": "tests/report-citations.test.mjs",
+      "sha256": "715fcf37066126dc6966b4cf08c521711e622b6022e2cd7fb58595c0241d7f41",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../src/lib/report-citations.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/report-first-ui-scenarios.mjs",
+      "sha256": "5aa6a19932c8a55fa2d15e024de71726cf32ff28d9978645e885a7070d10f8fd",
+      "area": "tests",
+      "imports": [
+        "node:assert/strict",
+        "node:url"
+      ],
+      "exports": [
+        "registerReportFirstScenarios"
+      ]
+    },
+    {
+      "path": "tests/report-headings.test.mjs",
+      "sha256": "2d86c7ea7adbd8f7c8b148e57f3b1f1f369921b196a1d4a1f0e3c0bfcca40fd4",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/report-headings.mjs",
+        "../shared/research-framework.mjs",
+        "../server/research-output.mjs",
+        "./fixtures/research-review.mjs",
+        "../shared/report-preview.mjs",
+        "../shared/research-export.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/report-preview.test.mjs",
+      "sha256": "84f00281190510e2f864cd5373088742df416dded536736ed6ef2388ebfbb7c3",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/report-preview.mjs",
+        "../shared/research-framework.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/report-security-headings.test.mjs",
+      "sha256": "1932bf38ecb714b7e8c490a271f4d3de3c8251492b113d5bb687c2fb4e66395f",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/report-security-headings.mjs",
+        "../shared/research-export.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/report-warnings.test.mjs",
+      "sha256": "4820267afaacbe9ba675cf1e5c0b53d3b469d69cb084ccc21f126c9986fe747d",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/report-warnings.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-contract.test.mjs",
+      "sha256": "782aeeffc95b9ee56e5ad8cd98e6381c0f4d80aff233acccd94cedb2814ba819",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:fs",
+        "node:crypto",
+        "../shared/research-framework.mjs",
+        "../server/knowledge.mjs",
+        "../server/router.mjs",
+        "../server/research-output.mjs",
+        "../server/research-baseline.mjs",
+        "../server/calculations.mjs",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-create.test.mjs",
+      "sha256": "c0df6daec339fd00ab9fe342a3a30606568577ce997aa49e39dc22f7e1655689",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:crypto",
+        "../server/research-create.mjs",
+        "../src/lib/research-submission.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-delivery.test.mjs",
+      "sha256": "e457b0e553afeb7e9be26e405c9dffde38126646bc57cff4d982b3aca7a4a62b",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/research-delivery.mjs",
+        "../server/research-retry.mjs",
+        "../server/job-stream.mjs",
+        "../shared/research-delivery.mjs",
+        "../shared/research-export.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-framework.test.mjs",
+      "sha256": "4c31088c1dae67e66fd2e450558fc28c55045660cee10969eeeb5063732e563d",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/research-framework.mjs",
+        "../server/router.mjs",
+        "../server/research-workflow.mjs",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-knowledge.test.mjs",
+      "sha256": "d08ca50ec079b4c1b6bd142cd53924d0e16685aa6615880d727080acbb68879f",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/research-framework.mjs",
+        "../shared/research-knowledge.mjs",
+        "../server/knowledge.mjs",
+        "../server/knowledge-excerpt.mjs",
+        "../shared/research-framework.mjs",
+        "../shared/research-export.mjs",
+        "../shared/research-preparation.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-path.test.mjs",
+      "sha256": "d7e8d1691f7a2f90ea30565e5911114cdaf31a916ae701f399adfe4a21560749",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/research-path.mjs",
+        "../server/router.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-pipeline.test.mjs",
+      "sha256": "efb45b5137e50b2961f25f2f95e29b300622da0562c747931bbeec2c3055c84b",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/bounded-reads.mjs",
+        "../server/market-data.mjs",
+        "../server/research-context.mjs",
+        "../shared/research-export.mjs",
+        "../shared/audit-coverage.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-preparation.test.mjs",
+      "sha256": "73d04f1c9d32d492a1c8ac8333522d9ec59fbfdf17e91136df2090dfed7b3161",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/research-preparation.mjs",
+        "../server/router.mjs",
+        "../shared/security-input.mjs",
+        "../shared/earnings-update.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-progress.test.mjs",
+      "sha256": "b2691af6235f284b83c9e754e0259dcfde321de8ccd8ee830ec327cefb73bdc4",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/research-progress.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-record.test.mjs",
+      "sha256": "89edb0b1af8440e72cf693be71cf1fb29574b62a75fc885e19e24b8a5de51f38",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/research-record.mjs",
+        "../shared/research-export.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-recovery.test.mjs",
+      "sha256": "f2e9b87296607a807bbff220d69cc6565f4ac2f03c8d3569e08172bbc7fcf58f",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/research-recovery.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-references.test.mjs",
+      "sha256": "ac7cb2565b8bb98d4cd1d05b7ad5f497dcbcb56fef8ecb75affcb0ff29797c81",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/research-references.mjs",
+        "../server/research-output.mjs",
+        "../shared/research-framework.mjs",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-resume.integration.mjs",
+      "sha256": "b2770b0ff3a69abe7d5204d318aac4f24a825bc561758d8dd50c1f2646d72814",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:crypto",
+        "node:child_process",
+        "mongodb",
+        "../server/storage.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-resume.test.mjs",
+      "sha256": "03603ebdaa3538090bacd634cc1af7f03eb54ed845878188d2e2c694049f67bd",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/agent.mjs",
+        "../server/research-retry.mjs",
+        "../server/research-resume.mjs",
+        "../server/job-stream.mjs",
+        "./fixtures/research-review.mjs",
+        "../shared/research-framework.mjs",
+        "../server/web-research.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/research-retry.test.mjs",
+      "sha256": "d85b776b38fde0066d588a70ca8f82a0c235ebc7ead3a3b8f717e16835e27ae9",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/research-retry.mjs",
+        "../server/knowledge.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/review-format.test.mjs",
+      "sha256": "3e5619234fb5107e857448d79210686e9ca8d742d637d175b922a083188f8a9d",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/review-format.mjs",
+        "../shared/research-framework.mjs",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/review-recovery.test.mjs",
+      "sha256": "8bf465921850775967f153ea0cb6b712cfb910168854e00edf5215d38ce21ee7",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/research-framework.mjs",
+        "../server/research-output.mjs",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/right-rail-ui-scenarios.mjs",
+      "sha256": "0cc84fd693ed7b0cfb4a01b10b54749cd84bc30b56389191dada03b9ba7fc3bc",
+      "area": "tests",
+      "imports": [
+        "node:assert/strict",
+        "node:url"
+      ],
+      "exports": [
+        "registerRightRailScenarios"
+      ]
+    },
+    {
+      "path": "tests/routes.fixture.jsx",
+      "sha256": "f5ca2470fd7e83e7dea705912ac279fd7a5994214f020b46c141705494436340",
+      "area": "tests",
+      "imports": [
+        "react",
+        "react-dom/server",
+        "react-router",
+        "../src/App"
+      ],
+      "exports": [
+        "renderRoute"
+      ]
+    },
+    {
+      "path": "tests/routes.integration.mjs",
+      "sha256": "e72fd5c159074942fe5e01a8ec8a3abd8c83e7cef5380d102b127b050c631048",
+      "area": "tests",
+      "imports": [
+        "vite",
+        "node:assert/strict"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/schema.integration.mjs",
+      "sha256": "d3e166ac9f4260cbb56a7de203e515d49a697879c5e11e1583c12ea49ba2ac5d",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "mongodb",
+        "node:crypto",
+        "../server/schema-migrations.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/screen-capability-alignment.test.mjs",
+      "sha256": "4bbf154322fb5330754fd0d420e99665c91ae46f0e521973b08b8ad176441497",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/quick-screen.mjs",
+        "../server/financial-input-verification.mjs",
+        "../server/agent-execution.mjs",
+        "../shared/research-execution-checks.mjs",
+        "../shared/research-export.mjs",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/security-display.test.mjs",
+      "sha256": "5f22dd35d6ab25a14fb6f23ff911555dcdc65d014159bb6d5aac8eb4ca0b574d",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/security-display.mjs",
+        "../server/security-exchanges.mjs",
+        "../server/market-request.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/security-intent.test.mjs",
+      "sha256": "052ad867badb2536a8cfca42491ec17153c55bdaebfe7fd5db22020f74b0b464",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/security-intent.mjs",
+        "../server/security-resolver.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/security-resolver.test.mjs",
+      "sha256": "7bf1c1e44868bfa9c7d1980f8db5df65cb08e6bcae9f9e31f2a6333df0d84e40",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/security-resolver.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/shareholder-data.test.mjs",
+      "sha256": "34e39c9b33999dc30dd041db8abcbf4cc649855caa49126e220f10067ce48247",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/shareholder-data.mjs",
+        "../server/data-basis.mjs",
+        "../server/calculations.mjs",
+        "../server/longbridge-quotes.mjs",
+        "../server/market-data.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/sidebar-ui-scenarios.mjs",
+      "sha256": "3e44adc8b00c9f5ed2d39102aa67cc117add678be91af737b895a8e8dfd72ecf",
+      "area": "tests",
+      "imports": [
+        "node:assert/strict"
+      ],
+      "exports": [
+        "registerSidebarScenarios"
+      ]
+    },
+    {
+      "path": "tests/storage.integration.mjs",
+      "sha256": "5bfc03e7bca6c29c6439937d1312a419974d9ca059102bc7165580a658c43207",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "mongodb",
+        "node:crypto",
+        "node:fs/promises",
+        "node:os",
+        "node:path",
+        "../server/storage.mjs",
+        "../server/migrate.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/streaming.test.mjs",
+      "sha256": "fcfc47f527a41f17dd9cbe798995f011b69da09c23b967b795e5d3caaef372fd",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:events",
+        "../server/model-stream.mjs",
+        "../server/job-stream.mjs",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs",
+        "../shared/report-preview.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/valuation-policy.test.mjs",
+      "sha256": "400b390bf6a9d02ae76814f86bdd69f9bbb4d3904f526ff919e2fc1c7973a261",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../shared/valuation-policy.mjs",
+        "../shared/research-framework.mjs",
+        "../server/research-output.mjs",
+        "../server/knowledge.mjs",
+        "../server/research-resume.mjs",
+        "../shared/research-recovery.mjs",
+        "../server/research-retry.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/visual-reading.test.mjs",
+      "sha256": "8c6f3fb31cc3f8d36a6435947ca7d4775a2a0fb2fdd8b137cad9e8c7c5a95aae",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:fs/promises",
+        "node:os",
+        "node:path",
+        "@napi-rs/canvas",
+        "../server/vision-model.mjs",
+        "../server/visual-reading.mjs",
+        "../server/visual-assets.mjs",
+        "../server/document-layout.mjs",
+        "../server/evidence-search.mjs",
+        "../shared/reference-materials.mjs",
+        "../server/agent.mjs",
+        "../server/material-vision.mjs",
+        "./fixtures/research-review.mjs",
+        "./fixtures/material-files.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/web-evidence-reuse.test.mjs",
+      "sha256": "de8aa46f07e5d0dfa0bb285d5b9cd1a1ebf1faeb03abed285e378b47bc0ef17b",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "../server/web-research.mjs",
+        "../server/evidence-search.mjs",
+        "../shared/web-evidence-progress.mjs",
+        "../server/agent.mjs",
+        "./fixtures/research-review.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/web-research.test.mjs",
+      "sha256": "9a12f2aae629295111ed2fdc419ee11da0fe99cfd91a32f66da09b42a5ce08a5",
+      "area": "tests",
+      "imports": [
+        "node:test",
+        "node:assert/strict",
+        "node:events",
+        "node:stream",
+        "node:zlib",
+        "../server/web-search-provider.mjs",
+        "../server/web-evidence-request.mjs",
+        "../server/web-evidence.mjs",
+        "../server/web-research.mjs",
+        "../server/agent.mjs",
+        "../server/calculations.mjs",
+        "./fixtures/research-review.mjs",
+        "../server/document-layout.mjs",
+        "../server/document-integrity.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "tests/workflow-ui-scenarios.mjs",
+      "sha256": "201a474909b3aeee9ba2b8656c528822cd2c225ac3003b133a4f9b528a30156d",
+      "area": "tests",
+      "imports": [
+        "node:assert/strict"
+      ],
+      "exports": [
+        "registerWorkflowScenarios"
+      ]
+    },
+    {
+      "path": "tests/workspace-ui.integration.mjs",
+      "sha256": "64f92a9526db91806fcac0b67025d78424dfe9d7b5db4827c8e526b8aabf191b",
+      "area": "tests",
+      "imports": [
+        "node:assert/strict",
+        "node:fs/promises",
+        "node:timers/promises",
+        "node:url",
+        "../shared/research-framework.mjs",
+        "./fixtures/research-review.mjs",
+        "../server/research-output.mjs",
+        "../server/research-retry.mjs",
+        "./fixtures/material-files.mjs",
+        "./fixtures/material-upload-response.mjs",
+        "./right-rail-ui-scenarios.mjs",
+        "./sidebar-ui-scenarios.mjs",
+        "./workflow-ui-scenarios.mjs",
+        "./recovery-ui-scenarios.mjs",
+        "./report-first-ui-scenarios.mjs",
+        "./knowledge-platform-ui-scenarios.mjs",
+        "./platform-recovery-ui-scenarios.mjs",
+        "./agent-capabilities-ui-scenarios.mjs",
+        "./context-settings-ui-scenarios.mjs"
+      ],
+      "exports": []
+    },
+    {
+      "path": "vite.config.js",
+      "sha256": "e86e3b51e660aa737c3171ab8689b8d8f4c7bf02c51992dc8ed0b70fd7412ca1",
+      "area": "vite.config.js",
+      "imports": [
+        "vite",
+        "@tailwindcss/vite",
+        "node:url"
+      ],
+      "exports": []
+    }
+  ]
+}

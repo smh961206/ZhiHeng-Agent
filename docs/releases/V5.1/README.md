@@ -1,12 +1,14 @@
 # V5.1 — Cost / Cache / Research Budget
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Optimize effective task cost only after capability/quality/health gates and introduce bounded research budgets.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V5.1.0 — Pricing registry:** Effective-dated pricing; unknown price=null.
 - **V5.1.1 — Effective task cost:** Aggregate retries/review/tool-loop effects, not API sticker price only.

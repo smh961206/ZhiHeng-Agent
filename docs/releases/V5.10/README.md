@@ -1,12 +1,14 @@
 # V5.10 — Portfolio Intelligence
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Extend decision quality from isolated securities to portfolio-level capital allocation and hidden/thesis exposure.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V5.10.0 — Portfolio/Position domain:** Canonical portfolios, positions and Cash.
 - **V5.10.1 — Exposure engine:** Sector/market/currency/issuer/factor.

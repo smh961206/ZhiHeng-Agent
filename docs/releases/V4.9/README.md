@@ -1,12 +1,14 @@
 # V4.9 — Unified Multimodal Layer
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Make Vision a capability-routed Gateway workload; benchmark and optionally introduce primary/fallback models without changing Vision evidence trust rules.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V4.9.0 — Vision request normalization:** All Vision model requests use Model Gateway with imageInput capability.
 - **V4.9.1 — Vision fixture harness:** Create frozen financial-table/screenshot/scanned-PDF benchmark.

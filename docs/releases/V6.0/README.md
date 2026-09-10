@@ -1,12 +1,14 @@
 # V6.0 — Investment Intelligence OS Platform
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Turn the single-user research system into governed multi-user/workspace infrastructure and a structured Research Workbench without compromising domain semantics.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V6.0.0 — Workspace/Tenant foundation:** workspaceId/tenantId boundaries.
 - **V6.0.1 — RBAC:** Owner/Researcher/Reviewer/Viewer.

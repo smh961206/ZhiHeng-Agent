@@ -24,3 +24,9 @@ Must normalize:
 - exposing reasoning_content;
 - cross-provider hidden state;
 - sending images to profiles without imageInput.
+
+## H0 implementation evidence
+
+Current owners are model-routing/model-request/model-deadline/model-stream, agent completion, research-path, security-intent and vision-model. Direct provider configuration and model-name capability checks remain. This request/response API is FUTURE; H0 must not introduce it.
+
+See [implementation map](../architecture/current-implementation-map.md) and [audit findings](../releases/H0/audit-findings.md). H0 changes no persisted object, field requirements, API, migration or financial meaning.

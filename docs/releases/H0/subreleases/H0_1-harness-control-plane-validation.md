@@ -1,7 +1,7 @@
 # H0.1 — Harness control-plane validation
 
 Release: `H0`
-Status: `FUTURE` unless this release/subrelease is explicitly active under `docs/releases/CURRENT`.
+Status: H0 calibration work; active only while CURRENT=H0. Completion is recorded by acceptance evidence, not by this heading.
 
 ## 1. Why
 
@@ -26,7 +26,7 @@ If paths or ownership changed, update `docs/architecture/current-implementation-
 
 ## 4. Current Behavior
 
-Before H0.1, the owning release capability is either absent, partial, or still on the previous accepted implementation.
+The runtime remains framework 4.7. H0 calibrates the installed Harness against executable code/tests; no new runtime capability is introduced.
 
 ## 5. Target Behavior
 
@@ -48,16 +48,11 @@ Validate AGENTS, Architecture, Contracts, Invariants, ADR and Release navigation
 - Ensure CURRENT points to H0 during bootstrap.
 - Ensure future contracts are marked FUTURE.
 
-Also update:
-- tests for the new behavior;
-- current implementation map if ownership changed;
-- release schema/migration/rollback docs if reality differs from this specification.
+Update documentation/static checks only. No runtime behavior, persistent schema or financial definition changes. Record compatibility and rollback as documentation-only.
 
 ## 9. Suggested Code Ownership
 
-- Prefer modifying/expanding the inspected current modules that already own this responsibility.
-- New modules are allowed only when responsibility is genuinely new or existing ownership would create an incoherent dependency.
-- If a new module supersedes an old path, document dual-read/dual-run/cutover ownership; do not leave unexplained parallel systems.
+Only Harness documentation/static checks. Inspect existing runtime owners; do not modify them. User-approved exceptions: add shared/ to the deployment test temporary copy list, retaining all deployment assertions; align the three recorded UI scenario files to current selectors/copy/preconditions and asynchronous state updates, preserving equivalent validations.
 
 ## 10. Contract Changes
 
@@ -139,7 +134,7 @@ Acceptance is behavioral, not “code exists”.
 
 ## 22. Benchmark Gate
 
-All existing repository tests must remain unchanged and pass; runtime behavior delta must be zero.
+All existing scenarios must execute and pass; runtime behavior delta must be zero. Preserve business/Evidence/financial/recovery validations. User-approved test-only repairs cover the deployment shared/ copy list and the three UI scenario files documented in ../test-failure-analysis.md. No deletion, skip, financial redefinition or validation weakening.
 
 If this subrelease does not itself introduce a benchmarkable behavior, it must at least preserve the owning release baseline.
 
@@ -151,7 +146,7 @@ Codex must not skip directly to default-on if the release specifies dry-run/dual
 
 ## 24. Rollback
 
-Disable/revert only this subrelease path while preserving additive data; fall back to the previous accepted subrelease.
+Revert only H0 documentation/static checks, the approved deployment fixture preparation change and the three authorized UI test repairs. Restore CURRENT=H0 if handoff is rolled back. No runtime/database rollback.
 
 Rollback must not require deleting evidence, historical research, verified facts, audit/provenance data, or user work.
 

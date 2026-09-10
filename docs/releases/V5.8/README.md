@@ -1,12 +1,14 @@
 # V5.8 — Event Intelligence / Continuous Research
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Update research selectively when material new information arrives, using event ontology/materiality/dependency deltas.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V5.8.0 — Event schema:** Canonical event identity/time/source.
 - **V5.8.1 — Event classifier:** earnings/guidance/dividend/buyback/capital raise/management/contract/regulation.

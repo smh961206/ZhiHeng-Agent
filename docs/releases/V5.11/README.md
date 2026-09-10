@@ -1,12 +1,14 @@
 # V5.11 — Reproducibility / Learning / Institutional Memory
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Make historical research replayable and turn outcomes/failures into governed system learning.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V5.11.0 — Research Snapshot:** Freeze Evidence/Fact/Knowledge/Market/Policy/Formula versions.
 - **V5.11.1 — Point-in-time Replay:** Re-run with historical information cutoffs.

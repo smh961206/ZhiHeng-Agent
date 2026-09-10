@@ -154,6 +154,7 @@ async function detailActions(page) {
   return sheet.locator('.rd-action-panel');
 }
 async function openDirectory(page) {
+  await revealDirectory(page);
   const trigger=page.getByRole('button',{name:'打开报告目录',exact:true});
   await enabled(trigger);
   await shadcnButtons(trigger,page.viewportSize().width<1024?'sheet-trigger':'popover-trigger');
@@ -161,6 +162,28 @@ async function openDirectory(page) {
   const popup=page.getByRole('dialog',{name:'报告目录',exact:true});
   await popup.waitFor();
   return popup.locator('.rd-outline');
+}
+async function revealDirectory(page) {
+  // Compact reading tools appear only after entering the report body.
+  const trigger=page.getByRole('button',{name:'打开报告目录',exact:true});
+  if(page.viewportSize().width<1024){
+    await eventually(async()=>{
+      if(await trigger.isVisible())return true;
+      await page.locator('article.rd-markdown').evaluate(element=>{
+        const toolbar=document.querySelector('.rd-content-toolbar');
+        document.querySelector('.page-scroll').scrollTop+=element.getBoundingClientRect().top-toolbar.getBoundingClientRect().bottom+160;
+      });
+      // Tab/navigation effects may restore scroll; observe the settled reading tools.
+      await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+      return trigger.isVisible();
+    },'Scrolling into the report must reveal the compact directory');
+  }
+  await enabled(trigger);
+}
+async function unavailableDirectory(page) {
+  const trigger=page.getByRole('button',{name:'打开报告目录',exact:true});
+  await count(trigger,page.viewportSize().width<1024?0:1);
+  if(page.viewportSize().width>=1024)await enabled(trigger,false);
 }
 async function dismissDetailSheet(page) {
   const sheet = page.getByRole('dialog');
@@ -1108,7 +1131,9 @@ test('recent-detail-tabs-reading-outline-sources', {jobs: historyFixtures()}, as
   await page.waitForURL(`**/research/${job.id}`);
   await page.locator('.research-detail').waitFor();
   await count(recent.locator('.rr-status'), 4);
-  await count(recent.locator('.rr-mode'), 4);
+  await count(recent.locator('time[datetime]'), 4);
+  assert.equal(await recent.first().locator('time').getAttribute('datetime'),new Date(job.createdAt).toISOString());
+  assert.equal(await recent.first().locator('.rr-title').innerText(),job.input.question);
   assert.equal(await recent.first().getAttribute('data-slot'), 'button');
   assert.equal(await recent.first().getAttribute('aria-current'), 'page');
   await page.getByRole('heading', {name: job.input.question, exact: true}).waitFor();
@@ -1278,14 +1303,14 @@ for (const width of [320, 768, 1440]) test(`detail-contextual-layout-${width}`, 
   jobs: [contextualJob, plainJob], viewport: {width, height: 960},
 }, async ({page}) => {
   await detail(page, contextualJob);
-  await enabled(page.getByRole('button',{name:'打开报告目录',exact:true}));
+  await revealDirectory(page);
   await count(page.locator('.rd-title-row .rd-status'),0);
   const original = await page.locator('.rd-report-card').boundingBox();
   for(const tab of ['审计记录','证据来源']){
     await page.getByRole('tab',{name:new RegExp('^'+tab)}).click();
     await count(page.locator('.rd-directory-rail'),0);
     await count(page.locator('.rd-outline-empty'),0);
-    await count(page.getByRole('button',{name:'打开报告目录',exact:true}),1);
+    await count(page.getByRole('button',{name:'打开报告目录',exact:true}),width<1024?0:1);
     const content = await page.locator('.rd-report-card').boundingBox();
     assert.ok(Math.abs(content.width-original.width)<=1&&Math.abs(content.x-original.x)<=1, 'Every tab must keep the same content width and position');
     await noOverflow(page, `contextual ${tab} ${width}`);
@@ -1293,6 +1318,7 @@ for (const width of [320, 768, 1440]) test(`detail-contextual-layout-${width}`, 
   }
   await page.reload();
   await count(page.locator('.rd-directory-rail'),0);
+  await page.getByRole('tab',{name:'研究报告',exact:true}).click();
   const directory=await openDirectory(page);
   await page.screenshot({path:fileURLToPath(new URL(`ui-directory-popup-${width}.png`,artifacts)),animations:'disabled'});
   const expanded=await page.locator('.rd-report-card').boundingBox();
@@ -1303,15 +1329,14 @@ for (const width of [320, 768, 1440]) test(`detail-contextual-layout-${width}`, 
   await jumpToHeading(page,directory.getByRole('navigation',{name:'报告目录',exact:true}),'现金流质量');
   await queryIs(page,{tab:null});
   await page.getByRole('tab',{name:'研究报告',exact:true}).click();
-  await enabled(page.getByRole('button',{name:'打开报告目录',exact:true}));
+  await revealDirectory(page);
   const restored = await page.locator('.rd-report-card').boundingBox();
   assert.ok(Math.abs(restored.width-original.width)<=2, 'Returning to report must restore its layout');
   if(width<1024) await page.getByRole('button',{name:'打开报告目录',exact:true}).waitFor();
   await detail(page, plainJob);
   await page.getByRole('article',{name:'报告正文'}).waitFor();
   await count(page.locator('.rd-directory-rail'),0);
-  await count(page.getByRole('button',{name:'打开报告目录',exact:true}),1);
-  await enabled(page.getByRole('button',{name:'打开报告目录',exact:true}),false);
+  await unavailableDirectory(page);
   const actions = await detailActions(page);
   await enabled(actions.getByRole('button',{name:'导出报告',exact:true}));
   await dismissDetailSheet(page);
@@ -1376,7 +1401,7 @@ for(const width of [320,1440])test(`detail-draft-format-${width}`,{jobs:[preview
  await content.getByRole('heading',{name:'正在整理研究报告',exact:true}).waitFor();
  await count(content.locator('pre'),0);
  assert.doesNotMatch(await content.innerText(),/sections|conclusion|```json/);
- await enabled(page.getByRole('button',{name:'打开报告目录',exact:true}),false);
+ await unavailableDirectory(page);
  await noOverflow(page,'pending structured draft '+width);
  await screenshot(page,'draft-format-waiting-'+width,'.rd-report-card');
  await detail(page,previewStructured);
@@ -1385,7 +1410,7 @@ for(const width of [320,1440])test(`detail-draft-format-${width}`,{jobs:[preview
  await textIncludes(content,'草稿已生成，正在审计');
  await count(content.locator('pre'),0);
  assert.doesNotMatch(await content.innerText(),/INTERNAL_|"sections"|"decision"|\\n/);
- await enabled(page.getByRole('button',{name:'打开报告目录',exact:true}));
+ await revealDirectory(page);
  let actions=await detailActions(page);
  await enabled(actions.getByRole('button',{name:'导出报告',exact:true}),false);
  await dismissDetailSheet(page);
@@ -1397,14 +1422,14 @@ for(const width of [320,1440])test(`detail-draft-format-${width}`,{jobs:[preview
  await count(content.locator('pre'),0);
  await textIncludes(content,'实时草稿 · 尚未审计');
  assert.doesNotMatch(await content.innerText(),/```|markdown/);
- await enabled(page.getByRole('button',{name:'打开报告目录',exact:true}));
+ await revealDirectory(page);
  await noOverflow(page,'readable fenced draft '+width);
  await screenshot(page,'draft-format-markdown-'+width,'.rd-report-card');
  await eventually(()=>requests('GET',`/api/jobs/${previewFenced.id}/stream`).length===1,'Draft stream missing');
  finishJob(previewFenced.id,{status:'failed',error:'合成的审计未通过'});
  await content.getByRole('heading',{name:'深度研究未完成',exact:true}).waitFor();
  await count(content.getByRole('heading',{name:'合成可读草稿',exact:true}),0);
- await enabled(page.getByRole('button',{name:'打开报告目录',exact:true}),false);
+ await unavailableDirectory(page);
  actions=await detailActions(page);
  await enabled(actions.getByRole('button',{name:'导出报告',exact:true}),false);
  assert.equal(requests('POST','/api/jobs').length,0,'Preview formatting must not start research or publish a draft');
@@ -1476,6 +1501,7 @@ for(const {width,job,entry} of [{width:320,job:failedUpdate,entry:'empty'},{widt
   await screenshot(page,'retry-pending-'+width);
   const previousURL=page.url();
   release();
+  await eventually(async()=>await page.locator('.rd-overview').getAttribute('data-progress-state')==='running','Retry response must reach the running view');
   assert.equal(await page.locator('.rd-overview').getAttribute('data-progress-state'),'running');
   assert.equal(page.url(),previousURL,'Retry must retain the URL, including the selected tab');
   assert.equal(db.size,2,'Retry must not add a history record');
@@ -1491,8 +1517,10 @@ for(const {width,job,entry} of [{width:320,job:failedUpdate,entry:'empty'},{widt
   assert.ok(navigations.every(url=>!new URL(url).pathname.startsWith('/workbench')),'Direct retry must never visit the workbench');
   if(width===320){
    finishJob(job.id,{status:'failed',error:'合成的重试失败'});
+   await eventually(async()=>await page.locator('.rd-overview').getAttribute('data-progress-state')==='failed','Failure event must reach the detail view');
    assert.equal(await page.locator('.rd-overview').getAttribute('data-progress-state'),'failed');
    await page.locator('.rd-empty').getByRole('button',{name:'重试研究',exact:true}).click();
+   await eventually(async()=>await page.locator('.rd-overview').getAttribute('data-progress-state')==='running','Second retry response must reach the running view');
    assert.equal(await page.locator('.rd-overview').getAttribute('data-progress-state'),'running');
    assert.equal(db.get(job.id).retryCount,2);assert.equal(db.size,2);
    assert.deepEqual(requests('POST',retryPath).at(-1).body,{expectedRetryCount:1});
@@ -1616,7 +1644,8 @@ for (const width of [320, 390, 768, 1440]) test(`responsive-${width}`, {jobs: hi
   await noOverflow(page, `detail report ${width}`);
   await screenshot(page, `detail-${width}`, '.rd-tab-list');
   const actions = await detailActions(page);
-  await shadcnButtons(actions.getByRole('button'));
+  await shadcnButtons(actions.getByRole('button').filter({hasNotText:'导出报告'}));
+  await shadcnButtons(actions.getByRole('button',{name:'导出报告',exact:true}),'popover-trigger');
   await actions.getByRole('button', {name: '阅读模式', exact: true}).click();
   await dismissDetailSheet(page);
   await noOverflow(page, `reading mode ${width}`);
@@ -2125,11 +2154,13 @@ test(`audit-evidence-hierarchy-${width}`,{jobs:[deepProcessJob],viewport:{width,
 });
 test(`deep-process-${width}`,{jobs:[deepProcessJob],viewport:{width,height:1000}},async({page,requests})=>{
  await workbench(page);
+ await page.getByRole('combobox',{name:'研究路径',exact:true}).click();
+ await page.getByRole('option',{name:'深度研究',exact:true}).click();
  await page.getByRole('button',{name:'比亚迪深度投资研究',exact:true}).click();
- assert.match(await page.locator('#question').inputValue(),/比亚迪.*资本回报.*A\/H/);
+ assert.match(await page.locator('#question').inputValue(),/比亚迪A股深度投资研究.*资本回报.*普通股权益.*估值假设与安全边际/);
  await textIncludes(page.locator('.path-picker'),'深度研究');
  await textIncludes(page.getByRole('combobox',{name:'报告深度',exact:true}),'完整展开');
- await textIncludes(page.locator('.options-row .choice-field').first(),'包含三情景分析、敏感性分析与研究评分。');
+ await textIncludes(page.locator('.options-row .choice-field').first(),'完整展开包含三情景、敏感性分析与研究评分。');
  await noOverflow(page,`deep workbench ${width}`);
  await screenshot(page,`deep-workbench-${width}`,'.research-workbench');
  assert.equal(requests('POST','/api/jobs').length,0,'Selecting an example must not silently start paid research');
@@ -2138,7 +2169,7 @@ test(`deep-process-${width}`,{jobs:[deepProcessJob],viewport:{width,height:1000}
  await page.locator('.research-detail').waitFor();
  const submitted=requests('POST','/api/jobs')[0].body;
  assert.equal(submitted.mode,'B');assert.equal(submitted.depth,'Deep');assert.equal(submitted.historyYears,5);
- assert.match(submitted.question,/比亚迪深度投资研究/);assert.equal(submitted.securities[0].symbol,'002594');
+ assert.match(submitted.question,/比亚迪A股深度投资研究/);assert.equal(submitted.securities[0].symbol,'002594');assert.equal(submitted.securities[0].market,'CN');
 });
 }
 
@@ -2148,10 +2179,11 @@ for(const width of [320,1440])test(`report-heading-dedup-${width}`,{jobs:[duplic
  await detail(page,duplicateHeadingJob);
  const report=page.locator('.rd-markdown[aria-label="报告正文"]');
  for(const title of ['行业与竞争','后续验证与判断升级条件','竞争格局'])await count(report.getByRole('heading',{name:title,exact:true}),1);
- await page.getByRole('button',{name:'打开报告目录',exact:true}).click();
+ await openDirectory(page);
  const directory=page.getByRole('navigation',{name:'报告目录',exact:true});
  for(const title of ['行业与竞争','后续验证与判断升级条件'])await count(directory.getByRole('link',{name:title,exact:true}),1);
- await screenshot(page,`report-heading-dedup-${width}`,'.rd-report-card');
+ // Capture without scrolling the report card: scrolling dismisses the compact directory.
+ await page.screenshot({path:fileURLToPath(new URL(`ui-report-heading-dedup-${width}.png`,artifacts)),animations:'disabled'});
  await directory.getByRole('link',{name:'后续验证与判断升级条件',exact:true}).click();
  await eventually(()=>report.getByRole('heading',{name:'后续验证与判断升级条件',exact:true}).evaluate(el=>document.activeElement===el),'Directory must focus the retained heading');
  await textIncludes(report.locator('table'),'利润');await noOverflow(page,`deduplicated report ${width}`);
@@ -2202,7 +2234,8 @@ const evidenceWindowJob=makeJob(984,'completed',{question:'复核资料范围（
 evidenceWindowJob.result.validation.initialEvidenceWindow={evidenceTotal:5,evidenceIncluded:3,toolsTotal:4,toolsIncluded:2,omittedEvidence:[{sourceId:'S1',blockId:'p7'}],omittedTools:[{toolCallId:'large'}]};
 for(const width of [320,1440])test(`audit-evidence-window-${width}`,{jobs:[evidenceWindowJob],viewport:{width,height:1000}},async({page})=>{
  await detail(page,evidenceWindowJob);await page.getByRole('tab',{name:'审计记录',exact:true}).click();
- const window=page.locator('.rd-audit-window');await textIncludes(window,'3 段完整证据');await textIncludes(window,'2 条完整工具记录');
+ const window=page.locator('.rd-audit-window');await textIncludes(window,'3/5 段完整证据');await textIncludes(window,'2/4 条完整工具记录');
+ await textIncludes(window,'资料已送审不等于事实已核实');
  await textIncludes(window,'部分记录超出本轮容量');await noOverflow(page,`audit evidence ${width}`);
  await window.evaluate(element=>element.scrollIntoView({block:'center',behavior:'instant'}));
  await page.screenshot({path:fileURLToPath(new URL(`ui-audit-evidence-${width}.png`,artifacts)),animations:'disabled'});
@@ -2456,7 +2489,10 @@ for(const width of [320,1440]){
 for(const width of [320,1440])test(`reference-image-backend-${width}`,{viewport:{width,height:1100}},async({page,requests})=>{
  await workbench(page);await page.locator('#question').fill('研究贵州茅台');await textIncludes(page.locator('.security-chip'),'600519');
  const area=page.getByRole('region',{name:'用户补充资料'}),start=page.locator('button[type=submit]');
- assert.equal(await area.evaluate(element=>element.previousElementSibling.classList.contains('workbench-securities')&&element.nextElementSibling.classList.contains('workbench-settings')),true);
+ assert.equal(await area.locator('..').evaluate(element=>{
+  const securities=document.querySelector('.workbench-securities');
+  return element.classList.contains('workbench-materials-target')&&element.parentElement===securities.parentElement&&Boolean(securities.compareDocumentPosition(element)&Node.DOCUMENT_POSITION_FOLLOWING)&&element.nextElementSibling.classList.contains('workbench-settings');
+ }),true,'Materials stay after securities (including an optional deep overview) and immediately before settings');
  await page.locator('.workbench-securities').evaluate(element=>element.scrollIntoView({block:'start',behavior:'instant'}));
  await page.screenshot({path:fileURLToPath(new URL(`ui-materials-placement-${width}.png`,artifacts)),animations:'disabled'});
  const remote=[];page.on('request',request=>{const url=new URL(request.url());if(['http:','https:'].includes(url.protocol)&&url.origin!==baseURL)remote.push(url.href);});

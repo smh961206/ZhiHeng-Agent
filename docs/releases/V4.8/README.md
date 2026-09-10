@@ -1,12 +1,14 @@
 # V4.8 — Model Gateway Foundation
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Move all real LLM requests behind a legacy-compatible Model Gateway; add capability profiles, dry-run policy, telemetry and safe Main→Pro escalation without changing research rules.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V4.8.0 — LLM inventory + Model Catalog:** Scan all model calls; define ModelProfile and legacy analysis/vision profiles. Runtime unchanged.
 - **V4.8.1 — Gateway client/adapters:** Add canonical complete() API, response/error normalization; reuse model-stream.

@@ -1,12 +1,14 @@
 # V5.0 — Model Benchmark / Challenger
 
-Status: FUTURE until CURRENT is changed to this release
+Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
 
 ## Goal
 
 Make model selection evidence-based using ZhiHeng-specific benchmarks and task champions.
 
 ## Subrelease sequence
+
+Execution authority: use [DETAILED_INDEX.md](DETAILED_INDEX.md) and its linked normalized subreleases. The overview below is historical grouping, not an alternate execution sequence.
 
 - **V5.0.0 — Benchmark platform:** Canonical case/fixture/grader/runner structure.
 - **V5.0.1 — Main challenger offline:** Evaluate second Main candidate without production traffic.

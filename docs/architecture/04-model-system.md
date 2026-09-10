@@ -16,7 +16,7 @@ Business capability request
 → Provider Adapter
 ```
 
-## Stable slots
+## Stable slots — FUTURE
 
 - ROUTER
 - MAIN
@@ -34,3 +34,7 @@ Data absence is not intelligence failure.
 Provider outage is not intelligence failure.
 
 Only repeatable capability/reasoning failures may justify model-tier escalation.
+
+## H0 calibration
+
+CURRENT: provider-configured research/review, path classification, security intent, Vision and their distinct transport guards. FUTURE: stable slots/catalog/Gateway, health/cost policy, escalation and cross-provider state compatibility. Do not enforce the target Gateway boundary against current call sites in H0.

@@ -82,3 +82,7 @@ Learning
 ## Permanent boundary
 
 Each target layer must be introduced incrementally. A FUTURE object must not be implemented merely because it appears on this map.
+
+## H0 calibration
+
+The current framework/Knowledge baseline is 4.7, distinct from Harness CURRENT. Acquisition is bounded and may be partial. Compatible resume preserves saved initial market data; rejected checkpoints restart acquisition. Full historical publishedAt enforcement/replay is not implemented. See [implementation map](current-implementation-map.md) for exact owners and limitations.

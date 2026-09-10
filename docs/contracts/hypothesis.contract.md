@@ -12,3 +12,9 @@ It has:
 - status.
 
 A research process must be able to retain multiple plausible hypotheses instead of prematurely collapsing to one narrative.
+
+## H0 implementation evidence
+
+agent-execution already accepts public hypotheses as text in a job plan. This is not the canonical Hypothesis entity/evaluation loop described here.
+
+See [implementation map](../architecture/current-implementation-map.md) and [audit findings](../releases/H0/audit-findings.md). H0 changes no persisted object, field requirements, API, migration or financial meaning.

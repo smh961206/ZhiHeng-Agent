@@ -225,7 +225,7 @@ WEB_RESEARCH_ISSUER_DOMAINS={}
 ode scripts/data-smoke.mjs` 做真实三市场抓取测试，将元数据写入 `artifacts/data-smoke.json`，不调用模型、不建立研究任务。`scripts/smoke.mjs` 是可选Playwright真实行情界面测试，设置 `PLAYWRIGHT_MODULE` 为已安装Playwright入口。
 
 依据：[巨潮资讯](https://www.cninfo.com.cn/new/index)、[SEC官方API](https://www.sec.gov/search-filings/edgar-application-programming-interfaces)、[PDF.js](https://mozilla.github.io/pdf.js/examples/)、[OpenAI接口](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create)。
-`LLM_TIMEOUT_MS` 控制单次模型请求超时，默认300000毫秒、允许30000～600000毫秒。审计使用独立精简上下文；未审计草稿不会作为最终报告展示。
+`LLM_TIMEOUT_MS` 控制模型连接连续无内容或保活信号的等待时限，默认300000毫秒、允许30000～600000毫秒。流式返回正文、推理内容、工具参数或标准 `: keep-alive` 心跳时重新计时。心跳只说明连接活跃，不表示已完成研究；等待时会在执行轨迹提示。其他空帧或注释不延长等待，推理内容仍仅保存在私有模型上下文中。`LLM_MAX_DURATION_MS` 控制单次请求总时限，默认1800000毫秒、允许30000～3600000毫秒，持续输出也不能超过该上限。用户取消和阶段自身的较短时限始终有效。审计使用独立精简上下文；未审计草稿不会作为最终报告展示。
 
 `LLM_REVIEW_FORMAT` 默认为 `auto`：审计优先使用严格 JSON Schema，约束当前模式的章节编号、研究动作、置信度、日期格式与字段类型。只有模型接口明确返回不支持该格式的 HTTP 400/422 错误时，才依次兼容 `json_object` 和文本模式；授权、额度、网络或 Schema 本身错误不触发降级。可显式设置 `json_schema`、`json_object` 或 `text`，显式设置不自动降级。格式约束仅用于独立审计，草稿与计算工具接口保持不变。接口格式参考 [OpenAI 结构化输出文档](https://developers.openai.com/api/docs/guides/structured-outputs)。结构化输出不能替代后续证据及业务校验。
 

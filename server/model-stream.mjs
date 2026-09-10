@@ -1,4 +1,4 @@
-export async function readCompletion(response,onDelta=()=>{}){
+export async function readCompletion(response,onDelta=()=>{},{onActivity=()=>{},onHeartbeat=()=>{}}={}){
  if(!response.headers.get('content-type')?.includes('text/event-stream')){
   const data=await response.json();const choice=data.choices?.[0];
   if(!choice?.message)throw new Error('模型返回格式无效');
@@ -8,12 +8,14 @@ export async function readCompletion(response,onDelta=()=>{}){
  const message={role:'assistant',content:''},calls=new Map();
  const decoder=new TextDecoder();let buffer='',done=false,finished=false,size=0;
  function consume(frame){
+  if(frame.split(/\r?\n/).some(line=>/^:\s*keep-alive\s*$/i.test(line)))onHeartbeat();
   const data=frame.split(/\r?\n/).filter(l=>l.startsWith('data:')).map(l=>l.slice(5).trimStart()).join('\n');
   if(!data)return;if(data==='[DONE]'){done=true;return;}
   const chunk=JSON.parse(data);if(chunk.error)throw new Error('模型流式接口返回错误');
   const choice=chunk.choices?.find(c=>c.index===0)||chunk.choices?.[0];if(!choice)return;
   if(choice.finish_reason){checkFinish(choice.finish_reason);finished=true;}
   const delta=choice.delta??{};
+  if(delta.content||delta.reasoning_content||delta.tool_calls?.some(tool=>tool.id||tool.function?.name||tool.function?.arguments))onActivity();
   // Required when DeepSeek thinking-mode tool calls continue. Keep this only
   // inside model messages; never emit it as report text or trace events.
   if(typeof delta.reasoning_content==='string')message.reasoning_content=(message.reasoning_content||'')+delta.reasoning_content;

@@ -6,7 +6,7 @@ import {gzipSync} from 'node:zlib';
 import {createWebSearchProvider,webSearchStatus,validateSearchQuery} from '../server/web-search-provider.mjs';
 import {publicAddress,publicWebURL,createWebDocumentFetcher,createPublicWebLookup} from '../server/web-evidence-request.mjs';
 import {createWebEvidenceReader,extractWebMetadata,sourceAuthority} from '../server/web-evidence.mjs';
-import {createWebResearchSession,validateWebResearchReview} from '../server/web-research.mjs';
+import {createWebResearchSession,normalizeWebGapReferences,validateWebResearchReview} from '../server/web-research.mjs';
 import {searchEvidence,runAgent} from '../server/agent.mjs';
 import {calculationBasis} from '../server/calculations.mjs';
 import {reviewFixture} from './fixtures/research-review.mjs';
@@ -223,4 +223,37 @@ test('agent executes local → search → read → local → quoted resolution a
   const result=await runAgent(job,(...args)=>events.push(args),new AbortController().signal,{webSession:options=>session(options)});
   assert.match(result.report,/S2/);assert.equal(step,6);assert.ok(events.some(event=>event[0]==='web_search'));assert.equal(job.input.sources.length,2);
  }finally{global.fetch=old;}
+});
+
+
+test('known web gap references normalize without changing disclosed limitations or audit state',()=>{
+ const state={gaps:[{id:'G1',status:'body-read-needs-review'},{id:'G2',status:'failed'}]},original=structuredClone(state);
+ for(const [text,expected] of [
+  ['G1：历史PE/PB估值分位缺失；F4/G2：渠道库存缺失。','[G1]：历史PE/PB估值分位缺失；F4/[G2]：渠道库存缺失。'],
+  ['【G1】日期未知；[ G2 ]发布者待核实。','[G1]日期未知；[G2]发布者待核实。'],
+  ['[F12] F3/G1：网页日期未知；G2仍未解决。','[F12] F3/[G1]：网页日期未知；[G2]仍未解决。'],
+ ]){
+  const value={decision:{missingData:[text],gates:[{id:'data',status:'limited'}]}};
+  assert.equal(normalizeWebGapReferences(value,state),true);
+  assert.deepEqual(value.decision.missingData,[expected]);
+  validateWebResearchReview(value,state);
+  assert.equal(normalizeWebGapReferences(value,state),false,'normalization must be idempotent');
+ }
+ assert.deepEqual(state,original,'formatting cannot resolve evidence gaps');
+});
+
+test('normalization never invents missing references or allows a passed data gate',()=>{
+ const state={gaps:[{id:'G1',status:'failed'},{id:'G10',status:'failed'}]};
+ for(const text of ['G10：其他缺口','AG1 / G1A / _G1 / G1_','G99：未知编号','没有提到缺口编号']){
+  const value={decision:{missingData:[text],gates:[{id:'data',status:'limited'}]}};
+  normalizeWebGapReferences(value,state);
+  assert.throws(()=>validateWebResearchReview(value,state),/G1/);
+ }
+ const passed={decision:{missingData:['G1及G10仍有未解决限制'],gates:[{id:'data',status:'passed'}]}};
+ normalizeWebGapReferences(passed,state);
+ assert.throws(()=>validateWebResearchReview(passed,state),/limited/);
+ assert.equal(passed.decision.gates[0].status,'passed');
+ const malformed={decision:{missingData:'G1'}};
+ assert.equal(normalizeWebGapReferences(malformed,state),false);
+ assert.throws(()=>validateWebResearchReview(malformed,state),/G1/);
 });

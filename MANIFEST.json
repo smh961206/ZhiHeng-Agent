@@ -1,6 +1,8 @@
 {
-  "harnessVersion": "2.0.0",
-  "fileCount": 220,
+  "harnessVersion": "3.0.0",
+  "normalizedTemplateSections": 26,
+  "executableSubreleases": 197,
+  "fileCount": 446,
   "files": [
     {
       "path": "AGENTS.md",
@@ -8,9 +10,19 @@
       "sha256": "1abb8fa866dfdb0059bccbe945b6bf3fccc65e5fdf22b1c4befd7b7cfb2bbd7c"
     },
     {
+      "path": "CODEX_EXECUTION_PROTOCOL.md",
+      "bytes": 1023,
+      "sha256": "008615210690018adf9420b9247a8f3f212f27b10e4f424540bbcabb36640f93"
+    },
+    {
+      "path": "EXECUTE_H0_FIRST.md",
+      "bytes": 465,
+      "sha256": "8e3d027080fc7732e38d64c44cbeeba9ae90f35910806b3841fc52b57b2d1f78"
+    },
+    {
       "path": "HARNESS_VERSION",
       "bytes": 6,
-      "sha256": "c28fcca53637bc88e124af1725df13cb98c69dedefd62fb3cdbe1cdb6b760624"
+      "sha256": "2985be8b28d3ade858e8d8fb4bc22f565b1bf6020dff982dce141f7721b9999c"
     },
     {
       "path": "INSTALL.md",
@@ -23,6 +35,11 @@
       "sha256": "f83ea07fd770054d7b155c60ed61c33bac3de909bbc3959063c41ee453c71ebd"
     },
     {
+      "path": "README_V3.md",
+      "bytes": 447,
+      "sha256": "e3adcc0de6d12d337615d0eba31921159e35e7a792b13a88ff8ee31b08bb561d"
+    },
+    {
       "path": "START_HERE.md",
       "bytes": 487,
       "sha256": "c1bb36a970c0921fcd8958df0c9cd69043aec00fe90280cce2e7f2b202144f30"
@@ -31,6 +48,11 @@
       "path": "V2_CHANGES.md",
       "bytes": 652,
       "sha256": "4e10001fe1e9aa34ac7e47baaa94b147982ae0daf355c7d4ed14402126400849"
+    },
+    {
+      "path": "V3_CHANGES.md",
+      "bytes": 1056,
+      "sha256": "4584b766d5520970ec4b79f268f83312d86c87fd62cb2637cb1b2ca48bf0ee4d"
     },
     {
       "path": "benchmark/README.md",
@@ -308,6 +330,11 @@
       "sha256": "d4ace2a4e289f42efe3e3c130ed5789978f17e6cd646e9e81713c9f60e5f777c"
     },
     {
+      "path": "docs/development/NORMALIZED_RELEASE_STANDARD.md",
+      "bytes": 1106,
+      "sha256": "c3c0f680f77a03b95bd49b6f27c75161d647a4849ad396ae7894783ab64310b1"
+    },
+    {
       "path": "docs/development/debugging.md",
       "bytes": 403,
       "sha256": "5ffc297b9274c99e99b6ba7ddc5e8e38a5706c17b7ba2569632eef3de793ceb0"
@@ -383,9 +410,19 @@
       "sha256": "fbcc484a4e5e99b10b52670a8f2e281d63f16f70943f7df3772b4ca0583ea0ec"
     },
     {
+      "path": "docs/releases/H0/DETAILED_INDEX.md",
+      "bytes": 586,
+      "sha256": "788dfcbfe1ca379683c9a40c3dedf23819296b9dabff19ddbf2790b9776e0172"
+    },
+    {
       "path": "docs/releases/H0/EXECUTE_H0.md",
       "bytes": 591,
       "sha256": "dca4d3ebe92420213f42081666287469e7a10153e8371e68dff998e2dc2fcbb8"
+    },
+    {
+      "path": "docs/releases/H0/NORMALIZED_EXECUTION.md",
+      "bytes": 656,
+      "sha256": "f0f427500fd8cdadcfaac75726ea92c73f2afa69d158f0da69e1f1c0b387c027"
     },
     {
       "path": "docs/releases/H0/README.md",
@@ -421,6 +458,36 @@
       "path": "docs/releases/H0/schema.md",
       "bytes": 284,
       "sha256": "f97f16087551b74f9f5718e754b4a364ec1ac747b4f97de71290966b95d7aed5"
+    },
+    {
+      "path": "docs/releases/H0/subreleases/H0_0-repository-inventory.md",
+      "bytes": 5879,
+      "sha256": "6892554b5c1a3becb7a46cdf4c037a0fd12b8eeee9400c0435c95afde0a363e8"
+    },
+    {
+      "path": "docs/releases/H0/subreleases/H0_1-harness-control-plane-validation.md",
+      "bytes": 5660,
+      "sha256": "cb9a8988b05e499f9df3654ef935bbe38cab7417e52a9378b8b8cc9c89bce2eb"
+    },
+    {
+      "path": "docs/releases/H0/subreleases/H0_2-baseline-architecture-fitness.md",
+      "bytes": 5575,
+      "sha256": "48a266ff060705e5fbd965e1dbcce554a4e2c058d831e0c828b28e07718cfd86"
+    },
+    {
+      "path": "docs/releases/H0/subreleases/H0_3-h0-acceptance-current-handoff.md",
+      "bytes": 5463,
+      "sha256": "2b3f82ab9ae7d99efec17cd9af162292a51480c1edbc908df1c50b03e425870a"
+    },
+    {
+      "path": "docs/releases/V4.8/DETAILED_INDEX.md",
+      "bytes": 1346,
+      "sha256": "d7a2cc4215193baac97c4f5968468673d53ad5e899b4922c003ce0cc53b03ac9"
+    },
+    {
+      "path": "docs/releases/V4.8/NORMALIZED_EXECUTION.md",
+      "bytes": 1020,
+      "sha256": "2e918e37f18b4a5291ffdc4fa7a4d150dd27b9e14cdd9426df1acb714fe3ec07"
     },
     {
       "path": "docs/releases/V4.8/README.md",
@@ -463,6 +530,76 @@
       "sha256": "65018d439a9102a03688d7125ab23126c5143e7b03736af4cda34348ae5a4369"
     },
     {
+      "path": "docs/releases/V4.8/subreleases/V4_8_0-llm-call-inventory.md",
+      "bytes": 6075,
+      "sha256": "103971d06e726fc0822be8f0467bb1738b4ef981ca029b78b60c84aab27fc7ea"
+    },
+    {
+      "path": "docs/releases/V4.8/subreleases/V4_8_1-model-catalog-legacy-profiles.md",
+      "bytes": 6074,
+      "sha256": "682b55412bd90ded5229dc7c783659e533da62312937c96310061eb5dbebdd1d"
+    },
+    {
+      "path": "docs/releases/V4.8/subreleases/V4_8_10-safe-main-pro-escalation.md",
+      "bytes": 6099,
+      "sha256": "69dead435d274b1725d9afebfb0415111d2e802363f9d925e7a1dbc9c1b9dfd7"
+    },
+    {
+      "path": "docs/releases/V4.8/subreleases/V4_8_11-policy-mode-rollout-gate.md",
+      "bytes": 5909,
+      "sha256": "c5fb567e3242c27683648cec8c93f7b21770e6b5b56f0571fda80b6f557e22ab"
+    },
+    {
+      "path": "docs/releases/V4.8/subreleases/V4_8_2-gateway-request-response-normalization.md",
+      "bytes": 6043,
+      "sha256": "d5b3f03b99a47c1aa1275903e1236e3aee2426ea3996a71c2315c057b8fd2697"
+    },
+    {
+      "path": "docs/releases/V4.8/subreleases/V4_8_3-migrate-research-review-followup-calls.md",
+      "bytes": 6062,
+      "sha256": "afc0faab05291965dfc96d5bfe28021cac5e34a904ca3564816bcc8584a1771f"
+    },
+    {
+      "path": "docs/releases/V4.8/subreleases/V4_8_4-migrate-router-and-vision-calls.md",
+      "bytes": 6105,
+      "sha256": "4b5c35ec6ee443cb93846b3c36c4438d889268b477d3148d487d9af8dc2bc2b3"
+    },
+    {
+      "path": "docs/releases/V4.8/subreleases/V4_8_5-complexity-evaluator-v1.md",
+      "bytes": 6030,
+      "sha256": "d41db66294060267bcc80b356c83ec724bfb96f45d23c5ff5e415785c27bb876"
+    },
+    {
+      "path": "docs/releases/V4.8/subreleases/V4_8_6-dry-run-model-policy.md",
+      "bytes": 6005,
+      "sha256": "59bd5bd0fe980624a12de8c68cd0a0b42ed596471a33b9bbad3af37249070b7c"
+    },
+    {
+      "path": "docs/releases/V4.8/subreleases/V4_8_7-model-usage-telemetry.md",
+      "bytes": 6045,
+      "sha256": "5df2227c43b6d2cf129699c19906bcf79cad70bd18958cd01fb613dbe6070edd"
+    },
+    {
+      "path": "docs/releases/V4.8/subreleases/V4_8_8-health-routing-v1.md",
+      "bytes": 5868,
+      "sha256": "2bed90d5042fadab61ea82af492a67c4c1f06351e2864ab34b3626d8b894a06f"
+    },
+    {
+      "path": "docs/releases/V4.8/subreleases/V4_8_9-checkpoint-modelstate-compatibility.md",
+      "bytes": 6062,
+      "sha256": "49dd72fbcd0ca92c98428ada4f42ccc2af455e808b11b1fd13135a29a48bd13d"
+    },
+    {
+      "path": "docs/releases/V4.9/DETAILED_INDEX.md",
+      "bytes": 1046,
+      "sha256": "d89bcac05d8a5962ba32cd9f768ff08107b500cf30c0e57d182afd37bce443ed"
+    },
+    {
+      "path": "docs/releases/V4.9/NORMALIZED_EXECUTION.md",
+      "bytes": 873,
+      "sha256": "31795e4a088e563952f5bee7fec07a761233762e82f41a14b91369593309ef0b"
+    },
+    {
       "path": "docs/releases/V4.9/README.md",
       "bytes": 1244,
       "sha256": "97709fd8e78f1af5ec979ac20c86c57336bf989c8a687d15758bb2d2f03fbfd4"
@@ -496,6 +633,61 @@
       "path": "docs/releases/V4.9/schema.md",
       "bytes": 323,
       "sha256": "1c915852db2fcafde0a6979adf6e2e1a0928a96d7547c4eb02b12b5068a5534d"
+    },
+    {
+      "path": "docs/releases/V4.9/subreleases/V4_9_0-vision-call-inventory.md",
+      "bytes": 6185,
+      "sha256": "97cc71567eec5c27d22c0ca6cee7ffd622cc7d8626c8d2ccb96aed4486aab98c"
+    },
+    {
+      "path": "docs/releases/V4.9/subreleases/V4_9_1-vision-canonical-request.md",
+      "bytes": 6019,
+      "sha256": "4f27bfcd4c4760e331f25a177289e16d8435dbf5c08e15ab56402136c54e9e8c"
+    },
+    {
+      "path": "docs/releases/V4.9/subreleases/V4_9_2-vision-response-normalization.md",
+      "bytes": 6071,
+      "sha256": "ec4332b7012d47e2790a731f626ed84d297cdd03cbe85a4efeca4a1f9e378059"
+    },
+    {
+      "path": "docs/releases/V4.9/subreleases/V4_9_3-remove-concrete-model-name-capability-logic.md",
+      "bytes": 6105,
+      "sha256": "5aceba7accbca0a34dddb017c2b28bae8c4148c4abee95c029b9807fc3505f38"
+    },
+    {
+      "path": "docs/releases/V4.9/subreleases/V4_9_4-vision-benchmark-fixtures.md",
+      "bytes": 5995,
+      "sha256": "3481cad0997b38c3bfef2e13c24eccf84188ca83f496b834823e587754a84512"
+    },
+    {
+      "path": "docs/releases/V4.9/subreleases/V4_9_5-vision-graders.md",
+      "bytes": 5998,
+      "sha256": "1219815de8987dfb2c7808aedd7e93b0ad6efaf6f31270987b8491322e45fcc7"
+    },
+    {
+      "path": "docs/releases/V4.9/subreleases/V4_9_6-vision-challenger-offline.md",
+      "bytes": 5982,
+      "sha256": "54d4d41c66dac3a4033e0630e862704d630f9305312f35d10be36a4d01771bae"
+    },
+    {
+      "path": "docs/releases/V4.9/subreleases/V4_9_7-vision-fallback-policy.md",
+      "bytes": 6022,
+      "sha256": "1d9f40c9739667be39a204df8961e0627e7d0248d19b53c21897108b2574bde9"
+    },
+    {
+      "path": "docs/releases/V4.9/subreleases/V4_9_8-vision-primary-promotion-gate.md",
+      "bytes": 6051,
+      "sha256": "e92a6912f461fc4ae7407f4076f7eacd19d5d16f1be9d2d5717aa43cd05f09cb"
+    },
+    {
+      "path": "docs/releases/V5.0/DETAILED_INDEX.md",
+      "bytes": 1400,
+      "sha256": "11d4fdcbc3f1eeaf7242a4b83278e443e326c0e063c1ebbe39b8e92a7606c785"
+    },
+    {
+      "path": "docs/releases/V5.0/NORMALIZED_EXECUTION.md",
+      "bytes": 1041,
+      "sha256": "406c8a32186b20126db1299f91b3056c0614da478f7a5e38d16d2e1efc551980"
     },
     {
       "path": "docs/releases/V5.0/README.md",
@@ -533,6 +725,86 @@
       "sha256": "81724a65558a22d32e51e7e1c99f2814cac91bb602b99722df68786920c662f3"
     },
     {
+      "path": "docs/releases/V5.0/subreleases/V5_0_0-benchmark-case-contract.md",
+      "bytes": 5647,
+      "sha256": "802b1d025146e1041669f1bd53fb94c7464d84c5b26ee2aa1bbb3c72dd9d780d"
+    },
+    {
+      "path": "docs/releases/V5.0/subreleases/V5_0_1-fixture-loader.md",
+      "bytes": 5538,
+      "sha256": "ac5967caedd6731a190688e5b3da927a0885c8ff7813cf896976e06d4781b173"
+    },
+    {
+      "path": "docs/releases/V5.0/subreleases/V5_0_10-champion-registry.md",
+      "bytes": 5537,
+      "sha256": "4389839600603a8084ffba84b123023be683fd45acd328f6afbd78b9702a8be9"
+    },
+    {
+      "path": "docs/releases/V5.0/subreleases/V5_0_11-a-b-assignment.md",
+      "bytes": 5549,
+      "sha256": "43ecb5c6bd073e81f8a5b80d789719bf54e7820b38993352bff4b1434d49da43"
+    },
+    {
+      "path": "docs/releases/V5.0/subreleases/V5_0_12-production-champion-rollout.md",
+      "bytes": 5631,
+      "sha256": "8ff72ae19792c7b6a7def34a6a502d84d5946cbb1b08503a63775ee9c15ea335"
+    },
+    {
+      "path": "docs/releases/V5.0/subreleases/V5_0_13-model-drift-monitor-baseline.md",
+      "bytes": 5676,
+      "sha256": "027b398cb5be951cd870a5689e45ee379c8bfcd14b20ae86afdf8a21cc2ed06a"
+    },
+    {
+      "path": "docs/releases/V5.0/subreleases/V5_0_2-deterministic-graders.md",
+      "bytes": 5628,
+      "sha256": "d21452e642517a87cd855df363b2a1c8acd48cb8251718b0e471a140ed29688b"
+    },
+    {
+      "path": "docs/releases/V5.0/subreleases/V5_0_3-semantic-grader-policy.md",
+      "bytes": 5686,
+      "sha256": "e1e616244325d5a07aa0622bcd41aaf8bf681836a583fb9cd7b428f988bb356a"
+    },
+    {
+      "path": "docs/releases/V5.0/subreleases/V5_0_4-benchmark-runner.md",
+      "bytes": 5537,
+      "sha256": "54da43859bae04ddf77be7ebe46e57ce09dd31a0c70384e80454f01dbefe2682"
+    },
+    {
+      "path": "docs/releases/V5.0/subreleases/V5_0_5-baseline-snapshot.md",
+      "bytes": 5563,
+      "sha256": "9cc540ee6ee27d4a8d274549411a3c1d40c48394a1fca03a4643d3b59454ea4e"
+    },
+    {
+      "path": "docs/releases/V5.0/subreleases/V5_0_6-challenger-profile-integration.md",
+      "bytes": 5662,
+      "sha256": "542b3c554c10a78d86b99403505e3e8adef33f7e6786d78b7e4232daf3842467"
+    },
+    {
+      "path": "docs/releases/V5.0/subreleases/V5_0_7-offline-challenger-run.md",
+      "bytes": 5580,
+      "sha256": "9836bdde518024df36928dafd806ca559e776b6f18ded28fa35911ce53d82c1e"
+    },
+    {
+      "path": "docs/releases/V5.0/subreleases/V5_0_8-statistical-comparison.md",
+      "bytes": 5620,
+      "sha256": "891fdaf0e38b730e4cf29121cc28c6f423eb1ce8cc5d0fe0e8a410c14896f21a"
+    },
+    {
+      "path": "docs/releases/V5.0/subreleases/V5_0_9-task-classification-for-champion.md",
+      "bytes": 5677,
+      "sha256": "5dac5862632d018c5b959fee35e2afbaa85da5e805469eb2b38f72cc12ec0462"
+    },
+    {
+      "path": "docs/releases/V5.1/DETAILED_INDEX.md",
+      "bytes": 1456,
+      "sha256": "e4ff1433fb8207418de78e9ae96042f368ee2c92c3d11874d028cd814aa548bd"
+    },
+    {
+      "path": "docs/releases/V5.1/NORMALIZED_EXECUTION.md",
+      "bytes": 1067,
+      "sha256": "33b234bf7451e68ee401cfc39b75ecd4246c0a40a0990ea1c33dbfab863b9459"
+    },
+    {
       "path": "docs/releases/V5.1/README.md",
       "bytes": 1265,
       "sha256": "c2a528be9d832c0faeb73f4804203d086c7592260bb76209111b99ed798a8b42"
@@ -568,9 +840,89 @@
       "sha256": "3e5203b1555103560962d3cefdf9d1b09f8f636eba8b2c63ca6e15bcad914cf4"
     },
     {
+      "path": "docs/releases/V5.1/subreleases/V5_1_0-pricing-schema.md",
+      "bytes": 5675,
+      "sha256": "e7b9b970a484b192b6b6c68f698b69e17eaca3e6375c61365a14dd3b367ff66f"
+    },
+    {
+      "path": "docs/releases/V5.1/subreleases/V5_1_1-pricing-registry-history.md",
+      "bytes": 5690,
+      "sha256": "7bba53bdbed1279b72b2457ebf0f1d39b97e3872455db874fbc638c5b10914d1"
+    },
+    {
+      "path": "docs/releases/V5.1/subreleases/V5_1_10-research-budget-schema.md",
+      "bytes": 5619,
+      "sha256": "a851a108408fe963ca1dc2f6e598cab00aa3a58f50cb1d94169bf4ea2a314d4e"
+    },
+    {
+      "path": "docs/releases/V5.1/subreleases/V5_1_11-budget-accounting.md",
+      "bytes": 5564,
+      "sha256": "bf501376e425c33de6c28a6bb00490528aedbe15c409cc8ee78200775d6d2dbe"
+    },
+    {
+      "path": "docs/releases/V5.1/subreleases/V5_1_12-budget-aware-retrieval.md",
+      "bytes": 5632,
+      "sha256": "5ae3f93600bd1d58443e75e781a2b624ecfd397c1ea8d149d1191cd9b64ad58e"
+    },
+    {
+      "path": "docs/releases/V5.1/subreleases/V5_1_13-peak-off-peak-pricing-support.md",
+      "bytes": 5677,
+      "sha256": "61e547cb93f72493177bb270ae1693adf955d128e339045c5fe0246f112ab9b8"
+    },
+    {
+      "path": "docs/releases/V5.1/subreleases/V5_1_14-cost-observability-ui-api.md",
+      "bytes": 5649,
+      "sha256": "f3c0dc370c09a3a8f5c5c26d6b80da39271f9ef945f363dca2e41321a46c2d4f"
+    },
+    {
+      "path": "docs/releases/V5.1/subreleases/V5_1_2-usage-normalization.md",
+      "bytes": 5635,
+      "sha256": "889d0fd677bd71b024ff237e806da2f05fad6328c0360d24563014eb672b54b2"
+    },
+    {
+      "path": "docs/releases/V5.1/subreleases/V5_1_3-per-call-cost-calculation.md",
+      "bytes": 5612,
+      "sha256": "52d8781a0a288548b4272b68693c0a454a50d931fbbe7fa8a8deca932158cd46"
+    },
+    {
+      "path": "docs/releases/V5.1/subreleases/V5_1_4-job-cost-aggregation.md",
+      "bytes": 5573,
+      "sha256": "d894dd7bdaf727a1a01da29925e73e92d33658a9516fecb7db457e6720067355"
+    },
+    {
+      "path": "docs/releases/V5.1/subreleases/V5_1_5-effective-task-cost.md",
+      "bytes": 5628,
+      "sha256": "b9768f3d66f0aad5e2908c9b88fa61e8c86ccd810025470bbad321589b93ee37"
+    },
+    {
+      "path": "docs/releases/V5.1/subreleases/V5_1_6-cache-fingerprint.md",
+      "bytes": 5579,
+      "sha256": "30ea422f6d5b784dc258afa4e61e4a7825ac736dc035e722140371e3582dee58"
+    },
+    {
+      "path": "docs/releases/V5.1/subreleases/V5_1_7-cache-analytics.md",
+      "bytes": 5587,
+      "sha256": "e8a5c31078933c49ca561fd50593fadd8723704682b23effca3ac47d6247ae5f"
+    },
+    {
+      "path": "docs/releases/V5.1/subreleases/V5_1_8-cache-eligibility-gate.md",
+      "bytes": 5659,
+      "sha256": "e05efbcd802d741502ebe8a77b9597f89d995686590920f04f2d64c3294a55a0"
+    },
+    {
+      "path": "docs/releases/V5.1/subreleases/V5_1_9-cost-candidate-ranking.md",
+      "bytes": 5603,
+      "sha256": "9ccce5aeb2f4c73f8c557c368984a540053016ccb222269845308677b94865f6"
+    },
+    {
       "path": "docs/releases/V5.10/DETAILED_INDEX.md",
-      "bytes": 501,
-      "sha256": "e3fec2501938f1abc08248b442167e5cc33f221f2ba76f2a2e8aed0f9f3f9e94"
+      "bytes": 1387,
+      "sha256": "b57f2d52b9f94897ae5643e9ef9c67b97386eb6ed87b654ff02d4b946353bad0"
+    },
+    {
+      "path": "docs/releases/V5.10/NORMALIZED_EXECUTION.md",
+      "bytes": 1036,
+      "sha256": "ea05b838660f96b7a811642d235635ccbf54526787ddeb0ffab2eba775cdc9de"
     },
     {
       "path": "docs/releases/V5.10/README.md",
@@ -608,9 +960,84 @@
       "sha256": "7a44054ef794b281b1066fc9e3c38eb6478b2adeed45e2319e5366553dcfb8e0"
     },
     {
+      "path": "docs/releases/V5.10/subreleases/V5_10_0-portfolio-position-schema.md",
+      "bytes": 6049,
+      "sha256": "38af0d24680b51c0825295c1af30ea4d7caa04c04fce2a84c22cbc6744040294"
+    },
+    {
+      "path": "docs/releases/V5.10/subreleases/V5_10_1-exposure-engine-v1.md",
+      "bytes": 5947,
+      "sha256": "2f73905639cf574c0ff2ac22e50bb87d876a65902ebd26d17f8226af0f549d85"
+    },
+    {
+      "path": "docs/releases/V5.10/subreleases/V5_10_10-capital-allocation-v1.md",
+      "bytes": 6079,
+      "sha256": "c4a030c3e31f20062ced0d7202c2da86d11ff2826c98987abf1dc3356a17c0c6"
+    },
+    {
+      "path": "docs/releases/V5.10/subreleases/V5_10_11-counterfactual-allocation.md",
+      "bytes": 6037,
+      "sha256": "d80b46fbca3f135167585934658f817e7443c7c4972495b2f6d026a8fee28b47"
+    },
+    {
+      "path": "docs/releases/V5.10/subreleases/V5_10_12-portfolio-thesis-ui-api.md",
+      "bytes": 6015,
+      "sha256": "91aa56939371b3457473e81773f522b40b741e463130d1a6d01a337aa2f19e19"
+    },
+    {
+      "path": "docs/releases/V5.10/subreleases/V5_10_13-portfolio-benchmark.md",
+      "bytes": 6027,
+      "sha256": "1cde2153504faa9e19847e61da6e23f6b0557203967e33f29d43cc69bad257da"
+    },
+    {
+      "path": "docs/releases/V5.10/subreleases/V5_10_2-factor-exposure-v1.md",
+      "bytes": 6060,
+      "sha256": "d541ac5ed97d29d2ceece93c5c2143f5b396db0f136196438cd7fc22da449014"
+    },
+    {
+      "path": "docs/releases/V5.10/subreleases/V5_10_3-liquidity-engine.md",
+      "bytes": 6014,
+      "sha256": "3a4c9ee21cee254a906eb2020873eb633508554da18274647237bdf854326928"
+    },
+    {
+      "path": "docs/releases/V5.10/subreleases/V5_10_4-price-correlation.md",
+      "bytes": 6007,
+      "sha256": "5c373ebb1d2999553f907dd3badad2822def2d5937b3d73b83fe822651698dcc"
+    },
+    {
+      "path": "docs/releases/V5.10/subreleases/V5_10_5-thesis-correlation.md",
+      "bytes": 5995,
+      "sha256": "04771b525ccbe14aceb8e50a06123d3278200ccecf026cacedf1f0b035c9c1bb"
+    },
+    {
+      "path": "docs/releases/V5.10/subreleases/V5_10_6-business-relationship-graph-v1.md",
+      "bytes": 6080,
+      "sha256": "18e90655f7b776971a28fcfb2b968559e3696005247f0cbd216b20c692078946"
+    },
+    {
+      "path": "docs/releases/V5.10/subreleases/V5_10_7-macro-regime-state-v1.md",
+      "bytes": 6035,
+      "sha256": "35fa43790b5ad4880b669eadc2e070b7d46b50158835b4e4d5d4b39913cfde4f"
+    },
+    {
+      "path": "docs/releases/V5.10/subreleases/V5_10_8-hidden-exposure-engine.md",
+      "bytes": 5997,
+      "sha256": "8b7387042681c4aed84589117c4aa95a0e094faceb4acca62ab8f8add85ed567"
+    },
+    {
+      "path": "docs/releases/V5.10/subreleases/V5_10_9-risk-budget.md",
+      "bytes": 5984,
+      "sha256": "763df1736e0f36ae52d2a72643c7df91dac707f2af5e27562ff4824434ed774b"
+    },
+    {
       "path": "docs/releases/V5.11/DETAILED_INDEX.md",
-      "bytes": 474,
-      "sha256": "3e498af3ac3d2ba3331fab9876093ef365f36d6921b231d084bda2deb8a1735c"
+      "bytes": 1303,
+      "sha256": "d06df8db15af180516c550c0502a80ace099f8171d556231c433e103593c5b41"
+    },
+    {
+      "path": "docs/releases/V5.11/NORMALIZED_EXECUTION.md",
+      "bytes": 996,
+      "sha256": "c4717896807359bfe9d07afb49a291cbab4b41ed6ca9418d45b632c3a6d8ff36"
     },
     {
       "path": "docs/releases/V5.11/README.md",
@@ -648,6 +1075,81 @@
       "sha256": "09acd6f353d16cfb69a4659ac7657f23b5e279fa21e8e68228859b4debf0a9aa"
     },
     {
+      "path": "docs/releases/V5.11/subreleases/V5_11_0-research-snapshot-manifest.md",
+      "bytes": 6104,
+      "sha256": "1507349425974a5fa6a6659ef2cd34d2645881895bf64780781692ecf2eb0e8a"
+    },
+    {
+      "path": "docs/releases/V5.11/subreleases/V5_11_1-point-in-time-replay.md",
+      "bytes": 6044,
+      "sha256": "a59e8dd6693b4c1a541f214b71d1bb6fe865a7645028dd95779009170e162ebf"
+    },
+    {
+      "path": "docs/releases/V5.11/subreleases/V5_11_10-structured-research-diff.md",
+      "bytes": 6017,
+      "sha256": "8749e5bfbf7b6db014aa620c6f6e3db5f498fe07b8868e33293ea9ce03e061ad"
+    },
+    {
+      "path": "docs/releases/V5.11/subreleases/V5_11_11-institutional-memory.md",
+      "bytes": 6040,
+      "sha256": "062e9bad7786d1afd4eaee75469e63419c5c93e65fd7136a28551a1ee7e6b812"
+    },
+    {
+      "path": "docs/releases/V5.11/subreleases/V5_11_12-offline-knowledge-policy-learning.md",
+      "bytes": 6144,
+      "sha256": "5b4cb6476bd59bdb8a5177e1f29f7d787d71981c43335751b41b444804e89dd5"
+    },
+    {
+      "path": "docs/releases/V5.11/subreleases/V5_11_2-research-provenance-id.md",
+      "bytes": 6015,
+      "sha256": "6df536ca963ab94fa6d0a43156ba88d591eb161259452fdccff5952271245dc6"
+    },
+    {
+      "path": "docs/releases/V5.11/subreleases/V5_11_3-failure-registry.md",
+      "bytes": 6000,
+      "sha256": "7014de94f5b6b704955492e89470dcf9ca5ffae57e3c3431d16414f47c947031"
+    },
+    {
+      "path": "docs/releases/V5.11/subreleases/V5_11_4-decision-journal.md",
+      "bytes": 5996,
+      "sha256": "bc8205e600868383fa2d923e947bfb04398965352694923ea4c1b5b3b27cba0c"
+    },
+    {
+      "path": "docs/releases/V5.11/subreleases/V5_11_5-outcome-model.md",
+      "bytes": 5964,
+      "sha256": "ffd3761ff595d83880694aefc4a371743454371f815c44c5914bd101708735fb"
+    },
+    {
+      "path": "docs/releases/V5.11/subreleases/V5_11_6-return-attribution.md",
+      "bytes": 6017,
+      "sha256": "a296bd0bc5c53284d5267b55d35d9a540edc7fc9396d4fdb22f66c762acecda0"
+    },
+    {
+      "path": "docs/releases/V5.11/subreleases/V5_11_7-belief-calibration.md",
+      "bytes": 5993,
+      "sha256": "2b56ca29a2f1dd435fbc9905916a0de8918752fd35f9a8e26117be655029e11f"
+    },
+    {
+      "path": "docs/releases/V5.11/subreleases/V5_11_8-decision-calibration.md",
+      "bytes": 6077,
+      "sha256": "93dfde9cbe9b8b9a5b44181d5fb79a043a6b2d2b9d5d353bd22d5c80d85f3d7d"
+    },
+    {
+      "path": "docs/releases/V5.11/subreleases/V5_11_9-research-genealogy.md",
+      "bytes": 5984,
+      "sha256": "ef8132c9cb1ca270719d08f2a03267062c717a28f1d06906e579b6afc6f2e5e6"
+    },
+    {
+      "path": "docs/releases/V5.2/DETAILED_INDEX.md",
+      "bytes": 1110,
+      "sha256": "236dc1b4b7d04f15f48cdbde7e9b411155d0f1dcb53edba5a226e45b7294f20f"
+    },
+    {
+      "path": "docs/releases/V5.2/NORMALIZED_EXECUTION.md",
+      "bytes": 902,
+      "sha256": "66de58edd81312211390f58ea5b09fcb3826eb4e9db5a447feef6d9bc0ca35d5"
+    },
+    {
       "path": "docs/releases/V5.2/README.md",
       "bytes": 1087,
       "sha256": "20aa6a809d64014f9dea1559e3878f12f77546e2f145665e741fc3d214326559"
@@ -683,9 +1185,69 @@
       "sha256": "82a641fa30dba32370a23e20a0333834eea094f1c2c6fc1a12b50793a8a74aeb"
     },
     {
+      "path": "docs/releases/V5.2/subreleases/V5_2_0-flagship-tier-schema.md",
+      "bytes": 5648,
+      "sha256": "2bc1b9745fa9cf73abc5dbdeb95978814e1fc318abda1008680152e8d1237b1c"
+    },
+    {
+      "path": "docs/releases/V5.2/subreleases/V5_2_1-flagship-eligibility-gate.md",
+      "bytes": 5631,
+      "sha256": "385f3c48faf37d896cea4cb71593430b606bd4c3b6a6ffdb20ea33ffa02ae136"
+    },
+    {
+      "path": "docs/releases/V5.2/subreleases/V5_2_10-flagship-drift-usage-guard.md",
+      "bytes": 5649,
+      "sha256": "e54be9e359ca227a210deac50085c926498c3b22c4c9794303ddb3ebf47585a1"
+    },
+    {
+      "path": "docs/releases/V5.2/subreleases/V5_2_2-critical-review-escalation.md",
+      "bytes": 5705,
+      "sha256": "4f691f116ef8d0669f270969a77802161170fc60051aa678b96e4d92c96583de"
+    },
+    {
+      "path": "docs/releases/V5.2/subreleases/V5_2_3-core-conflict-detector.md",
+      "bytes": 5644,
+      "sha256": "6481419e8c2740dd0471ee9180a9dc856a6a287ffc00d87501e7da4ae3cf04f3"
+    },
+    {
+      "path": "docs/releases/V5.2/subreleases/V5_2_4-judge-input-contract.md",
+      "bytes": 5610,
+      "sha256": "1eedd783587aff83b7eb90e0f4d4701d3023aea4e3a7cc07ca355af5b516a90d"
+    },
+    {
+      "path": "docs/releases/V5.2/subreleases/V5_2_5-judge-output-contract.md",
+      "bytes": 5608,
+      "sha256": "1c7b1b67053743ca3f3bb2b7de954042f524e8f920e4828bea6a4d06e5dab4d9"
+    },
+    {
+      "path": "docs/releases/V5.2/subreleases/V5_2_6-judge-validation.md",
+      "bytes": 5635,
+      "sha256": "37d2b1323a92daa88785a7a204bd07a96d15306651c601d244fb24239caf13fc"
+    },
+    {
+      "path": "docs/releases/V5.2/subreleases/V5_2_7-judge-telemetry.md",
+      "bytes": 5568,
+      "sha256": "ed703361748e5f20e768d9478079134d6e0482c19c76ca84099f1e19a7557603"
+    },
+    {
+      "path": "docs/releases/V5.2/subreleases/V5_2_8-judge-benchmark.md",
+      "bytes": 5591,
+      "sha256": "41d00bda1679f7c7df936f75c27edfcf0e4485fe34ed3cc8816b2669464dcaf6"
+    },
+    {
+      "path": "docs/releases/V5.2/subreleases/V5_2_9-rare-path-rollout.md",
+      "bytes": 5608,
+      "sha256": "ef1c9eb01c92a4519b13ca089fab9d3e8ecc62d4d3678c8668cfdaf84d4d4bdf"
+    },
+    {
       "path": "docs/releases/V5.3/DETAILED_INDEX.md",
-      "bytes": 431,
-      "sha256": "a8eeb717e1ca09662a23ddedb99f752ce32b02d291b0a8096fcf87289fdd7065"
+      "bytes": 1238,
+      "sha256": "0f39d8057f8f8add944102b9e4e8ffe958d717151199db25dbdf2731e0014785"
+    },
+    {
+      "path": "docs/releases/V5.3/NORMALIZED_EXECUTION.md",
+      "bytes": 966,
+      "sha256": "ff55528799530202c779d0d8b0cacc431d1cec276f97572df56a9b383aa5c5d8"
     },
     {
       "path": "docs/releases/V5.3/README.md",
@@ -723,9 +1285,74 @@
       "sha256": "040b66779b46d8583c93acbaa11b003949729c6cc1c234c0fd51411051fa8109"
     },
     {
+      "path": "docs/releases/V5.3/subreleases/V5_3_0-knowledge-inventory-ownership-map.md",
+      "bytes": 6019,
+      "sha256": "fe0623e73bbf1aeb019907b39513d2d5ffeb8db4891590e3c29d8413531a5ef4"
+    },
+    {
+      "path": "docs/releases/V5.3/subreleases/V5_3_1-rule-id-foundation.md",
+      "bytes": 5807,
+      "sha256": "a08fb3966c60fd142bf62a8a6e4358f2ec7d1b1e9854e93ce1739cce48c8b0bf"
+    },
+    {
+      "path": "docs/releases/V5.3/subreleases/V5_3_10-promote-to-runtime-pipeline.md",
+      "bytes": 5869,
+      "sha256": "751cd524dd4199e9a4666bc32828df1c68e770add1acd6953845d6e95aaf6bfa"
+    },
+    {
+      "path": "docs/releases/V5.3/subreleases/V5_3_11-impact-analysis-rule-decay.md",
+      "bytes": 5868,
+      "sha256": "98d3dbc7649117d34a8d9c67758077c8e95eddc6720906d658309516819bf4fb"
+    },
+    {
+      "path": "docs/releases/V5.3/subreleases/V5_3_2-constitution-extraction.md",
+      "bytes": 5829,
+      "sha256": "1ae5ff01d792d2f87db382c3d655d3452fd4815f26e106a46f607e282fd61d6d"
+    },
+    {
+      "path": "docs/releases/V5.3/subreleases/V5_3_3-ontology-foundation.md",
+      "bytes": 5842,
+      "sha256": "46769adbe1d999272b6a1f2ed7ec2c45c6c3757938e5e68a78f7a520d3f52c42"
+    },
+    {
+      "path": "docs/releases/V5.3/subreleases/V5_3_4-knowledge-resolver-v1.md",
+      "bytes": 5822,
+      "sha256": "8283058df09da3160540f2004939e4ae9f48f61c4b7dfde654a4a39d207c8d78"
+    },
+    {
+      "path": "docs/releases/V5.3/subreleases/V5_3_5-context-compiler-v1.md",
+      "bytes": 5854,
+      "sha256": "0238c7a40d835dbd64be38ecb30be53a3b7d77bdb8620e0ea82540b24722c431"
+    },
+    {
+      "path": "docs/releases/V5.3/subreleases/V5_3_6-knowledge-linter.md",
+      "bytes": 5827,
+      "sha256": "f5414c8d41511feb4c940bcea484323bdd954f984e59f82cbae01f8fb1fbd5b1"
+    },
+    {
+      "path": "docs/releases/V5.3/subreleases/V5_3_7-knowledge-regression.md",
+      "bytes": 5770,
+      "sha256": "712886c22564fad5dceeccb3bd6b0bb6297fe47972da51c920d51a54be57c549"
+    },
+    {
+      "path": "docs/releases/V5.3/subreleases/V5_3_8-k-series-snapshot.md",
+      "bytes": 5715,
+      "sha256": "9d8be4a33e727ca9290a61ec5c9fcff353dcfe64b0cb5572e98b71598d0e6e3b"
+    },
+    {
+      "path": "docs/releases/V5.3/subreleases/V5_3_9-knowledge-change-proposal.md",
+      "bytes": 5705,
+      "sha256": "442e175ca64056da520f01179b1cacf3e42b27017c93ee8fbac7cbcc78eaca2d"
+    },
+    {
       "path": "docs/releases/V5.4/DETAILED_INDEX.md",
-      "bytes": 331,
-      "sha256": "679df47e41401a8824f6aaf8fe04d7cc63094ffa1ec96856ef64f891483316cf"
+      "bytes": 998,
+      "sha256": "4efb847f266faed7c435b9373a4bb1fe6575403a3b67eb50b95c8b5565186ae5"
+    },
+    {
+      "path": "docs/releases/V5.4/NORMALIZED_EXECUTION.md",
+      "bytes": 848,
+      "sha256": "265db21ead535c3ddc477892a92d1ee79fbe70af1970846b431705a6c70769c2"
     },
     {
       "path": "docs/releases/V5.4/README.md",
@@ -763,9 +1390,64 @@
       "sha256": "d7c784023a932c1328192ae5daeacf1f88e00df8fd1684e366338735cdce502a"
     },
     {
+      "path": "docs/releases/V5.4/subreleases/V5_4_0-source-contract-adapter.md",
+      "bytes": 5835,
+      "sha256": "ffc5bc9516841db07515fadb16483e1eb35c7025e49a8107ad988c9dc8c4aca3"
+    },
+    {
+      "path": "docs/releases/V5.4/subreleases/V5_4_1-evidence-contract-normalization.md",
+      "bytes": 5778,
+      "sha256": "9e1ffb06dfa5f5a804afb0fd79ed7c9dfc89fe1e03864100d035266bc3586046"
+    },
+    {
+      "path": "docs/releases/V5.4/subreleases/V5_4_2-bm25-lexical-layer.md",
+      "bytes": 5714,
+      "sha256": "616d91ecdfb1b6d5c596ea587fdc69ae810b684b02f949eda3190ba41dcddae5"
+    },
+    {
+      "path": "docs/releases/V5.4/subreleases/V5_4_3-embedding-provider-index.md",
+      "bytes": 5795,
+      "sha256": "ed05ee2187878fa3fd51b629485c0c9a45f7407d21d9a89193954cbdec539431"
+    },
+    {
+      "path": "docs/releases/V5.4/subreleases/V5_4_4-hybrid-fusion.md",
+      "bytes": 5724,
+      "sha256": "2973384d79bbf005aa21751b9f82b7a3fdd67a546b6891cb6145992c1f511707"
+    },
+    {
+      "path": "docs/releases/V5.4/subreleases/V5_4_5-reranker.md",
+      "bytes": 5688,
+      "sha256": "935568d4302404499fb19d89a2cf680f1df0dbdfd9a1382a3f50309fa39ea9fa"
+    },
+    {
+      "path": "docs/releases/V5.4/subreleases/V5_4_6-retrieval-planner.md",
+      "bytes": 5697,
+      "sha256": "7af5a32aa605723dd9d09c3e8a0f13ee70eb17852a9ad121efa636c17ff4dcae"
+    },
+    {
+      "path": "docs/releases/V5.4/subreleases/V5_4_7-evidence-pack.md",
+      "bytes": 5672,
+      "sha256": "64138a2496023fb22430bdf4d920c05240beef3f243d436e563685f31d6b096a"
+    },
+    {
+      "path": "docs/releases/V5.4/subreleases/V5_4_8-contradiction-registry.md",
+      "bytes": 5779,
+      "sha256": "0e3d5d4a178fc21c236ddad14839240f59fd9c0628b4a431eb39db691ef2086a"
+    },
+    {
+      "path": "docs/releases/V5.4/subreleases/V5_4_9-retrieval-benchmark.md",
+      "bytes": 5725,
+      "sha256": "4a5119e925ae24b176a8729d6ba0f42c80d296548ae0c519589ad941b62668ea"
+    },
+    {
       "path": "docs/releases/V5.5/DETAILED_INDEX.md",
-      "bytes": 533,
-      "sha256": "2c97ce242c91f915195d70838a72bd3bd2902340055a348cd0400cbf9151b86e"
+      "bytes": 1430,
+      "sha256": "603287e8f61dbccbeee762addef4d6e899f8753e6ecba161a292f31181a02d81"
+    },
+    {
+      "path": "docs/releases/V5.5/NORMALIZED_EXECUTION.md",
+      "bytes": 1057,
+      "sha256": "bfd05357b261c39565a476052ddd425a3585ab67dee854be4a6a110b438ae908"
     },
     {
       "path": "docs/releases/V5.5/README.md",
@@ -803,9 +1485,84 @@
       "sha256": "8cc240b1945bf8f557b6fda954f490a5e2160e6655651eb2275ac2634790d566"
     },
     {
+      "path": "docs/releases/V5.5/subreleases/V5_5_0-security-identity-inventory.md",
+      "bytes": 6152,
+      "sha256": "f366abc40df809dfe1a263b8fdbbac4a7962bcde920e1a9652b881e57f0dc4be"
+    },
+    {
+      "path": "docs/releases/V5.5/subreleases/V5_5_1-issuer-security-listing-shareclass-schema.md",
+      "bytes": 6121,
+      "sha256": "912960d75da099bb8f35967cf43c693756fae14443481b97e65684a503e511b9"
+    },
+    {
+      "path": "docs/releases/V5.5/subreleases/V5_5_10-fact-verification-pipeline.md",
+      "bytes": 6124,
+      "sha256": "d5cfffea27843ff04b388aeb6bbbbba1153fc59324186747e1c736611a6d3241"
+    },
+    {
+      "path": "docs/releases/V5.5/subreleases/V5_5_11-restatement-revision-engine.md",
+      "bytes": 6120,
+      "sha256": "3fd2b4717312e5b2c96454383199541fe9298cf1fc00dd79b0ba75924efb48ff"
+    },
+    {
+      "path": "docs/releases/V5.5/subreleases/V5_5_12-fact-conflict-resolver.md",
+      "bytes": 6099,
+      "sha256": "a0a94b6ce833c894497eeecba245114b245c5388dd9a13c7ed916ebca2c3441b"
+    },
+    {
+      "path": "docs/releases/V5.5/subreleases/V5_5_13-fact-lineage-api.md",
+      "bytes": 6041,
+      "sha256": "66dae2a49a77198cf21f3169e8d15effde8d9761e471a266bd63819cc61ac6f2"
+    },
+    {
+      "path": "docs/releases/V5.5/subreleases/V5_5_2-identifier-resolver-bridge.md",
+      "bytes": 6109,
+      "sha256": "8b4a205d374961a65e88bfdff6cac86cf7d9aa0ed9fc6601a60bb29c0eded666"
+    },
+    {
+      "path": "docs/releases/V5.5/subreleases/V5_5_3-corporate-action-base.md",
+      "bytes": 6204,
+      "sha256": "1e52aeb750c8d791ba089fcd5a517b0cd9bb44dd0fcd7fa1ae3debdfb278e04c"
+    },
+    {
+      "path": "docs/releases/V5.5/subreleases/V5_5_4-fact-schema-v1.md",
+      "bytes": 6056,
+      "sha256": "30999510db86ef0106e8df7597274d328ca0b337f1344c76baf34118499174eb"
+    },
+    {
+      "path": "docs/releases/V5.5/subreleases/V5_5_5-metric-ontology-runtime-bridge.md",
+      "bytes": 6131,
+      "sha256": "9b08efcf963f2bcd616faa4ee85544ef46d07b4dad7e22fb92965b78cee8e39e"
+    },
+    {
+      "path": "docs/releases/V5.5/subreleases/V5_5_6-period-engine.md",
+      "bytes": 6018,
+      "sha256": "acd973d8b79acc1a5a031154486fd8f2744b18292460c253fd6f2f2acdb7e008"
+    },
+    {
+      "path": "docs/releases/V5.5/subreleases/V5_5_7-currency-engine.md",
+      "bytes": 6027,
+      "sha256": "819490fba86000513bd7d41081142c5e2cb19e971f62c40f06665d32c8bd8849"
+    },
+    {
+      "path": "docs/releases/V5.5/subreleases/V5_5_8-accounting-scope-engine.md",
+      "bytes": 6085,
+      "sha256": "601460231d22fceb8746e71ebe30f616aacfb9ba1bd6fa0df79b1b29c97ffe91"
+    },
+    {
+      "path": "docs/releases/V5.5/subreleases/V5_5_9-share-basis-engine.md",
+      "bytes": 6119,
+      "sha256": "3f7e6566d1479abe0a9f326ce794682ab3e1004c77bd781e00c359e4ba5cf068"
+    },
+    {
       "path": "docs/releases/V5.6/DETAILED_INDEX.md",
-      "bytes": 473,
-      "sha256": "0b6c0412606475c2a092faf3f91a2da18afa491e4ddc512b49c48ca5dde4d001"
+      "bytes": 1320,
+      "sha256": "3199d273a1b04a893ccf34b7864067df8e53c2aa244a4bd0f7a2da6aadf95ed9"
+    },
+    {
+      "path": "docs/releases/V5.6/NORMALIZED_EXECUTION.md",
+      "bytes": 1003,
+      "sha256": "1be7139842af5190dd0d7a60402c6cdde4333a0e054d137739860cd4f189c161"
     },
     {
       "path": "docs/releases/V5.6/README.md",
@@ -843,9 +1600,79 @@
       "sha256": "925451684e923b738777a5c2a7cafa50045b817273e6da870425c32c32fd1602"
     },
     {
+      "path": "docs/releases/V5.6/subreleases/V5_6_0-calculation-inventory.md",
+      "bytes": 6213,
+      "sha256": "be9bcb836599ac24930533d69a24cb315ed0cf7cf3aaf04e774395bdfdb38d35"
+    },
+    {
+      "path": "docs/releases/V5.6/subreleases/V5_6_1-formula-registry.md",
+      "bytes": 6101,
+      "sha256": "b92b3f5834d118d45188cfff39e3852ad266766d9102ab1dc68304a47c70ffdd"
+    },
+    {
+      "path": "docs/releases/V5.6/subreleases/V5_6_10-narrative-discipline-checks.md",
+      "bytes": 6182,
+      "sha256": "06f02e52a1e94ea1ae9d4dccb7e4722af0221eab46f2cbda5cb87f05f4be814f"
+    },
+    {
+      "path": "docs/releases/V5.6/subreleases/V5_6_11-claim-renderer-sidecar.md",
+      "bytes": 6154,
+      "sha256": "a86d9483968269076b044be6720a59535456feb50a9525e48d8bc408ad713a6f"
+    },
+    {
+      "path": "docs/releases/V5.6/subreleases/V5_6_12-claim-calculation-benchmark.md",
+      "bytes": 6178,
+      "sha256": "70d53d04ccd7b42befc7249f55a3b465641120cd701b44d91c4d5e2630794059"
+    },
+    {
+      "path": "docs/releases/V5.6/subreleases/V5_6_2-calculation-record-wrapper.md",
+      "bytes": 6235,
+      "sha256": "2538ebe9f2413626759f346aff8449007230a8652c55f5844947da4b8fd46b46"
+    },
+    {
+      "path": "docs/releases/V5.6/subreleases/V5_6_3-assumption-registry.md",
+      "bytes": 6182,
+      "sha256": "6bff2ce905c3dd9a165e5d149dcd30afe2d06d775122ec6e6dd6c3c25f7ce66c"
+    },
+    {
+      "path": "docs/releases/V5.6/subreleases/V5_6_4-claim-schema-v1.md",
+      "bytes": 6178,
+      "sha256": "a3e4ecb00d72e657550ddeda4bead6e7afc822c7e70477542c90b17302d4ecd3"
+    },
+    {
+      "path": "docs/releases/V5.6/subreleases/V5_6_5-counter-evidence-support.md",
+      "bytes": 6130,
+      "sha256": "684c4453e3ebed39092e67293055d49364fe1bed42d3595772b69512a0f51644"
+    },
+    {
+      "path": "docs/releases/V5.6/subreleases/V5_6_6-claim-dependency-links.md",
+      "bytes": 6133,
+      "sha256": "d3068e11761c4a320d8d9f452cf94e5aa50e527bb7b08bcca8dfbe75bac2db7e"
+    },
+    {
+      "path": "docs/releases/V5.6/subreleases/V5_6_7-dependency-dag-v1.md",
+      "bytes": 6178,
+      "sha256": "e56881f554a8f4a93dbf24f44338c1f30ad285c447156d9e7dd4f8ba7c03c98a"
+    },
+    {
+      "path": "docs/releases/V5.6/subreleases/V5_6_8-runtime-system-invariants.md",
+      "bytes": 6159,
+      "sha256": "88c1df240ab74dbdf3ed9183aae39ba0ce1707d407c4b74d736c64f73d3a2425"
+    },
+    {
+      "path": "docs/releases/V5.6/subreleases/V5_6_9-causal-mechanism-metadata.md",
+      "bytes": 6233,
+      "sha256": "907c95c48967fbc04a1b2761103d9e2cc769e314e6d7a7cf50720d2b0cca421d"
+    },
+    {
       "path": "docs/releases/V5.7/DETAILED_INDEX.md",
-      "bytes": 562,
-      "sha256": "4bdf0c2fd705c6c95d8d3c57c645159e025f5f8fcc92e377b626195e2ca1cbe8"
+      "bytes": 1518,
+      "sha256": "c3230545f39e5f8286126a23536cd518573b0496358363258c8d484906fb94d8"
+    },
+    {
+      "path": "docs/releases/V5.7/NORMALIZED_EXECUTION.md",
+      "bytes": 1096,
+      "sha256": "3e25415a4526720f932f4493020f1217918644745191fb25d802d93ef7e8b88e"
     },
     {
       "path": "docs/releases/V5.7/README.md",
@@ -883,9 +1710,94 @@
       "sha256": "a3687a352b44c0c8aa253f0f1d3e35c5966b0d6309005a90c212bc96b061d1a6"
     },
     {
+      "path": "docs/releases/V5.7/subreleases/V5_7_0-hypothesis-schema.md",
+      "bytes": 6366,
+      "sha256": "7784ddf58cf3999ca71a0003668598e967ac55d8886cf8c80f26116e3abbaa90"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_1-hypothesis-evaluation-loop.md",
+      "bytes": 6366,
+      "sha256": "821207df4beaf07908444b1efb55e1402109d1133ea92659c95f7ee87ffb84c8"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_10-research-state-builder.md",
+      "bytes": 6316,
+      "sha256": "0e23e17bd28fc88dcb4c99ef6f2b9b939266efac093516ca4acfc2f0f30ebde9"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_11-state-renderer.md",
+      "bytes": 6265,
+      "sha256": "c3f319cf2d6f7ac013e6cc683bc51e997c48b57b22e52e124f4aff3be72c7033"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_12-research-ir-v1.md",
+      "bytes": 6361,
+      "sha256": "4e7154916279829cc1ebb0ac409b51a5cb7a2f3e5800be7f106bbca8214c7c72"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_13-decision-readiness-inputs.md",
+      "bytes": 6314,
+      "sha256": "41001ce14d195347d8748b1e6e002c978e72cf666a997671dd989f362b8a865a"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_14-calibration-capture.md",
+      "bytes": 6306,
+      "sha256": "949ca2708f671ab112e925fefe06c0ba8419f31485b2a311c0afa126a712df39"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_15-scenario-tree-reservation.md",
+      "bytes": 6304,
+      "sha256": "b703a735bad654fa3c7de50a1cdb8c0551a83057086e3224d9f647070e0341d4"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_2-belief-schema.md",
+      "bytes": 6275,
+      "sha256": "fb822990021306565733cd45a57acff88027f291797bcf823c97c4bcdc2cdd57"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_3-uncertainty-taxonomy-runtime.md",
+      "bytes": 6353,
+      "sha256": "008166f3e68c950bb08104b7f5443be12e5648c98be2889470b5ec67fc12413e"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_4-forecast-data-model.md",
+      "bytes": 6307,
+      "sha256": "163bb44891e682f8a89884440bab05563734ad48fc404ca1d2f229a44141b02e"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_5-revenue-forecast-v1.md",
+      "bytes": 6323,
+      "sha256": "3f6487bde11e2eca8658f425343a6204aa11910e8a799e3c69cb13b60d9d5692"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_6-margin-fcf-forecast-v1.md",
+      "bytes": 6282,
+      "sha256": "02c12ea4b1584e6cd19292df8f2af3a019702fc1ac8d169ac4b155b2b8a8035d"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_7-scenario-engine-v1.md",
+      "bytes": 6277,
+      "sha256": "914f92afcf8d80f26d2dbb53ef0fc70458e2b89e49c91fa976404ad6f9b03af4"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_8-reverse-valuation.md",
+      "bytes": 6305,
+      "sha256": "68a27cffdd71e96f11d403ec2f442aceb5e190a2a6632ffc1a1ce8c68f591ff2"
+    },
+    {
+      "path": "docs/releases/V5.7/subreleases/V5_7_9-research-state-schema-v1.md",
+      "bytes": 6370,
+      "sha256": "d20e46111c151884a59c736027aa2c05d6a81bc25b107a1a499f4d9b734cc485"
+    },
+    {
       "path": "docs/releases/V5.8/DETAILED_INDEX.md",
-      "bytes": 401,
-      "sha256": "ae272ba37a0b56ee581c4cc8a9d58e0dcfcc1040f151a7da6250975893c362e2"
+      "bytes": 1232,
+      "sha256": "1e767b8aacb5c77d47d3593b49ac86bf8ec50af5329e288b27eeeb12c46a8ae5"
+    },
+    {
+      "path": "docs/releases/V5.8/NORMALIZED_EXECUTION.md",
+      "bytes": 963,
+      "sha256": "bed9addbd55225c10eaec3a527a67c658ec5ac29ed12c426b3baead1d574deb0"
     },
     {
       "path": "docs/releases/V5.8/README.md",
@@ -923,9 +1835,74 @@
       "sha256": "6d66ee6ab7e757eab05a2b1ca586f6d5313a9a4f54553cb16e0bef24636a805f"
     },
     {
+      "path": "docs/releases/V5.8/subreleases/V5_8_0-event-identity-time.md",
+      "bytes": 6013,
+      "sha256": "acce43de084296571c23d45c75da111da8982238057fb129fb0f8882e5eb6f06"
+    },
+    {
+      "path": "docs/releases/V5.8/subreleases/V5_8_1-event-classifier-v1.md",
+      "bytes": 6071,
+      "sha256": "b25fd4ed66b091c5a902216e08b58e7d20617649a7006e9ff7d9421647381688"
+    },
+    {
+      "path": "docs/releases/V5.8/subreleases/V5_8_10-continuous-scheduler-v1.md",
+      "bytes": 6038,
+      "sha256": "d4cc3cb5a10b98f3e71d4f8d30f465991901c1e430eeb63c1e29feafb44bcc12"
+    },
+    {
+      "path": "docs/releases/V5.8/subreleases/V5_8_11-continuous-coverage-benchmark.md",
+      "bytes": 6031,
+      "sha256": "474da10ab99fec4a4e2f65225d780509f72e23a135d0915996c051021adef311"
+    },
+    {
+      "path": "docs/releases/V5.8/subreleases/V5_8_2-event-fact-impact.md",
+      "bytes": 5998,
+      "sha256": "061c695dc4a66658bb3bac08673f1b8f4f736fdb67d2996a2804de32c04c82df"
+    },
+    {
+      "path": "docs/releases/V5.8/subreleases/V5_8_3-materiality-engine-v1.md",
+      "bytes": 6000,
+      "sha256": "1bd026e0dcc530eef4afe2d51f32c65a31131bbdb142a34e46d4aef127e45a98"
+    },
+    {
+      "path": "docs/releases/V5.8/subreleases/V5_8_4-research-delta-schema.md",
+      "bytes": 5975,
+      "sha256": "7ea3bf84c6760c37e494d88f65c5ed7119cfc3ca2576837237934a4ccfbf240c"
+    },
+    {
+      "path": "docs/releases/V5.8/subreleases/V5_8_5-selective-revalidation-planner.md",
+      "bytes": 5939,
+      "sha256": "350283f792574f407fac4f8ebc906fe03e10001ec880d5e3502a8e78aa247143"
+    },
+    {
+      "path": "docs/releases/V5.8/subreleases/V5_8_6-monitoring-metric-links.md",
+      "bytes": 5956,
+      "sha256": "dd83c51709ec33b0ff4f6f26fa12e7023ca5dcff88e0e6e8656e95a7ed14a237"
+    },
+    {
+      "path": "docs/releases/V5.8/subreleases/V5_8_7-leading-indicator-registry.md",
+      "bytes": 6002,
+      "sha256": "dd45057219ca509736c29eb20f2ae805af924b47250be9c1acf62c62efe726f4"
+    },
+    {
+      "path": "docs/releases/V5.8/subreleases/V5_8_8-thesis-fragility.md",
+      "bytes": 5973,
+      "sha256": "f94c87b4523c3cc7769108244d268be50f41e434d04155110c1b4db3d54a9351"
+    },
+    {
+      "path": "docs/releases/V5.8/subreleases/V5_8_9-research-priority.md",
+      "bytes": 6053,
+      "sha256": "4358f026f4d0def9c76f295153afb7d904fa2b6e2dc4f4d3c67b93db46b50d1d"
+    },
+    {
       "path": "docs/releases/V5.9/DETAILED_INDEX.md",
-      "bytes": 435,
-      "sha256": "03eea2c7052735cb4ee9577bf6893bb9b7c41e70711ec41c528f10d08189dfcf"
+      "bytes": 1226,
+      "sha256": "8867f8103493e6b27209b47ba894e030155b7d5e1b57c0d17aa5c31dadd80ca3"
+    },
+    {
+      "path": "docs/releases/V5.9/NORMALIZED_EXECUTION.md",
+      "bytes": 958,
+      "sha256": "45bf98a24a2147dc9d394adf33f35de6e88f4d1d0ce5a604b768c86cafbb4191"
     },
     {
       "path": "docs/releases/V5.9/README.md",
@@ -963,9 +1940,74 @@
       "sha256": "2565437bd44d480b7371001b6ff650173d75e95b156d475462bbf25d60049450"
     },
     {
+      "path": "docs/releases/V5.9/subreleases/V5_9_0-investment-mandate-schema.md",
+      "bytes": 5911,
+      "sha256": "622af78badec826326a31b303b6ad0b4339b93efd9abd780b3dc0d6ae57e8c67"
+    },
+    {
+      "path": "docs/releases/V5.9/subreleases/V5_9_1-decision-readiness.md",
+      "bytes": 5752,
+      "sha256": "81c73a1a718b44e034e3a7859c5d048be37f187dc9bf5f481cfe1b9af0c304ed"
+    },
+    {
+      "path": "docs/releases/V5.9/subreleases/V5_9_10-decision-audit-renderer.md",
+      "bytes": 5837,
+      "sha256": "c6ff7e6e5171c138969450da5b9518b46e484a7f16ffc0fa1b564c9cb4d8c521"
+    },
+    {
+      "path": "docs/releases/V5.9/subreleases/V5_9_11-decision-benchmark.md",
+      "bytes": 5814,
+      "sha256": "e40b74476f3e3bdb5e13becfe7fd71d0d6bea47e984f1bab94efca7d99dda56f"
+    },
+    {
+      "path": "docs/releases/V5.9/subreleases/V5_9_2-expected-return-decomposition.md",
+      "bytes": 5783,
+      "sha256": "a81c8f30a41298a44d61ebe28a68e25a1c6334a6c07c8db3dd9f2c6cfa43b2b7"
+    },
+    {
+      "path": "docs/releases/V5.9/subreleases/V5_9_3-opportunity-set-v1.md",
+      "bytes": 5794,
+      "sha256": "fc3ec358f344f5fc21a99da99eae147900348663cd1354693f6c99d8c61e6fce"
+    },
+    {
+      "path": "docs/releases/V5.9/subreleases/V5_9_4-decision-policy-v1.md",
+      "bytes": 5809,
+      "sha256": "ec26fb71ab92b3b3e8cc379462138318a125fc2152e64898a85bead7e4af685f"
+    },
+    {
+      "path": "docs/releases/V5.9/subreleases/V5_9_5-robustness-shocks.md",
+      "bytes": 5819,
+      "sha256": "795da1eb544c6bb463c36791f570d82359266f285cb0d32dd4a2fe7580103d9b"
+    },
+    {
+      "path": "docs/releases/V5.9/subreleases/V5_9_6-permanent-loss-risk.md",
+      "bytes": 5837,
+      "sha256": "35633df489c598ab7be6c267548cea363bc47cd5da6830ade50261b6ad321c99"
+    },
+    {
+      "path": "docs/releases/V5.9/subreleases/V5_9_7-optionality-separation.md",
+      "bytes": 5764,
+      "sha256": "fe3771eb468dd5b42e6e9898d4bdfbfaca56c95491897c5cf99253da0eb83d4a"
+    },
+    {
+      "path": "docs/releases/V5.9/subreleases/V5_9_8-decision-sufficiency-stop-rule.md",
+      "bytes": 5807,
+      "sha256": "c1f05b33cfd5a06efb25ba307dc396313c404dd385f7f2dbcc06886b517e5fec"
+    },
+    {
+      "path": "docs/releases/V5.9/subreleases/V5_9_9-value-of-information-v1.md",
+      "bytes": 5875,
+      "sha256": "a00465f99dd2f26242a537e6ffabac1838ec618213b71e576e6aa4a1111bc0ed"
+    },
+    {
       "path": "docs/releases/V6.0/DETAILED_INDEX.md",
-      "bytes": 551,
-      "sha256": "6e899b442e0098ca22bfca1f8210cb12bc592be5354eb222336f270c2559ad93"
+      "bytes": 1516,
+      "sha256": "16986fef3d44a908f531265b60c90842eab53053cf6aa778606d3bb26978e8d7"
+    },
+    {
+      "path": "docs/releases/V6.0/NORMALIZED_EXECUTION.md",
+      "bytes": 1096,
+      "sha256": "74587f4aded6836affedcc2a06b9345739a029d463f653ce98761cb7778a4ddb"
     },
     {
       "path": "docs/releases/V6.0/README.md",
@@ -1003,6 +2045,86 @@
       "sha256": "c1c78193d59b0653f83d9ffc30a1be56834f8b8d80172842850ee5d8d2d62441"
     },
     {
+      "path": "docs/releases/V6.0/subreleases/V6_0_0-tenant-workspace-ownership-inventory.md",
+      "bytes": 6014,
+      "sha256": "08add8ecee6311d6912cb75316749093ebbf52b1a40404c96d5197a79b5bca79"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_1-workspace-tenant-schema.md",
+      "bytes": 5951,
+      "sha256": "21a6b1c638caa65cd76ac3a5dda5441306667b041140d9455c5d6f4712c01dc2"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_10-research-package.md",
+      "bytes": 6004,
+      "sha256": "528511c50e721b709ba58e9b0cd797e01addf61ba2e0e29451c74e21bcd7c741"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_11-zrp-v1.md",
+      "bytes": 5918,
+      "sha256": "4817d50ec9231bb54049216ed519dd2dc839288e1cbff5b5e4e834f477be92e4"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_12-api-mcp-surface.md",
+      "bytes": 5940,
+      "sha256": "729c74305596a479b99abda22fda8a7d183cd85c33226a0941029cf852e0d40d"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_13-worker-queue.md",
+      "bytes": 6035,
+      "sha256": "b3b4f45bbe3586b54746f8f511b1ad2ad7a9c2a82084344464928c18d6ca16c7"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_14-tenant-safe-continuous-research.md",
+      "bytes": 5904,
+      "sha256": "5363ef617fa6e4220ceb0420a919ae142080cbecfa3dab67849715ac2c3194b5"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_15-production-hardening-dr.md",
+      "bytes": 6013,
+      "sha256": "39019de8e65950b033f135659098f2e30eb4d4a23f8a4eae6203276a9a1a7426"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_2-rbac-v1.md",
+      "bytes": 5951,
+      "sha256": "44c2f8823c26be42a372f13646c723f4c9f8dba6ae8b864042f0b0b89a7688d5"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_3-audit-ledger.md",
+      "bytes": 5927,
+      "sha256": "1c7235c45be3dd38d1971c11887e29a3b270c9375b83592cae06d9ec16fab730"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_4-data-classification.md",
+      "bytes": 5892,
+      "sha256": "38d84ded9726893623d915f0351c944427afdd453316a7e6ec56b26a136a578a"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_5-provider-governance.md",
+      "bytes": 5929,
+      "sha256": "94cb02129e2cd4ac1c512b5da933e51420b4fd0cbb99f9e0f084b48c0b439758"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_6-human-override-provenance.md",
+      "bytes": 5926,
+      "sha256": "74681ec1e06ab7e12e098ee6b7d52abe3ff97a975e18cc2e3a8d96ac4d62f14c"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_7-human-research-workflow.md",
+      "bytes": 5963,
+      "sha256": "51e5445d93288c325f03014a11e1ccf96a28701dc381a85763f793494b2fa580"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_8-research-workbench-shell.md",
+      "bytes": 5961,
+      "sha256": "6fa632fa54eb1f1a9a10c7f5a7c62e12aecac06f106b4259e3e0b7484c6f6d69"
+    },
+    {
+      "path": "docs/releases/V6.0/subreleases/V6_0_9-fact-claim-evidence-drilldown.md",
+      "bytes": 5891,
+      "sha256": "465004bf7cc3591f5654b50ed0b4deddf472cd4b14d404d38f38e3cc8c88eaba"
+    },
+    {
       "path": "docs/releases/templates/acceptance-template.md",
       "bytes": 203,
       "sha256": "5947e6967f877bb66b1a067d4ddfc828dd9fa082a09a30cd49f218b660d6b85a"
@@ -1028,9 +2150,19 @@
       "sha256": "5951b99b1507e966a1ebb93732893a8e119fdb6e90fc96d574688a778c4e69d3"
     },
     {
+      "path": "docs/roadmap/NORMALIZED_RELEASE_MATRIX.md",
+      "bytes": 1316,
+      "sha256": "5bb0b7ce818a38c7990344a6a79591ee624eb177215c4800ec260feb9c1abe6c"
+    },
+    {
       "path": "docs/roadmap/RELEASE-DEPENDENCY-MATRIX.md",
       "bytes": 1599,
       "sha256": "d27438212720ae33916a376a2b4ede833ba090781a5ff25e572f125fd50e2d6f"
+    },
+    {
+      "path": "docs/roadmap/RELEASE_DEPENDENCIES_V3.md",
+      "bytes": 1228,
+      "sha256": "8497710fa2c1758ab3025f6114e0929529d1d4fa22077aaebe445ee0c192ae1d"
     },
     {
       "path": "docs/tracks/B-series.md",

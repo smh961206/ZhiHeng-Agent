@@ -116,6 +116,20 @@ export function createWebResearchSession({job,searchLocal,searchWeb=searchWebCan
  return {state,local,search,resolve,snapshot:()=>structuredClone({receipts:[...receipts],completedSearches:[...completedSearches],sequence})};
 }
 export function pendingWebGaps(state){return (state?.gaps||[]).filter(gap=>gap.status!=='evidence-located');}
+// Canonicalize only references already present in missingData and known to this
+// task. Do not add omitted gaps, change their status, or weaken the data gate.
+export function normalizeWebGapReferences(value,state){
+ const missing=value.decision?.missingData;if(!Array.isArray(missing))return false;
+ const ids=new Set((state?.gaps||[]).map(gap=>gap.id));let changed=false;
+ value.decision.missingData=missing.map(item=>{
+  if(typeof item!=='string')return item;
+  const normalized=item.replace(/\[\s*(G[1-9]\d*)\s*\]|【\s*(G[1-9]\d*)\s*】|(?<![A-Za-z0-9_])G[1-9]\d*(?![A-Za-z0-9_])/g,(match,square,wide)=>{
+   const id=square||wide||match;return ids.has(id)?'['+id+']':match;
+  });
+  if(normalized!==item)changed=true;return normalized;
+ });
+ return changed;
+}
 export function validateWebResearchReview(value,state){
  const pending=pendingWebGaps(state);if(!pending.length)return;
  const missing=value.decision?.missingData;

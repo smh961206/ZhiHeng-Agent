@@ -53,7 +53,7 @@ test('progress counts unresolved web gaps without double-counting linked follow-
  job.evidenceFollowup.checks[0].status='evidence-located';assert.equal(webEvidenceProgress(job).remaining,3,'A still-open web gap cannot disappear behind a resolved follow-up');
  assert.equal(webEvidenceProgress({}).remaining,0);
 });
-test('full research and audit retain an independently unresolved reused gap while making only one external search',async()=>{
+for(const gapReference of ['[G2]','F3/G2','【G2】'])test('full research and audit retain an unresolved reused gap: '+gapReference,async()=>{
  const original=global.fetch,job={mode:'B',input:{mode:'B',question:'合成行业研究',depth:'Standard',sources:[{id:'S1',type:'official-report',official:true,security:'CN:600519',text:'合成现有行业资料，须查证样本与报告期间。'}]}};
  let step=0,searches=0,reads=0;
  const calls=[['search_evidence',{query:'行业统计',security:'CN:600519'}],['search_web',{retrievalId:'R1',gap:'第一项合成缺口：行业统计范围'}],['search_evidence',{query:'行业统计',sourceId:'S2'}],['resolve_web_gap',{gapId:'G1',sourceId:'S2',quote:text.slice(0,60),explanation:'合成连续原文摘录说明第一项统计范围'}],['search_evidence',{query:'行业统计',security:'CN:600519'}],['search_web',{retrievalId:'R3',gap:'第二项合成缺口：行业统计报告期间'}]];
@@ -64,12 +64,12 @@ test('full research and audit retain an independently unresolved reused gap whil
   else{
    const audit=JSON.parse(request.messages[1].content);assert.equal(audit.webResearch.gaps[1].reusedFrom,'G1');assert.equal(audit.webResearch.gaps[1].status,'body-read-needs-review');
    assert.ok(audit.toolEvidence.some(item=>item.toolName==='search_web'&&item.result.reusedFrom==='G1'));
-   const review=reviewFixture(job.input,'S2');review.decision.missingData=['[G2] 合成统计报告期间仍待核实'];message={role:'assistant',content:JSON.stringify(review)};
+   const review=reviewFixture(job.input,'S2');review.decision.missingData=[gapReference+' 合成统计报告期间仍待核实'];message={role:'assistant',content:JSON.stringify(review)};
   }
   return Response.json({choices:[{message}]});
  };
  try{
   const result=await runAgent(job,()=>{},new AbortController().signal,{webSession:options=>createWebResearchSession({...options,archive:null,status:{enabled:true,configured:true},searchWeb:async()=>{searches++;return {candidates:[{url}]};},readDocument:async(candidate,{security})=>{reads++;return {type:'web-evidence',documentRead:true,url:candidate.url,security,text,authorityVerified:true,publishedAt:'2026-08-01',metadataWarnings:[]};}})});
-  assert.equal(searches,1);assert.equal(reads,1);assert.equal(step,8);assert.match(result.decision.missingData.join(' '),/G2/);assert.equal(job.input.sources.length,2);
+  assert.equal(searches,1);assert.equal(reads,1);assert.equal(step,8);assert.ok(result.decision.missingData.some(item=>item.includes('[G2]')));assert.equal(job.input.sources.length,2);
  }finally{global.fetch=original;}
 });

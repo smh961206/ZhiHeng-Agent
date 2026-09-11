@@ -1,10 +1,10 @@
 # V4.8 — Model Gateway Foundation
 
-Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
+Implementation Status: PARTIAL. V4.8.0–.10 are implemented and accepted for their stated scope. V4.8.11 has a closed rollout gate and offline safety coverage; live candidate quality acceptance is explicitly deferred by the user. Default execution remains legacy. CURRENT=V4.8; V4.9 is not authorized.
 
 ## Accepted progress
 
-V4.8.0 call inventory is complete: [inventory](model-call-inventory.md), [acceptance report](V4_8_0-completion-report.md). V4.8.1 internal Catalog and Legacy Profiles are implemented: [acceptance report](V4_8_1-completion-report.md). V4.8.2–V4.8.11 remain FUTURE; no Gateway dispatch, model policy or caller migration is implemented yet. CURRENT remains V4.8; next is V4.8.2 after authorization.
+V4.8.0 call inventory is complete: [inventory](model-call-inventory.md), [acceptance report](V4_8_0-completion-report.md). [V4.8.1 Catalog](V4_8_1-completion-report.md), [V4.8.2 Gateway](V4_8_2-completion-report.md), [V4.8.3 text migration](V4_8_3-completion-report.md), [V4.8.4 remaining-call migration](V4_8_4-completion-report.md) and [V4.8.5 complexity utility](V4_8_5-completion-report.md) are accepted. [V4.8.6 dry-run policy](V4_8_6-completion-report.md) is accepted. [V4.8.7 telemetry/deployment](V4_8_7-deployment-acceptance.md) and [V4.8.8 internal health routing](V4_8_8-completion-report.md) are accepted. [V4.8.9 pins](V4_8_9-completion-report.md) and [V4.8.10 internal escalation](V4_8_10-completion-report.md) are accepted; [V4.8.11 offline completion and deferred live gate](V4_8_11-completion-report.md) records the final boundary. Production stays legacy; no paid benchmark is authorized. CURRENT remains V4.8.
 
 ## Goal
 
@@ -37,3 +37,7 @@ Future release concepts may be referenced for compatibility, but may not be impl
 - relevant invariants
 - relevant ADRs
 - current repository implementation/tests
+
+
+
+Final authorized boundary: [V4.8.11 completion report](V4_8_11-completion-report.md). Offline implementation/testing is completed; real quality acceptance and production activation remain deferred. CURRENT stays V4.8; stop before V4.9.

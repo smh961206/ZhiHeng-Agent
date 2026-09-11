@@ -3,6 +3,7 @@ import {Link} from 'react-router';
 import {LoaderCircle} from 'lucide-react';
 import {Button} from './ui/button';
 
+const Workbench=lazy(()=>import('./ResearchWorkbench'));
 const Detail=lazy(()=>import('./ResearchDetail'));
 const Handbook=lazy(()=>import('./ResearchHandbook'));
 
@@ -17,3 +18,5 @@ class PageBoundary extends Component{
 
 export function ResearchDetailPage(props){return <PageBoundary name="研究详情"><Detail {...props}/></PageBoundary>;}
 export function ResearchHandbookPage(props){return <PageBoundary name="研究手册"><Handbook {...props}/></PageBoundary>;}
+
+export function ResearchWorkbenchPage(props){return <PageBoundary name="研究工作台"><Workbench {...props}/></PageBoundary>;}

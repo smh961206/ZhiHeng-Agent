@@ -1,7 +1,9 @@
 # V4.8.11 — Policy mode rollout gate
 
 Release: `V4.8`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: PARTIAL — gate and offline validation implemented; live quality acceptance deferred by explicit user instruction. See [report](../V4_8_11-completion-report.md).
+
+The isolated fixed-material comparison executor is now implemented and offline-tested. See [execution runbook](../model-comparison-runbook.md) and [executor report](../V4_8_11-executor-report.md). Live comparison, actual-case selection, spending authorization and production rollout remain pending; the executor does not relax AC01.
 
 ## 1. Why
 
@@ -92,7 +94,7 @@ If implementation requires reversing an accepted ADR, stop and create a supersed
 
 ## 13. Schema
 
-No persistent schema change.
+No Mongo schema migration. Optional initial selection in private modelState v2 is additive; absent initial retains the .10 MAIN/low interpretation.
 
 All persistent changes are additive-first. Unknown historical values remain unknown.
 

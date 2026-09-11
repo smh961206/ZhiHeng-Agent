@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "kind": "frozen-research-comparison",
+  "material": "synthetic",
+  "cutoff": "2026-09-06",
+  "cases": [
+    {"id":"offline-A","mode":"A","input":{"mode":"A","question":"合成资料快速筛选，缺口必须保留。","depth":"Quick","sources":[{"id":"S1","title":"合成测试材料","publishedAt":"2026-09-01","url":"https://fixture.invalid/source","text":"本资料仅验证执行器，不是真实公司研究；缺少完整财务报表和附注。"}]}},
+    {"id":"offline-B","mode":"B","input":{"mode":"B","question":"合成资料深度研究，缺口必须保留。","depth":"Standard","historyYears":5,"sources":[{"id":"S1","title":"合成测试材料","publishedAt":"2026-09-01","url":"https://fixture.invalid/source","text":"本资料仅验证执行器，不是真实公司研究；缺少完整财务报表和附注。"}]}},
+    {"id":"offline-C","mode":"C","input":{"mode":"C","question":"合成资料财报更新，未提供旧研究。","depth":"Standard","sources":[{"id":"S1","title":"合成测试材料","publishedAt":"2026-09-01","url":"https://fixture.invalid/source","text":"本资料仅验证执行器，不是真实公司研究；缺少完整财务报表和附注。"}]}},
+    {"id":"offline-D","mode":"D","input":{"mode":"D","question":"合成资料比较，资料不足时保留边界。","depth":"Standard","sources":[{"id":"S1","title":"合成测试材料","publishedAt":"2026-09-01","url":"https://fixture.invalid/source","text":"本资料仅验证执行器，不是真实公司研究；缺少完整财务报表和附注。"}]}},
+    {"id":"offline-E","mode":"E","input":{"mode":"E","question":"合成组合分析，未提供持仓时不输出具体仓位。","depth":"Standard","sources":[{"id":"S1","title":"合成测试材料","publishedAt":"2026-09-01","url":"https://fixture.invalid/source","text":"本资料仅验证执行器，不是真实公司研究；缺少完整财务报表和附注。"}]}},
+    {"id":"offline-F","mode":"F","input":{"mode":"F","question":"合成股东回报分析，不能虚构分红。","depth":"Standard","sources":[{"id":"S1","title":"合成测试材料","publishedAt":"2026-09-01","url":"https://fixture.invalid/source","text":"本资料仅验证执行器，不是真实公司研究；缺少完整财务报表和附注。"}]}}
+  ]
+}

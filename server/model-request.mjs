@@ -6,6 +6,10 @@ function networkCodes(error,seen=new Set()){
  seen.add(error);
  return [error.code,...networkCodes(error.cause,seen),...(Array.isArray(error.errors)?error.errors.flatMap(item=>networkCodes(item,seen)):[])].filter(code=>typeof code==='string');
 }
+// Shared classification for failures after headers too; this does not retry a body.
+export function isModelNetworkError(error){
+ return error?.code==='model_network'||networkCodes(error).some(code=>transientCodes.has(code)||certificateCodes.has(code))||error instanceof TypeError&&error.message==='fetch failed';
+}
 function checkSignal(signal){
  if(!signal?.aborted)return;
  if(signal.reason?.name==='TimeoutError')throw Object.assign(new Error('模型服务连接超时，请稍后重试'),{code:'model_timeout',cause:signal.reason});

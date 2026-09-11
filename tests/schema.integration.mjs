@@ -8,17 +8,18 @@ test('数据库结构迁移：幂等、锁、失败重试、拒绝降级及数�
  await client.connect();const db=client.db('zhiheng_schema_test_'+randomUUID().replaceAll('-',''));
  try{
   await db.collection('jobs').insertOne({_id:'keep',createdAt:'2026-01-01'});
-  assert.equal(await migrateSchema(db),1);assert.equal(await migrateSchema(db),1);
-  assert.equal(await db.collection('schema_migrations').countDocuments(),1);
+  assert.equal(await migrateSchema(db),2);assert.equal(await migrateSchema(db),2);
+  assert.equal(await db.collection('schema_migrations').countDocuments(),2);
+  assert.ok((await db.collection('model_calls').indexes()).some(i=>i.key.jobId===1&&i.key.startedAt===1));
   await db.collection('schema_locks').insertOne({_id:'upgrade'});
   await assert.rejects(migrateSchema(db),/锁定/);
   await db.collection('schema_locks').deleteOne({_id:'upgrade'});
   let fail=true;
-  const next=[...migrations,{version:2,name:'add_field',async up(db){await db.collection('jobs').updateMany({label:{$exists:false}},{$set:{label:'migrated'}});if(fail)throw new Error('injected failure');}}];
+  const next=[...migrations,{version:3,name:'add_field',async up(db){await db.collection('jobs').updateMany({label:{$exists:false}},{$set:{label:'migrated'}});if(fail)throw new Error('injected failure');}}];
   await assert.rejects(migrateSchema(db,next),/injected/);
-  assert.equal(await db.collection('schema_migrations').countDocuments(),1);
+  assert.equal(await db.collection('schema_migrations').countDocuments(),2);
   assert.equal(await db.collection('schema_locks').countDocuments(),0);
-  fail=false;assert.equal(await migrateSchema(db,next),2);
+  fail=false;assert.equal(await migrateSchema(db,next),3);
   assert.equal((await db.collection('jobs').findOne({_id:'keep'})).label,'migrated');
   await assert.rejects(migrateSchema(db),/禁止降级/);
  }finally{await db.dropDatabase();await client.close();}

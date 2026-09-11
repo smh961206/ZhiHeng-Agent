@@ -23,15 +23,15 @@ dc exec -T app node -e "fetch('http://127.0.0.1:3001/').then(async r=>{if(!r.ok|
 dc exec -T mongodb mongosh zhiheng_agent --quiet --eval 'db.deployment_probe.insertOne({_id:"original",value:1})'
 cat >> server/schema-migrations.mjs <<'MIGRATION'
 
-migrations.push({version:2,name:'deployment_test_v2',async up(db){await db.collection('deployment_probe').updateMany({added:{$exists:false}},{$set:{added:true}});}});
+migrations.push({version:3,name:'deployment_test_v3',async up(db){await db.collection('deployment_probe').updateMany({added:{$exists:false}},{$set:{added:true}});}});
 MIGRATION
 bash deploy.sh upgrade
 archive="$(find backups -name '*.image' | head -n 1)"
 archive="${archive%.image}"
 test -s "$archive"
-dc exec -T mongodb mongosh zhiheng_agent --quiet --eval 'if(db.deployment_probe.findOne({_id:"original"}).value!==1 || !db.deployment_probe.findOne({_id:"original"}).added || db.schema_migrations.countDocuments()!==2)quit(1);db.deployment_probe.updateOne({_id:"original"},{$set:{value:2}});db.only_after_upgrade.insertOne({x:1})'
+dc exec -T mongodb mongosh zhiheng_agent --quiet --eval 'if(db.deployment_probe.findOne({_id:"original"}).value!==1 || !db.deployment_probe.findOne({_id:"original"}).added || db.schema_migrations.countDocuments()!==3)quit(1);db.deployment_probe.updateOne({_id:"original"},{$set:{value:2}});db.only_after_upgrade.insertOne({x:1})'
 bash deploy.sh rollback "$archive" --confirm-data-loss
-dc exec -T mongodb mongosh zhiheng_agent --quiet --eval 'if(db.deployment_probe.findOne({_id:"original"}).value!==1 || db.only_after_upgrade.countDocuments()!==0 || db.schema_migrations.countDocuments()!==1)quit(1)'
+dc exec -T mongodb mongosh zhiheng_agent --quiet --eval 'if(db.deployment_probe.findOne({_id:"original"}).value!==1 || db.only_after_upgrade.countDocuments()!==0 || db.schema_migrations.countDocuments()!==2)quit(1)'
 bash deploy.sh backup
 bash deploy.sh stop
 bash deploy.sh backup

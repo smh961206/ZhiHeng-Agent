@@ -1,3 +1,4 @@
+import './model-env.mjs';
 import {createResearchPlan,scoring} from '../../shared/research-framework.mjs';
 
 // Synthetic evidence with deliberate limitations; never presented as company research.

@@ -1795,7 +1795,7 @@ for(const width of [320,1440])test(`framework-autoplay-${width}`,{viewport:{widt
  ];
  for(const group of groups){
   const section=page.locator('#'+group.id),tabs=section.getByRole('tab');
-  await count(section.getByRole('button',{name:/轮播/}),0);
+  await count(section.getByRole('button',{name:/暂停.*轮播/}),1);
   const leaveContent=async()=>{await section.locator('.fw-section-heading').click();await page.mouse.move(1,1);};
   const selected=index=>eventually(()=>tabs.nth(index).getAttribute('aria-selected').then(value=>value==='true'),`${group.label}: expected tab ${index}`);
   // Timers do not advance unseen groups while the reader is at the page introduction.
@@ -2651,7 +2651,7 @@ for(const width of [320,1440]){
  const job=makeJob(972);job.visualAudit={included:[{id:'S1',pages:[2,3]}],omitted:[{id:'M1',reason:'原页缺失'}],notice:'仅指定原页提供给模型'};
  job.input.sources[0].visualReading={status:'read',pages:[2,3],notice:'模型已读取第 2、3 页原图；其余页面仅按程序提取情况提供。'};
  test(`visual-audit-detail-${width}`,{jobs:[job],viewport:{width,height:1000}},async({page})=>{
-  await detail(page,job);await openProcess(page);await textIncludes(page.getByRole('dialog',{name:'研究过程',exact:true}),'Vision 已复读 1 份资料原页，1 份未纳入');
+  await detail(page,job);await openProcess(page);await textIncludes(page.getByRole('dialog',{name:'研究过程',exact:true}),'视觉模型已复读 1 份资料原页，1 份未纳入');
   const reading=page.locator('.rd-document-reading');await reading.locator('summary').focus();await page.keyboard.press('Enter');
   await textIncludes(reading.getByRole('region',{name:'已复读原页'}),'第 2、3 页');await textIncludes(reading.getByRole('region',{name:'未纳入原页复核'}),'原页缺失');
   await noOverflow(page,'expanded reading coverage '+width);await screenshot(page,'reading-coverage-'+width,'.rd-document-reading');
@@ -2734,7 +2734,7 @@ for(const width of [320,1440])test(`handbook-current-features-${width}`,{viewpor
  await page.locator('.fw-guide-steps>li').first().waitFor();
  const guideCards=await page.locator('.fw-guide-steps>li').evaluateAll(nodes=>nodes.map(node=>{const style=getComputedStyle(node);return {radius:style.borderTopLeftRadius,border:style.borderTopWidth,background:style.backgroundColor};}));
  assert.equal(guideCards.length,3);
- for(const card of guideCards){assert.equal(card.radius,'16px');assert.equal(card.border,'1px');assert.equal(card.background,'rgb(255, 255, 255)');}
+ for(const card of guideCards){assert.equal(card.radius,'14px');assert.equal(card.border,'3px');assert.equal(card.background,'rgb(255, 255, 255)');}
  const guideEntry=page.locator('.fw-handbook-link').getByRole('link',{name:'查看使用指南'});
  await guideEntry.scrollIntoViewIfNeeded();await noOverflow(page,'home guide entry '+width);
  await page.screenshot({path:fileURLToPath(new URL(`ui-home-guide-entry-${width}.png`,artifacts)),animations:'disabled'});
@@ -2848,7 +2848,7 @@ for(const width of [320,1440]){
   await count(page.getByRole('list',{name:'研究判断顺序'}).getByRole('listitem'),4);
   await screenshot(page,`platform-current-home-${width}`);
   await page.getByRole('link',{name:'了解当前研究方法'}).click();
-  await textIncludes(page.locator('.research-method'),'当前研究方法 · V'+frameworkVersion);
+  await textIncludes(page.locator('.research-method'),'证据优先的研究方法');
   await count(page.getByRole('heading',{name:'研究方法',level:2,exact:true}),1);
   const methodSteps=page.getByRole('button',{name:'查看研究判断的四个步骤',exact:true});
   assert.equal(await methodSteps.getAttribute('aria-expanded'),'false');
@@ -2979,7 +2979,7 @@ async function main() {
   // Concurrent agents may have created the components before wiring up App.
   // Report this as pending, never as a passing test or an old-UI regression.
   const app = await readFile(new URL('../src/App.jsx', import.meta.url), 'utf8');
-  const missing = ['ResearchWorkbench', 'ResearchDetailPage'].filter(name => !new RegExp(`<${name}\\b`).test(app));
+  const missing = [['ResearchWorkbench', /<ResearchWorkbench(?:Page)?\b/], ['ResearchDetailPage', /<ResearchDetailPage\b/]].filter(([,pattern])=>!pattern.test(app)).map(([name])=>name);
   if (missing.length) {
     console.error(`NOT READY: App has not integrated ${missing.join(', ')}. Script is ready; rerun after UI integration.`);
     process.exitCode = 2;
@@ -3088,6 +3088,12 @@ for(const [mode,label] of Object.entries({A:'快速筛选',B:'深度研究',C:'�
 });
 const {registerContextSettingsScenarios}=await import('./context-settings-ui-scenarios.mjs');
 registerContextSettingsScenarios({test,workbench,choose,textIncludes,count,noOverflow,screenshot,enabled});
+const {registerPlatformV48Scenarios}=await import('./platform-v48-ui-scenarios.mjs');
+registerPlatformV48Scenarios({test,makeJob,detail,detailActions,openProcess,textIncludes,noOverflow,screenshot});
+
+const {registerPlatformCleanupScenarios}=await import('./platform-cleanup-ui-scenarios.mjs');
+registerPlatformCleanupScenarios({test,makeJob,detail,workbench,textIncludes,noOverflow,screenshot});
+
 await main().catch(error => { console.error(error.stack || error); process.exitCode = 1; });
 
 async function downloadReport(page,actions,scope='完整研究记录'){

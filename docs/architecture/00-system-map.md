@@ -54,6 +54,12 @@ Review / Validation
 Storage / Delivery / Resume
 ```
 
+V4.8.4 completes Gateway migration for research, review, followup, path classification, security intent and Vision, including the synthetic diagnostic. Business orchestration, evidence validation, router caches/fallback and visual processing remain in the owners shown above. Later .8–.11 now add health, persistent pins and gated internal policy; production still uses legacy.
+
+V4.8.5 added a pure complexity evaluator over structured signals, initially without runtime callers. V4.8.6's shadow observer below now consumes it. It does not choose execution models, alter research budgets, persist state or change validation. See the [implementation map](current-implementation-map.md) for known-signal scoring and integration boundaries.
+
+V4.8.6 adds opt-in dry-run policy observation at Gateway. Agent supplies known mode and planned history years; the unchanged complexity evaluator yields a candidate slot/effort recorded separately from the actual legacy execution profile. Server logs are best effort, not public history or persistent ModelCall records. Requests, review/delivery, financial/Evidence rules and checkpoints remain unchanged. Production policy acceptance remains pending; .11 has an executable closed gate.
+
 ## Target long-term runtime
 
 ```text
@@ -86,3 +92,11 @@ Each target layer must be introduced incrementally. A FUTURE object must not be 
 ## H0 calibration
 
 The current framework/Knowledge baseline is 4.7, distinct from Harness CURRENT. Acquisition is bounded and may be partial. Compatible resume preserves saved initial market data; rejected checkpoints restart acquisition. Full historical publishedAt enforcement/replay is not implemented. See [implementation map](current-implementation-map.md) for exact owners and limitations.
+
+## V4.8.7 telemetry integration
+
+V4.8.7 adds ModelCall started/terminal records through the existing Gateway, a process-local AsyncLocalStorage job attribution scope in the existing server execution path, and MongoDB model_calls storage with an on-demand internal job usage summary. No prompts, messages, source bodies, hidden reasoning, endpoint URLs or credentials are retained. Default production telemetry is enabled; MODEL_TELEMETRY_ENABLED=false disables the writer without changing routing. Standalone Gateway/CLI consumers need an injected onModelCall sink or configured writer; no database is opened implicitly by the Gateway. Acceptance is tracked in the V4.8.7 completion report.
+
+## V4.8.8–.11 current model boundary
+
+Recent health outcomes/cooldown are process-local; model-state pins live privately in new jobs/checkpoints. Internal MAIN/PRO profiles and acknowledged context rebuild support safe escalation. The rollout owner accepts only a matching operator-approved real model comparison with at least 50 unique cases across six modes, no critical fact errors, and passing delivery/citation/rollback checks. No such live report was produced: the user explicitly chose offline validation and legacy default. Existing research, Evidence, financial math, Knowledge and acquisition owners remain; V4.9 is not started.

@@ -1,0 +1,69 @@
+/* Shared V4.8 presentation. Domain layouts and status semantics keep their owners. */
+:root{--background:#f5f7f5;--border:#dce5df;--ring:#39705c;--radius:0.75rem}
+.app-shell .topbar{background:#ffffffed;border-bottom:1px solid var(--border);gap:12px}
+.topbar>div:first-child{min-width:0}
+.breadcrumbs ol{flex-wrap:wrap;row-gap:2px}
+.platform-status-trigger{flex-shrink:0;gap:8px;color:#35564a;min-height:36px}
+.platform-status-dot{width:7px;height:7px;border-radius:50%;background:#86918a;flex-shrink:0}
+.platform-status-dot.is-configured{background:#3b7b60}
+.platform-status-dot.is-unconfigured,.platform-status-dot.is-unknown{background:#a07630}
+.platform-status-dot.is-incompatible{background:#b24b35}
+.platform-version{font-size:11px;font-weight:650;letter-spacing:.03em;padding:2px 6px;border:1px solid #dce5df;border-radius:5px}
+.platform-status-panel{width:min(380px,calc(100vw - 24px));padding:22px;border-radius:16px;max-height:calc(100dvh - 90px);overflow-y:auto;color:#29453a}
+.platform-panel-heading{display:flex;align-items:flex-start;gap:12px}
+.platform-panel-heading>svg{margin-top:4px;flex-shrink:0}
+.platform-panel-heading h2{font-size:17px;font-weight:650}
+.platform-panel-heading p,.platform-status-panel p{font-size:13px;line-height:1.8;color:#52665b}
+.platform-connection{margin:18px 0;padding:12px 14px;border:1px solid #dce5df;border-radius:10px;background:#f4f7f4}
+.platform-connection strong{font-size:14px}
+.platform-status-panel dl{display:grid;gap:14px}
+.platform-status-panel dt{font-size:13px;font-weight:650;margin-bottom:3px}
+.platform-status-panel dd{font-size:13px;line-height:1.8;color:#52665b}
+.platform-status-panel .platform-policy-note{padding-top:14px;margin:16px 0;border-top:1px solid var(--border);font-size:12px}
+.platform-version-explainer{margin:0 0 18px;font-size:13px}
+.platform-version-explainer summary,.method-version-note summary{cursor:pointer;font-weight:600;line-height:1.7}
+.platform-version-explainer p{margin-top:8px}
+.research-handbook .handbook-heading{margin-bottom:0;padding-bottom:24px;border-bottom:0}
+.research-handbook .handbook-heading p{max-width:720px;line-height:1.9}
+.method-version-note{padding:14px 18px;margin:0 0 22px;border:1px solid #dce5df;border-radius:10px;background:#f6f8f6;color:#405e4c}
+.method-version-note p{font-size:14px;line-height:1.9;margin-top:10px}
+.research-detail .rd-provenance{flex-wrap:wrap;gap:8px 16px;padding-block:10px}
+.history-page .rh-heading p{max-width:640px}
+.app-shell .page-heading h1,.rh-heading h1{letter-spacing:-.7px}
+.app-shell .page-heading p,.rh-heading p{color:#5c6f65}
+.sidebar-layout .nav-current{background:#e7efe9!important;box-shadow:inset 3px 0 #285c47}
+.sidebar-layout .nav-button{border-radius:9px}
+.research-home .fw-hero{padding:32px 0 42px;gap:36px}
+.fw-release-note{display:inline-flex;align-items:center;gap:9px;color:#355f4b;font-size:12px;letter-spacing:.04em}
+.fw-release-note span{background:#e6eee6;border:1px solid #d0ded1;border-radius:5px;padding:2px 7px;font-weight:650}
+.research-home .fw-question-card{background:#204a3a;border-color:#204a3a;border-radius:20px;box-shadow:0 12px 32px #123c3508}
+.research-home .fw-guide-steps>li{border-radius:14px;border-top:3px solid #b9cdbd}
+.fw-rotation-control{display:flex;justify-content:flex-end;margin:-8px 0 14px}
+.fw-rotation-control button{color:#4c6859;font-size:12px}
+.workbench-heading{border-bottom:1px solid var(--border);padding-bottom:22px}
+.workbench-composer{box-shadow:0 6px 24px #123c3505;border-color:#d9e3dc}
+.research-workbench .composer-steps{background:#f3f7f3}
+.research-workbench .question-input{background:#fbfcfb;border-radius:12px}
+.research-workbench .question-input:focus-visible{background:#fff}
+.composer-shortcut{display:block;font-size:11px;color:#60766a;margin-top:3px}
+.composer-shortcut kbd{font:inherit;border:1px solid #cddbd1;border-radius:4px;padding:1px 4px;background:#f8faf8}
+.rh-heading{padding-bottom:20px;border-bottom:1px solid var(--border)}
+.research-detail .rd-document-reading{border-radius:12px}
+.rd-model-records{display:grid;gap:6px;margin:14px 0;padding:12px 14px;background:#f4f7f4;border:1px solid #dbe5dc;border-radius:9px}
+.rd-model-records>div{display:flex;flex-wrap:wrap;gap:5px 14px;justify-content:space-between}
+.rd-model-records dt{font-size:12px;color:#52685b}
+.rd-model-records dd{font-size:13px;overflow-wrap:anywhere}
+.rd-model-record-note{font-size:12px;color:#5c6f64}
+.research-progress .rp-next{border-left:3px solid #94b39e}
+.app-shell :is(button,a,input,textarea,summary,[role=tab]):focus-visible{outline:2px solid #39705c;outline-offset:3px}
+@media(max-width:639px){
+ .platform-status-label{display:none}
+ .platform-status-trigger{padding-inline:5px;gap:5px}
+ .platform-version{font-size:10px}
+ .app-shell .topbar{gap:4px}
+ .research-home .fw-hero{padding-top:12px;gap:22px}
+ .research-home .fw-hero h1{font-size:32px;line-height:1.45}
+ .fw-rotation-control{justify-content:flex-start;margin:0 0 12px}
+ .workbench-heading{padding-bottom:16px}
+ .composer-shortcut{display:none}
+}

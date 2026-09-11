@@ -6,6 +6,7 @@ export function useTabAutoplay(items,initialValue=items[0],interval=4000){
  const [value,setValue]=useState(initialValue),[revision,setRevision]=useState(0);
  const [hovered,setHovered]=useState(false),[focused,setFocused]=useState(false);
  const [inView,setInView]=useState(false),[visible,setVisible]=useState(true);
+ const [paused,setPaused]=useState(false);
  const [reducedMotion,setReducedMotion]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
  function cancelHover(){window.clearTimeout(hoverTimer.current);hoverTimer.current=null;}
  function select(next){cancelHover();setValue(next);setRevision(current=>current+1);}
@@ -28,10 +29,10 @@ export function useTabAutoplay(items,initialValue=items[0],interval=4000){
  },[]);
 
  useEffect(()=>{
-  if(reducedMotion||hovered||focused||!visible||!inView||items.length<2)return;
+  if(paused||reducedMotion||hovered||focused||!visible||!inView||items.length<2)return;
   const timer=window.setTimeout(()=>setValue(current=>items[(items.indexOf(current)+1)%items.length]),interval);
   return()=>window.clearTimeout(timer);
- },[reducedMotion,hovered,focused,visible,inView,items,interval,value,revision]);
+ },[paused,reducedMotion,hovered,focused,visible,inView,items,interval,value,revision]);
 
  useEffect(()=>{
   // Scroll only the horizontal tab strip; never move the page or keyboard focus.
@@ -44,7 +45,7 @@ export function useTabAutoplay(items,initialValue=items[0],interval=4000){
  },[value]);
 
  return {
-  value,rootRef,
+  value,rootRef,paused,reducedMotion,togglePause:()=>{cancelHover();setPaused(current=>!current);},
   select,
   hoverProps(next){return {
    onPointerEnter(event){

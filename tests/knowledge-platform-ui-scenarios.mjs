@@ -1,3 +1,4 @@
+import {readyRules,refreshRules} from './fixtures/platform-status-ui.mjs';
 import assert from 'node:assert/strict';
 import {frameworkVersion} from '../shared/research-framework.mjs';
 import {depthGuidance} from '../shared/research-knowledge.mjs';
@@ -7,7 +8,7 @@ export function registerKnowledgePlatformScenarios({test,makeJob,detail,workbenc
  const configOverrides={knowledgeSnapshot:current,knowledgeStatus:{updatePending:false}};
  for(const width of [320,1440]){
   test('knowledge-v47-home-handbook-'+width,{viewport:{width,height:1000},configOverrides},async({page,requests})=>{
-   await page.goto('/');await textIncludes(page.getByRole('region',{name:'研究规则状态'}),'当前可用规则');
+   await page.goto('/');await readyRules(page);
    assert.equal(await page.locator('.knowledge-highlights article').count(),3);await noOverflow(page,'knowledge home');await screenshot(page,'knowledge-home-'+width);
    await page.goto('/handbook?tab=method#method-loading');await textIncludes(page.locator('#method-loading'),depthGuidance.Standard);
    assert.equal(await page.locator('#method-loading').evaluate(node=>document.activeElement===node),true);
@@ -22,10 +23,10 @@ export function registerKnowledgePlatformScenarios({test,makeJob,detail,workbenc
    await textIncludes(page.locator('.knowledge-depth'),depthGuidance.Quick);const question=await page.locator('#question').inputValue();
    let status=503,version=frameworkVersion;
    await page.route('**/api/config',route=>route.fulfill({status,contentType:'application/json',body:JSON.stringify(status===200?{configured:true,knowledgeVersion:version,...configOverrides}:{error:'合成连接失败'})}));
-   await page.getByRole('button',{name:'重新检查',exact:true}).click();await textIncludes(page.getByRole('region',{name:'研究规则状态'}),'暂未确认服务状态');
+   await refreshRules(page);await textIncludes(page.getByRole('region',{name:'研究规则状态'}),'暂未确认服务状态');
    assert.equal(await page.locator('button[type=submit]').isDisabled(),true);assert.equal(await page.locator('#question').inputValue(),question);
-   status=200;version='0.0';await page.getByRole('button',{name:'重新检查',exact:true}).click();await textIncludes(page.getByRole('region',{name:'研究规则状态'}),'页面与服务版本不一致');
-   version=frameworkVersion;await page.getByRole('button',{name:'重新检查',exact:true}).click();await textIncludes(page.getByRole('region',{name:'研究规则状态'}),'当前可用规则');
+   status=200;version='0.0';await refreshRules(page);await textIncludes(page.getByRole('region',{name:'研究规则状态'}),'页面与服务版本不一致');
+   version=frameworkVersion;await refreshRules(page);await readyRules(page);
    assert.equal(await page.locator('button[type=submit]').isDisabled(),false);await noOverflow(page,'knowledge workbench');await screenshot(page,'knowledge-workbench-'+width);
   });
   const job=makeJob(4700+width,'completed',{mode:'B',question:'规则依据与原文核对（合成）'});
@@ -89,7 +90,7 @@ export function registerKnowledgePlatformScenarios({test,makeJob,detail,workbenc
   await workbench(page);await manualInput(page);const question=await page.locator('#question').inputValue(),status=page.getByRole('region',{name:'研究规则状态'});
   let response={configured:false,knowledgeVersion:frameworkVersion};
   await page.route('**/api/config',route=>route.fulfill({contentType:'application/json',body:JSON.stringify(response)}));
-  const refresh=()=>page.getByRole('button',{name:'重新检查',exact:true}).click();
+  const refresh=()=>refreshRules(page);
   await refresh();await textIncludes(status,'研究服务尚未就绪');assert.equal(await page.locator('button[type=submit]').isDisabled(),true);
   response={};await refresh();await textIncludes(status,'暂未确认服务状态');assert.equal(await page.locator('button[type=submit]').isDisabled(),true);
   let held;await page.route('**/api/config',route=>{held=route;});
@@ -97,12 +98,12 @@ export function registerKnowledgePlatformScenarios({test,makeJob,detail,workbenc
   await Promise.all([page.waitForRequest(request=>request.url().endsWith('/api/config')),refresh()]);
   await page.evaluate(()=>window.expireConfig());await textIncludes(status,'暂未确认服务状态');assert.equal(await page.getByRole('button',{name:'重新检查',exact:true}).isEnabled(),true);
   await held.fulfill({contentType:'application/json',body:JSON.stringify({configured:true,knowledgeVersion:'0.0'})}).catch(()=>{});
-  await page.unroute('**/api/config');await refresh();await textIncludes(status,'当前可用规则');assert.equal(await page.locator('#question').inputValue(),question);
+  await page.unroute('**/api/config');await refresh();await readyRules(page);assert.equal(await page.locator('#question').inputValue(),question);
   assert.equal(requests('POST','/api/jobs').length,0);
  });
  test('knowledge-v47-lazy-pages',{configOverrides},async({page})=>{
   const modules=[];page.on('request',request=>modules.push(new URL(request.url()).pathname));
-  await page.goto('/');await textIncludes(page.getByRole('region',{name:'研究规则状态'}),'当前可用规则');
+  await page.goto('/');await readyRules(page);
   assert.equal(modules.some(path=>/\/Research(Detail|Handbook)(?:-[\w-]+)?\.jsx?$/.test(path)),false);
   await page.getByRole('link',{name:'研究手册',exact:true}).click();await page.locator('.research-handbook').waitFor();
   assert.ok(modules.some(path=>/\/ResearchHandbook(?:-[\w-]+)?\.jsx?$/.test(path)));assert.equal(modules.some(path=>/\/ResearchDetail(?:-[\w-]+)?\.jsx?$/.test(path)),false);
@@ -113,7 +114,7 @@ export function registerKnowledgePlatformScenarios({test,makeJob,detail,workbenc
   await page.goto('/handbook');await textIncludes(page.getByRole('alert'),'暂时无法打开研究手册');
   assert.equal(await page.getByRole('link',{name:'返回首页',exact:true}).getAttribute('href'),'/');
   await page.unroute('**/ResearchHandbook*.js*');await page.getByRole('button',{name:'刷新重试',exact:true}).click();
-  await page.locator('.research-handbook').waitFor();await textIncludes(page.getByRole('region',{name:'研究规则状态'}),'当前可用规则');
+  await page.locator('.research-handbook').waitFor();await readyRules(page);
  });
  const slow=makeJob(4990,'completed');slow.plan.knowledgeSnapshot=ref;slow.knowledgeUsage={snapshotId:ref.id,records:[{key:'slow',kind:'context',snapshotId:ref.id,moduleId:'07-valuation',heading:'超时核对规则',path:'knowledge/modules/rules/07-valuation.md',line:1,endLine:3,reason:'规则补读：估值'}]};
  test('knowledge-v47-excerpt-timeout',{jobs:[slow],configOverrides},async({page})=>{

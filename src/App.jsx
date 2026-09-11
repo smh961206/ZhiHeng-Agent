@@ -4,8 +4,8 @@ import {Link,useNavigate,useParams,useLocation,useSearchParams} from 'react-rout
 import {researchPreparation} from '../shared/research-preparation.mjs';
 import {knowledgeAvailability} from '../shared/research-knowledge.mjs';
 import {modeOf} from './lib/research-mode';
-import ResearchWorkbench,{researchModes as modes} from './components/ResearchWorkbench';
-import {ResearchDetailPage,ResearchHandbookPage} from './components/ResearchPages';
+
+import {ResearchWorkbenchPage,ResearchDetailPage,ResearchHandbookPage} from './components/ResearchPages';
 import RecentResearch from './components/RecentResearch';
 import './components/sidebar-layout.css';
 
@@ -14,6 +14,7 @@ import {useComposerDraft} from './hooks/use-composer-draft';
 import {loadComposerDraft} from './lib/composer-draft.mjs';
 import {createSubmissionTracker} from './lib/research-submission.mjs';
 import Brand from './components/Brand';
+import PlatformStatus from './components/PlatformStatus';
 import ResearchFramework from './components/ResearchFramework';
 import ResearchHistory from './components/ResearchHistory';
 import DeleteResearchDialog from './components/DeleteResearchDialog';
@@ -28,7 +29,7 @@ import {Alert,AlertDescription} from '@/components/ui/alert';
 import {api,post} from '@/lib/api';
 import {useSecurityResolution} from '@/hooks/use-security-resolution';
 import {modes as frameworkModes} from '../shared/research-framework.mjs';
-import {exportResearchMarkdown,exportExecutionMarkdown} from '../shared/research-export.mjs';
+
 import {needsSaveRetry,deliveryProgress} from '../shared/research-delivery.mjs';
 const nav=[['rules','首页',House],['work','研究工作台',ChartNoAxesCombined],['history','研究记录',History],['handbook','研究手册',BookOpen]];
 const labels={queued:'等待中',running:'研究中',completed:'已完成',failed:'失败',cancelled:'已取消'};
@@ -53,12 +54,14 @@ export default function App({page}){
  }
  const pagePaths={rules:'/',work:'/workbench',history:'/history',handbook:'/handbook'};
  const pageScroll=useRef(null);
+ const [workbenchFocusRequest,setWorkbenchFocusRequest]=useState(0);
  const [savedDraft]=useState(()=>loadComposerDraft());
  const [submission]=useState(()=>createSubmissionTracker());
  const {config,checking:configChecking,refresh:refreshConfig}=useResearchConfig(location.pathname);
  const [jobs,setJobs]=useState([]),[mode,setMode]=useState(savedDraft?.mode??'auto'),[depth,setDepth]=useState(savedDraft?.depth??'Standard'),[question,setQuestion]=useState(savedDraft?.question??''),[portfolio,setPortfolio]=useState(savedDraft?.portfolio??''),[historyYears,setHistoryYears]=useState(savedDraft?.historyYears??5),[storedJob,setSelected]=useState(null),[error,setError]=useState(''),[busy,setBusy]=useState(false),[mobileOpen,setMobileOpen]=useState(false),[contextOpen,setContextOpen]=useState(savedDraft?.contextOpen??false);
  const [deleteTarget,setDeleteTarget]=useState(null),[deleting,setDeleting]=useState(false),[deleteError,setDeleteError]=useState('');
  const [opening,setOpening]=useState(null),[cancelling,setCancelling]=useState(false);
+ const [exporting,setExporting]=useState(false),exportPending=useRef(false);
  const [retryState,setRetryState]=useState({id:null,pending:false,error:''});
  const retryPending=useRef(null),retryLocation=useRef(location.pathname);
  retryLocation.current=location.pathname;
@@ -102,7 +105,7 @@ export default function App({page}){
  },[hasActiveJobs,refresh]);
  const streamConnection=useJobStream(selected,setSelected,setJobs);
  function navigate(id){routerNavigate(pagePaths[id]||'/workbench');setMobileOpen(false);}
- function newResearch(preset,example=''){submission.clear();draftStorage.clear();setMaterialDraft('');setMaterialDraftTitle('');setMaterialEditDraft(null);setReferenceMaterials([]);setSelected(null);setQuestion(typeof example==='string'?example:'');setPortfolio('');setPreviousResearch('');setBaselineJobId('');setPortfolioContext({});setMode(typeof preset==='string'&&modes.some(m=>m[0]===preset)?preset:'auto');setDepth(frameworkModes[preset]?.defaultDepth||'Standard');setHistoryYears(5);setContextOpen(preset==='E'||preset==='C');resolution.reset();setError('');navigate('work');requestAnimationFrame(()=>document.getElementById('question')?.focus());}
+ function newResearch(preset,example=''){submission.clear();draftStorage.clear();setMaterialDraft('');setMaterialDraftTitle('');setMaterialEditDraft(null);setReferenceMaterials([]);setSelected(null);setQuestion(typeof example==='string'?example:'');setPortfolio('');setPreviousResearch('');setBaselineJobId('');setPortfolioContext({});setMode(typeof preset==='string'&&(preset==='auto'||Object.hasOwn(frameworkModes,preset))?preset:'auto');setDepth(frameworkModes[preset]?.defaultDepth||'Standard');setHistoryYears(5);setContextOpen(preset==='E'||preset==='C');resolution.reset();setError('');navigate('work');setWorkbenchFocusRequest(value=>value+1);}
  async function start(e){
   e.preventDefault();if(startPending.current)return;
   const preparation=researchPreparation({question,mode:executionMode,depth,historyYears,portfolio,previousResearch,baselineJobId,portfolioContext},resolution,{pathPending:pathDecision.pending,materialsReading,materialsPending,materialEditDraft,materialDraft,config,jobs,jobsLoading,jobsError});
@@ -161,14 +164,27 @@ export default function App({page}){
   setPortfolio([v.portfolio,questions.length?'上次快筛的待验证事项（须重新取证，不作为当前事实）：\n'+JSON.stringify(questions,null,2):''].filter(Boolean).join('\n\n').slice(0,20000));
   setPortfolioContext(v.portfolioContext??{});setPreviousResearch('');setBaselineJobId('');setContextOpen(Boolean(v.portfolio||questions.length));setError('');setSelected(null);navigate('work');
  }
- function download({includeResearchProcess=true,executionOnly=false,usExchanges={}}={}){if(!selected||!executionOnly&&!selected.result)return;try{const text=executionOnly?exportExecutionMarkdown(selected):exportResearchMarkdown(selected,{includeResearchProcess,usExchanges});const url=URL.createObjectURL(new Blob([text],{type:'text/markdown;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download=`research-${selected.id.slice(0,8)}-${executionOnly?'execution':includeResearchProcess?'complete':'report'}.md`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}catch(e){setError(e.message);}}
+ async function download({includeResearchProcess=true,executionOnly=false,usExchanges={}}={}){
+  if(exportPending.current||!selected||!executionOnly&&!selected.result)return;
+  exportPending.current=true;setExporting(true);setError('');
+  try{
+   const {exportResearchMarkdown,exportExecutionMarkdown}=await import('../shared/research-export.mjs');
+   const text=executionOnly?exportExecutionMarkdown(selected):exportResearchMarkdown(selected,{includeResearchProcess,usExchanges});
+   const url=URL.createObjectURL(new Blob([text],{type:'text/markdown;charset=utf-8'}));
+   try{
+    const link=document.createElement('a');link.href=url;
+    link.download=`research-${selected.id.slice(0,8)}-${executionOnly?'execution':includeResearchProcess?'complete':'report'}.md`;link.click();
+   }finally{setTimeout(()=>URL.revokeObjectURL(url),1000);}
+  }catch{setError('导出失败，请刷新页面后重试。已保存的研究记录不受影响。');}
+  finally{exportPending.current=false;setExporting(false);}
+ }
  const navLink=([id,title,Icon])=><Button variant="ghost" asChild key={id} className={"nav-button "+(page===id?"nav-current":"")}><Link to={pagePaths[id]} aria-current={page===id&&!jobId?"page":undefined} onClick={()=>setMobileOpen(false)}><Icon size={18}/>{title}{id==="history"&&<span className="ml-auto text-xs opacity-70" aria-hidden="true">{jobs.length}</span>}</Link></Button>;
  const sidebar=<div className="sidebar-inner sidebar-layout"><div className="sidebar-top"><Brand onClick={()=>navigate('rules')}/><nav className="sidebar-navigation" aria-label="主导航">{nav.slice(0,3).map(navLink)}<div className="sidebar-reference">{navLink(nav[3])}</div></nav></div><RecentResearch jobs={jobs} currentId={jobId} onNavigate={()=>setMobileOpen(false)}/><div className="sidebar-bottom"><Link to="/#fw-plans" className="sidebar-service" onClick={()=>setMobileOpen(false)}><span><Sparkles size={16}/>知衡研究服务</span><small>了解方案与开通方式<ArrowUpRight size={14}/></small></Link><div className="side-principle"><ShieldCheck size={21}/><p>知价值，衡长远。</p><span>价值投资与股东回报智能研究</span></div></div></div>;
- return <div className="app-shell"><a href="#main-content" className="skip-to-content">跳至主要内容</a><DeleteResearchDialog job={deleteTarget} pending={deleting} error={deleteError} onConfirm={deleteResearch} onClose={()=>{if(!deleting)setDeleteTarget(null);}}/><aside className="desktop-sidebar">{sidebar}</aside><div className="main-shell"><header className="topbar"><div className="flex items-center gap-3"><Sheet open={mobileOpen} onOpenChange={setMobileOpen}><SheetTrigger asChild><Button variant="ghost" size="icon" className="lg:hidden" aria-label="打开导航菜单"><Menu size={20}/></Button></SheetTrigger><SheetContent side="left" className="sidebar-drawer w-[280px] p-0"><SheetTitle className="sr-only">研究导航</SheetTitle><SheetDescription className="sr-only">切换首页、研究工作台与研究记录、研究手册</SheetDescription>{sidebar}</SheetContent></Sheet><nav className="breadcrumbs" aria-label="面包屑导航"><ol>{page!=='rules'&&<><li><Link to="/">首页</Link></li><li aria-hidden="true"><ChevronRight size={14}/></li></>}{jobId?<><li><Link to="/history">研究记录</Link></li><li aria-hidden="true"><ChevronRight size={14}/></li><li><span aria-current="page">研究详情</span></li></>:<li><span aria-current="page">{nav.find(n=>n[0]===page)?.[1]||"页面不存在"}</span></li>}</ol></nav></div></header><div className="page-scroll" ref={pageScroll}><main className="page-content" id="main-content" tabIndex={-1}>{error&&<Alert variant="destructive" className="mb-6"><AlertDescription className="flex items-center justify-between gap-3"><span>{error}{error.startsWith('暂时无法确认提交结果')&&<Button asChild variant="link" size="sm"><Link to="/history">查看研究记录<ArrowUpRight size={14}/></Link></Button>}</span><Button variant="ghost" size="icon" aria-label="关闭错误" onClick={()=>setError('')}><X size={16}/></Button></AlertDescription></Alert>}
- {page==='work'&&!jobId&&<ResearchWorkbench pathDecision={pathDecision} {...{question,setQuestion,mode,setMode,depth,setDepth,portfolio,setPortfolio,historyYears,setHistoryYears,contextOpen,setContextOpen,resolution,busy,jobs,jobsLoading,jobsError,previousResearch,setPreviousResearch,baselineJobId,setBaselineJobId,portfolioContext,setPortfolioContext,referenceMaterials,setReferenceMaterials,materialsReading,setMaterialsReading,materialsPending,setMaterialsPending,materialDraft,setMaterialDraft,materialDraftTitle,setMaterialDraftTitle,materialEditDraft,setMaterialEditDraft}} config={config} configChecking={configChecking} onRefreshConfig={refreshConfig} onRefreshJobs={refresh} draftStatus={draftStorage.status} onClear={()=>newResearch('auto')} onStart={start}/>}
+ return <div className="app-shell"><a href="#main-content" className="skip-to-content">跳至主要内容</a><DeleteResearchDialog job={deleteTarget} pending={deleting} error={deleteError} onConfirm={deleteResearch} onClose={()=>{if(!deleting)setDeleteTarget(null);}}/><aside className="desktop-sidebar">{sidebar}</aside><div className="main-shell"><header className="topbar"><div className="flex items-center gap-3"><Sheet open={mobileOpen} onOpenChange={setMobileOpen}><SheetTrigger asChild><Button variant="ghost" size="icon" className="lg:hidden" aria-label="打开导航菜单"><Menu size={20}/></Button></SheetTrigger><SheetContent side="left" className="sidebar-drawer w-[280px] p-0"><SheetTitle className="sr-only">研究导航</SheetTitle><SheetDescription className="sr-only">切换首页、研究工作台与研究记录、研究手册</SheetDescription>{sidebar}</SheetContent></Sheet><nav className="breadcrumbs" aria-label="面包屑导航"><ol>{page!=='rules'&&<><li><Link to="/">首页</Link></li><li aria-hidden="true"><ChevronRight size={14}/></li></>}{jobId?<><li><Link to="/history">研究记录</Link></li><li aria-hidden="true"><ChevronRight size={14}/></li><li><span aria-current="page">研究详情</span></li></>:<li><span aria-current="page">{nav.find(n=>n[0]===page)?.[1]||"页面不存在"}</span></li>}</ol></nav></div><PlatformStatus config={config} checking={configChecking} onRefresh={refreshConfig}/></header><div className="page-scroll" ref={pageScroll}><main className="page-content" id="main-content" tabIndex={-1}>{error&&<Alert variant="destructive" className="mb-6"><AlertDescription className="flex items-center justify-between gap-3"><span>{error}{error.startsWith('暂时无法确认提交结果')&&<Button asChild variant="link" size="sm"><Link to="/history">查看研究记录<ArrowUpRight size={14}/></Link></Button>}</span><Button variant="ghost" size="icon" aria-label="关闭错误" onClick={()=>setError('')}><X size={16}/></Button></AlertDescription></Alert>}
+ {page==='work'&&!jobId&&<ResearchWorkbenchPage focusRequest={workbenchFocusRequest} pathDecision={pathDecision} {...{question,setQuestion,mode,setMode,depth,setDepth,portfolio,setPortfolio,historyYears,setHistoryYears,contextOpen,setContextOpen,resolution,busy,jobs,jobsLoading,jobsError,previousResearch,setPreviousResearch,baselineJobId,setBaselineJobId,portfolioContext,setPortfolioContext,referenceMaterials,setReferenceMaterials,materialsReading,setMaterialsReading,materialsPending,setMaterialsPending,materialDraft,setMaterialDraft,materialDraftTitle,setMaterialDraftTitle,materialEditDraft,setMaterialEditDraft}} config={config} configChecking={configChecking} onRefreshConfig={refreshConfig} onRefreshJobs={refresh} draftStatus={draftStorage.status} onClear={()=>newResearch('auto')} onStart={start}/>}
  {page==='missing'&&<div className="empty-state"><FileText size={32}/><h1>页面不存在</h1><p>请检查地址，或返回研究工作台。</p><Button onClick={()=>navigate('work')}>研究工作台</Button></div>}
  {jobId&&!selected&&<div className="empty-state" role="status">{loadError?<><FileText size={32}/><h2>暂时无法打开研究</h2><p>{loadError}</p><Button variant="outline" onClick={()=>setLoadAttempt(n=>n+1)}>重新加载</Button><Button onClick={()=>navigate('history')}>查看研究记录</Button></>:<><LoaderCircle size={32} className="animate-spin"/><p>正在加载研究记录…</p></>}</div>}
- {page==='work'&&selected&&<ResearchDetailPage key={selected.id} currentConfig={config} job={selected} tab={tab} onTabChange={setTab} streamConnection={streamConnection} onRetry={['failed','cancelled'].includes(selected.status)?retryResearch:undefined} retrying={retryState.id===selected.id&&retryState.pending} retryError={retryState.id===selected.id?retryState.error:''} onReuse={reuseInput} onUpdate={updateResearch} onDeepen={prepareDeepResearch} onDownload={download} onCancel={cancelResearch} cancelling={cancelling}/>}
+ {page==='work'&&selected&&<ResearchDetailPage key={selected.id} currentConfig={config} job={selected} tab={tab} onTabChange={setTab} streamConnection={streamConnection} onRetry={['failed','cancelled'].includes(selected.status)?retryResearch:undefined} retrying={retryState.id===selected.id&&retryState.pending} retryError={retryState.id===selected.id?retryState.error:''} onReuse={reuseInput} onUpdate={updateResearch} onDeepen={prepareDeepResearch} onDownload={download} exporting={exporting} onCancel={cancelResearch} cancelling={cancelling}/>}
  {page==='history'&&<ResearchHistory jobs={jobs} jobsLoading={jobsLoading} jobsError={jobsError} onRefresh={refresh} onStart={newResearch} onOpen={open} renderDelete={deleteButton} Status={Status} opening={opening}/>}
  {page==='rules'&&<ResearchFramework config={config} checking={configChecking} onRefresh={refreshConfig} onStart={newResearch}/>}
  {page==='handbook'&&<ResearchHandbookPage onStart={newResearch} config={config} checking={configChecking} onRefresh={refreshConfig}/>}

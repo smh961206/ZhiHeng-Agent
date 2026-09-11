@@ -1,7 +1,7 @@
 # V4.8.2 — Gateway request/response normalization
 
 Release: `V4.8`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT — standalone Gateway normalization implemented; see [completion report](../V4_8_2-completion-report.md). Business-call migration remains FUTURE.
 
 ## 1. Why
 
@@ -29,7 +29,7 @@ If paths or ownership changed, update `docs/architecture/current-implementation-
 
 ## 4. Current Behavior
 
-Before V4.8.2, the owning release capability is either absent, partial, or still on the previous accepted implementation.
+V4.8.1 was accepted and committed at `de56872c3718371e086454a291d385f6992bcd24`. Catalog metadata existed; four production transports still owned requests. V4.8.2 adds a standalone adapter/facade and opt-in parser metadata/validation without migrating those callers.
 
 ## 5. Target Behavior
 
@@ -111,7 +111,7 @@ additive → dual-read if needed → new-write → verified backfill → cutover
 
 ## 16. Resume / Recovery
 
-New checkpoints may add modelState additively; old checkpoints map to Legacy Profile and preserve original research cutoff/evidence/tool state.
+No checkpoint or resume schema changes in V4.8.2. Private continuation is an explicit in-memory, same-Gateway accessor and does not pin or migrate jobs. Additive modelState and old-checkpoint mapping belong to V4.8.9.
 
 This subrelease is incomplete if interruption/retry can duplicate completed work, lose evidence, change data cutoff, or corrupt the prior validated state.
 
@@ -123,13 +123,13 @@ No future-information contamination is allowed.
 
 ## 18. Provenance
 
-Persist profile/policy/routing decision/usage metadata, never hidden reasoning.
+Return profile/model/tier, safe usage/performance/billing metadata and a public message without hidden reasoning. No metadata persistence, policy decision or public history is introduced here; durable telemetry belongs to V4.8.7 and modelState to V4.8.9.
 
 Every newly introduced derived/canonical object must be able to answer “where did this come from?” at the semantic level appropriate to this release.
 
 ## 19. Feature Flag
 
-Use MODEL_ROUTING_MODE and release-specific flags/config; legacy remains an immediate fallback until acceptance.
+No routing-mode feature flag is added in V4.8.2. The API is standalone and existing business callers remain active; MODEL_ROUTING_MODE rollout belongs to later subreleases.
 
 High-risk behavior should be observable in disabled/dry-run/dual-run mode before becoming canonical where practical.
 
@@ -153,7 +153,7 @@ If this subrelease does not itself introduce a benchmarkable behavior, it must a
 
 ## 23. Rollout
 
-legacy → dry-run → policy/internal → partial production → default only after benchmark gate.
+Standalone API acceptance first. Business integration occurs only in V4.8.3/V4.8.4. Future policy rollout remains legacy → dry-run → policy/internal → partial production → default only after benchmark gates.
 
 Codex must not skip directly to default-on if the release specifies dry-run/dual-run/benchmark stages.
 

@@ -8,6 +8,7 @@ import './components/research-workbench.css';
 import './components/research-history.css';
 import './components/research-detail.css';
 import './components/research-scope.css';
+import './platform.css';
 function FrameworkRedirect(){const {search,hash}=useLocation();return <Navigate to={{pathname:'/',search,hash}} replace/>;}
 createRoot(document.getElementById('root')).render(<BrowserRouter><Routes>
  <Route path="/" element={<App page="rules"/>}/>

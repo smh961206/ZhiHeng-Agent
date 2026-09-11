@@ -3,6 +3,7 @@ import {MongoClient,GridFSBucket} from 'mongodb';
 import {Readable} from 'node:stream';
 import {pipeline} from 'node:stream/promises';
 import {migrateSchema} from './schema-migrations.mjs';
+import {normalizeModelCall,summarizeModelCalls} from './model-telemetry.mjs';
 
 export async function createStorage({uri=process.env.MONGODB_URI||'mongodb://127.0.0.1:27017',database=process.env.MONGODB_DATABASE||'zhiheng_agent'}={}){
  const client=new MongoClient(uri,{serverSelectionTimeoutMS:5000,connectTimeoutMS:5000,writeConcern:{w:1,j:true}});
@@ -15,7 +16,7 @@ export async function createStorage({uri=process.env.MONGODB_URI||'mongodb://127
     // Serialize before awaiting: running jobs can continue emitting events.
     const {liveReport,...stored}=job;
     const bytes=Buffer.from(JSON.stringify(stored));
-    const {input,result,events,draft,marketData,checkpoint,knowledgeUsage,...summary}=stored;
+    const {input,result,events,draft,marketData,checkpoint,knowledgeUsage,modelState,...summary}=stored;
     const upload=bucket.openUploadStream(job.id+'.json');
     await pipeline(Readable.from([bytes]),upload);
     try{
@@ -38,6 +39,16 @@ export async function createStorage({uri=process.env.MONGODB_URI||'mongodb://127
     // Retain old payload versions so concurrent readers can finish safely.
   }
   return {
+   async saveModelCall(input){
+    const record=normalizeModelCall(input);if(!record.id)throw new Error('Invalid ModelCall');
+    if(record.jobId&&await deleted.findOne({_id:record.jobId}))return;
+    await db.collection('model_calls').updateOne({_id:record.id},record.status==='started'?{$setOnInsert:record}:{$set:record},{upsert:true,maxTimeMS:1000});
+    if(record.jobId&&await deleted.findOne({_id:record.jobId}))await db.collection('model_calls').deleteMany({jobId:record.jobId});
+   },
+   async modelUsageSummary(jobId){
+    if(typeof jobId!=='string'||!jobId)throw new Error('Invalid job ID');
+    return summarizeModelCalls(await db.collection('model_calls').find({jobId},{projection:{_id:0}}).toArray());
+   },
    saveJob:writeJob,
    createJob:job=>writeJob(job,undefined,false,true),
    async restartJob(job,expectedRetryCount){
@@ -57,6 +68,7 @@ export async function createStorage({uri=process.env.MONGODB_URI||'mongodb://127
     // Keep only an ID tombstone: retained legacy JSON must not restore a deleted job.
     await deleted.updateOne({_id:id},{$setOnInsert:{deletedAt:new Date()}},{upsert:true});
     await jobs.deleteOne({_id:id});
+    await db.collection('model_calls').deleteMany({jobId:id});
     // Clean every saved version, not just the current GridFS payload.
     for await(const file of bucket.find({filename:id+'.json'}))await bucket.delete(file._id);
    },

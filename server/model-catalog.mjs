@@ -1,5 +1,9 @@
 import {modelRouting} from './model-routing.mjs';
-import {legacyVisionImageInput} from './vision-model.mjs';
+
+// Legacy configuration fact, not inference from arbitrary model names.
+export function legacyVisionImageInput(model,inputMode){
+ return inputMode!=='off'&&(model==='deepseek-v4-flash-vision-exp'||inputMode==='images');
+}
 
 /**
  * @typedef {Object} ModelProfile
@@ -57,9 +61,11 @@ const tokenLimit=value=>value===null||Number.isSafeInteger(value)&&value>0;
 /** Validate, copy and deeply freeze a profile. Never attach an env or a secret. */
 export function createModelProfile(input){
  input=record(input,fields);
- if(input.schemaVersion!==1||!text(input.id)||input.source!=='legacy-env'||!text(input.model)||
+ const legacy=input.schemaVersion===1&&input.source==='legacy-env'&&input.tier==='legacy'&&['legacy-analysis','legacy-vision'].includes(input.connectionRef);
+ const policy=input.schemaVersion===2&&input.source==='policy-config'&&['MAIN','PRO'].includes(input.tier)&&input.connectionRef===input.tier.toLowerCase()&&['zai','deepseek'].includes(input.provider);
+ if(!(legacy||policy)||!text(input.id)||!text(input.model)||
   !(input.provider===null||text(input.provider))||input.protocol!=='openai-chat-completions'||
-  !['legacy-analysis','legacy-vision'].includes(input.connectionRef)||input.tier!=='legacy')invalid();
+  policy&&(input.tier==='MAIN'&&(input.model!=='glm-5.3-flash'||input.provider!=='zai')||input.tier==='PRO'&&(input.model!=='deepseek-v4-pro'||input.provider!=='deepseek')))invalid();
  input.purposes=purposeList(input.purposes);
  input.capabilities=record(input.capabilities,capabilityFields);
  if(capabilityFields.some(key=>input.capabilities[key]!==null&&typeof input.capabilities[key]!=='boolean'))invalid();
@@ -74,10 +80,20 @@ export function createModelProfile(input){
  return Object.freeze({...input,purposes:Object.freeze([...input.purposes]),capabilities:Object.freeze({...input.capabilities}),pricing});
 }
 
+// Explicit user-selected bindings, never inferred from arbitrary legacy model names.
+export function createPolicyModelCatalog(env=process.env){
+ const legacy=createLegacyModelCatalog(env);
+ const profiles=['MAIN','PRO'].map(tier=>createModelProfile({schemaVersion:2,source:'policy-config',id:tier.toLowerCase(),tier,
+  model:env['LLM_'+tier+'_MODEL']||(tier==='MAIN'?'glm-5.3-flash':'deepseek-v4-pro'),provider:tier==='MAIN'?'zai':'deepseek',protocol:'openai-chat-completions',connectionRef:tier.toLowerCase(),purposes:['research','review','followup'],
+  capabilities:{textInput:true,imageInput:false,streaming:true,toolCalling:true,jsonObject:true,jsonSchema:null,reasoningControl:true},contextWindow:null,maxOutputTokens:null,pricing:null,
+ }));
+ return Object.freeze({schemaVersion:2,profiles:Object.freeze([...legacy.profiles,...profiles])});
+}
+
 /**
- * Pure metadata snapshot. Existing transports still own requests/readiness.
+ * Pure metadata snapshot. Gateway owns requests; wrappers retain readiness.
  * Connection refs intentionally omit even base URLs: URLs can contain secrets.
- * Resolve credentials at the future Gateway boundary, never through serialization.
+ * Resolve credentials at the Gateway boundary, never through serialization.
  */
 export function createLegacyModelCatalog(env=process.env){
  const {analysisModel,visionModel}=modelRouting(env);

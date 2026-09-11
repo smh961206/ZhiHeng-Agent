@@ -1,7 +1,7 @@
 # V4.8.10 — Safe Main→Pro escalation
 
 Release: `V4.8`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT — internal/offline safe escalation accepted; production/live quality not accepted. See [completion report](../V4_8_10-completion-report.md).
 
 ## 1. Why
 
@@ -93,7 +93,7 @@ If implementation requires reversing an accepted ADR, stop and create a supersed
 
 ## 13. Schema
 
-No persistent schema change.
+Additive private modelState v2 for explicit internal policy jobs; existing v1/absent readers retained. Mongo schema stays 2, no backfill.
 
 All persistent changes are additive-first. Unknown historical values remain unknown.
 

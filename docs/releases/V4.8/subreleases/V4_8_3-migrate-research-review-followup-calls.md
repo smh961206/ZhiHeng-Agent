@@ -1,7 +1,7 @@
 # V4.8.3 — Migrate research/review/followup calls
 
 Release: `V4.8`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT — research/review/followup migration and scoped acceptance are complete, including the authorized deployment regression; see [completion report](../V4_8_3-completion-report.md). Subsequent router/Vision progress is tracked separately in [V4.8.4](V4_8_4-migrate-router-and-vision-calls.md).
 
 ## 1. Why
 
@@ -31,7 +31,7 @@ If paths or ownership changed, update `docs/architecture/current-implementation-
 
 ## 4. Current Behavior
 
-Before V4.8.3, the owning release capability is either absent, partial, or still on the previous accepted implementation.
+The accepted V4.8.2 worktree supplied a standalone Gateway while Agent still owned one shared direct research/review/followup transport. V4.8.3 replaces that transport with a thin compatibility wrapper and explicit purposes. Followup assessment is an Agent callback; evidence-followup and deterministic valuation-review need no new provider implementation.
 
 ## 5. Target Behavior
 
@@ -114,7 +114,7 @@ additive → dual-read if needed → new-write → verified backfill → cutover
 
 ## 16. Resume / Recovery
 
-New checkpoints may add modelState additively; old checkpoints map to Legacy Profile and preserve original research cutoff/evidence/tool state.
+No checkpoint or modelState change in V4.8.3. Existing private tool/review messages and original cutoff/evidence/tool state are preserved. Additive modelState and checkpoint mapping belong to V4.8.9; this migration does not introduce them.
 
 This subrelease is incomplete if interruption/retry can duplicate completed work, lose evidence, change data cutoff, or corrupt the prior validated state.
 
@@ -126,13 +126,13 @@ No future-information contamination is allowed.
 
 ## 18. Provenance
 
-Persist profile/policy/routing decision/usage metadata, never hidden reasoning.
+Keep existing source, calculation and checkpoint provenance unchanged. Gateway returns metadata in memory; durable usage/routing telemetry belongs to V4.8.7 and modelState to V4.8.9. Hidden reasoning remains only in the existing private continuation/checkpoint path and never enters public results/events. No new persistence is introduced here.
 
 Every newly introduced derived/canonical object must be able to answer “where did this come from?” at the semantic level appropriate to this release.
 
 ## 19. Feature Flag
 
-Use MODEL_ROUTING_MODE and release-specific flags/config; legacy remains an immediate fallback until acceptance.
+No MODEL_ROUTING_MODE or policy flag is introduced. This migration uses fixed Legacy Profiles and has a code rollback to the accepted V4.8.2 worktree. Policy flags/mode rollout belong to later subreleases.
 
 High-risk behavior should be observable in disabled/dry-run/dual-run mode before becoming canonical where practical.
 
@@ -157,7 +157,7 @@ If this subrelease does not itself introduce a benchmarkable behavior, it must a
 
 ## 23. Rollout
 
-legacy → dry-run → policy/internal → partial production → default only after benchmark gate.
+Text-call integration retains legacy model selection and business validation. Acceptance uses the six-mode pinned legacy request/delivery/event/checkpoint baseline and affected regressions. Later policy rollout remains legacy → dry-run → policy/internal → partial production → default only after its own benchmark gate; this subrelease does not activate policy.
 
 Codex must not skip directly to default-on if the release specifies dry-run/dual-run/benchmark stages.
 

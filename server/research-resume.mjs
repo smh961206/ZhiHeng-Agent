@@ -1,5 +1,6 @@
 import {savedKnowledgeMatches} from './knowledge.mjs';
 import {frameworkVersion} from '../shared/research-framework.mjs';
+import {assertJobModelState} from './model-state.mjs';
 // Internal model conversations are persisted only in the private job payload.
 export const resumeScope=job=>JSON.stringify({frameworkVersion,mode:job.mode,question:job.input?.question,securities:job.input?.securities,depth:job.input?.depth,historyYears:job.input?.historyYears,...(job.plan?.knowledgeSnapshot?{knowledgeSnapshot:job.plan.knowledgeSnapshot}:{})});
 const changedRules=job=>!savedKnowledgeMatches(job.plan);
@@ -17,6 +18,7 @@ function legacyRecords(job){
  return [...records.values()];
 }
 export function researchResume(job){
+ assertJobModelState(job);
  if(changedFramework(job)||changedRules(job))return null;
  const checkpoint=job.checkpoint;
  if(validCheckpoint(job))return structuredClone(checkpoint);
@@ -30,6 +32,7 @@ export function researchResume(job){
 }
 export function resumeSummary(job){
  if(job.status==='completed')return {available:false};
+ try{assertJobModelState(job);}catch{return {available:false,reason:'model_configuration_changed'};}
  if(changedFramework(job))return {available:false,reason:'framework_changed',fromVersion:job.plan.version,toVersion:frameworkVersion};
  if(changedRules(job))return {available:false,reason:'rules_changed',toVersion:frameworkVersion};
  const valid=validCheckpoint(job);

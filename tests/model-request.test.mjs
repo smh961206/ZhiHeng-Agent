@@ -1,4 +1,5 @@
 import test from 'node:test';
+import './fixtures/model-env.mjs';
 import assert from 'node:assert/strict';
 import {fetchModel} from '../server/model-request.mjs';
 import {completion} from '../server/agent.mjs';

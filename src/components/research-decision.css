@@ -81,7 +81,7 @@
 .research-detail .rd-decision-digest .rd-decision-actions .rd-decision-disclosure{padding:4px 0}
 .research-detail .rd-decision-digest .rd-disclosure-count,.research-detail .rd-decision-digest .rd-disclosure-state{font-size:12px}
 .research-detail .rd-decision-digest .rd-decision-disclosure[data-state=open] .rd-disclosure-state svg{transform:none}
-.research-detail .rd-report-intro:has(.rd-decision-digest){margin-bottom:28px;padding-bottom:0;border-bottom:0}
+.research-detail .rd-report-intro:has(.rd-decision-digest){margin-bottom:16px;padding-bottom:0;border-bottom:0}
 .rd-decision-sheet[data-slot=sheet-content]{width:min(680px,100vw);max-width:680px;gap:0;padding:0;background:#fff}
 .rd-decision-sheet>[data-slot=sheet-header]{padding:24px 52px 20px 26px;border-bottom:1px solid #e2e9e3;flex-shrink:0}
 .rd-decision-sheet [data-slot=sheet-title]{font-size:19px;font-weight:600;color:#284633}

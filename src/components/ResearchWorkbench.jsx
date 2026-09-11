@@ -31,8 +31,9 @@ const screenExamples=[['贵州茅台快速筛选','A股贵州茅台值不值得�
 function Choice({label,value,onChange,options,disabled,help}){
  return <div className="choice-field"><span>{label}</span><Select value={String(value)} onValueChange={onChange} disabled={disabled}><SelectTrigger aria-label={label}><SelectValue/></SelectTrigger><SelectContent>{options.map(([v,l])=><SelectItem key={v} value={String(v)}>{l}</SelectItem>)}</SelectContent></Select>{help&&<small>{help}</small>}</div>;
 }
-export default function ResearchWorkbench({pathDecision,question,setQuestion,mode,setMode,depth,setDepth,portfolio,setPortfolio,historyYears,setHistoryYears,resolution,busy,onStart,jobs,jobsLoading,jobsError,onRefreshJobs,previousResearch,setPreviousResearch,baselineJobId,setBaselineJobId,portfolioContext,setPortfolioContext,referenceMaterials,setReferenceMaterials,materialsReading,setMaterialsReading,materialsPending,setMaterialsPending,materialDraft,setMaterialDraft,materialDraftTitle,setMaterialDraftTitle,materialEditDraft,setMaterialEditDraft,draftStatus,onClear,config,configChecking,onRefreshConfig}){
+export default function ResearchWorkbench({focusRequest=0,pathDecision,question,setQuestion,mode,setMode,depth,setDepth,portfolio,setPortfolio,historyYears,setHistoryYears,resolution,busy,onStart,jobs,jobsLoading,jobsError,onRefreshJobs,previousResearch,setPreviousResearch,baselineJobId,setBaselineJobId,portfolioContext,setPortfolioContext,referenceMaterials,setReferenceMaterials,materialsReading,setMaterialsReading,materialsPending,setMaterialsPending,materialDraft,setMaterialDraft,materialDraftTitle,setMaterialDraftTitle,materialEditDraft,setMaterialEditDraft,draftStatus,onClear,config,configChecking,onRefreshConfig}){
  const questionInput=useRef(null),form=useRef(null),securitiesSection=useRef(null),settingsSection=useRef(null),materialsSection=useRef(null);
+ useEffect(()=>{if(focusRequest)questionInput.current?.focus({preventScroll:true});},[focusRequest]);
  const [scopeOnSide,setScopeOnSide]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(min-width: 1280px)').matches);
  useEffect(()=>{const media=window.matchMedia('(min-width: 1280px)'),sync=()=>setScopeOnSide(media.matches);media.addEventListener('change',sync);return()=>media.removeEventListener('change',sync);},[]);
 
@@ -55,7 +56,7 @@ export default function ResearchWorkbench({pathDecision,question,setQuestion,mod
  function goToStep(value){const target=value==='execution'?document.getElementById('execution-background'):value===2||value==='path'?document.getElementById('research-path'):value===1||value==='question'?questionInput.current:value===3||value==='securities'?securitiesSection.current:value==='materials'?materialsSection.current:settingsSection.current;target?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});target?.focus({preventScroll:true});}
  function selectMode(value){setMode(value);if(value==='B')setDepth('Deep');}
  return <section className="research-workbench">
-  <header className="page-heading workbench-heading"><div><h1>研究工作台</h1><p>先写问题，再确认研究路径与标的；研究范围随路径同步调整。</p></div></header>
+  <header className="page-heading workbench-heading"><div><h1>研究工作台</h1><p>写下公司与关注点，核对标的和研究范围。模型由平台管理，你只需确认这次要回答的问题。</p></div></header>
   <KnowledgeStatus config={config} checking={configChecking} onRefresh={onRefreshConfig}/>
   <div className="workspace-grid">
    <Card className="workbench-composer gap-0 py-0">
@@ -79,8 +80,8 @@ export default function ResearchWorkbench({pathDecision,question,setQuestion,mod
      </CardContent>
      <CardFooter className="composer-footer"><div className={'composer-readiness '+(readinessLoading?'is-loading':ready?'is-ready':'is-pending')} id="start-readiness" role="status">
       <span className="readiness-state" aria-hidden="true">{readinessLoading?<LoaderCircle size={15} className="animate-spin"/>:ready?<Check size={15}/>:<CircleAlert size={15}/>}</span>
-      <div className="readiness-content"><div className="readiness-primary"><p>{readiness}</p>{!ready&&!readinessLoading&&preparation.issues[0]?.id!=='service'&&<Button type="button" variant="link" size="sm" className="readiness-action" onClick={()=>goToStep(preparation.issues[0]?.id)}>定位待处理项<ArrowUpRight size={13}/></Button>}</div><small>{materialsReading?'资料导入期间请保持当前页面。':'研究创建成功后可离开，稍后在研究记录查看进度。'}</small></div>
-     </div><Button type="submit" size="lg" className="start-button" disabled={busy||!ready} aria-describedby="start-readiness">{busy?<><LoaderCircle size={17} className="animate-spin"/>创建中…</>:<>{settingsPending?pathDecision?.pending?'正在匹配研究路径…':'开始研究':'开始'+settings.task}<ArrowRight size={17}/></>}</Button></CardFooter>
+      <div className="readiness-content"><div className="readiness-primary"><p>{readiness}</p>{!ready&&!readinessLoading&&preparation.issues[0]?.id!=='service'&&<Button type="button" variant="link" size="sm" className="readiness-action" onClick={()=>goToStep(preparation.issues[0]?.id)}>定位待处理项<ArrowUpRight size={13}/></Button>}</div><small>{materialsReading?'资料导入期间请保持当前页面。':'研究创建成功后可离开，稍后在研究记录查看进度。'}</small><span className="composer-shortcut"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Enter</kbd> 开始研究</span></div>
+     </div><Button type="submit" size="lg" className="start-button" disabled={busy||!ready} aria-describedby="start-readiness" aria-keyshortcuts="Control+Enter Meta+Enter">{busy?<><LoaderCircle size={17} className="animate-spin"/>创建中…</>:<>{settingsPending?pathDecision?.pending?'正在匹配研究路径…':'开始研究':'开始'+settings.task}<ArrowRight size={17}/></>}</Button></CardFooter>
     </form>
    </Card>
    {scopeOnSide&&<aside className="workbench-scope-rail" aria-label="研究范围核对"><ResearchPreparation preparation={preparation} materialCount={referenceMaterials?.length??0} automatic={mode==='auto'} awaitingMode={awaitingMode} pathPending={pathDecision?.pending} showMaterials={Boolean(setReferenceMaterials)} onNavigate={goToStep}/></aside>}

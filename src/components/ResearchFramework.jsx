@@ -4,7 +4,7 @@ import ResearchCapabilities from './ResearchCapabilities';
 import {ResearchMethodSteps} from './ResearchMethod';
 import {useEffect,useState} from 'react';
 import {Link} from 'react-router';
-import {ArrowRight,ArrowUpRight,BookOpen,Check,ChevronDown,Coins,FileText,Layers,Search,ShieldCheck,RefreshCw,ChartNoAxesCombined} from 'lucide-react';
+import {Pause,Play,ArrowRight,ArrowUpRight,BookOpen,Check,ChevronDown,Coins,FileText,Layers,Search,ShieldCheck,RefreshCw,ChartNoAxesCombined} from 'lucide-react';
 import {Button} from './ui/button';
 import {Badge} from './ui/badge';
 import {Card,CardContent} from './ui/card';
@@ -42,6 +42,7 @@ const flow=[
  {title:'交付结论，也交付改变结论的条件',copy:'模型复核后，由程序检查报告结构、引用和判断边界。发现问题会尝试补充或修正，未核实事项保留说明；结果保存失败时可单独重试保存。',example:['跟踪','哪三条经营事实出现时，需要重审原判断？'],result:'对照报告、审计记录、证据来源与执行轨迹'},
 ];
 const questions=[
+ ['V4.8 更新后，需要自己选模型吗？','无需在研究表单里选择模型。平台统一接入模型服务，按当前已启用的配置执行。模型策略调整需先通过质量验收；资料不足时仍保留缺口，不以升级模型代替取证。'],
  ['第一次使用，应该从哪里开始？','在工作台输入公司与具体问题，核对股票代码和市场后开始研究，稍后可到研究记录中查看结果。'],
  ['可以上传自己的报告、表格或截图吗？','可以。文件直接上传平台处理，也可粘贴文字笔记。最多 6 份，每份文件 10 MB；处理结果可预览与修改，关键数字仍需核对原件。'],
  ['什么时候可以离开页面？','资料导入期间请保持页面；研究创建成功后可离开，稍后从研究记录查看。文件失败可单独重试，仅保存结果失败时无需重新研究。'],
@@ -64,7 +65,7 @@ export default function ResearchFramework({onStart,config,checking,onRefresh}){
  useEffect(()=>{const query=window.matchMedia('(max-width: 639px)'),change=()=>setNarrow(query.matches);query.addEventListener('change',change);return()=>query.removeEventListener('change',change);},[]);
  return <section ref={sectionNavigation.rootRef} onClick={sectionNavigation.onAnchorClick} className="research-framework research-home" aria-labelledby="fw-hero-title">
   <section className="fw-hero" aria-labelledby="fw-hero-title">
-   <div className="fw-hero-copy"><h1 id="fw-hero-title">让每一次研究，<br/>都有依据可循。</h1><p>输入一个公司问题，串联公开资料、财务分析与结论复核。从第一次看懂公司，到每次财报后更新判断，把研究持续做下去。</p><div className="fw-hero-actions"><Button size="lg" onClick={()=>onStart()}>开始一项研究<ArrowRight size={17}/></Button><Button variant="outline" size="lg" asChild><Link to="/handbook?tab=guide">了解研究流程<ArrowUpRight size={16}/></Link></Button></div><div className="fw-hero-note"><ShieldCheck size={16}/>公开计划 · 真实调用 · 完整回答 · 持续验证</div></div>
+   <div className="fw-hero-copy"><div className="fw-release-note"><span>V4.8</span>证据优先 · 研究可追溯</div><h1 id="fw-hero-title">让每一次研究，<br/>都有依据可循。</h1><p>从公司与问题出发，核对原始资料、复算关键数字，再形成有条件的判断。研究进度、资料缺口与复核记录，都能回看。</p><div className="fw-hero-actions"><Button size="lg" onClick={()=>onStart()}>开始一项研究<ArrowRight size={17}/></Button><Button variant="outline" size="lg" asChild><Link to="/handbook?tab=guide">了解研究流程<ArrowUpRight size={16}/></Link></Button></div><div className="fw-hero-note"><ShieldCheck size={16}/>先核对证据，再形成判断；缺失资料如实保留</div></div>
    <Card className="fw-question-card"><CardContent><div className="fw-preview-label"><FileText size={18}/>一份研究，分清判断与执行</div><ResearchMethodSteps compact/><Link className="fw-method-link" to="/handbook?tab=method">了解当前研究方法<ArrowRight size={15}/></Link></CardContent></Card>
   </section>
   <KnowledgeStatus config={config} checking={checking} onRefresh={onRefresh}/>
@@ -75,6 +76,7 @@ export default function ResearchFramework({onStart,config,checking,onRefresh}){
    <div className="fw-prompt-example"><div><span>试着这样提问</span><p>{starterQuestion}</p></div><Button variant="outline" onClick={()=>onStart('A',starterQuestion)}>使用这个问题<ArrowUpRight size={16}/></Button><div className="fw-handbook-link"><span>资料上传或操作遇到问题？</span><Link to="/handbook?tab=guide">查看使用指南<ArrowRight size={14} aria-hidden="true"/></Link></div></div>
   </section>
   <section id="fw-paths" className="fw-section"><div className="fw-section-heading"><span>02 / 从问题出发</span><h2>同一套原则，六种研究路径。</h2><p>选择你的问题，看看会得到什么，以及需要准备什么。</p></div>
+   {!sceneRotation.reducedMotion&&<div className="fw-rotation-control"><Button type="button" variant="ghost" size="sm" onClick={sceneRotation.togglePause}>{sceneRotation.paused?<Play size={14}/>:<Pause size={14}/>} {sceneRotation.paused?'继续场景轮播':'暂停场景轮播'}</Button></div>}
    <Tabs ref={sceneRotation.rootRef} {...sceneRotation.interactionProps} orientation={narrow?'horizontal':'vertical'} value={scene} onValueChange={sceneRotation.select} className="fw-scenes"><TabsList aria-label="研究场景" className="fw-scene-tabs">{Object.entries(modes).map(([id,item])=>{const Icon=modeIcons[id];return <TabsTrigger key={id} value={id} {...sceneRotation.hoverProps(id)}><Icon size={18}/><span>{item.name}<small>{item.description}</small></span><ArrowRight size={14}/></TabsTrigger>;})}</TabsList>
     <div className="fw-scene-panels">{Object.entries(modes).map(([id,profile])=>{
      const SceneIcon=modeIcons[id],plan={mode:id,output:outputContract(id,profile.defaultDepth)};
@@ -91,6 +93,7 @@ export default function ResearchFramework({onStart,config,checking,onRefresh}){
   <ResearchCapabilities/>
   <ResearchService onStart={onStart}/>
   <section id="fw-flow" className="fw-section"><div className="fw-section-heading"><span>04 / 了解交付过程</span><h2>每份报告，都能回到研究的来路。</h2><p>选择步骤，了解从资料获取到报告交付的过程。以下为方法说明。</p></div>
+   {!stepRotation.reducedMotion&&<div className="fw-rotation-control"><Button type="button" variant="ghost" size="sm" onClick={stepRotation.togglePause}>{stepRotation.paused?<Play size={14}/>:<Pause size={14}/>} {stepRotation.paused?'继续流程轮播':'暂停流程轮播'}</Button></div>}
    <Tabs ref={stepRotation.rootRef} {...stepRotation.interactionProps} value={step} onValueChange={stepRotation.select} className="fw-flow"><TabsList className="fw-flow-tabs" aria-label="研究流程步骤">{researchStages.map((item,index)=><TabsTrigger value={item.id} key={item.id} {...stepRotation.hoverProps(item.id)}><span>{String(index+1).padStart(2,'0')}</span>{item.label}</TabsTrigger>)}</TabsList><div className="fw-flow-panels">{researchStages.map((item,index)=><TabsContent forceMount value={item.id} key={item.id} className="fw-flow-panel" aria-hidden={step!==item.id} inert={step!==item.id?true:undefined} tabIndex={step===item.id?0:-1}><div><Badge variant="outline">{item.label}</Badge><h3>{flow[index].title}</h3><p>{flow[index].copy}</p><Button variant="outline" className="fw-flow-next" onClick={()=>stepRotation.select(researchStages[(index+1)%researchStages.length].id)}><span>{index===researchStages.length-1?'重新查看流程':'下一步：'+researchStages[index+1].label}</span>{index===researchStages.length-1?<RefreshCw size={16} aria-hidden="true"/>:<ArrowRight size={16} aria-hidden="true"/>}</Button></div><Card className="fw-flow-example"><CardContent><span>以现金回报研究为例</span><small>{flow[index].example[0]}</small><h4>{flow[index].example[1]}</h4><p><Check size={16}/>{flow[index].result}</p></CardContent></Card></TabsContent>)}</div></Tabs>
   </section>
   <ResearchPrinciplesPreview/>

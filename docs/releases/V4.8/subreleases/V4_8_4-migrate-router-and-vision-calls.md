@@ -1,7 +1,7 @@
 # V4.8.4 — Migrate router and vision calls
 
 Release: `V4.8`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT — implementation and scoped acceptance are complete; see [completion report](../V4_8_4-completion-report.md). Subsequent complexity work is tracked separately in [V4.8.5](V4_8_5-complexity-evaluator-v1.md).
 
 ## 1. Why
 
@@ -20,18 +20,20 @@ Codex must inspect the real checkout before editing:
 - `server/agent.mjs`
 - `server/agent-execution.mjs`
 - `server/research-path.mjs`
+- `server/security-intent.mjs`
 - `server/vision-model.mjs`
 - `server/evidence-followup.mjs`
 - `.env.example`
 - `tests/`
 - `server/material-vision.mjs`
 - `server/visual-reading.mjs`
+- `scripts/dual-model-diagnostics.mjs`
 
 If paths or ownership changed, update `docs/architecture/current-implementation-map.md`; do not force the repository to match stale filenames.
 
 ## 4. Current Behavior
 
-Before V4.8.4, the owning release capability is either absent, partial, or still on the previous accepted implementation.
+The accepted V4.8.3 worktree routes research/review/followup through Gateway. Path classification, security intent and Vision still own direct transports; the synthetic diagnostic has one additional direct analysis call. These are the migration owners, not new subsystems.
 
 ## 5. Target Behavior
 
@@ -112,7 +114,7 @@ additive → dual-read if needed → new-write → verified backfill → cutover
 
 ## 16. Resume / Recovery
 
-New checkpoints may add modelState additively; old checkpoints map to Legacy Profile and preserve original research cutoff/evidence/tool state.
+No checkpoint or modelState change in V4.8.4. Existing private continuation, original cutoff, evidence, tool receipts and visual archives remain unchanged. Additive modelState mapping belongs to V4.8.9.
 
 This subrelease is incomplete if interruption/retry can duplicate completed work, lose evidence, change data cutoff, or corrupt the prior validated state.
 
@@ -124,13 +126,13 @@ No future-information contamination is allowed.
 
 ## 18. Provenance
 
-Persist profile/policy/routing decision/usage metadata, never hidden reasoning.
+Preserve existing source, archive, calculation and checkpoint provenance. No new metadata persistence in V4.8.4; durable usage belongs to V4.8.7 and modelState to V4.8.9. Hidden reasoning remains outside public results/events.
 
 Every newly introduced derived/canonical object must be able to answer “where did this come from?” at the semantic level appropriate to this release.
 
 ## 19. Feature Flag
 
-Use MODEL_ROUTING_MODE and release-specific flags/config; legacy remains an immediate fallback until acceptance.
+No new flag or MODEL_ROUTING_MODE is introduced. Existing legacy env/capability configuration remains; code restoration to the saved accepted V4.8.3 worktree is the rollback. Policy mode rollout belongs to later subreleases.
 
 High-risk behavior should be observable in disabled/dry-run/dual-run mode before becoming canonical where practical.
 
@@ -155,7 +157,7 @@ If this subrelease does not itself introduce a benchmarkable behavior, it must a
 
 ## 23. Rollout
 
-legacy → dry-run → policy/internal → partial production → default only after benchmark gate.
+This subrelease keeps fixed legacy selection and migrates transport only. Six saved pre-migration Router/Vision request/result comparisons, six existing research-mode golden cases, affected tests and static AC01 validate compatibility. Future policy rollout remains legacy → dry-run → policy/internal → partial production → default after its own benchmark gate; no such policy is activated here.
 
 Codex must not skip directly to default-on if the release specifies dry-run/dual-run/benchmark stages.
 

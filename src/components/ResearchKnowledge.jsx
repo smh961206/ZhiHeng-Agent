@@ -30,6 +30,9 @@ function RuleExcerpt({jobId,record}){
 
 export function KnowledgeStatus({config,checking,onRefresh}){
  const state=knowledgeAvailability(config);
+ // Normal readiness lives in the global status control; keep actionable
+ // exceptions visible without repeating a version banner on every page.
+ if(state.kind==='ready'||state.kind==='loading')return null;
  return <section className={'knowledge-status is-'+state.kind} aria-label="研究规则状态">
   <ShieldCheck size={19} aria-hidden="true"/><div role="status"><strong>{state.title}</strong><p>{state.description}</p></div>
   {onRefresh&&<Button type="button" variant="ghost" size="sm" disabled={checking} onClick={onRefresh}><RefreshCw size={14} className={checking?'animate-spin':''}/>{checking?'正在检查':'重新检查'}</Button>}
@@ -52,7 +55,7 @@ function RuleUsagePanel({job,currentConfig}){
  const words=query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
  const rows=view.records.filter(row=>(filter==='all'||(filter==='audit'?row.reason==='正式输出前审计':row.reason?.startsWith('规则补读')))&&words.every(word=>[row.heading,row.reason,row.path].join(' ').toLocaleLowerCase().includes(word)));
  return <Collapsible className="knowledge-usage" aria-label="本次规则依据">
-  <CollapsibleTrigger asChild><Button type="button" variant="ghost" className="knowledge-usage-trigger"><BookOpen size={18}/><span><strong>本次规则依据{view.version?' · V'+view.version:''}</strong><small>{view.recorded?`${view.moduleCount} 项规则 · ${view.sectionCount} 条使用记录`:'此记录未保存实际读取明细'}</small></span><ChevronDown size={16}/></Button></CollapsibleTrigger>
+  <CollapsibleTrigger asChild><Button type="button" variant="ghost" className="knowledge-usage-trigger"><BookOpen size={18}/><span><strong>本次规则依据{view.version?' · 规则 V'+view.version:''}</strong><small>{view.recorded?`${view.moduleCount} 项规则 · ${view.sectionCount} 条使用记录`:'此记录未保存实际读取明细'}</small></span><ChevronDown size={16}/></Button></CollapsibleTrigger>
   <CollapsibleContent className="knowledge-usage-body">
    <p>{view.snapshot?'本次研究固定创建时的规则，研究、补读与复核使用同一份依据。':'此记录未保存固定规则快照，不根据当前规则补写历史使用情况。'}{changed?' 当前已有更新，本报告仍保留原依据。':''}</p>
    {view.recorded&&<><div className="knowledge-filters" role="group" aria-label="规则记录筛选">{[['all','全部'],['lookup','按需补读'],['audit','审计']].map(([id,label])=><Button type="button" size="sm" variant={filter===id?'secondary':'ghost'} aria-pressed={filter===id} key={id} onClick={()=>{setFilter(id);setLimit(20);}}>{label}</Button>)}</div>

@@ -1,7 +1,7 @@
 # V4.8.7 — Model usage telemetry
 
 Release: `V4.8`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT — accepted after both reviews and the successful Linux deployment gate. See [completion report](../V4_8_7-completion-report.md) and [deployment acceptance](../V4_8_7-deployment-acceptance.md). V4.8.8/.9 remain unimplemented.
 
 ## 1. Why
 
@@ -31,7 +31,7 @@ If paths or ownership changed, update `docs/architecture/current-implementation-
 
 ## 4. Current Behavior
 
-Before V4.8.7, the owning release capability is either absent, partial, or still on the previous accepted implementation.
+The accepted V4.8.6 Gateway returns in-memory usage/performance and logs dry-run decisions, but has no durable ModelCall or job usage aggregation.
 
 ## 5. Target Behavior
 
@@ -94,7 +94,7 @@ If implementation requires reversing an accepted ADR, stop and create a supersed
 
 ## 13. Schema
 
-Add model_calls or equivalent additive telemetry store; job summary fields only.
+Add model_calls and migration 2 index. Provide on-demand internal job summary, with no public job payload changes.
 
 All persistent changes are additive-first. Unknown historical values remain unknown.
 
@@ -113,7 +113,7 @@ additive → dual-read if needed → new-write → verified backfill → cutover
 
 ## 16. Resume / Recovery
 
-New checkpoints may add modelState additively; old checkpoints map to Legacy Profile and preserve original research cutoff/evidence/tool state.
+No modelState change in V4.8.7; checkpoint compatibility is V4.8.9. Job attribution uses transient async context and independent ModelCall records.
 
 This subrelease is incomplete if interruption/retry can duplicate completed work, lose evidence, change data cutoff, or corrupt the prior validated state.
 
@@ -125,13 +125,13 @@ No future-information contamination is allowed.
 
 ## 18. Provenance
 
-Persist profile/policy/routing decision/usage metadata, never hidden reasoning.
+Persist safe profile/purpose/status, routing mode/policy version, usage/performance metadata; no raw decisions, prompts, outputs or hidden reasoning.
 
 Every newly introduced derived/canonical object must be able to answer “where did this come from?” at the semantic level appropriate to this release.
 
 ## 19. Feature Flag
 
-Use MODEL_ROUTING_MODE and release-specific flags/config; legacy remains an immediate fallback until acceptance.
+MODEL_TELEMETRY_ENABLED=false disables production telemetry writes; legacy/dry-run selection is unchanged. Writer setup is explicit for standalone consumers.
 
 High-risk behavior should be observable in disabled/dry-run/dual-run mode before becoming canonical where practical.
 

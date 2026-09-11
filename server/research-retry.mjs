@@ -3,6 +3,7 @@ import {bindKnowledge} from './knowledge.mjs';
 import {validateInput,route} from './router.mjs';
 import {attachResearchBaseline} from './research-baseline.mjs';
 import {researchResume,resumeSummary} from './research-resume.mjs';
+import {modelStateError} from './model-state.mjs';
 
 const failure=(status,message)=>Object.assign(new Error(message),{status});
 export async function prepareResearchRetry(job,loadJob,now=new Date().toISOString()){
@@ -18,6 +19,8 @@ export async function prepareResearchRetry(job,loadJob,now=new Date().toISOStrin
   next.events??=[];next.events.push({time:now,type:'progress',message:`第${retryCount}次重试，从已保存的${checkpoint.phase==='review'?'复核':'研究'}进度继续；保留已有资料与计算结果。`});
   return next;
  }
+ // A new pinned job with unusable progress cannot silently become a fresh run.
+ if(Object.hasOwn(job,'modelState'))throw modelStateError();
  // Rebuild execution data from saved inputs, without feeding old evidence back into a new run.
  let input=validateInput({...original,mode:job.mode||original.mode,sources:[]});
  const mode=route(input);

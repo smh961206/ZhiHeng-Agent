@@ -14,6 +14,8 @@ import {readFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {runAgent} from './agent.mjs';
+import {configureModelTelemetry,withModelCallContext} from './model-telemetry.mjs';
+import {assertModelRollout} from './model-rollout.mjs';
 import {modes,validateInput} from './router.mjs';
 import {validateSecurities,fetchQuote} from './market-data.mjs';
 import {resolveSecurities} from './security-resolver.mjs';
@@ -29,6 +31,7 @@ import {readDocument} from './document-reader.mjs';
 const allowRequest=createAccessPolicy(process.env.PUBLIC_ORIGINS);
 const root=fileURLToPath(new URL('../',import.meta.url));
 const storage=await getStorage();
+configureModelTelemetry(process.env.MODEL_TELEMETRY_ENABLED==='false'?undefined:record=>storage.saveModelCall(record));
 console.log('MongoDB 已连接；旧数据迁移：',await migrateLegacy(storage));
 await storage.recoverInterrupted();
 const jobs=new Map(),controllers=new Map(),streams=createJobStreams();
@@ -66,7 +69,7 @@ async function execute(job){
   const event={time:new Date().toISOString(),type,message,...details};job.events.push(event);streams.publish(job.id,'trace',event);
   if(['tool_result','audit_validation','audit_context','evidence_followup','research_input','knowledge_read'].includes(type))checkpoints.request();
  };
- try{await save(job);const result=await withVisualBudget(()=>runAgent(job,emit,control.signal,{onCheckpoint:async()=>{checkpoints.request();await checkpoints.flush();}}));control.signal.throwIfAborted();delete job.checkpoint;outcome={status:'completed',result,researchOutcome:{action:result.decision.action,confidence:result.decision.confidence,summary:result.decision.summary}};}
+ try{assertModelRollout(job);await save(job);const result=await withModelCallContext(job.id,()=>withVisualBudget(()=>runAgent(job,emit,control.signal,{onCheckpoint:async()=>{checkpoints.request();await checkpoints.flush();},onModelCheckpoint:async()=>{await checkpoints.flush();await save(job);}})));control.signal.throwIfAborted();delete job.checkpoint;outcome={status:'completed',result,researchOutcome:{action:result.decision.action,confidence:result.decision.confidence,summary:result.decision.summary}};}
  catch(e){const status=control.signal.aborted?'cancelled':'failed';outcome={status,error:control.signal.aborted?'任务已取消':e.message};interruptWorkflow(job,status);}
  finally{await checkpoints.close();try{await delivery.finish(job,outcome);}finally{controllers.delete(job.id);streams.finish(job);}}
 }
@@ -112,7 +115,7 @@ const server=http.createServer(async(req,res)=>{
   if(url.pathname==='/api/health'&&req.method==='GET'){try{await storage.ping();return send(res,200,{ok:true,storage:'mongodb'});}catch{return send(res,503,{ok:false,storage:'mongodb'});}}
   if(url.pathname==='/api/jobs'&&req.method==='GET'){
    const summaries=new Map((await storage.listJobs()).map(j=>[j.id,j]));
-   for(const {input,result,events,draft,liveReport,marketData,submission,checkpoint,knowledgeUsage,...j} of jobs.values())summaries.set(j.id,{...j,question:input.question,sourceCount:input.sources.length});
+   for(const {input,result,events,draft,liveReport,marketData,submission,checkpoint,knowledgeUsage,modelState,...j} of jobs.values())summaries.set(j.id,{...j,question:input.question,sourceCount:input.sources.length});
    return send(res,200,[...summaries.values()].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)));
   }
   if(url.pathname==='/api/jobs'&&req.method==='POST'){

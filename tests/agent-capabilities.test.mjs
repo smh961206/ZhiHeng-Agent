@@ -39,7 +39,7 @@ test('targeted reader returns exact stored pages, supports continuation and does
 });
 
 test('missing-page rereads keep file identity and budgets, while changed originals remain untouched',async()=>{
- const j=job(),reader=createAgentPageReader({request:async()=>Buffer.from('original'),extract:async()=>({totalPages:2,pages:[{page:2,blocks:[{id:'target-p2-b1',page:2,text:'核对原件第二页',method:'native'}],quality:{status:'readable'}}]}),maxPages:1});
+ const j=job(),reader=createAgentPageReader({enabled:()=>false,request:async()=>Buffer.from('original'),extract:async()=>({totalPages:2,pages:[{page:2,blocks:[{id:'target-p2-b1',page:2,text:'核对原件第二页',method:'native'}],quality:{status:'readable'}}]}),maxPages:1});
  const result=await reader({sourceId:'S1',pages:[2],view:'text'},{job:j});assert.equal(result.matches[0].page,2);assert.ok(j.input.sources[0].documentBlocks.some(b=>b.id==='target-p2-b1'));assert.equal(j.input.sources[0].text,body);
  assert.equal((await reader({sourceId:'S1',pages:[1],view:'visual'},{job:j})).status,'unavailable');
  const changed=job(),mismatch=createAgentPageReader({request:async()=>Buffer.from('changed')});

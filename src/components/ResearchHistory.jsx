@@ -126,7 +126,7 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
 
   return <section className="history-page research-history" aria-label="研究记录">
     <header className="rh-heading">
-      <div><h1>研究记录</h1><p>跟进研究进度，查找报告与判断，继续已有研究。</p></div>
+      <div><h1>研究记录</h1><p>查看进度与报告，回查证据，处理未完成的研究。</p></div>
       <Button type="button" onClick={() => onStart?.()} className="rh-create"><Plus size={17} aria-hidden="true"/>新建研究</Button>
     </header>
 

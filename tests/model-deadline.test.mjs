@@ -1,4 +1,5 @@
 import test from 'node:test';
+import './fixtures/model-env.mjs';
 import assert from 'node:assert/strict';
 import {setImmediate as nextTick} from 'node:timers/promises';
 import {createModelDeadline,modelTimeouts} from '../server/model-deadline.mjs';

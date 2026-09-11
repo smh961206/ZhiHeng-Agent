@@ -152,7 +152,7 @@ function ReportPanel({job, exchanges, prefix, preview, onRetry, retrying, retryE
   const guide=recovery&&<RecoveryGuide {...{recovery,onSources,onTrace,onReuse,retrying}} errorInOverview={failed}/>;
   if(recovery&&['save','saving','save-unavailable'].includes(recovery.kind))return <EmptyState failed={failed} title={recovery.title} icon={isSavingResult(job)?LoaderCircle:CircleAlert} active={isSavingResult(job)} actions={<>{needsSaveRetry(job)&&onRetry&&<RetryButton onRetry={onRetry} retrying={retrying} saveOnly/>}{guide}</>}>{recovery.text}</EmptyState>;
   const recordedVersion=job.result?.framework?.version||job.plan?.version;
-  if (job.result?.report?.trim()) return <><div className="rd-provenance" aria-label="报告版本"><span>{recordedVersion?'研究方法 V'+recordedVersion:'研究版本未记录'}{recordedVersion&&recordedVersion!==frameworkVersion?' · 历史报告保留原始判断':''}</span><Link to="/handbook?tab=method">当前方法说明</Link></div><div className="rd-report-intro"><ResearchDecision job={job} onUpdate={onUpdate} onDeepen={onDeepen} onExecutionAudit={onExecutionAudit}/></div><ReportDocument text={reportSecurityHeadings(job.result.report,job,exchanges)} prefix={prefix} onOutline={onOutline} sources={job.input?.sources} onCitation={onCitation}/>{modeOf(job)==='D'&&<ComparisonResults job={job} onSources={onSources} exchanges={exchanges}/>} {guide}</>;
+  if (job.result?.report?.trim()) return <><div className="rd-provenance" aria-label="报告版本" title="按本次任务保存的研究规则记录，与平台功能版本分别管理。"><span>{recordedVersion?'本报告规则 V'+recordedVersion:'本报告规则版本未记录'}{recordedVersion&&recordedVersion!==frameworkVersion?' · 历史报告保留原始判断':''}</span><Link to="/handbook?tab=method">当前方法说明</Link></div><div className="rd-report-intro"><ResearchDecision job={job} onUpdate={onUpdate} onDeepen={onDeepen} onExecutionAudit={onExecutionAudit}/></div><ReportDocument text={reportSecurityHeadings(job.result.report,job,exchanges)} prefix={prefix} onOutline={onOutline} sources={job.input?.sources} onCitation={onCitation}/>{modeOf(job)==='D'&&<ComparisonResults job={job} onSources={onSources} exchanges={exchanges}/>} {guide}</>;
   const active = isActive(job.status);
   if (!job.result && active && preview.trim()) return <>
     <div className="rd-notice rd-draft-notice" role="status"><LoaderCircle size={17} className="rd-spin" aria-hidden="true"/>
@@ -457,21 +457,21 @@ function Outline({items,activeId,onNavigate,reportHref=''}) {
   </CardContent></Card>;
 }
 
-function ResearchActions({job,reading,setReading,active,hasReport,cancelling,onCancel,onRetry,retrying,onReuse,onDownload,onNavigate,saveOnly,saving,saveUnavailable}) {
+function ResearchActions({job,reading,setReading,active,hasReport,cancelling,onCancel,onRetry,retrying,onReuse,onDownload,exporting,onNavigate,saveOnly,saving,saveUnavailable}) {
   const [exportScope,setExportScope]=useState('full'),[exportOpen,setExportOpen]=useState(false),exportDescription=useId();
   function perform(action){onNavigate?.();action?.();}
   return <Card className="rd-action-panel" role="group" aria-label="研究操作"><CardContent>
     <Button variant="outline" className="rd-reading-toggle" aria-pressed={reading} onClick={()=>perform(()=>setReading(value=>!value))}><BookOpen size={17}/>{reading?'退出阅读模式':'阅读模式'}</Button>
     {!active&&(onRetry?<RetryButton onRetry={()=>perform(onRetry)} retrying={retrying} saveOnly={saveOnly} notice={retryNotice(job)}/>:onReuse&&<Button variant="outline" onClick={()=>perform(onReuse)} disabled={retrying} title="将输入载入工作台，确认提交后才会开始新的研究"><RotateCcw size={17}/>复用研究输入</Button>)}
     <Popover open={exportOpen} onOpenChange={setExportOpen}>
-      <PopoverTrigger asChild><Button className="rd-export" disabled={!hasReport||!onDownload||retrying} title={hasReport?'选择下载内容':saveOnly||saving||saveUnavailable?'结果保存成功后可导出':'正式报告生成后可导出'}><Download size={17}/>导出报告</Button></PopoverTrigger>
+      <PopoverTrigger asChild><Button className="rd-export" disabled={!hasReport||!onDownload||retrying||exporting} aria-busy={Boolean(exporting)} title={hasReport?'选择下载内容':saveOnly||saving||saveUnavailable?'结果保存成功后可导出':'正式报告生成后可导出'}>{exporting?<LoaderCircle size={17} className="rd-spin"/>:<Download size={17}/>}{exporting?'准备导出…':'导出报告'}</Button></PopoverTrigger>
       <PopoverContent align="end" collisionPadding={12} className="rd-export-popover" aria-label="下载选项" aria-describedby={exportDescription}>
         <h3>下载选项</h3><p id={exportDescription}>选择需要保留的内容，下载为 Markdown 文件。</p>
         <fieldset><legend className="sr-only">下载内容</legend>{[
           ['full','完整研究记录','包含报告、审计、来源、公开计划、工具调用及规则依据。'],
           ['report','报告、审计与来源','适合阅读与分享，省略公开计划和工具参数。'],
         ].map(([value,label,description])=><label className="rd-export-option" key={value}><input type="radio" name={exportDescription} value={value} checked={exportScope===value} onChange={()=>setExportScope(value)}/><span><strong>{label}</strong><small>{description}</small></span></label>)}</fieldset>
-        <Button className="rd-export-confirm" disabled={!hasReport||!onDownload||retrying} onClick={()=>{setExportOpen(false);perform(()=>onDownload?.({includeResearchProcess:exportScope==='full'}));}}><Download size={16}/>开始下载</Button>
+        <Button className="rd-export-confirm" disabled={!hasReport||!onDownload||retrying||exporting} aria-busy={Boolean(exporting)} onClick={async()=>{setExportOpen(false);await onDownload?.({includeResearchProcess:exportScope==='full'});onNavigate?.();}}><Download size={16}/>开始下载</Button>
       </PopoverContent>
     </Popover>
     {active&&<Button variant="outline" className="rd-cancel" disabled={saving||cancelling||!onCancel} aria-busy={Boolean(cancelling)} title={saving?'正在保存原结果，请等待保存完成':'停止当前执行；之后可重试研究，优先从已保存的进度继续'} onClick={()=>{if(!cancelling&&!saving)perform(onCancel);}}>{cancelling?<LoaderCircle size={16} className="rd-spin"/>:<Square size={16}/>} {saving?'正在保存':cancelling?'正在取消…':'取消任务'}</Button>}
@@ -524,7 +524,7 @@ function quickScreenProgress(job,hasReport){
  return {title:'未找到筛选报告',text:'可查看已有资料、审计与执行记录；未保存的判断不会补写。'};
 }
 
-function DetailView({job, currentConfig, tab, onTabChange, streamConnection, onRetry, retrying, retryError, onReuse, onUpdate,onDeepen, onDownload:download, onCancel, cancelling}) {
+function DetailView({job, currentConfig, tab, onTabChange, streamConnection, onRetry, retrying, retryError, onReuse, onUpdate,onDeepen, onDownload:download, exporting, onCancel, cancelling}) {
   const exchangeJobs=useMemo(()=>[{securities:reportSecurities(job).map(value=>researchSecurityDisplay(job,value))}],[job]);
   const exchanges=useSecurityExchanges(exchangeJobs);
   const onDownload=download?options=>download({...options,usExchanges:exchanges}):undefined;
@@ -657,7 +657,7 @@ function DetailView({job, currentConfig, tab, onTabChange, streamConnection, onR
   function showExecutionSource(id){const index=sources.findIndex(source=>source.id===id);if(index>=0)showWarningSource(index);else showContent('sources');}
   function showProcessSources(){processDestination.current='sources';setProcessOpen(false);}
   function closeProcess(event){if(processDestination.current){event.preventDefault();const next=processDestination.current;processDestination.current=null;showContent(next);}}
-  const actionProps={job,reading,setReading,active,hasReport,cancelling,onCancel,onRetry:retryAction,retrying,onReuse,onDownload,saveOnly:needsSaveRetry(job),saving:isSavingResult(job),saveUnavailable:recovery?.kind==='save-unavailable'};
+  const actionProps={job,reading,setReading,active,hasReport,cancelling,onCancel,onRetry:retryAction,retrying,onReuse,onDownload,exporting,saveOnly:needsSaveRetry(job),saving:isSavingResult(job),saveUnavailable:recovery?.kind==='save-unavailable'};
   const title=job.input?.question||job.question||'未命名研究';
   const progressState=researchProgress(job);
   const progressFailed=job.status==='failed'||job.delivery?.status==='failed';
@@ -686,7 +686,7 @@ function DetailView({job, currentConfig, tab, onTabChange, streamConnection, onR
           <span className="rd-overview-copy" role="status" aria-atomic="true">{compactFailure?<><span className="rd-progress-label">未完成原因</span><strong><span className="rd-progress-error">{failureReason}</span></strong></>:<><span className="rd-progress-label">研究进展<span aria-hidden="true">·</span>{progressState.label}</span><strong>{screenState?.title||overview}{failureReason&&<span className="rd-progress-error">（{job.delivery?.status==='failed'?'保存问题：':'失败原因：'}{failureReason}{executionReason&&executionReason!==failureReason?`；原执行问题：${executionReason}`:''}）</span>}</strong></>}</span>
           <Sheet open={processOpen} onOpenChange={setProcessOpen}><SheetTrigger asChild><Button type="button" variant="outline" size="sm" className="rd-process-trigger" aria-label="研究过程"><Activity size={16} aria-hidden="true"/>查看研究过程<ArrowUpRight size={16} aria-hidden="true"/></Button></SheetTrigger><SheetContent side="right" className="research-detail rd-process-sheet" onCloseAutoFocus={closeProcess}><SheetHeader><SheetTitle>研究过程</SheetTitle><SheetDescription>查看研究设置、规则依据、执行阶段与资料覆盖。</SheetDescription></SheetHeader><div className="rd-process-body">
     <dl className="rd-meta">
-      <div><dt>研究规则版本</dt><dd>{job.result?.framework?.version||job.plan?.version?'V'+(job.result?.framework?.version||job.plan.version):'未记录'}</dd></div><div><dt>研究路径</dt><dd>{modes[job.mode]?.name||(job.mode==='auto'?'自动匹配':job.plan?.name||'研究路径未记录')}</dd></div>
+      <div><dt>本次研究规则版本</dt><dd>{job.result?.framework?.version||job.plan?.version?'V'+(job.result?.framework?.version||job.plan.version):'未记录'}</dd></div><div><dt>研究路径</dt><dd>{modes[job.mode]?.name||(job.mode==='auto'?'自动匹配':job.plan?.name||'研究路径未记录')}</dd></div>
       {job.input?.depth&&<div><dt>{quick?'研究目标':'报告深度'}</dt><dd>{quick?'判断是否继续研究':depthLabels[job.input.depth]||job.input.depth}</dd></div>}
       {(job.plan?.historyYears||job.input?.historyYears)&&<div><dt>财报范围</dt><dd>近 {job.plan?.historyYears||job.input.historyYears} 年</dd></div>}
       <div><dt>创建时间</dt><dd>{formatDate(job.createdAt)}</dd></div>
@@ -718,7 +718,7 @@ function DetailView({job, currentConfig, tab, onTabChange, streamConnection, onR
           </Tabs>
         </Card>
       </div>
-      <aside className="rd-right-rail" aria-label="研究执行记录" hidden={reading}><ResearchExecutionChecks job={job} onTrace={showTrace} onDownload={onDownload}/><Trace key={job.retryCount??0} events={events} status={job.status} hidden={reading} revealFilter={traceReveal.filter||'issues'} reveal={traceReveal.attempt===(job.retryCount??0)?traceReveal.count:0}/></aside>
+      <aside className="rd-right-rail" aria-label="研究执行记录" hidden={reading}><ResearchExecutionChecks job={job} onTrace={showTrace} onDownload={onDownload} exporting={exporting}/><Trace key={job.retryCount??0} events={events} status={job.status} hidden={reading} revealFilter={traceReveal.filter||'issues'} reveal={traceReveal.attempt===(job.retryCount??0)?traceReveal.count:0}/></aside>
     </div>
   </section>;
 }

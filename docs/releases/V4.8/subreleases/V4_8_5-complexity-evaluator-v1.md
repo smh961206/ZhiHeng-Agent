@@ -1,7 +1,7 @@
 # V4.8.5 — Complexity Evaluator V1
 
 Release: `V4.8`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT — pure evaluator and scoped acceptance complete; see [completion report](../V4_8_5-completion-report.md). At V4.8.5 acceptance it was isolated; subsequently accepted [V4.8.6](V4_8_6-dry-run-model-policy.md) adds only shadow-policy consumption. Boundaries below describe V4.8.5's original scope.
 
 ## 1. Why
 
@@ -26,12 +26,14 @@ Codex must inspect the real checkout before editing:
 - `tests/`
 - `server/research-create.mjs`
 - `server/research-workflow.mjs`
+- `shared/research-framework.mjs`
+- `server/research-complexity.mjs` (new pure owner after confirming no existing evaluator)
 
 If paths or ownership changed, update `docs/architecture/current-implementation-map.md`; do not force the repository to match stale filenames.
 
 ## 4. Current Behavior
 
-Before V4.8.5, the owning release capability is either absent, partial, or still on the previous accepted implementation.
+V4.8.4 completed Gateway migration. Mode/depth/history plans, execution budgets/status and review attempts already exist, but no standalone complexity scoring or weights exist. These remain separate business owners; do not change their behavior or treat all retry/validation errors as reasoning failure.
 
 ## 5. Target Behavior
 
@@ -45,6 +47,8 @@ Add pure, testable research complexity scoring.
 ## 7. Out of Scope
 
 - Changing actual model yet
+- Production scoring integration, job-to-signal extraction, RoutingDecision and policy thresholds (V4.8.6).
+- Durable usage/modelState, new feature flags and changes to existing execution/review budgets.
 
 ## 8. Deliverables
 
@@ -98,6 +102,8 @@ All persistent changes are additive-first. Unknown historical values remain unkn
 
 Internal evaluateResearchComplexity().
 
+Input/output fields, fixed V1 weights, descriptive levels, unknown handling and non-scoring failure categories are defined in the [Gateway contract](../../../contracts/model-gateway.contract.md). This is an isolated heuristic utility, not calibrated predictive model selection.
+
 Existing callers must remain compatible unless this subrelease explicitly introduces a versioned API boundary.
 
 ## 15. Migration
@@ -109,7 +115,7 @@ additive → dual-read if needed → new-write → verified backfill → cutover
 
 ## 16. Resume / Recovery
 
-New checkpoints may add modelState additively; old checkpoints map to Legacy Profile and preserve original research cutoff/evidence/tool state.
+No checkpoint/modelState or resume-path change in V4.8.5. The evaluator is not called by production execution. Original cutoff, evidence, tool state and private continuation remain unchanged; modelState belongs to V4.8.9.
 
 This subrelease is incomplete if interruption/retry can duplicate completed work, lose evidence, change data cutoff, or corrupt the prior validated state.
 
@@ -121,13 +127,13 @@ No future-information contamination is allowed.
 
 ## 18. Provenance
 
-Persist profile/policy/routing decision/usage metadata, never hidden reasoning.
+Return only normalized structured signals, fixed contribution codes and unknown paths in memory. No persistence, raw question/evidence/financial text or hidden reasoning. A future caller must establish distinct workload counts and classify failures; the evaluator does not verify facts. Durable usage belongs to V4.8.7.
 
 Every newly introduced derived/canonical object must be able to answer “where did this come from?” at the semantic level appropriate to this release.
 
 ## 19. Feature Flag
 
-Use MODEL_ROUTING_MODE and release-specific flags/config; legacy remains an immediate fallback until acceptance.
+None. An executable isolation test prevents production integration. Existing fixed legacy execution remains unchanged; restoring this utility's files is the rollback. MODEL_ROUTING_MODE belongs to later policy rollout.
 
 High-risk behavior should be observable in disabled/dry-run/dual-run mode before becoming canonical where practical.
 
@@ -154,7 +160,7 @@ If this subrelease does not itself introduce a benchmarkable behavior, it must a
 
 ## 23. Rollout
 
-legacy → dry-run → policy/internal → partial production → default only after benchmark gate.
+V4.8.5 supplies a tested pure utility without production callers. Its six explicit fixtures and boundary tests validate determinism and invariants; existing research and Router/Vision golden suites retain the executable baseline. Live quality calibration and legacy → dry-run → policy rollout remain later work; scoring levels do not activate that rollout.
 
 Codex must not skip directly to default-on if the release specifies dry-run/dual-run/benchmark stages.
 

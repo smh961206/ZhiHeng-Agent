@@ -1,7 +1,7 @@
 # V4.8.9 — Checkpoint modelState compatibility
 
 Release: `V4.8`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT — additive modelState compatibility accepted. See [completion report](../V4_8_9-completion-report.md).
 
 ## 1. Why
 
@@ -16,6 +16,13 @@ Persist model policy/profile state for new jobs without breaking old resume.
 Codex must inspect the real checkout before editing:
 
 - `server/model-routing.mjs`
+- `server/model-catalog.mjs`
+- `server/model-gateway.mjs`
+- `server/index.mjs`
+- `server/research-create.mjs`
+- `server/research-retry.mjs`
+- `server/job-stream.mjs`
+- `server/storage.mjs`
 - `server/model-stream.mjs`
 - `server/agent.mjs`
 - `server/agent-execution.mjs`
@@ -32,7 +39,7 @@ If paths or ownership changed, update `docs/architecture/current-implementation-
 
 ## 4. Current Behavior
 
-Before V4.8.9, the owning release capability is either absent, partial, or still on the previous accepted implementation.
+Gateway snapshots configuration per call, but does not pin it across a job or process restart. Agent stores private checkpoint v1 conversations/tool/evidence state. research-resume validates framework/Knowledge/scope; research-retry preserves compatible progress but rebuilds execution inputs and reacquires data when no usable checkpoint remains. No modelState compatibility check exists. Stable legacy profile IDs resolve current environment values, so an ID alone cannot prove an unchanged configured model/connection. Job-stream removes checkpoints from public output; storage separately creates a job summary, and both owners must be checked before adding private job metadata.
 
 ## 5. Target Behavior
 
@@ -107,12 +114,16 @@ Existing callers must remain compatible unless this subrelease explicitly introd
 
 No rewrite of old checkpoints; absence means legacy behavior.
 
+Old records do not prove a historical connection/profile pin that was never saved. Preserve the defined legacy reader without inventing past model state; distinguish that limitation from new pinned records. Persist no credential or hidden reasoning in modelState. Explicitly define which model/connection/effort/policy changes invalidate a new pin, and test credential rotation separately from a model/connection change.
+
 Default migration discipline:
 additive → dual-read if needed → new-write → verified backfill → cutover → cleanup in a later accepted release.
 
 ## 16. Resume / Recovery
 
 New checkpoints may add modelState additively; old checkpoints map to Legacy Profile and preserve original research cutoff/evidence/tool state.
+
+For new pinned records, incompatibility must fail safely before dispatch or retry acquisition. Do not implement pin mismatch by merely returning null from research-resume: the existing research-retry fallback would restart acquisition and lose the promised continuation/cutoff behavior. Pending tool calls must remain on their original compatible context. Private modelState must not leak into job list/detail/public events merely because it is added to a stored job.
 
 This subrelease is incomplete if interruption/retry can duplicate completed work, lose evidence, change data cutoff, or corrupt the prior validated state.
 
@@ -139,6 +150,9 @@ High-risk behavior should be observable in disabled/dry-run/dual-run mode before
 - Old checkpoint resume.
 - New checkpoint resume.
 - Pending tool call checkpoint.
+- Changed model/connection/policy/effort rejects new pinned resume before provider/tool/acquisition work, without changing cutoff.
+- Legacy records preserve existing reads without fabricated historical identity; corrupt new state cannot downgrade to legacy absence.
+- Compatible process restart and credential rotation; private state excluded from public detail/list/events.
 
 Also run all existing tests affected by the inspected modules.
 

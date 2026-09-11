@@ -7,7 +7,9 @@ export const migrations=[{
   await db.collection('jobs').createIndex({createdAt:-1});
   await db.collection('report_cache').createIndex({expiresAt:1},{expireAfterSeconds:0});
  }
-}];
+},{version:2,name:'model_call_indexes',async up(db){
+ await db.collection('model_calls').createIndex({jobId:1,startedAt:1});
+}}];
 
 export async function migrateSchema(db,steps=migrations){
  if(steps.some((step,i)=>step.version!==i+1))throw new Error('迁移版本必须从 1 连续递增');

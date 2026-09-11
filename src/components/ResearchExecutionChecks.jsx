@@ -2,11 +2,11 @@ import {useState} from 'react';
 import {Collapsible,CollapsibleTrigger,CollapsibleContent} from './ui/collapsible';
 import {researchExecutionChecks} from '../../shared/research-execution-checks.mjs';
 import {Button} from './ui/button';
-import {Download,ArrowUpRight,ChevronDown,ClipboardList} from 'lucide-react';
+import {Download,ArrowUpRight,ChevronDown,ClipboardList,LoaderCircle} from 'lucide-react';
 import './execution-checks.css';
 import FinancialCoverage from './FinancialCoverage';
 const stateLabels={'not-recorded':'未记录','has-gaps':'待回查',pending:'返回未齐',returned:'已返回'};
-export default function ResearchExecutionChecks({job,onTrace,onDownload}){
+export default function ResearchExecutionChecks({job,onTrace,onDownload,exporting}){
  const [open,setOpen]=useState(true);
  const checks=researchExecutionChecks(job),used=checks.filter(c=>c.attempts).length;
  const priority={'has-gaps':0,pending:1,returned:2};
@@ -48,7 +48,7 @@ export default function ResearchExecutionChecks({job,onTrace,onDownload}){
 
   <div className="execution-checks-actions">
    <Button variant="outline" className="execution-checks-trace" aria-label="查看实际输入与返回" disabled={!onTrace} onClick={()=>onTrace?.('tools')}>查看调用<ArrowUpRight size={14}/></Button>
-   <Button variant="outline" className="execution-record-download" aria-label="导出已保存记录" disabled={!onDownload} onClick={()=>onDownload?.({executionOnly:true})}><Download size={14}/>导出记录</Button>
+   <Button variant="outline" className="execution-record-download" aria-label="导出已保存记录" disabled={!onDownload||exporting} aria-busy={Boolean(exporting)} onClick={()=>onDownload?.({executionOnly:true})}>{exporting?<LoaderCircle size={14} className="rd-spin"/>:<Download size={14}/>}{exporting?'准备导出…':'导出记录'}</Button>
   </div>
   <p className="execution-record-note">仅导出已保存记录，进行中或中断后也可使用。</p>
    </CollapsibleContent>

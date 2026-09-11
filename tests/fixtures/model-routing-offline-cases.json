@@ -1,0 +1,427 @@
+{
+  "version": 1,
+  "kind": "offline-safety-comparison",
+  "qualityAcceptance": false,
+  "cases": [
+    {
+      "id": "OFFLINE-A-01",
+      "mode": "A",
+      "kind": "invalid_tool_arguments",
+      "count": 1,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-A-02",
+      "mode": "A",
+      "kind": "invalid_tool_arguments",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-A-03",
+      "mode": "A",
+      "kind": "structured_output",
+      "count": 1,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-A-04",
+      "mode": "A",
+      "kind": "structured_output",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-A-05",
+      "mode": "A",
+      "kind": "data_missing",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-A-06",
+      "mode": "A",
+      "kind": "rate_limit",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-A-07",
+      "mode": "A",
+      "kind": "provider_unavailable",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-A-08",
+      "mode": "A",
+      "kind": "timeout",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-A-09",
+      "mode": "A",
+      "kind": "financial_validation",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-A-10",
+      "mode": "A",
+      "kind": "refusal",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-B-01",
+      "mode": "B",
+      "kind": "invalid_tool_arguments",
+      "count": 1,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-B-02",
+      "mode": "B",
+      "kind": "invalid_tool_arguments",
+      "count": 2,
+      "expectedEffort": "high"
+    },
+    {
+      "id": "OFFLINE-B-03",
+      "mode": "B",
+      "kind": "structured_output",
+      "count": 1,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-B-04",
+      "mode": "B",
+      "kind": "structured_output",
+      "count": 2,
+      "expectedEffort": "high"
+    },
+    {
+      "id": "OFFLINE-B-05",
+      "mode": "B",
+      "kind": "data_missing",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-B-06",
+      "mode": "B",
+      "kind": "rate_limit",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-B-07",
+      "mode": "B",
+      "kind": "provider_unavailable",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-B-08",
+      "mode": "B",
+      "kind": "timeout",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-B-09",
+      "mode": "B",
+      "kind": "financial_validation",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-B-10",
+      "mode": "B",
+      "kind": "refusal",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-C-01",
+      "mode": "C",
+      "kind": "invalid_tool_arguments",
+      "count": 1,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-C-02",
+      "mode": "C",
+      "kind": "invalid_tool_arguments",
+      "count": 2,
+      "expectedEffort": "high"
+    },
+    {
+      "id": "OFFLINE-C-03",
+      "mode": "C",
+      "kind": "structured_output",
+      "count": 1,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-C-04",
+      "mode": "C",
+      "kind": "structured_output",
+      "count": 2,
+      "expectedEffort": "high"
+    },
+    {
+      "id": "OFFLINE-C-05",
+      "mode": "C",
+      "kind": "data_missing",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-C-06",
+      "mode": "C",
+      "kind": "rate_limit",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-C-07",
+      "mode": "C",
+      "kind": "provider_unavailable",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-C-08",
+      "mode": "C",
+      "kind": "timeout",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-C-09",
+      "mode": "C",
+      "kind": "financial_validation",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-C-10",
+      "mode": "C",
+      "kind": "refusal",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-D-01",
+      "mode": "D",
+      "kind": "invalid_tool_arguments",
+      "count": 1,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-D-02",
+      "mode": "D",
+      "kind": "invalid_tool_arguments",
+      "count": 2,
+      "expectedEffort": "high"
+    },
+    {
+      "id": "OFFLINE-D-03",
+      "mode": "D",
+      "kind": "structured_output",
+      "count": 1,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-D-04",
+      "mode": "D",
+      "kind": "structured_output",
+      "count": 2,
+      "expectedEffort": "high"
+    },
+    {
+      "id": "OFFLINE-D-05",
+      "mode": "D",
+      "kind": "data_missing",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-D-06",
+      "mode": "D",
+      "kind": "rate_limit",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-D-07",
+      "mode": "D",
+      "kind": "provider_unavailable",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-D-08",
+      "mode": "D",
+      "kind": "timeout",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-D-09",
+      "mode": "D",
+      "kind": "financial_validation",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-D-10",
+      "mode": "D",
+      "kind": "refusal",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-E-01",
+      "mode": "E",
+      "kind": "invalid_tool_arguments",
+      "count": 1,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-E-02",
+      "mode": "E",
+      "kind": "invalid_tool_arguments",
+      "count": 2,
+      "expectedEffort": "high"
+    },
+    {
+      "id": "OFFLINE-E-03",
+      "mode": "E",
+      "kind": "structured_output",
+      "count": 1,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-E-04",
+      "mode": "E",
+      "kind": "structured_output",
+      "count": 2,
+      "expectedEffort": "high"
+    },
+    {
+      "id": "OFFLINE-E-05",
+      "mode": "E",
+      "kind": "data_missing",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-E-06",
+      "mode": "E",
+      "kind": "rate_limit",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-E-07",
+      "mode": "E",
+      "kind": "provider_unavailable",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-E-08",
+      "mode": "E",
+      "kind": "timeout",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-E-09",
+      "mode": "E",
+      "kind": "financial_validation",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-E-10",
+      "mode": "E",
+      "kind": "refusal",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-F-01",
+      "mode": "F",
+      "kind": "invalid_tool_arguments",
+      "count": 1,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-F-02",
+      "mode": "F",
+      "kind": "invalid_tool_arguments",
+      "count": 2,
+      "expectedEffort": "high"
+    },
+    {
+      "id": "OFFLINE-F-03",
+      "mode": "F",
+      "kind": "structured_output",
+      "count": 1,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-F-04",
+      "mode": "F",
+      "kind": "structured_output",
+      "count": 2,
+      "expectedEffort": "high"
+    },
+    {
+      "id": "OFFLINE-F-05",
+      "mode": "F",
+      "kind": "data_missing",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-F-06",
+      "mode": "F",
+      "kind": "rate_limit",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-F-07",
+      "mode": "F",
+      "kind": "provider_unavailable",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-F-08",
+      "mode": "F",
+      "kind": "timeout",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-F-09",
+      "mode": "F",
+      "kind": "financial_validation",
+      "count": 2,
+      "expectedEffort": "low"
+    },
+    {
+      "id": "OFFLINE-F-10",
+      "mode": "F",
+      "kind": "refusal",
+      "count": 2,
+      "expectedEffort": "low"
+    }
+  ]
+}

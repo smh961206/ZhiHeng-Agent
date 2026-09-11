@@ -1,7 +1,7 @@
 # V4.8.6 — Dry-run Model Policy
 
 Release: `V4.8`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT — accepted V4.8.6 shadow policy only. See [completion report](../V4_8_6-completion-report.md). Executable policy and later subreleases remain FUTURE.
 
 ## 1. Why
 
@@ -29,11 +29,13 @@ If paths or ownership changed, update `docs/architecture/current-implementation-
 
 ## 4. Current Behavior
 
-Before V4.8.6, the owning release capability is either absent, partial, or still on the previous accepted implementation.
+The accepted V4.8.5 worktree has one Gateway adapter, three legacy Catalog profiles and an isolated 0–100 complexity evaluator. No policy, MAIN/PRO profile bindings, MODEL_ROUTING_MODE or RoutingDecision logger existed.
 
 ## 5. Target Behavior
 
 Compute candidate Main/Pro/reasoning decisions without changing actual execution model.
+
+Runtime uses the same prepared legacy request/profile. Opt-in dry-run records a candidate slot/effort to server logs, not public history or checkpoints. Agent provides mode and plan historyYears only; all other signals remain unknown. The Gateway observer is best effort and does not await logging.
 
 ## 6. In Scope
 
@@ -90,7 +92,7 @@ If implementation requires reversing an accepted ADR, stop and create a supersed
 
 ## 13. Schema
 
-Add RoutingDecision telemetry/persistence additively if storage is used.
+Add an in-memory/log RoutingDecision v1 only. No storage is used; ModelCall persistence belongs to V4.8.7.
 
 All persistent changes are additive-first. Unknown historical values remain unknown.
 
@@ -109,7 +111,7 @@ additive → dual-read if needed → new-write → verified backfill → cutover
 
 ## 16. Resume / Recovery
 
-New checkpoints may add modelState additively; old checkpoints map to Legacy Profile and preserve original research cutoff/evidence/tool state.
+No modelState or checkpoint fields are added in V4.8.6; compatibility/pinning belongs to V4.8.9. Existing resume/recovery and original research cutoff/evidence/tool state remain unchanged.
 
 This subrelease is incomplete if interruption/retry can duplicate completed work, lose evidence, change data cutoff, or corrupt the prior validated state.
 
@@ -121,21 +123,23 @@ No future-information contamination is allowed.
 
 ## 18. Provenance
 
-Persist profile/policy/routing decision/usage metadata, never hidden reasoning.
+Record only safe prepared-attempt policy metadata in server logs; never hidden reasoning, prompts, source text, credentials or URLs. No durable usage/policy persistence or correlation ID is added. A log is not proof of dispatch/success.
 
 Every newly introduced derived/canonical object must be able to answer “where did this come from?” at the semantic level appropriate to this release.
 
 ## 19. Feature Flag
 
-Use MODEL_ROUTING_MODE and release-specific flags/config; legacy remains an immediate fallback until acceptance.
+MODEL_ROUTING_MODE=legacy is the default; dry-run enables observation only. Empty/unknown/unsupported policy values fall back to legacy. Restore legacy to disable observation; no production policy mode exists.
 
 High-risk behavior should be observable in disabled/dry-run/dual-run mode before becoming canonical where practical.
 
 ## 20. Tests
 
 - 0–3 Main/low, 4–7 Main/high, 8–10 Pro/high, >=11 Pro/max.
-- Mode A cap.
+- Mode A cap is MAIN/low, per release acceptance MG-004.
 - Missing data no escalation.
+
+Thresholds apply directly to the unchanged V4.8.5 0–100 score, without rescaling. No conversion was specified; B=8 and B plus five planned years=12 illustrate early saturation. This mismatch is recorded as uncalibrated policy debt, not resolved by changing accepted weights or implementing production routing. All-scoring-unknown inputs yield no candidate.
 
 Also run all existing tests affected by the inspected modules.
 
@@ -147,7 +151,7 @@ Acceptance is behavioral, not “code exists”.
 
 ## 22. Benchmark Gate
 
-Model-routing benchmark must preserve delivery/citation quality and introduce no critical fact regression versus the pinned legacy baseline.
+Six existing pinned research wire/delivery/event/checkpoint comparisons must remain identical with dry-run enabled. Existing router/Vision and strict transport regressions remain. No live-provider quality certification or production rollout is claimed.
 
 If this subrelease does not itself introduce a benchmarkable behavior, it must at least preserve the owning release baseline.
 
@@ -178,6 +182,8 @@ Stop this subrelease when all are true:
 
 ## 26. Deferred Work
 
-- Production policy routing
+- Production policy routing, executable MAIN/PRO bindings and live quality calibration.
+- Durable usage telemetry (V4.8.7), health (V4.8.8), modelState (V4.8.9), escalation/rollout (V4.8.10/.11).
+- Complete job-to-signal collection and reliable reasoning-failure classification.
 
 Do not proceed to the next subrelease unless the user explicitly authorizes continuation or explicitly asked Codex to execute the entire current core release.

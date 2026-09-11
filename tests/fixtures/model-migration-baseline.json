@@ -1,0 +1,53 @@
+{
+  "source": "accepted V4.8.2 worktree before migration",
+  "cases": [
+    {
+      "mode": "A",
+      "requests": 3,
+      "wireSha256": "3eb4f69d996dddbb9cf3590b1a69753e148384b59989042609dd8be6c4fd2720",
+      "resultSha256": "c783300b732809d9c6a5cef33830d3bbfb53ab755c93f09ae7970182b2c36b49",
+      "eventsSha256": "cadc891b6c0276ed450baac50e69238c77a496e5353b1a8aa40e8d0d385bb840",
+      "checkpointsSha256": "b92cde4ca4a3e0ce8aa00bea16c14d507148ed48f72db0c542c87f92dc83ed4f"
+    },
+    {
+      "mode": "B",
+      "requests": 3,
+      "wireSha256": "c095a66d0724ac041f4a47d0bfb399cfb1f381ca8884e48627899026737dac15",
+      "resultSha256": "42b394ed354888c14dee16594c12788d276768e26f8a50a5f9baba8c50d083d0",
+      "eventsSha256": "d97a535d460dcf181793f96091a573b522c88c819958e6a1ad88dbaa47b30181",
+      "checkpointsSha256": "4100b64330d6ea54a12ba47f6dc0c3e21cee279af76c4fba6fc97b067f4592dc"
+    },
+    {
+      "mode": "C",
+      "requests": 3,
+      "wireSha256": "598101d8a3f2963b652cae9a50667131f2fc4d411fb0e7f15c71c98a5a02938f",
+      "resultSha256": "73b27c20d98b3f975a3df8e4157ebdfbf3a6c769943b6d0576c95aa72df77dd6",
+      "eventsSha256": "9ff916e815500a69ca50b54fa64e1db1eb1f69c49964eab2273d75d1c64bb60e",
+      "checkpointsSha256": "17104d9ede746e76897475de247c5aac2fbdb371c61ee64a64d106c55649ae8d"
+    },
+    {
+      "mode": "D",
+      "requests": 3,
+      "wireSha256": "a148ac771b282d11fcb3e404e59012ebd5ee1b1a49dfd68d0bf11f206f87a76c",
+      "resultSha256": "98bdefc68e940c915c1afcd1b7ee38e34767cb10779551eca0e83a9d45308fbc",
+      "eventsSha256": "eb336556e4c93bc73d4eee881b2ff89fa59269d432457f8f967343b3abaa66f0",
+      "checkpointsSha256": "2ba7739ed8144bd0b0dd47957896c529e805ab27f22e73b28195f7dfa1e10265"
+    },
+    {
+      "mode": "E",
+      "requests": 3,
+      "wireSha256": "b690db1e4e6da51b4d013e6a12c662701f0066acd73d048cd1d3b584b0506bf9",
+      "resultSha256": "085c12ead8ac9d62b6f4da5a61c7d92db1556836067ab11fee3fefdab4323aac",
+      "eventsSha256": "8b464219a74b04eeeb7db522afdcd7f345baebbc8a073b4918212d87824bd948",
+      "checkpointsSha256": "3cb5a022a03215f38e0ae0a797df9b21dee37ee1a652bac382f8ceb9167f045a"
+    },
+    {
+      "mode": "F",
+      "requests": 3,
+      "wireSha256": "4bf7c6029ff6960ef46967fbac24ba25d277dc2af9c503570ee997d60eb5ae6b",
+      "resultSha256": "913b06aa53219a2a4e559c9c3174f3c8fd8af3e6b0a6cf83037123d514f44174",
+      "eventsSha256": "2a4770aaf3584d6bed9612add3968c8b9315259724a58d4511fc86ae4f58e7fe",
+      "checkpointsSha256": "a3b1f677007329cd80536e7dc9446188c901f4a096a57a7b18cd6d72371284ea"
+    }
+  ]
+}

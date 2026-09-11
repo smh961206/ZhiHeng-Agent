@@ -1,0 +1,41 @@
+{
+  "source": "Captured from the saved accepted V4.8.3 worktree before V4.8.4; full wire and stable result hashes. Only random path decisionId is excluded after validating its reuse.",
+  "cases": [
+    {
+      "name": "path-default",
+      "requests": 1,
+      "requestHash": "d55f3b4fcadc677c3add948d4ebff43d08038e7a696d79613070099fc1308a70",
+      "resultHash": "f4410a95893dd32e4eed9c26d9d992f2bda44083b4264e0ac9c8d750f94cb5b5"
+    },
+    {
+      "name": "intent-default",
+      "requests": 1,
+      "requestHash": "0475a05b842a10ea9847f35725ce525b148857efe2f1f8168ec9b7776673b7bb",
+      "resultHash": "3bf82615bcad7c067aeb1f50d4bce6f98ef96bcf7bf9f08946b4c462e86113fb"
+    },
+    {
+      "name": "vision-default",
+      "requests": 1,
+      "requestHash": "0011b94e6e8072c9daaeb9ad2d1001686693e10a279102ef019bfeb0be655755",
+      "resultHash": "4e80448795a8600a083d389e391603002e1428c407cc412dc5b2a6068cc3a753"
+    },
+    {
+      "name": "path-custom",
+      "requests": 1,
+      "requestHash": "c9d82801c1bb22fb8ded2c0cb622d2f354534e7b11f7582223d807d9ae2cc877",
+      "resultHash": "f4410a95893dd32e4eed9c26d9d992f2bda44083b4264e0ac9c8d750f94cb5b5"
+    },
+    {
+      "name": "intent-custom",
+      "requests": 1,
+      "requestHash": "9dd74db00aa96df1894330914d142dd916e2f338266c19ba372d1b3b568e4fd0",
+      "resultHash": "3bf82615bcad7c067aeb1f50d4bce6f98ef96bcf7bf9f08946b4c462e86113fb"
+    },
+    {
+      "name": "vision-custom",
+      "requests": 1,
+      "requestHash": "08ad54482b8a2cf350436e56dce8c0fc6a413cdbf61449cfd6d18079db93568f",
+      "resultHash": "4e80448795a8600a083d389e391603002e1428c407cc412dc5b2a6068cc3a753"
+    }
+  ]
+}

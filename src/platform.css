@@ -1,4 +1,4 @@
-/* Shared V4.8 presentation. Domain layouts and status semantics keep their owners. */
+/* Shared platform presentation. Domain layouts and status semantics keep their owners. */
 :root{--background:#f5f7f5;--border:#dce5df;--ring:#39705c;--radius:0.75rem}
 .app-shell .topbar{background:#ffffffed;border-bottom:1px solid var(--border);gap:12px}
 .topbar>div:first-child{min-width:0}
@@ -20,7 +20,7 @@
 .platform-status-panel dt{font-size:13px;font-weight:650;margin-bottom:3px}
 .platform-status-panel dd{font-size:13px;line-height:1.8;color:#52665b}
 .platform-status-panel .platform-policy-note{padding-top:14px;margin:16px 0;border-top:1px solid var(--border);font-size:12px}
-.platform-version-explainer{margin:0 0 18px;font-size:13px}
+.platform-version-explainer{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--border);font-size:12px}
 .platform-version-explainer summary,.method-version-note summary{cursor:pointer;font-weight:600;line-height:1.7}
 .platform-version-explainer p{margin-top:8px}
 .research-handbook .handbook-heading{margin-bottom:0;padding-bottom:24px;border-bottom:0}
@@ -56,6 +56,20 @@
 .rd-model-record-note{font-size:12px;color:#5c6f64}
 .research-progress .rp-next{border-left:3px solid #94b39e}
 .app-shell :is(button,a,input,textarea,summary,[role=tab]):focus-visible{outline:2px solid #39705c;outline-offset:3px}
+.platform-status-panel dl>div{padding-left:12px;border-left:2px solid #d8e5dc}
+.platform-status-panel .platform-version-explainer p{font-size:12px;overflow-wrap:anywhere}
+.research-home .fw-release-note{flex-wrap:wrap;row-gap:4px;line-height:1.8}
+.history-page .rh-row:focus-within{background:#f3f7f4;box-shadow:inset 3px 0 #39705c}
+.history-page .rh-row .rh-source-total{color:#62766a}
+.materials-visual-guide{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0 14px;color:#476151}
+.materials-visual-guide strong{font-size:12px;font-weight:600}
+.materials-visual-guide p{font-size:12px;line-height:1.8;margin:4px 0 0}
+.materials-visual-guide a{flex-shrink:0;display:inline-flex;align-items:center;min-height:44px;font-size:12px;text-decoration:underline;text-underline-offset:4px}
+.rd-reading-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));list-style:none!important;padding:16px 0!important;margin:16px 0!important;border-block:1px solid #e1e9e2;gap:16px}
+.rd-reading-steps li{min-width:0;margin:0!important;display:grid;grid-template-columns:22px minmax(0,1fr);gap:3px 8px;align-content:start}
+.rd-reading-steps li>span{grid-row:span 2;font-size:11px;color:#75927e;padding-top:3px}
+.rd-reading-steps strong{font-size:13px;line-height:1.8}
+.rd-reading-steps small{font-size:12px;color:#617567;line-height:1.8;overflow-wrap:anywhere}
 @media(max-width:639px){
  .platform-status-label{display:none}
  .platform-status-trigger{padding-inline:5px;gap:5px}
@@ -66,4 +80,6 @@
  .fw-rotation-control{justify-content:flex-start;margin:0 0 12px}
  .workbench-heading{padding-bottom:16px}
  .composer-shortcut{display:none}
+ .materials-visual-guide{align-items:flex-start;flex-direction:column;gap:0}
+ .rd-reading-steps{grid-template-columns:minmax(0,1fr);gap:12px}
 }

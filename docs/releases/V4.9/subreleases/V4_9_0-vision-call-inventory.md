@@ -1,7 +1,7 @@
 # V4.9.0 — Vision call inventory
 
 Release: `V4.9`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT — inventory and offline regression accepted. See [completion report](../V4_9_0-completion-report.md). No provider switch or canonical Vision API is implemented here.
 
 ## 1. Why
 
@@ -11,6 +11,8 @@ Inventory image/scanned-PDF model calls, current limits and evidence semantics.
 
 - Owning release prerequisites are accepted.
 - Current repository baseline has been inspected.
+
+2026-09-11 calibration: the user explicitly selected V4.9. Accepted V4.8.1–.4 Catalog/Gateway migration provides the required existing transport. V4.8.11 live text-policy quality acceptance remains deferred and is not a prerequisite for this zero-runtime-change inventory. Production remains legacy; this is not an implicit waiver of its rollout gate.
 
 ## 3. Current Code Inspection
 

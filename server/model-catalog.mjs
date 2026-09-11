@@ -2,7 +2,7 @@ import {modelRouting} from './model-routing.mjs';
 
 // Legacy configuration fact, not inference from arbitrary model names.
 export function legacyVisionImageInput(model,inputMode){
- return inputMode!=='off'&&(model==='deepseek-v4-flash-vision-exp'||inputMode==='images');
+ return inputMode!=='off'&&(model==='deepseek-flash'||inputMode==='images');
 }
 
 /**
@@ -60,13 +60,21 @@ const tokenLimit=value=>value===null||Number.isSafeInteger(value)&&value>0;
 
 /** Validate, copy and deeply freeze a profile. Never attach an env or a secret. */
 export function createModelProfile(input){
- input=record(input,fields);
+ const version=Object.getOwnPropertyDescriptor(input??{},'schemaVersion')?.value;
+ input=record(input,version===3?[...fields,'adapterOptions']:fields);
  const legacy=input.schemaVersion===1&&input.source==='legacy-env'&&input.tier==='legacy'&&['legacy-analysis','legacy-vision'].includes(input.connectionRef);
  const policy=input.schemaVersion===2&&input.source==='policy-config'&&['MAIN','PRO'].includes(input.tier)&&input.connectionRef===input.tier.toLowerCase()&&['zai','deepseek'].includes(input.provider);
- if(!(legacy||policy)||!text(input.id)||!text(input.model)||
+ const vision=input.schemaVersion===3&&input.source==='vision-config'&&input.tier==='VISION'&&input.connectionRef==='vision-challenger'&&input.id==='vision-challenger';
+ if(!(legacy||policy||vision)||!text(input.id)||!text(input.model)||
   !(input.provider===null||text(input.provider))||input.protocol!=='openai-chat-completions'||
-  policy&&(input.tier==='MAIN'&&(input.model!=='glm-5.3-flash'||input.provider!=='zai')||input.tier==='PRO'&&(input.model!=='deepseek-v4-pro'||input.provider!=='deepseek')))invalid();
+  policy&&(input.tier==='MAIN'&&(input.model!=='glm-5.3-flash'||input.provider!=='zai')||input.tier==='PRO'&&(input.model!=='deepseek-flash'||input.provider!=='deepseek')))invalid();
  input.purposes=purposeList(input.purposes);
+ if(vision){
+  if(input.purposes.length!==1||input.purposes[0]!=='vision')invalid();
+  input.adapterOptions=record(input.adapterOptions,['thinking']);
+  if(!['omit','disabled'].includes(input.adapterOptions.thinking))invalid();
+  input.adapterOptions=Object.freeze({...input.adapterOptions});
+ }
  input.capabilities=record(input.capabilities,capabilityFields);
  if(capabilityFields.some(key=>input.capabilities[key]!==null&&typeof input.capabilities[key]!=='boolean'))invalid();
  if(!tokenLimit(input.contextWindow)||!tokenLimit(input.maxOutputTokens))invalid();
@@ -80,11 +88,22 @@ export function createModelProfile(input){
  return Object.freeze({...input,purposes:Object.freeze([...input.purposes]),capabilities:Object.freeze({...input.capabilities}),pricing});
 }
 
+// Explicit operator-declared compatibility; never inferred from an opaque model name.
+export function createVisionModelCatalog(env=process.env){
+ const legacy=createLegacyModelCatalog(env);
+ if(!env.LLM_VISION_CHALLENGER_MODEL)return legacy;
+ const profile=createModelProfile({...legacy.profiles.find(p=>p.id==='legacy-vision'),schemaVersion:3,source:'vision-config',
+  id:'vision-challenger',tier:'VISION',model:env.LLM_VISION_CHALLENGER_MODEL,provider:env.LLM_VISION_CHALLENGER_PROVIDER||null,
+  connectionRef:'vision-challenger',adapterOptions:{thinking:env.LLM_VISION_CHALLENGER_THINKING||'omit'},
+  capabilities:{textInput:true,imageInput:env.LLM_VISION_CHALLENGER_INPUT==='images',streaming:false,toolCalling:false,jsonObject:null,jsonSchema:null,reasoningControl:false}});
+ return Object.freeze({schemaVersion:3,profiles:Object.freeze([...legacy.profiles,profile])});
+}
+
 // Explicit user-selected bindings, never inferred from arbitrary legacy model names.
 export function createPolicyModelCatalog(env=process.env){
  const legacy=createLegacyModelCatalog(env);
  const profiles=['MAIN','PRO'].map(tier=>createModelProfile({schemaVersion:2,source:'policy-config',id:tier.toLowerCase(),tier,
-  model:env['LLM_'+tier+'_MODEL']||(tier==='MAIN'?'glm-5.3-flash':'deepseek-v4-pro'),provider:tier==='MAIN'?'zai':'deepseek',protocol:'openai-chat-completions',connectionRef:tier.toLowerCase(),purposes:['research','review','followup'],
+  model:env['LLM_'+tier+'_MODEL']||(tier==='MAIN'?'glm-5.3-flash':'deepseek-flash'),provider:tier==='MAIN'?'zai':'deepseek',protocol:'openai-chat-completions',connectionRef:tier.toLowerCase(),purposes:['research','review','followup'],
   capabilities:{textInput:true,imageInput:false,streaming:true,toolCalling:true,jsonObject:true,jsonSchema:null,reasoningControl:true},contextWindow:null,maxOutputTokens:null,pricing:null,
  }));
  return Object.freeze({schemaVersion:2,profiles:Object.freeze([...legacy.profiles,...profiles])});

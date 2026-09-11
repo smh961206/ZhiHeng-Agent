@@ -12,6 +12,16 @@ const make=()=>{
  const job={id:'pin-test',status:'failed',mode:'B',input:{question:'synthetic',sources:[],securities:[]},events:[],marketData:{asOf:'2025-12-31'},modelState:createJobModelState()};
  job.checkpoint={version:1,scope:resumeScope(job),phase:'research',messages:[],toolRecords:[],evidence:[],modelState:structuredClone(job.modelState)};return job;
 };
+test('renaming configured models leaves historical pins intact and requires a new job',()=>{
+ const historicalEnv={LLM_MODEL:'deepseek-v4-pro',LLM_VISION_MODEL:'deepseek-v4-flash-vision-exp'};
+ const state=createJobModelState(historicalEnv);
+ const job={mode:'B',modelState:state,checkpoint:{modelState:structuredClone(state)},marketData:{asOf:'2025-12-31'}};
+ const before=structuredClone(job);
+ assertJobModelState(job,historicalEnv);
+ assert.throws(()=>assertJobModelState(job,{}),e=>e.code==='model_state_incompatible');
+ assert.deepEqual(job,before);
+ assert.deepEqual(createJobModelState({}).profiles.map(p=>p.model),['deepseek-flash','deepseek-flash','deepseek-flash']);
+});
 test('new pins survive JSON serialization and key rotation, but model/connection/mode/effort changes reject',()=>{
  const job=make(),env={...process.env};assertJobModelState(JSON.parse(JSON.stringify(job)));
  assertJobModelState(job,{...env,LLM_API_KEY:'rotated',LLM_VISION_API_KEY:'rotated-vision'});

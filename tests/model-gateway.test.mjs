@@ -100,7 +100,7 @@ test('Gateway retains router and Vision model/base/key and legacy reasoning sema
    body=JSON.parse(options.body);assert.equal(url.origin,purpose==='vision'?'https://vision.invalid':'https://analysis.invalid');assert.equal(options.headers.Authorization,purpose==='vision'?'Bearer vision-secret':'Bearer analysis-secret');return json();
   }});
   const result=await g.complete({purpose,messages:[{role:'user',content:purpose==='vision'?[{type:'image_url',image_url:{url:'data:image/png;base64,AA=='}}]:'fixture'}]});
-  assert.equal(body.model,purpose==='vision'?'deepseek-v4-flash-vision-exp':'deepseek-router');assert.equal(body.max_tokens,purpose==='vision'?6000:400);assert.equal(body.stream,false);assert.deepEqual(body.thinking,{type:'disabled'});assert.equal(result.profile,'legacy-'+purpose);
+  assert.equal(body.model,purpose==='vision'?'deepseek-flash':'deepseek-router');assert.equal(body.max_tokens,purpose==='vision'?6000:400);assert.equal(body.stream,false);assert.deepEqual(body.thinking,{type:'disabled'});assert.equal(result.profile,'legacy-'+purpose);
  }
 });
 

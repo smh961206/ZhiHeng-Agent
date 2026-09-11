@@ -21,6 +21,14 @@ function prepare(request,catalog,onProfile){
  if(selected.length!==1||!selected[0].purposes.includes(request.purpose))fail('configuration');
  const profile=selected[0];
  onProfile?.(profile);
+ const requiredCapabilities=request.requiredCapabilities;
+ if(requiredCapabilities!==undefined){
+  if(!Array.isArray(requiredCapabilities)||!requiredCapabilities.length||new Set(requiredCapabilities).size!==requiredCapabilities.length)fail('invalid_request');
+  for(const capability of requiredCapabilities){
+   if(!Object.hasOwn(profile.capabilities,capability))fail('invalid_request');
+   if(profile.capabilities[capability]!==true)fail('unsupported_capability');
+  }
+ }
  const stream=request.stream===undefined?profile.capabilities.streaming:request.stream;
  if(typeof stream!=='boolean')fail('invalid_request');
  if(stream&&profile.capabilities.streaming!==true)fail('unsupported_capability');
@@ -31,9 +39,10 @@ function prepare(request,catalog,onProfile){
  let images=0;
  for(const message of messages){
   if(!message||!['system','user','assistant','tool'].includes(message.role))fail('invalid_request');
+  if(request.purpose==='vision'&&(!['system','user'].includes(message.role)||['reasoning_content','tool_calls','tool_call_id'].some(key=>Object.hasOwn(message,key))))fail('invalid_request');
   if(Array.isArray(message.content)){
    for(const part of message.content){
-    if(part?.type==='image_url'){if(!text(part.image_url?.url))fail('invalid_request');images++;}
+    if(part?.type==='image_url'){if(!text(part.image_url?.url)||request.purpose==='vision'&&message.role!=='user')fail('invalid_request');images++;}
     else if(part?.type!=='text'||typeof part.text!=='string')fail('invalid_request');
    }
   }else if(typeof message.content!=='string'&&!(message.role==='assistant'&&message.content==null&&Array.isArray(message.tool_calls)))fail('invalid_request');
@@ -41,6 +50,7 @@ function prepare(request,catalog,onProfile){
  if(images&&profile.capabilities.imageInput!==true)fail('unsupported_capability');
  if(request.purpose==='vision'&&(!images||images>12))fail('invalid_request');
  if(tools!==undefined){
+  if(request.purpose==='vision')fail('invalid_request');
   if(!Array.isArray(tools)||!tools.length)fail('invalid_request');
   // Iteration visits holes too; JSON would otherwise send them as null tools.
   for(const tool of tools)if(tool?.type!=='function'||!text(tool.function?.name))fail('invalid_request');
@@ -59,7 +69,7 @@ function prepare(request,catalog,onProfile){
  const maxOutputTokens=request.maxOutputTokens===undefined?(request.purpose==='vision'?6000:request.purpose==='router'?400:undefined):request.maxOutputTokens;
  if(maxOutputTokens!==undefined&&(!Number.isSafeInteger(maxOutputTokens)||maxOutputTokens<=0||profile.maxOutputTokens!==null&&maxOutputTokens>profile.maxOutputTokens||request.purpose==='vision'&&maxOutputTokens>6000))fail('invalid_request');
  const callbacks=Object.fromEntries(['onDelta','onRetry','onActivity','onHeartbeat'].map(name=>[name,syncModelCallback(request[name])]));
- return {profile,request:{purpose:request.purpose,messages,tools,responseFormat,stream,maxOutputTokens,reasoningEffort:request.reasoningEffort,signal:request.signal,...callbacks}};
+ return {profile,request:{purpose:request.purpose,messages,tools,responseFormat,stream,maxOutputTokens,requiredCapabilities:requiredCapabilities?.slice(),reasoningEffort:request.reasoningEffort,signal:request.signal,...callbacks}};
 }
 
 export function createModelGateway({env=process.env,catalog,fetchImpl,now=()=>performance.now(),wait,setTimer=setTimeout,clearTimer=clearTimeout,compatibility,onModelCall,health=modelHealth,healthRouting,onRoutingDecision=decision=>console.info(JSON.stringify(decision))}={}){

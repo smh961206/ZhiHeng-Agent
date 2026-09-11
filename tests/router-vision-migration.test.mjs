@@ -120,7 +120,7 @@ test('Vision bounds non-cooperative fetch by 60 seconds and closes late response
 
 test('synthetic dual-model diagnostic uses Gateway for both Vision and analysis without real networking',async()=>{
  const directory=fs.mkdtempSync(join(tmpdir(),'zhiheng-v484-diagnostic-'));
- const values={LLM_MODEL:'deepseek-fixture',LLM_API_KEY:'synthetic',LLM_BASE_URL:'https://model.invalid',LLM_VISION_MODEL:'deepseek-v4-flash-vision-exp',LLM_VISION_INPUT:'images',LLM_VISION_API_KEY:'synthetic-vision',LLM_VISION_BASE_URL:'https://vision.invalid'};
+ const values={LLM_MODEL:'deepseek-fixture',LLM_API_KEY:'synthetic',LLM_BASE_URL:'https://model.invalid',LLM_VISION_MODEL:'deepseek-flash',LLM_VISION_INPUT:'images',LLM_VISION_API_KEY:'synthetic-vision',LLM_VISION_BASE_URL:'https://vision.invalid'};
  const before=Object.fromEntries(Object.keys(values).map(k=>[k,process.env[k]])),oldFetch=globalThis.fetch,requests=[];
  Object.assign(process.env,values);
  globalThis.fetch=async(url,options)=>{

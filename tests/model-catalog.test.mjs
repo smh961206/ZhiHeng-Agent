@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createLegacyModelCatalog,createModelProfile} from '../server/model-catalog.mjs';
+import {createLegacyModelCatalog,createPolicyModelCatalog,createModelProfile} from '../server/model-catalog.mjs';
 import {modelRouting,publicModelRouting} from '../server/model-routing.mjs';
 import {visionStatus,readVisionImages} from '../server/vision-model.mjs';
 import {createPathResolver} from '../server/research-path.mjs';
@@ -8,6 +8,16 @@ import {createSecurityIntentExtractor} from '../server/security-intent.mjs';
 
 const byId=(catalog,id)=>catalog.profiles.find(p=>p.id===id);
 const sample=()=>structuredClone(createLegacyModelCatalog({}).profiles[0]);
+
+test('policy PRO uses the selected Flash binding while MAIN remains unchanged',()=>{
+ for(const env of [{},{LLM_PRO_MODEL:'deepseek-flash'}]){
+  const catalog=createPolicyModelCatalog(env);
+  assert.equal(byId(catalog,'main').model,'glm-5.3-flash');
+  assert.equal(byId(catalog,'pro').model,'deepseek-flash');
+  assert.equal(byId(catalog,'pro').capabilities.imageInput,false);
+ }
+ assert.throws(()=>createPolicyModelCatalog({LLM_PRO_MODEL:'unapproved-model'}),/Invalid ModelProfile metadata/);
+});
 
 test('Legacy catalog maps defaults, empty-string fallback and explicit model overrides',()=>{
  for(const env of [{},{LLM_MODEL:'',LLM_ROUTER_MODEL:'',LLM_VISION_MODEL:''},{LLM_MODEL:'custom-analysis',LLM_ROUTER_MODEL:'custom-router',LLM_VISION_MODEL:'custom-image'},{LLM_MODEL:'custom-analysis'}]){
@@ -17,8 +27,8 @@ test('Legacy catalog maps defaults, empty-string fallback and explicit model ove
   assert.equal(byId(catalog,'legacy-vision').model,routing.visionModel);
   assert.deepEqual(catalog.profiles.map(p=>p.purposes),[['research','review','followup'],['router'],['vision']]);
  }
- assert.equal(byId(createLegacyModelCatalog({}),'legacy-analysis').model,'deepseek-v4-pro');
- assert.equal(byId(createLegacyModelCatalog({}),'legacy-vision').model,'deepseek-v4-flash-vision-exp');
+ assert.equal(byId(createLegacyModelCatalog({}),'legacy-analysis').model,'deepseek-flash');
+ assert.equal(byId(createLegacyModelCatalog({}),'legacy-vision').model,'deepseek-flash');
 });
 
 test('Legacy connection references preserve independent base/key fallback without serializing connections',()=>{
@@ -67,11 +77,11 @@ test('Legacy capabilities describe transport usage and retain unknown provider s
 });
 
 test('Vision capability and credential readiness preserve every legacy mode combination',()=>{
- for(const model of [undefined,'','deepseek-v4-flash-vision-exp','some-vision-model','deepseek-v4-flash'])
+ for(const model of [undefined,'','deepseek-flash','some-vision-model','deepseek-v4-flash'])
  for(const mode of [undefined,'','auto','off','images','IMAGES'])
  for(const key of [undefined,'','synthetic-key']){
   const env={LLM_VISION_MODEL:model,LLM_VISION_INPUT:mode,LLM_API_KEY:key};
-  const expected=mode!=='off'&&((model||'deepseek-v4-flash-vision-exp')==='deepseek-v4-flash-vision-exp'||mode==='images');
+  const expected=mode!=='off'&&((model||'deepseek-flash')==='deepseek-flash'||mode==='images');
   assert.equal(byId(createLegacyModelCatalog(env),'legacy-vision').capabilities.imageInput,expected);
   assert.equal(visionStatus(env).enabled,!!key&&expected);
  }
@@ -148,7 +158,7 @@ test('Creating a catalog neither mutates environment nor changes public routing 
  const before={routing:modelRouting(env),public:publicModelRouting(env),vision:visionStatus(env)};
  createLegacyModelCatalog(env);
  assert.deepEqual({routing:modelRouting(env),public:publicModelRouting(env),vision:visionStatus(env)},before);
- assert.deepEqual(before.public,{analysisModel:'a',visionModel:'v',workflow:'Vision 负责看，Pro 负责分析与审计'});
+ assert.deepEqual(before.public,{analysisModel:'a',visionModel:'v',workflow:'Vision 负责原页读取，分析模型负责研究与审计'});
 });
 
 test('Catalog Vision profile agrees with a working legacy request and does not change wire options',async()=>{

@@ -1,5 +1,9 @@
 # Model System
 
+## V4.9 current boundary
+
+V4.9.1–.8 implement canonical image requests/results, explicit Vision challenger configuration, 48 frozen originals, deterministic grading, a two-attempt independent fallback and a closed Vision promotion gate. Existing Gateway/adapter/connection and modelState remain owners. Vision admission is separate from text rollout to avoid cyclic state construction. New admitted jobs pin actual Vision identity; saved legacy and historical no-state jobs retain legacy, candidate pins pause after rollback. Real candidate quality remains unaccepted and FEATURE_VISION_ROUTING defaults false. See [V4.9 report](../releases/V4.9/V4_9-completion-report.md).
+
 ## Baseline
 
 Research/review and Vision are configured separately. V4.8.4 completes Gateway migration of router/Vision and diagnostics. All provider requests use one adapter; existing connection identities, business guards and fixed legacy selection remain.
@@ -77,4 +81,8 @@ Gateway emits safe ModelCall metadata through model-telemetry and existing stora
 
 ## V4.8.10 internal safe escalation — CURRENT
 
-ModelProfile v2 binds main/zai/glm-5.3-flash and pro/deepseek/deepseek-v4-pro explicitly; v1 remains legacy. server/model-state.mjs validates private policy state v2 and pins actual connection identity/effort, while server/model-escalation.mjs coordinates acknowledged checkpoint transitions. Existing Catalog/Gateway/adapter/context and Agent owners remain. MAIN low→high→PRO high→max only follows two explicit model-format/JSON-argument failures, with all pending tools completed. Mode A/data gaps/health/financial validation do not escalate. Raw assistant reasoning is never transferred; actual evidence/tool context is rebuilt with existing window/omission semantics. Strict checkpoint persistence precedes the next call. Existing budgets/validation/cutoff remain unchanged. Production default stays legacy and paid quality acceptance is deferred by user; offline tests are not permission to activate policy. Tests: tests/model-escalation.test.mjs and tests/model-state.integration.mjs. Full target rollout remains .11.
+ModelProfile v2 binds main/zai/glm-5.3-flash and pro/deepseek/deepseek-flash explicitly; v1 remains legacy. server/model-state.mjs validates private policy state v2 and pins actual connection identity/effort, while server/model-escalation.mjs coordinates acknowledged checkpoint transitions. Existing Catalog/Gateway/adapter/context and Agent owners remain. MAIN low→high→PRO high→max only follows two explicit model-format/JSON-argument failures, with all pending tools completed. Mode A/data gaps/health/financial validation do not escalate. Raw assistant reasoning is never transferred; actual evidence/tool context is rebuilt with existing window/omission semantics. Strict checkpoint persistence precedes the next call. Existing budgets/validation/cutoff remain unchanged. Production default stays legacy and paid quality acceptance is deferred by user; offline tests are not permission to activate policy. Tests: tests/model-escalation.test.mjs and tests/model-state.integration.mjs. Full target rollout remains .11.
+
+## 2026-09-11 模型名称配置更新
+
+按用户明确要求，当前分析、PRO 档及默认视觉模型统一使用 `deepseek-flash`；MAIN 绑定与路由、升级和验收门槛不变。以上 CURRENT 绑定名称反映本次更新，不代表历史付费质量验证已完成。历史任务模型身份及验收记录不回写；详见 [变更报告](../releases/V4.9/model-name-unification-20260911.md).

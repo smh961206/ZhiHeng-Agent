@@ -1,5 +1,25 @@
 # Current Implementation Map
 
+Current V4.9 acceptance: batch-nine live Vision quality is [operator-approved](../releases/V4.9/vision-operator-approval-20260911.md), with both models passing 48/48. Production activation remains pending; the admission owner still validates the exact code/configuration and file. Earlier unaccepted-quality statements below record implementation-stage evidence.
+
+V4.9 output constraints: existing server/vision-model.mjs strengthens shared source-reading instructions while scripts/vision-benchmark.mjs clarifies the table schema. No new normalization subsystem or grader relaxation; current prompts are included in the existing comparison code binding. See [review](../releases/V4.9/vision-output-constraints-review-20260911.md).
+
+## V4.9 frontend alignment — CURRENT presentation
+
+The existing home, workbench, history, handbook and detail components now explain document/image reading without promoting extraction into verified facts. `src/config/platform-release.mjs` owns the public feature label; framework and saved job versions remain separate. Existing ResearchUsageGuide owns hash-linked topic expansion, focus and sticky-tab-aware positioning. DocumentReadingSummary only renders saved model/audit records and explicitly preserves missing historical coverage. No API, persistent schema, routing or research recovery change. See the [frontend completion report](../releases/V4.9/V4_9-frontend-completion-report.md) for 301 UI scenarios and compatibility evidence.
+
+## V4.9.1–.8 — CURRENT implementation; live promotion unaccepted
+
+Authorized review fixes: the existing Vision benchmark now owns an additive atomic progress ledger and conservative resume; uncertain reserved requests cannot replay. vision-model capability status resolves the selected context/profile; vision-policy caches validation while checking file/config/code identity and credentials on use. Existing index/research-retry coordinate cancelled execution finalization through an in-memory completion promise, preserving mutation locks and durable acknowledgement. See [fix report](../releases/V4.9/V4_9-review-fixes-report.md).
+
+Existing `server/vision-model.mjs` owns canonical requests/results and bounded independent fallback, retaining the text facade. Gateway validates explicit capabilities; Catalog/connection/adapter accept explicit image-only v3 challenger metadata. `server/vision-quality.mjs` owns deterministic extraction grading; `server/vision-policy.mjs` owns Vision-specific admission without importing job state. Existing model-state consumes approved selection for new jobs, preserves legacy/absent historical identities and pauses candidate pins after rollback. No Mongo/schema migration or archive rewrite.
+
+`scripts/vision-benchmark.mjs` and `scripts/build-vision-fixtures.py` own the scoped 48-original corpus, simulation/live opt-in comparison and regeneration. They do not implement the future V5.0 unified benchmark platform. New response metadata is in memory; old production readers still get strings, so archived extraction identity remains unavailable for old records. Independent admitted reads can fallback once; pinned research does not cross models. See [complete report](../releases/V4.9/V4_9-completion-report.md) and [runbook](../releases/V4.9/vision-comparison-runbook.md). Earlier unimplemented V4.9 statements below retain historical context.
+
+## V4.9.0 Vision inventory — CURRENT
+
+The user activated V4.9 on 2026-09-11; CURRENT now selects V4.9. The [Vision inventory](../releases/V4.9/vision-call-inventory.md) records four semantic readers, one existing Vision wrapper and the existing Gateway adapter, with current rendering/upload/page/audit/model limits and evidence semantics. `scripts/check-model-call-inventory.mjs` adds optional Vision inspection; `tests/vision-call-inventory.test.mjs` detects call/owner/guard drift. Runtime owners remain unchanged. V4.9.1–.8 are unimplemented; V4.8.11 live acceptance and its paid pilot remain deferred. Earlier release activation statements below describe their historical boundary, not the current authorization.
+
 ## V4.8 regression and loading optimization — CURRENT
 
 Existing src/components/ResearchPages.jsx now also owns the lazy workbench boundary; App retains form/draft state and requests focus only after an explicit start action. Existing shared/research-export is loaded on download. Existing research-decision.css owns the compact summary-to-report gap. No model/research/schema boundary changes. See [regression report](../releases/V4.8/V4_8-regression-optimization-report.md) for all 289 UI scenarios, isolated recovery/deployment evidence and offline/live acceptance distinction.
@@ -242,7 +262,7 @@ Owners: server/model-state.mjs, server/model-connection.mjs, existing research-c
 
 ## V4.8.10 internal safe escalation — CURRENT
 
-ModelProfile v2 binds main/zai/glm-5.3-flash and pro/deepseek/deepseek-v4-pro explicitly; v1 remains legacy. server/model-state.mjs validates private policy state v2 and pins actual connection identity/effort, while server/model-escalation.mjs coordinates acknowledged checkpoint transitions. Existing Catalog/Gateway/adapter/context and Agent owners remain. MAIN low→high→PRO high→max only follows two explicit model-format/JSON-argument failures, with all pending tools completed. Mode A/data gaps/health/financial validation do not escalate. Raw assistant reasoning is never transferred; actual evidence/tool context is rebuilt with existing window/omission semantics. Strict checkpoint persistence precedes the next call. Existing budgets/validation/cutoff remain unchanged. Production default stays legacy and paid quality acceptance is deferred by user; offline tests are not permission to activate policy. Tests: tests/model-escalation.test.mjs and tests/model-state.integration.mjs. Full target rollout remains .11.
+ModelProfile v2 binds main/zai/glm-5.3-flash and pro/deepseek/deepseek-flash explicitly; v1 remains legacy. server/model-state.mjs validates private policy state v2 and pins actual connection identity/effort, while server/model-escalation.mjs coordinates acknowledged checkpoint transitions. Existing Catalog/Gateway/adapter/context and Agent owners remain. MAIN low→high→PRO high→max only follows two explicit model-format/JSON-argument failures, with all pending tools completed. Mode A/data gaps/health/financial validation do not escalate. Raw assistant reasoning is never transferred; actual evidence/tool context is rebuilt with existing window/omission semantics. Strict checkpoint persistence precedes the next call. Existing budgets/validation/cutoff remain unchanged. Production default stays legacy and paid quality acceptance is deferred by user; offline tests are not permission to activate policy. Tests: tests/model-escalation.test.mjs and tests/model-state.integration.mjs. Full target rollout remains .11.
 
 ## V4.8.11 rollout gate — PARTIAL release acceptance
 
@@ -252,3 +272,11 @@ Only an accepted new policy job consumes existing complexity recommendations; Mo
 
 Offline validation: tests/model-rollout.test.mjs and tests/fixtures/model-routing-offline-cases.json run 60 baseline/candidate transport safety comparisons plus gate/rollback tests. They are not research-quality evidence. User deferred all paid comparison and required legacy; live acceptance and production rollout therefore remain pending. A one-command legacy server entry exists: pnpm start:legacy after stopping the previous server instance. It overrides inherited mode without editing .env or deleting records. No V4.9 or unified V5 benchmark platform is implemented.
 V4.8 第二轮回归补充：App 继续拥有异步下载请求，以浏览器内存状态及同步锁防止资源加载期间重复导出；ResearchDetail 与 ResearchExecutionChecks 共享等待反馈，手机操作面板在下载准备期间保持可见。原 shared/research-export.mjs、持久化对象、模型策略及恢复语义不变。证据见 [第二轮回归报告](../releases/V4.8/V4_8-regression-review2-report.md)。
+
+## 2026-09-11 模型名称配置更新
+
+按用户明确要求，当前分析、PRO 档及默认视觉模型统一使用 `deepseek-flash`；MAIN 绑定与路由、升级和验收门槛不变。以上 CURRENT 绑定名称反映本次更新，不代表历史付费质量验证已完成。历史任务模型身份及验收记录不回写；详见 [变更报告](../releases/V4.9/model-name-unification-20260911.md).
+
+## V4.9 回归维护：页面加载与发布检查
+
+既有 ResearchPages 扩展到研究记录页；PlatformStatus 保留即时状态与触发入口，PlatformStatusPanel 在用户打开说明时加载，复用原 Popover 内容及焦点行为。测试拦截同时识别开发和正式构建模块，测试工件标记 assetMode。package.json 的 test:release 汇集既有清单检查，harness 增加公开模板一致性/空密钥/禁用晋升校验。无业务、持久化或模型执行架构变化。详见 [报告](../releases/V4.9/V4_9-regression-optimization-report.md)。

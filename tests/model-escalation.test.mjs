@@ -43,7 +43,7 @@ test('entire ladder rebuilds verified context, keeps private history local and p
   assert.match(JSON.stringify(history),/actual excerpt|actual result/);
   await withJobModelState(job,()=>g.complete({purpose:'research',messages:history}));
  }
- assert.deepEqual(wires.map(w=>[w.body.model,w.body.reasoning_effort]),[['glm-5.3-flash','low'],['glm-5.3-flash','high'],['deepseek-v4-pro','high'],['deepseek-v4-pro','max']]);
+ assert.deepEqual(wires.map(w=>[w.body.model,w.body.reasoning_effort]),[['glm-5.3-flash','low'],['glm-5.3-flash','high'],['deepseek-flash','high'],['deepseek-flash','max']]);
  assert.ok(wires.every(w=>w.body.thinking.type==='enabled'));assert.equal(records.at(-1).routingMode,'policy');assert.equal(records.at(-1).profile,'pro');
  assert.deepEqual(job.input,original.input);assert.deepEqual(job.marketData,original.marketData);assert.deepEqual(job.checkpoint.toolRecords,original.checkpoint.toolRecords);
  noteModelFailure(job,'structured_output');noteModelFailure(job,'structured_output');assert.equal(await escalateAtCheckpoint(job,{phase:'research',messages:history,persist:()=>assert.fail('maximum already reached')}),false);

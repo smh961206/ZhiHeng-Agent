@@ -4,6 +4,12 @@
 .usage-heading p{margin:6px 0 0;color:#6d7f71;font-size:14px;line-height:1.8}
 .usage-heading>a{flex-shrink:0;min-height:44px;font-size:13px}
 .usage-topics{display:grid;gap:12px}
+.usage-navigation{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:24px}
+.usage-navigation a{display:flex;align-items:center;gap:8px;min-height:44px;padding:10px 12px;border:1px solid #dce6dc;border-radius:9px;color:#486451;font-size:13px;text-decoration:none;line-height:1.6}
+.usage-navigation a>svg{flex-shrink:0}
+.usage-navigation a:hover,.usage-navigation a[aria-current=location]{background:#edf4ee;color:#244a36;border-color:#b8cdbc}
+.usage-topic{scroll-margin-top:88px}
+.usage-topic:focus-visible{outline:2px solid #39705c;outline-offset:3px}
 .usage-topic{border:1px solid #dce6dc;border-radius:12px;background:#fff;overflow:hidden}
 .usage-topic .usage-trigger{width:100%;height:auto;min-height:88px;padding:18px 20px;text-align:left;white-space:normal;gap:14px;justify-content:flex-start;border-radius:0}
 .usage-trigger>.usage-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:#edf4ec;color:#507653;flex-shrink:0}
@@ -28,4 +34,5 @@
 @media(max-width:760px){.research-home .fw-prompt-example{grid-template-columns:minmax(0,1fr);gap:10px;padding:20px}.research-home .fw-prompt-example>div:first-child{display:block}.research-home .fw-prompt-example p{margin-top:8px!important}.research-home .fw-prompt-example>[data-slot=button]{justify-self:start;width:auto;min-height:44px}.fw-handbook-link{margin-left:0}}
 @media(max-width:639px){.fw-handbook-link{gap:0 8px}.fw-handbook-link>a{min-height:44px}}
 @media(prefers-reduced-motion:reduce){.fw-handbook-link>a>svg{transition:none}}
+@media(max-width:639px){.usage-navigation{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.usage-navigation a{font-size:12px;padding:10px 8px;gap:6px}.research-handbook .handbook-tabs>[data-slot=tabs-list]{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:639px){.usage-heading{align-items:stretch;flex-direction:column}.usage-heading>a{align-self:flex-start}.usage-topic .usage-trigger{padding:15px 12px;gap:10px}.usage-trigger>.usage-icon{width:30px;height:34px}.usage-trigger small{font-size:12px}.usage-body{padding:0 14px 18px}.handbook-tabs>[data-slot=tabs-list]{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%}.handbook-tabs>[data-slot=tabs-list]>button{font-size:12px;padding-inline:5px;gap:4px;min-width:0}.handbook-tabs>[data-slot=tabs-list]>button svg{width:14px}}

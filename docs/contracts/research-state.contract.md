@@ -1,4 +1,6 @@
 # Research State Contract
+
+V4.9 authorized lifecycle repair: a cancelled job whose terminal save is still awaiting acknowledgement remains owned by its controller. An exact-version retry may wait up to five seconds for that execution's completion promise while holding the mutation lock; duplicates still fail. Only after durable finalization and controller release may capacity, persisted state and retry version be rechecked and one retry start. Timeout or failed delivery cannot bypass save recovery. This coordination is in memory, not a canonical ResearchState schema change.
 Implementation Status: PARTIAL; target V5.7.
 
 Research State becomes the canonical structured representation of a company's research state.

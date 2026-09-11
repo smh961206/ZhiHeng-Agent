@@ -1,0 +1,2839 @@
+{
+  "version": 1,
+  "kind": "frozen-vision-corpus",
+  "synthetic": true,
+  "cases": [
+    {
+      "id": "VIS-001",
+      "kind": "table",
+      "file": "VIS-001.png",
+      "sha256": "5a73faa1e636bc328d750101367a7e81b3cf5017d2c8c2e47cdd5a42a708c979",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "CNY million",
+        "parentheses",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2025",
+          "2024"
+        ],
+        "cells": [
+          {
+            "row": "Revenue",
+            "column": "2025",
+            "value": "51.25",
+            "unit": "CNY million",
+            "date": "2025-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Revenue",
+            "column": "2024",
+            "value": "62.25",
+            "unit": "CNY million",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating costs",
+            "column": "2025",
+            "value": "(80.25)",
+            "unit": "CNY million",
+            "date": "2025-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating costs",
+            "column": "2024",
+            "value": "(91.25)",
+            "unit": "CNY million",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-002",
+      "kind": "screenshot",
+      "file": "VIS-002.png",
+      "sha256": "cb20df98c3b5f6e6978293502e20e188f0f037ad1a896228b576755283d5b463",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "USD thousand",
+        "parentheses",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2025",
+          "2024"
+        ],
+        "cells": [
+          {
+            "row": "Operating cash flow",
+            "column": "2025",
+            "value": "68.25",
+            "unit": "USD thousand",
+            "date": "2025-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating cash flow",
+            "column": "2024",
+            "value": "79.25",
+            "unit": "USD thousand",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2025",
+            "value": "(97.25)",
+            "unit": "USD thousand",
+            "date": "2025-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2024",
+            "value": "(108.25)",
+            "unit": "USD thousand",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-003",
+      "kind": "scanned-pdf",
+      "file": "VIS-003.pdf",
+      "sha256": "2e5d0a76fbd9acac188d0793d14d22fcb0c8f12b96072cebe1297233738d7d2a",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "HKD million",
+        "parentheses",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2025",
+          "2024"
+        ],
+        "cells": [
+          {
+            "row": "Net profit",
+            "column": "2025",
+            "value": "85.25",
+            "unit": "HKD million",
+            "date": "2025-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Net profit",
+            "column": "2024",
+            "value": "96.25",
+            "unit": "HKD million",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2025",
+            "value": "(114.25)",
+            "unit": "HKD million",
+            "date": "2025-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2024",
+            "value": "(125.25)",
+            "unit": "HKD million",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-004",
+      "kind": "table",
+      "file": "VIS-004.png",
+      "sha256": "ff5d58b8e8e71cc90f8ad86556f8b09d94ff280c6a92b9a538db613d3f2c4263",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "%",
+        "parentheses",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2025",
+          "2024"
+        ],
+        "cells": [
+          {
+            "row": "Return on equity",
+            "column": "2025",
+            "value": "12.5%",
+            "unit": "%",
+            "date": "2025-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Return on equity",
+            "column": "2024",
+            "value": "23.5%",
+            "unit": "%",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating margin",
+            "column": "2025",
+            "value": "(11.5%)",
+            "unit": "%",
+            "date": "2025-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating margin",
+            "column": "2024",
+            "value": "(22.5%)",
+            "unit": "%",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-005",
+      "kind": "screenshot",
+      "file": "VIS-005.png",
+      "sha256": "99039934657a98507f08aa82623a1203a505e34df4561126e20e3593f42705dc",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "shares thousand",
+        "parentheses",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2025",
+          "2024"
+        ],
+        "cells": [
+          {
+            "row": "Basic shares",
+            "column": "2025",
+            "value": "119.25",
+            "unit": "shares thousand",
+            "date": "2025-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Basic shares",
+            "column": "2024",
+            "value": "130.25",
+            "unit": "shares thousand",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2025",
+            "value": "(148.25)",
+            "unit": "shares thousand",
+            "date": "2025-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2024",
+            "value": "(159.25)",
+            "unit": "shares thousand",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-006",
+      "kind": "scanned-pdf",
+      "file": "VIS-006.pdf",
+      "sha256": "03e478c65fadcdd2eab67837f9d8fcb2524c0b37c264e4ccbdf17d770d765710",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "EUR million",
+        "parentheses",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2025",
+          "2024"
+        ],
+        "cells": [
+          {
+            "row": "Assets",
+            "column": "2025",
+            "value": "136.25",
+            "unit": "EUR million",
+            "date": "2025-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Assets",
+            "column": "2024",
+            "value": "147.25",
+            "unit": "EUR million",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Liabilities",
+            "column": "2025",
+            "value": "(165.25)",
+            "unit": "EUR million",
+            "date": "2025-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Liabilities",
+            "column": "2024",
+            "value": "(176.25)",
+            "unit": "EUR million",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-007",
+      "kind": "table",
+      "file": "VIS-007.png",
+      "sha256": "39e0249908170b0a824d0dfec9650c5e3bfb243539c355f8c94829b4b4bca387",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "CNY million",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2024",
+          "2023"
+        ],
+        "cells": [
+          {
+            "row": "Revenue",
+            "column": "2024",
+            "value": "153.25",
+            "unit": "CNY million",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Revenue",
+            "column": "2023",
+            "value": "164.25",
+            "unit": "CNY million",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating costs",
+            "column": "2024",
+            "value": "-182.25",
+            "unit": "CNY million",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating costs",
+            "column": "2023",
+            "value": "-193.25",
+            "unit": "CNY million",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-008",
+      "kind": "screenshot",
+      "file": "VIS-008.png",
+      "sha256": "0685e21fb565c8779f9476de50479e57d053ece96fca979699aa67f5ebd97794",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "USD thousand",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2024",
+          "2023"
+        ],
+        "cells": [
+          {
+            "row": "Operating cash flow",
+            "column": "2024",
+            "value": "170.25",
+            "unit": "USD thousand",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating cash flow",
+            "column": "2023",
+            "value": "181.25",
+            "unit": "USD thousand",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2024",
+            "value": "-199.25",
+            "unit": "USD thousand",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2023",
+            "value": "-210.25",
+            "unit": "USD thousand",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-009",
+      "kind": "scanned-pdf",
+      "file": "VIS-009.pdf",
+      "sha256": "fd24cc860e47489d725dbc3ac66cd15dae3205ab6905137d6b294722575bc96c",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "HKD million",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2024",
+          "2023"
+        ],
+        "cells": [
+          {
+            "row": "Net profit",
+            "column": "2024",
+            "value": "187.25",
+            "unit": "HKD million",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Net profit",
+            "column": "2023",
+            "value": "198.25",
+            "unit": "HKD million",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2024",
+            "value": "-216.25",
+            "unit": "HKD million",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2023",
+            "value": "-227.25",
+            "unit": "HKD million",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-010",
+      "kind": "table",
+      "file": "VIS-010.png",
+      "sha256": "9083af8927145a3c8a3176c18de33d7e299628adcbf118bd55cdcd620eabe998",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "%",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2024",
+          "2023"
+        ],
+        "cells": [
+          {
+            "row": "Return on equity",
+            "column": "2024",
+            "value": "24.5%",
+            "unit": "%",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Return on equity",
+            "column": "2023",
+            "value": "5.5%",
+            "unit": "%",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating margin",
+            "column": "2024",
+            "value": "-23.5%",
+            "unit": "%",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating margin",
+            "column": "2023",
+            "value": "-4.5%",
+            "unit": "%",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-011",
+      "kind": "screenshot",
+      "file": "VIS-011.png",
+      "sha256": "eae39ca04eaf51efd83c28db026c877e3b3a84b7fcc66c8f7554b05197006b7c",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "shares thousand",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2024",
+          "2023"
+        ],
+        "cells": [
+          {
+            "row": "Basic shares",
+            "column": "2024",
+            "value": "221.25",
+            "unit": "shares thousand",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Basic shares",
+            "column": "2023",
+            "value": "232.25",
+            "unit": "shares thousand",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2024",
+            "value": "-250.25",
+            "unit": "shares thousand",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2023",
+            "value": "-261.25",
+            "unit": "shares thousand",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-012",
+      "kind": "scanned-pdf",
+      "file": "VIS-012.pdf",
+      "sha256": "6b44508e84d79497c3d8e9fd95f4f787f039e77806497945399a457105804a4d",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "EUR million",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2024",
+          "2023"
+        ],
+        "cells": [
+          {
+            "row": "Assets",
+            "column": "2024",
+            "value": "238.25",
+            "unit": "EUR million",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Assets",
+            "column": "2023",
+            "value": "249.25",
+            "unit": "EUR million",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Liabilities",
+            "column": "2024",
+            "value": "-267.25",
+            "unit": "EUR million",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Liabilities",
+            "column": "2023",
+            "value": "-278.25",
+            "unit": "EUR million",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-013",
+      "kind": "table",
+      "file": "VIS-013.png",
+      "sha256": "5b9e0183ce72d2fe398d4045ac1a047a941d28d5a605cbc36fd81a30bbfd17cc",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "CNY million",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2023",
+          "2022"
+        ],
+        "cells": [
+          {
+            "row": "Revenue",
+            "column": "2023",
+            "value": "255.25",
+            "unit": "CNY million",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Revenue",
+            "column": "2022",
+            "value": "266.25",
+            "unit": "CNY million",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating costs",
+            "column": "2023",
+            "value": "284.25",
+            "unit": "CNY million",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating costs",
+            "column": "2022",
+            "value": "295.25",
+            "unit": "CNY million",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-014",
+      "kind": "screenshot",
+      "file": "VIS-014.png",
+      "sha256": "0ad39d76fb808e3940fe569430c7e0171eedc6ed591cc38792aca54395511416",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "USD thousand",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2023",
+          "2022"
+        ],
+        "cells": [
+          {
+            "row": "Operating cash flow",
+            "column": "2023",
+            "value": "272.25",
+            "unit": "USD thousand",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating cash flow",
+            "column": "2022",
+            "value": "283.25",
+            "unit": "USD thousand",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2023",
+            "value": "301.25",
+            "unit": "USD thousand",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2022",
+            "value": "312.25",
+            "unit": "USD thousand",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-015",
+      "kind": "scanned-pdf",
+      "file": "VIS-015.pdf",
+      "sha256": "efeca0893ffe42439f7a0603f8147cc31d10f6ac03cac3f2ec51af71dd083f95",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "HKD million",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2023",
+          "2022"
+        ],
+        "cells": [
+          {
+            "row": "Net profit",
+            "column": "2023",
+            "value": "289.25",
+            "unit": "HKD million",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Net profit",
+            "column": "2022",
+            "value": "300.25",
+            "unit": "HKD million",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2023",
+            "value": "318.25",
+            "unit": "HKD million",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2022",
+            "value": "329.25",
+            "unit": "HKD million",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-016",
+      "kind": "table",
+      "file": "VIS-016.png",
+      "sha256": "c8affc380bfe2a50c4adfb1824134f1b676b5e64b37b88ef611676c963efeed2",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "%",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2023",
+          "2022"
+        ],
+        "cells": [
+          {
+            "row": "Return on equity",
+            "column": "2023",
+            "value": "6.5%",
+            "unit": "%",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Return on equity",
+            "column": "2022",
+            "value": "17.5%",
+            "unit": "%",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating margin",
+            "column": "2023",
+            "value": "5.5%",
+            "unit": "%",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating margin",
+            "column": "2022",
+            "value": "16.5%",
+            "unit": "%",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-017",
+      "kind": "screenshot",
+      "file": "VIS-017.png",
+      "sha256": "96c722bb0d530b639e58cb79a0020c54c595d646becddd32e8f379112b6224d6",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "shares thousand",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2023",
+          "2022"
+        ],
+        "cells": [
+          {
+            "row": "Basic shares",
+            "column": "2023",
+            "value": "323.25",
+            "unit": "shares thousand",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Basic shares",
+            "column": "2022",
+            "value": "334.25",
+            "unit": "shares thousand",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2023",
+            "value": "352.25",
+            "unit": "shares thousand",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2022",
+            "value": "363.25",
+            "unit": "shares thousand",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-018",
+      "kind": "scanned-pdf",
+      "file": "VIS-018.pdf",
+      "sha256": "a558605504d42d564400e8abf5de5d862c02a74b10fd506c28e03dcac42955e8",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "EUR million",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2023",
+          "2022"
+        ],
+        "cells": [
+          {
+            "row": "Assets",
+            "column": "2023",
+            "value": "340.25",
+            "unit": "EUR million",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Assets",
+            "column": "2022",
+            "value": "351.25",
+            "unit": "EUR million",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Liabilities",
+            "column": "2023",
+            "value": "369.25",
+            "unit": "EUR million",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Liabilities",
+            "column": "2022",
+            "value": "380.25",
+            "unit": "EUR million",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-019",
+      "kind": "table",
+      "file": "VIS-019.png",
+      "sha256": "aa7cbfe90c3c5620b8641c93a20c583394c5867cddccee2844d137b9c6728d92",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "CNY million",
+        "parentheses",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2022",
+          "2021"
+        ],
+        "cells": [
+          {
+            "row": "Revenue",
+            "column": "2022",
+            "value": "357.25",
+            "unit": "CNY million",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Revenue",
+            "column": "2021",
+            "value": "368.25",
+            "unit": "CNY million",
+            "date": "2021-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating costs",
+            "column": "2022",
+            "value": "(386.25)",
+            "unit": "CNY million",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating costs",
+            "column": "2021",
+            "value": "(397.25)",
+            "unit": "CNY million",
+            "date": "2021-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-020",
+      "kind": "screenshot",
+      "file": "VIS-020.png",
+      "sha256": "402d413e65d8de0ad9f38817c02c4cd29beb46eb4371ad562860da2f6381b930",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "USD thousand",
+        "parentheses",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2022",
+          "2021"
+        ],
+        "cells": [
+          {
+            "row": "Operating cash flow",
+            "column": "2022",
+            "value": "374.25",
+            "unit": "USD thousand",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating cash flow",
+            "column": "2021",
+            "value": "385.25",
+            "unit": "USD thousand",
+            "date": "2021-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2022",
+            "value": "(403.25)",
+            "unit": "USD thousand",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2021",
+            "value": "(414.25)",
+            "unit": "USD thousand",
+            "date": "2021-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-021",
+      "kind": "scanned-pdf",
+      "file": "VIS-021.pdf",
+      "sha256": "9cb7e4b3d7214346bf80b9d09af9d752269e88b23dd4d61c39fbcf7689272a6a",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "HKD million",
+        "parentheses",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2022",
+          "2021"
+        ],
+        "cells": [
+          {
+            "row": "Net profit",
+            "column": "2022",
+            "value": "391.25",
+            "unit": "HKD million",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Net profit",
+            "column": "2021",
+            "value": "402.25",
+            "unit": "HKD million",
+            "date": "2021-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2022",
+            "value": "(420.25)",
+            "unit": "HKD million",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2021",
+            "value": "(431.25)",
+            "unit": "HKD million",
+            "date": "2021-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-022",
+      "kind": "table",
+      "file": "VIS-022.png",
+      "sha256": "6483f738e97b42e5ca97e8ec86d9ee48ae4b9af803c6f3569821c9587fe83e92",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "%",
+        "parentheses",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2022",
+          "2021"
+        ],
+        "cells": [
+          {
+            "row": "Return on equity",
+            "column": "2022",
+            "value": "18.5%",
+            "unit": "%",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Return on equity",
+            "column": "2021",
+            "value": "29.5%",
+            "unit": "%",
+            "date": "2021-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating margin",
+            "column": "2022",
+            "value": "(17.5%)",
+            "unit": "%",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating margin",
+            "column": "2021",
+            "value": "(28.5%)",
+            "unit": "%",
+            "date": "2021-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-023",
+      "kind": "screenshot",
+      "file": "VIS-023.png",
+      "sha256": "17e86c33e6b5248579f83f62a3cbc640f06d92241c91ae5fc6ed5c4564fe90e3",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "shares thousand",
+        "parentheses",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2022",
+          "2021"
+        ],
+        "cells": [
+          {
+            "row": "Basic shares",
+            "column": "2022",
+            "value": "425.25",
+            "unit": "shares thousand",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Basic shares",
+            "column": "2021",
+            "value": "436.25",
+            "unit": "shares thousand",
+            "date": "2021-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2022",
+            "value": "(454.25)",
+            "unit": "shares thousand",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2021",
+            "value": "(465.25)",
+            "unit": "shares thousand",
+            "date": "2021-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-024",
+      "kind": "scanned-pdf",
+      "file": "VIS-024.pdf",
+      "sha256": "33b25dff18a50262f3786c677d8206240cc6b70acf3583429fab498249243394",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "EUR million",
+        "parentheses",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2022",
+          "2021"
+        ],
+        "cells": [
+          {
+            "row": "Assets",
+            "column": "2022",
+            "value": "442.25",
+            "unit": "EUR million",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Assets",
+            "column": "2021",
+            "value": "453.25",
+            "unit": "EUR million",
+            "date": "2021-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Liabilities",
+            "column": "2022",
+            "value": "(471.25)",
+            "unit": "EUR million",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Liabilities",
+            "column": "2021",
+            "value": "(482.25)",
+            "unit": "EUR million",
+            "date": "2021-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-025",
+      "kind": "table",
+      "file": "VIS-025.png",
+      "sha256": "d40e82d8c4f0eca726d32fa2401ae3b4a9bf947c892163fb33084644427904c3",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "CNY million",
+        "sign",
+        "missing",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2025",
+          "2024"
+        ],
+        "cells": [
+          {
+            "row": "Revenue",
+            "column": "2025",
+            "value": "459.25",
+            "unit": "CNY million",
+            "date": "2025-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Revenue",
+            "column": "2024",
+            "value": null,
+            "unit": "CNY million",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating costs",
+            "column": "2025",
+            "value": "-488.25",
+            "unit": "CNY million",
+            "date": "2025-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating costs",
+            "column": "2024",
+            "value": "-499.25",
+            "unit": "CNY million",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-026",
+      "kind": "screenshot",
+      "file": "VIS-026.png",
+      "sha256": "fbda738777f67c6b5fb75ca1b98da38f60259dbf48f0ab4f9ebf0197966e6563",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "USD thousand",
+        "sign",
+        "missing",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2025",
+          "2024"
+        ],
+        "cells": [
+          {
+            "row": "Operating cash flow",
+            "column": "2025",
+            "value": "476.25",
+            "unit": "USD thousand",
+            "date": "2025-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating cash flow",
+            "column": "2024",
+            "value": null,
+            "unit": "USD thousand",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2025",
+            "value": "-505.25",
+            "unit": "USD thousand",
+            "date": "2025-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2024",
+            "value": "-516.25",
+            "unit": "USD thousand",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-027",
+      "kind": "scanned-pdf",
+      "file": "VIS-027.pdf",
+      "sha256": "111b1a9f1019542f954fb3e36ff18fbdd04d47302b358d7d775d239fbc002b1a",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "HKD million",
+        "sign",
+        "missing",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2025",
+          "2024"
+        ],
+        "cells": [
+          {
+            "row": "Net profit",
+            "column": "2025",
+            "value": "493.25",
+            "unit": "HKD million",
+            "date": "2025-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Net profit",
+            "column": "2024",
+            "value": null,
+            "unit": "HKD million",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2025",
+            "value": "-522.25",
+            "unit": "HKD million",
+            "date": "2025-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2024",
+            "value": "-533.25",
+            "unit": "HKD million",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-028",
+      "kind": "table",
+      "file": "VIS-028.png",
+      "sha256": "e23286f179f3345568e5f900a3e02c37a25a9f90b636b107fe105117f5a2990e",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "%",
+        "sign",
+        "missing",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2025",
+          "2024"
+        ],
+        "cells": [
+          {
+            "row": "Return on equity",
+            "column": "2025",
+            "value": "0.5%",
+            "unit": "%",
+            "date": "2025-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Return on equity",
+            "column": "2024",
+            "value": null,
+            "unit": "%",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating margin",
+            "column": "2025",
+            "value": "-29.5%",
+            "unit": "%",
+            "date": "2025-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating margin",
+            "column": "2024",
+            "value": "-10.5%",
+            "unit": "%",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-029",
+      "kind": "screenshot",
+      "file": "VIS-029.png",
+      "sha256": "807189413813ab67990214f86f516ab77924e338f6139a9116e8431056f0459f",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "shares thousand",
+        "sign",
+        "missing",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2025",
+          "2024"
+        ],
+        "cells": [
+          {
+            "row": "Basic shares",
+            "column": "2025",
+            "value": "527.25",
+            "unit": "shares thousand",
+            "date": "2025-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Basic shares",
+            "column": "2024",
+            "value": null,
+            "unit": "shares thousand",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2025",
+            "value": "-556.25",
+            "unit": "shares thousand",
+            "date": "2025-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2024",
+            "value": "-567.25",
+            "unit": "shares thousand",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-030",
+      "kind": "scanned-pdf",
+      "file": "VIS-030.pdf",
+      "sha256": "1bbfe2a696cc6578078cdc4eb7d7416e183d5ca000a80c1c9c3edb3654b873ce",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "EUR million",
+        "sign",
+        "missing",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2025",
+          "2024"
+        ],
+        "cells": [
+          {
+            "row": "Assets",
+            "column": "2025",
+            "value": "544.25",
+            "unit": "EUR million",
+            "date": "2025-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Assets",
+            "column": "2024",
+            "value": null,
+            "unit": "EUR million",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Liabilities",
+            "column": "2025",
+            "value": "-573.25",
+            "unit": "EUR million",
+            "date": "2025-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Liabilities",
+            "column": "2024",
+            "value": "-584.25",
+            "unit": "EUR million",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-031",
+      "kind": "table",
+      "file": "VIS-031.png",
+      "sha256": "738da707019a48adc1189e939dacbd02a05ca7b7501fa6335ebad9ef0393c37f",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "CNY million",
+        "sign",
+        "missing",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2024",
+          "2023"
+        ],
+        "cells": [
+          {
+            "row": "Revenue",
+            "column": "2024",
+            "value": "561.25",
+            "unit": "CNY million",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Revenue",
+            "column": "2023",
+            "value": "572.25",
+            "unit": "CNY million",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating costs",
+            "column": "2024",
+            "value": null,
+            "unit": "CNY million",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating costs",
+            "column": "2023",
+            "value": "601.25",
+            "unit": "CNY million",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-032",
+      "kind": "screenshot",
+      "file": "VIS-032.png",
+      "sha256": "a5ff2ef017e934358c02d846a31154fc8d32e9cb3e43b2d0ea61e555d6f5eadf",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "USD thousand",
+        "sign",
+        "missing",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2024",
+          "2023"
+        ],
+        "cells": [
+          {
+            "row": "Operating cash flow",
+            "column": "2024",
+            "value": "578.25",
+            "unit": "USD thousand",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating cash flow",
+            "column": "2023",
+            "value": "589.25",
+            "unit": "USD thousand",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2024",
+            "value": null,
+            "unit": "USD thousand",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2023",
+            "value": "618.25",
+            "unit": "USD thousand",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-033",
+      "kind": "scanned-pdf",
+      "file": "VIS-033.pdf",
+      "sha256": "ecbdbe39524d995b8bdf5f0e17c9a2deb80aa4fdbd76c0d415b7f1cc95617a4c",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "HKD million",
+        "sign",
+        "missing",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2024",
+          "2023"
+        ],
+        "cells": [
+          {
+            "row": "Net profit",
+            "column": "2024",
+            "value": "595.25",
+            "unit": "HKD million",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Net profit",
+            "column": "2023",
+            "value": "606.25",
+            "unit": "HKD million",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2024",
+            "value": null,
+            "unit": "HKD million",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2023",
+            "value": "635.25",
+            "unit": "HKD million",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-034",
+      "kind": "table",
+      "file": "VIS-034.png",
+      "sha256": "1dc65180887d0661d87e8646e05cc01b31c41f7900afd67db62b90a7279f13c9",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "%",
+        "sign",
+        "missing",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2024",
+          "2023"
+        ],
+        "cells": [
+          {
+            "row": "Return on equity",
+            "column": "2024",
+            "value": "12.5%",
+            "unit": "%",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Return on equity",
+            "column": "2023",
+            "value": "23.5%",
+            "unit": "%",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating margin",
+            "column": "2024",
+            "value": null,
+            "unit": "%",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating margin",
+            "column": "2023",
+            "value": "22.5%",
+            "unit": "%",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-035",
+      "kind": "screenshot",
+      "file": "VIS-035.png",
+      "sha256": "2fb555321da772096c95f5913ba70ff08720f6e9b3ee7ba416b987830c582cf4",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "shares thousand",
+        "sign",
+        "missing",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2024",
+          "2023"
+        ],
+        "cells": [
+          {
+            "row": "Basic shares",
+            "column": "2024",
+            "value": "629.25",
+            "unit": "shares thousand",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Basic shares",
+            "column": "2023",
+            "value": "640.25",
+            "unit": "shares thousand",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2024",
+            "value": null,
+            "unit": "shares thousand",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2023",
+            "value": "669.25",
+            "unit": "shares thousand",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-036",
+      "kind": "scanned-pdf",
+      "file": "VIS-036.pdf",
+      "sha256": "ec9c4c29bdeba6b88672cf12323dee040ab8c245f7575328a870a98d3605ab14",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "EUR million",
+        "sign",
+        "missing",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2024",
+          "2023"
+        ],
+        "cells": [
+          {
+            "row": "Assets",
+            "column": "2024",
+            "value": "646.25",
+            "unit": "EUR million",
+            "date": "2024-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Assets",
+            "column": "2023",
+            "value": "657.25",
+            "unit": "EUR million",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Liabilities",
+            "column": "2024",
+            "value": null,
+            "unit": "EUR million",
+            "date": "2024-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Liabilities",
+            "column": "2023",
+            "value": "686.25",
+            "unit": "EUR million",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-037",
+      "kind": "table",
+      "file": "VIS-037.png",
+      "sha256": "bf7026e1d836b97b35f645d0df88ba30b9d48f1e7eb331f0774373129836da8f",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "CNY million",
+        "parentheses",
+        "zero",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2023",
+          "2022"
+        ],
+        "cells": [
+          {
+            "row": "Revenue",
+            "column": "2023",
+            "value": "0",
+            "unit": "CNY million",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Revenue",
+            "column": "2022",
+            "value": "674.25",
+            "unit": "CNY million",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating costs",
+            "column": "2023",
+            "value": "(692.25)",
+            "unit": "CNY million",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating costs",
+            "column": "2022",
+            "value": "(703.25)",
+            "unit": "CNY million",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-038",
+      "kind": "screenshot",
+      "file": "VIS-038.png",
+      "sha256": "2b8d98f8a2574ef2c4013a49232d903c84a8eb1ff705dc5de45abcf832c54061",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "USD thousand",
+        "parentheses",
+        "zero",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2023",
+          "2022"
+        ],
+        "cells": [
+          {
+            "row": "Operating cash flow",
+            "column": "2023",
+            "value": "0",
+            "unit": "USD thousand",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating cash flow",
+            "column": "2022",
+            "value": "691.25",
+            "unit": "USD thousand",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2023",
+            "value": "(709.25)",
+            "unit": "USD thousand",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2022",
+            "value": "(720.25)",
+            "unit": "USD thousand",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-039",
+      "kind": "scanned-pdf",
+      "file": "VIS-039.pdf",
+      "sha256": "3067029a80882f4158dc578b26ca0e0b217059f3e507afe13d66d614c86b09a4",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "HKD million",
+        "parentheses",
+        "zero",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2023",
+          "2022"
+        ],
+        "cells": [
+          {
+            "row": "Net profit",
+            "column": "2023",
+            "value": "0",
+            "unit": "HKD million",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Net profit",
+            "column": "2022",
+            "value": "708.25",
+            "unit": "HKD million",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2023",
+            "value": "(726.25)",
+            "unit": "HKD million",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2022",
+            "value": "(737.25)",
+            "unit": "HKD million",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-040",
+      "kind": "table",
+      "file": "VIS-040.png",
+      "sha256": "d0ce41c4ebfc232ed45c0b817c3f46662fd3e5589f48f09735366413e04b5e45",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "%",
+        "parentheses",
+        "zero",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2023",
+          "2022"
+        ],
+        "cells": [
+          {
+            "row": "Return on equity",
+            "column": "2023",
+            "value": "0",
+            "unit": "%",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Return on equity",
+            "column": "2022",
+            "value": "5.5%",
+            "unit": "%",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating margin",
+            "column": "2023",
+            "value": "(23.5%)",
+            "unit": "%",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating margin",
+            "column": "2022",
+            "value": "(4.5%)",
+            "unit": "%",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-041",
+      "kind": "screenshot",
+      "file": "VIS-041.png",
+      "sha256": "b0914f9e84ce2f64a2ad4e37267fcaa8591d18ad85c40e9b184e4ea47ba75796",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "shares thousand",
+        "parentheses",
+        "zero",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2023",
+          "2022"
+        ],
+        "cells": [
+          {
+            "row": "Basic shares",
+            "column": "2023",
+            "value": "0",
+            "unit": "shares thousand",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Basic shares",
+            "column": "2022",
+            "value": "742.25",
+            "unit": "shares thousand",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2023",
+            "value": "(760.25)",
+            "unit": "shares thousand",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2022",
+            "value": "(771.25)",
+            "unit": "shares thousand",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-042",
+      "kind": "scanned-pdf",
+      "file": "VIS-042.pdf",
+      "sha256": "495a4352d958b99d7369c613622b5ae3495aea0be482f2ea508baa6014186014",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "EUR million",
+        "parentheses",
+        "zero",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2023",
+          "2022"
+        ],
+        "cells": [
+          {
+            "row": "Assets",
+            "column": "2023",
+            "value": "0",
+            "unit": "EUR million",
+            "date": "2023-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Assets",
+            "column": "2022",
+            "value": "759.25",
+            "unit": "EUR million",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Liabilities",
+            "column": "2023",
+            "value": "(777.25)",
+            "unit": "EUR million",
+            "date": "2023-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Liabilities",
+            "column": "2022",
+            "value": "(788.25)",
+            "unit": "EUR million",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Consolidated scope; not parent-only."
+        ]
+      }
+    },
+    {
+      "id": "VIS-043",
+      "kind": "table",
+      "file": "VIS-043.png",
+      "sha256": "6f1ed9dd81359236a5ee36d72d988459faad32e60522e8f6e4d3bdacc9e503a2",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "CNY million",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2022",
+          "2021"
+        ],
+        "cells": [
+          {
+            "row": "Revenue",
+            "column": "2022",
+            "value": "765.25",
+            "unit": "CNY million",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Revenue",
+            "column": "2021",
+            "value": "776.25",
+            "unit": "CNY million",
+            "date": "2021-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating costs",
+            "column": "2022",
+            "value": "-794.25",
+            "unit": "CNY million",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating costs",
+            "column": "2021",
+            "value": "-805.25",
+            "unit": "CNY million",
+            "date": "2021-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-044",
+      "kind": "screenshot",
+      "file": "VIS-044.png",
+      "sha256": "683ff02cb2023058e8a99a6a81868f24054d56301ce9c109e6bcf24537d95633",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "USD thousand",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2022",
+          "2021"
+        ],
+        "cells": [
+          {
+            "row": "Operating cash flow",
+            "column": "2022",
+            "value": "782.25",
+            "unit": "USD thousand",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating cash flow",
+            "column": "2021",
+            "value": "793.25",
+            "unit": "USD thousand",
+            "date": "2021-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2022",
+            "value": "-811.25",
+            "unit": "USD thousand",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Capital expenditure",
+            "column": "2021",
+            "value": "-822.25",
+            "unit": "USD thousand",
+            "date": "2021-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-045",
+      "kind": "scanned-pdf",
+      "file": "VIS-045.pdf",
+      "sha256": "3d280617815c70dd0e6130ce30c66919d44493bc6110f6683e71f707cf6fc5a1",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "HKD million",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2022",
+          "2021"
+        ],
+        "cells": [
+          {
+            "row": "Net profit",
+            "column": "2022",
+            "value": "799.25",
+            "unit": "HKD million",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Net profit",
+            "column": "2021",
+            "value": "810.25",
+            "unit": "HKD million",
+            "date": "2021-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2022",
+            "value": "-828.25",
+            "unit": "HKD million",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Nonrecurring gain",
+            "column": "2021",
+            "value": "-839.25",
+            "unit": "HKD million",
+            "date": "2021-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-046",
+      "kind": "table",
+      "file": "VIS-046.png",
+      "sha256": "dfbc4a31558f920d861da9cf91b335ed3352e24671218ec8af5833212487ed3c",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "%",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2022",
+          "2021"
+        ],
+        "cells": [
+          {
+            "row": "Return on equity",
+            "column": "2022",
+            "value": "6.5%",
+            "unit": "%",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Return on equity",
+            "column": "2021",
+            "value": "17.5%",
+            "unit": "%",
+            "date": "2021-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Operating margin",
+            "column": "2022",
+            "value": "-5.5%",
+            "unit": "%",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Operating margin",
+            "column": "2021",
+            "value": "-16.5%",
+            "unit": "%",
+            "date": "2021-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-047",
+      "kind": "screenshot",
+      "file": "VIS-047.png",
+      "sha256": "f0642e4b21b267a307b11e7064f50e2053998885e06235f20f5de37c9276207f",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "shares thousand",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2022",
+          "2021"
+        ],
+        "cells": [
+          {
+            "row": "Basic shares",
+            "column": "2022",
+            "value": "833.25",
+            "unit": "shares thousand",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Basic shares",
+            "column": "2021",
+            "value": "844.25",
+            "unit": "shares thousand",
+            "date": "2021-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2022",
+            "value": "-862.25",
+            "unit": "shares thousand",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Diluted shares",
+            "column": "2021",
+            "value": "-873.25",
+            "unit": "shares thousand",
+            "date": "2021-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    },
+    {
+      "id": "VIS-048",
+      "kind": "scanned-pdf",
+      "file": "VIS-048.pdf",
+      "sha256": "fe90c0025969ac251b8ad7b3cfa85189c239cc1e9be90e27b166866f4f4d2cf2",
+      "synthetic": true,
+      "page": 1,
+      "tags": [
+        "EUR million",
+        "sign",
+        "numeric",
+        "footnote",
+        "relationship"
+      ],
+      "expected": {
+        "headers": [
+          "Metric",
+          "2022",
+          "2021"
+        ],
+        "cells": [
+          {
+            "row": "Assets",
+            "column": "2022",
+            "value": "850.25",
+            "unit": "EUR million",
+            "date": "2022-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Assets",
+            "column": "2021",
+            "value": "861.25",
+            "unit": "EUR million",
+            "date": "2021-12-31",
+            "footnote": null
+          },
+          {
+            "row": "Liabilities",
+            "column": "2022",
+            "value": "-879.25",
+            "unit": "EUR million",
+            "date": "2022-12-31",
+            "footnote": "[1]"
+          },
+          {
+            "row": "Liabilities",
+            "column": "2021",
+            "value": "-890.25",
+            "unit": "EUR million",
+            "date": "2021-12-31",
+            "footnote": "[1]"
+          }
+        ],
+        "footnotes": [
+          "[1] Restated comparative period."
+        ]
+      }
+    }
+  ]
+}

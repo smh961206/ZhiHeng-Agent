@@ -6,6 +6,7 @@ import {Button} from './ui/button';
 const Workbench=lazy(()=>import('./ResearchWorkbench'));
 const Detail=lazy(()=>import('./ResearchDetail'));
 const Handbook=lazy(()=>import('./ResearchHandbook'));
+const History=lazy(()=>import('./ResearchHistory'));
 
 class PageBoundary extends Component{
  state={failed:false};
@@ -20,3 +21,4 @@ export function ResearchDetailPage(props){return <PageBoundary name="研究详�
 export function ResearchHandbookPage(props){return <PageBoundary name="研究手册"><Handbook {...props}/></PageBoundary>;}
 
 export function ResearchWorkbenchPage(props){return <PageBoundary name="研究工作台"><Workbench {...props}/></PageBoundary>;}
+export function ResearchHistoryPage(props){return <PageBoundary name="研究记录"><History {...props}/></PageBoundary>;}

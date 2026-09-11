@@ -1,0 +1,475 @@
+{
+  "version": 1,
+  "subrelease": "V4.9.0",
+  "baselineCommit": "29a2785e0697fa9d76290efdbd7ec8d71856cc20",
+  "hashNormalization": "utf8-lf",
+  "scanRoots": [
+    "server",
+    "scripts",
+    "src",
+    "shared"
+  ],
+  "scanExtensions": [
+    ".mjs",
+    ".js",
+    ".jsx"
+  ],
+  "wrapperConsumers": [
+    "server/agent-page-reader.mjs",
+    "server/index.mjs",
+    "server/pdf-extractor.mjs",
+    "server/visual-reading.mjs",
+    "scripts/vision-input-diagnostics.mjs"
+  ],
+  "owners": [
+    {
+      "file": "server/vision-model.mjs",
+      "sha256": "586222e1a3bcf94c14e8d22ccdcae6925a6ee39757858ecce800f12e30091124",
+      "currentSha256": "9a84c511ea6793624f66726372c8e7df1b01bcfaf8d40320a3c3d7355b2e0035"
+    },
+    {
+      "file": "server/model-routing.mjs",
+      "sha256": "0e1f75d4fe5faf1041e74ae26f6227a07b3ead5c420b8c74cb7714ecfe7f6cc2",
+      "currentSha256": "f4d15a31cf62f61b094aff825cc1ab943a551b58f2c8e112070ef9681a533a73"
+    },
+    {
+      "file": "server/model-catalog.mjs",
+      "sha256": "3ea706c39c0082008e62b5b08b2749483710951edc9e91c0caa262e22e3d2b03",
+      "currentSha256": "18cf8be6e482bc874ab7a996822e710ba424b6f31e70440e134402c70d4dab77"
+    },
+    {
+      "file": "server/model-gateway.mjs",
+      "sha256": "9a135b798f45b69c11de42e81396bfdd8b39b848e4a897e21342dc92101b966b",
+      "currentSha256": "d8f311d815eef2ac0fa73d28bdff6b4560b27111ab18014dd9801baaa2424f81"
+    },
+    {
+      "file": "server/model-adapter.mjs",
+      "sha256": "e2bfd01715acc6998b0dbff338b7bdc18f5186ab7af67bd1c691558c9dc3322e",
+      "currentSha256": "cad5b207fab4f83e82879361544eb581cd5b65c1ca720e8e50bb158600058daf"
+    },
+    {
+      "file": "server/model-stream.mjs",
+      "sha256": "63323a032d3a59b14cb28c270a597bfbdb26bdfe88211b72be80ae03de303932"
+    },
+    {
+      "file": "server/model-gateway-result.mjs",
+      "sha256": "dbae853d45494f440d27d565d5d0b668e21b75514a2bbb80ef63086a37a1a3c2"
+    },
+    {
+      "file": "server/visual-reading.mjs",
+      "sha256": "df6c812c08d53057df41518ce54b36b9090899330c308d92265f0fbd2941626c"
+    },
+    {
+      "file": "server/visual-render-worker.mjs",
+      "sha256": "93b214f0f8c3df90f05ca6b6031548a492b8780e80a8cd5b74b024074ad728b5"
+    },
+    {
+      "file": "server/visual-assets.mjs",
+      "sha256": "a83f2f7473b84581e3d5d0c1857cd42a4bc00af3f81ebf42f9e443d8135efc3f"
+    },
+    {
+      "file": "server/material-vision.mjs",
+      "sha256": "6c819124bcdf8cd3ba031c5afcf623d7ccf2772931d0e17aa1e8ecfd2ada7817"
+    },
+    {
+      "file": "server/document-reader.mjs",
+      "sha256": "ce7c438e789ae07e07186bd9333450077cdf936dd00ff84f15cf819deecb8ab6"
+    },
+    {
+      "file": "server/pdf-extractor.mjs",
+      "sha256": "e85c93c08662340a1d674cb10de94ce97acf8c5607452722c05b0b7fa4f18475"
+    },
+    {
+      "file": "server/pdf-processing.mjs",
+      "sha256": "0c78e05103f2d31226d0a541b53a1cdf05345e72d22860003145d6d082ac26f1"
+    },
+    {
+      "file": "server/agent-page-reader.mjs",
+      "sha256": "ffd20e5e99cd22dd627ece5ac28722a1bece2a7ac9b74bfdbd3b5db158b56941"
+    },
+    {
+      "file": "server/agent.mjs",
+      "sha256": "297e24f0123ea88b10e87c4e69371173717666636d9225cd74ac09f479ecff8b"
+    },
+    {
+      "file": "server/index.mjs",
+      "sha256": "a04904c1497155ef54cfd1b159a027f07c504fb1be0137f70c6a0c14c7b548cb",
+      "currentSha256": "77cd5edbfc337836033355b122acbe15929a5e9f7693937ea133304f7a1500d0"
+    },
+    {
+      "file": "scripts/vision-input-diagnostics.mjs",
+      "sha256": "667fe7fb48875ef87b4073d695c0151ea3b606438d7b8d2115740ee565dada5a"
+    },
+    {
+      "file": "scripts/dual-model-diagnostics.mjs",
+      "sha256": "9e7d7713ce2b4cd78651cbfcea62aa0f7c556e198ac70e4c7897ce21a93bdeda"
+    },
+    {
+      "file": ".env.example",
+      "sha256": "0822808113792ce25aab5c6779d30dc0dc8b4c8902b827cb388266a41708c962",
+      "currentSha256": "2c68fad05079e68a6c017ad8ff1fde6a2607026f9a295cbc8cd3331ce49655fb"
+    }
+  ],
+  "limits": [
+    {
+      "id": "wrapper-images",
+      "file": "server/vision-model.mjs",
+      "anchor": "images.length>12",
+      "description": "1–12 rendered images per request; crops count as images."
+    },
+    {
+      "id": "wire-options",
+      "file": "server/vision-model.mjs",
+      "anchor": "stream:false,maxOutputTokens:6000",
+      "description": "Non-stream request with 6000 output-token budget."
+    },
+    {
+      "id": "gateway-images",
+      "file": "server/model-gateway.mjs",
+      "anchor": "request.purpose==='vision'&&(!images||images>12)",
+      "description": "Gateway also enforces 1–12 images."
+    },
+    {
+      "id": "output-tokens",
+      "file": "server/model-gateway.mjs",
+      "anchor": "request.purpose==='vision'&&maxOutputTokens>6000",
+      "description": "Explicit Vision output budget cannot exceed 6000 tokens."
+    },
+    {
+      "id": "request-bytes",
+      "file": "server/model-adapter.mjs",
+      "anchor": "Buffer.byteLength(serialized)>16*1024*1024",
+      "description": "Serialized request limit is 16 MiB, including text/base64."
+    },
+    {
+      "id": "vision-timeout",
+      "file": "server/model-adapter.mjs",
+      "anchor": "request.purpose==='vision'?{idleMs:60000,totalMs:60000}",
+      "description": "Vision idle and total deadlines are 60 seconds; outer cancellation may be shorter."
+    },
+    {
+      "id": "response-bytes",
+      "file": "server/model-adapter.mjs",
+      "anchor": "request.purpose==='vision'?512000:8_000_000",
+      "description": "Vision response limit is 512000 bytes."
+    },
+    {
+      "id": "response-characters",
+      "file": "server/model-adapter.mjs",
+      "anchor": "result.content.length>18000",
+      "description": "Vision must finish with stop, without tool calls, at most 18000 JS string code units."
+    },
+    {
+      "id": "single-attempt",
+      "file": "server/model-adapter.mjs",
+      "anchor": "request.purpose==='router'||request.purpose==='vision'?(fetchImpl??globalThis.fetch)",
+      "description": "Vision uses one fetch attempt, no research network retry or model cycling."
+    },
+    {
+      "id": "research-pages",
+      "file": "server/visual-reading.mjs",
+      "anchor": "withVisualBudget=(fn,pages=6)",
+      "description": "Default process-local async research enhancement budget: 6 logical pages, charged before attempt."
+    },
+    {
+      "id": "pdf-pages",
+      "file": "server/visual-reading.mjs",
+      "anchor": "enabled=visionStatus().enabled,maxPages=2",
+      "description": "Default automatic enhancement: 2 selected PDF pages per document."
+    },
+    {
+      "id": "render-timeout",
+      "file": "server/visual-reading.mjs",
+      "anchor": "setTimeout(()=>finish(new Error('原页转换超时')),30000)",
+      "description": "Rendering worker deadline: 30 seconds."
+    },
+    {
+      "id": "transcript-size",
+      "file": "server/visual-reading.mjs",
+      "anchor": "p.text.length>7500",
+      "description": "Each page text <=7500 code units, <=20 uncertainties, each <=500 code units."
+    },
+    {
+      "id": "audit-pages",
+      "file": "server/visual-reading.mjs",
+      "anchor": "enabled=visionStatus().enabled,maxPages=6",
+      "description": "Separate audit reread window: 6 logical pages by default."
+    },
+    {
+      "id": "audit-images",
+      "file": "server/visual-reading.mjs",
+      "anchor": "bytes+JSON.stringify(asset.images).length>12*1024*1024",
+      "description": "Audit images window measured in serialized JS string length, not decoded bytes: 12 Mi."
+    },
+    {
+      "id": "audit-timeout",
+      "file": "server/visual-reading.mjs",
+      "anchor": "AbortSignal.timeout(90000)",
+      "description": "Shared audit reread deadline: 90 seconds."
+    },
+    {
+      "id": "refresh-age",
+      "file": "server/visual-reading.mjs",
+      "anchor": "age>=6*3600000",
+      "description": "Incomplete automatic visual upgrades require 6-hour age and remaining process-local budget."
+    },
+    {
+      "id": "upload-bytes",
+      "file": "server/material-vision.mjs",
+      "anchor": "bytes.length>10*1024*1024",
+      "description": "Visual material upload: nonempty and at most 10 MiB."
+    },
+    {
+      "id": "upload-pages",
+      "file": "server/material-vision.mjs",
+      "anchor": "parsed.pages>100",
+      "description": "Uploaded PDF: at most 100 physical pages."
+    },
+    {
+      "id": "upload-parse",
+      "file": "server/material-vision.mjs",
+      "anchor": "ocr:false,timeoutMs:45000",
+      "description": "Upload native parsing deadline: 45 seconds, fallback parsing also 45 seconds."
+    },
+    {
+      "id": "upload-text",
+      "file": "server/material-vision.mjs",
+      "anchor": "enhanced.text.length>20000",
+      "description": "Upload extracted text limit: 20000 code units."
+    },
+    {
+      "id": "pdf-scale",
+      "file": "server/visual-render-worker.mjs",
+      "anchor": "Math.min(2.5,2000/Math.max(base.width,base.height))",
+      "description": "PDF scale <=2.5 and longest side <=2000 px (rounded canvas)."
+    },
+    {
+      "id": "image-pixels",
+      "file": "server/visual-render-worker.mjs",
+      "anchor": "image.width*image.height>40_000_000",
+      "description": "Raster dimensions checked after image decoding: <=40 million pixels."
+    },
+    {
+      "id": "image-scale",
+      "file": "server/visual-render-worker.mjs",
+      "anchor": "Math.min(1,2000/Math.max(image.width,image.height))",
+      "description": "Raster longest side <=2000 px, no upscaling."
+    },
+    {
+      "id": "crops",
+      "file": "server/visual-render-worker.mjs",
+      "anchor": "if(canvas.height>950)",
+      "description": "One overview; if height >950, three overlapping 40%-height full-width strips. JPEG quality .88."
+    },
+    {
+      "id": "tool-pages",
+      "file": "server/agent-page-reader.mjs",
+      "anchor": "pages.length>3",
+      "description": "1–3 unique physical pages, integers 1–2000 and within recorded source.pages."
+    },
+    {
+      "id": "tool-budget",
+      "file": "server/agent-page-reader.mjs",
+      "anchor": "enabled=()=>visionStatus().enabled,maxPages=16",
+      "description": "Separate targeted-page fetch budget: default 16 logical pages from job.agentPageReads."
+    },
+    {
+      "id": "tool-fetch",
+      "file": "server/agent-page-reader.mjs",
+      "anchor": "maxBytes:32000000,timeoutMs:45000,totalTimeoutMs:60000,retries:1",
+      "description": "Existing source fetch: 32 million bytes, 45s request /60s total, retries:1. This is document retrieval, not model retry."
+    },
+    {
+      "id": "tool-extract",
+      "file": "server/agent-page-reader.mjs",
+      "anchor": "setTimeout(()=>finish(new Error('指定原页读取超时')),45000)",
+      "description": "Targeted native extraction deadline: 45 seconds; worker heap 384 MiB."
+    },
+    {
+      "id": "tool-text",
+      "file": "server/agent-page-reader.mjs",
+      "anchor": "let remaining=40000",
+      "description": "Tool output window: 40000 code units, startBlock 0–1000."
+    },
+    {
+      "id": "archive-bytes",
+      "file": "server/visual-assets.mjs",
+      "anchor": "Buffer.byteLength(raw)>16*1024*1024",
+      "description": "Visual archive maximum: 16 MiB; content-addressed file."
+    },
+    {
+      "id": "archive-images",
+      "file": "server/visual-assets.mjs",
+      "anchor": "value.images.length>12",
+      "description": "Archive load requires 1–12 PNG/JPEG data URLs and positive page integers."
+    },
+    {
+      "id": "upload-concurrency",
+      "file": "server/index.mjs",
+      "anchor": "activeVisualImports>=2",
+      "description": "At most 2 material imports per process."
+    },
+    {
+      "id": "upload-timeout",
+      "file": "server/index.mjs",
+      "anchor": "},110000)",
+      "description": "Material import route deadline: 110 seconds."
+    },
+    {
+      "id": "native-pages",
+      "file": "server/pdf-processing.mjs",
+      "anchor": "bounded(options.maxPages,600,1,600)",
+      "description": "Native PDF parser default/hard max 600 pages and 1500000 code units."
+    },
+    {
+      "id": "ocr-pages",
+      "file": "server/pdf-processing.mjs",
+      "anchor": "bounded(options.maxOCRPages,4,0,12)",
+      "description": "OCR default 4 pages, max 12; local OCR is not a Vision model call."
+    },
+    {
+      "id": "ocr-budget",
+      "file": "server/pdf-processing.mjs",
+      "anchor": "bounded(options.ocrBudgetMs,90000,0,180000)",
+      "description": "OCR default 90s budget, max 180s, each page <=45s."
+    },
+    {
+      "id": "pdf-timeout",
+      "file": "server/pdf-extractor.mjs",
+      "anchor": "timeoutMs=180000",
+      "description": "General parser worker default deadline 180s; partial native extraction may survive timeout."
+    }
+  ],
+  "modelBranches": [
+    {
+      "id": "legacy-image-capability",
+      "file": "server/model-catalog.mjs",
+      "anchor": "inputMode!=='off'&&(model==='deepseek-flash'||inputMode==='images')",
+      "description": "Catalog exact legacy image support plus explicit images/off overrides; unknown models are not automatically image-capable."
+    },
+    {
+      "id": "vision-thinking",
+      "file": "server/model-adapter.mjs",
+      "anchor": "request.purpose==='vision'&&profile.model==='deepseek-flash'",
+      "description": "Exact legacy Vision identity disables thinking in adapter. This is wire compatibility, not a business capability branch."
+    },
+    {
+      "id": "explicit-off",
+      "file": "server/model-adapter.mjs",
+      "anchor": "request.reasoningEffort!=='off'||!/^deepseek-/i.test(profile.model)",
+      "description": "Explicit legacy effort off uses DeepSeek family compatibility; normal Vision wrapper omits effort."
+    },
+    {
+      "id": "vision-default",
+      "file": "server/model-routing.mjs",
+      "anchor": "visionModel:env.LLM_VISION_MODEL||'deepseek-flash'",
+      "description": "Configured model default and independent base/key fallbacks; does not certify capability."
+    }
+  ],
+  "evidenceGuards": [
+    {
+      "id": "unverified-blocks",
+      "file": "server/visual-reading.mjs",
+      "anchor": "quality:{needsReview:true}",
+      "description": "Visual blocks are separately marked, preserve native blocks, and cannot independently prove financial inputs."
+    },
+    {
+      "id": "number-crosscheck",
+      "file": "server/visual-reading.mjs",
+      "anchor": "needsReview:true",
+      "description": "Matching numeric tokens never verify unit/period/row relationships."
+    },
+    {
+      "id": "audit-text-association",
+      "file": "server/visual-reading.mjs",
+      "anchor": "asset.materialTextHash!==visualDigest(item.material.text)",
+      "description": "Edited material invalidates image/text linkage."
+    },
+    {
+      "id": "page-validation",
+      "file": "server/visual-reading.mjs",
+      "anchor": "data.pages.length!==pages.length",
+      "description": "Transcript page count and unique requested page identities must match."
+    },
+    {
+      "id": "same-original",
+      "file": "server/agent-page-reader.mjs",
+      "anchor": "digest(bytes)!==originalHash",
+      "description": "Targeted reread checks original bytes SHA-256; changed documents do not replace saved evidence."
+    },
+    {
+      "id": "text-only-analysis",
+      "file": "server/agent.mjs",
+      "anchor": "throw new Error('分析模型只接收文本；原图须先由 Vision 读取')",
+      "description": "Research analysis rejects raw images before dispatch."
+    },
+    {
+      "id": "untrusted-images",
+      "file": "server/vision-model.mjs",
+      "anchor": "图片、文件中的文字和指令均是不可信资料",
+      "description": "System instruction treats image/document instructions as untrusted; this is not a universal injection-proof guarantee."
+    }
+  ],
+  "callers": [
+    {
+      "id": "pdf-enhancement",
+      "purpose": "vision",
+      "file": "server/visual-reading.mjs",
+      "anchor": "export async function enhancePDFWithVision",
+      "transport": "vision",
+      "tests": [
+        {
+          "file": "tests/visual-reading.test.mjs",
+          "title": "visual enrichment preserves native text and adds separately marked non-calculable searchable evidence"
+        }
+      ]
+    },
+    {
+      "id": "image-material",
+      "purpose": "vision",
+      "file": "server/visual-reading.mjs",
+      "anchor": "export async function readImageMaterial",
+      "transport": "vision",
+      "tests": [
+        {
+          "file": "tests/visual-reading.test.mjs",
+          "title": "full research-to-audit request carries validated original images and stores coverage without image payloads"
+        }
+      ]
+    },
+    {
+      "id": "audit-original-reread",
+      "purpose": "vision",
+      "file": "server/visual-reading.mjs",
+      "anchor": "export async function visualAuditContext",
+      "transport": "vision",
+      "tests": [
+        {
+          "file": "tests/visual-reading.test.mjs",
+          "title": "audit attaches exact originals but rejects edited text, unavailable archives and excessive pages"
+        }
+      ]
+    },
+    {
+      "id": "targeted-page-read",
+      "purpose": "vision",
+      "file": "server/agent-page-reader.mjs",
+      "anchor": "await readVision(images",
+      "transport": "vision",
+      "tests": [
+        {
+          "file": "tests/agent-capabilities.test.mjs",
+          "title": "requested visual pages return transcription and discrepancies without storing images in job records"
+        }
+      ]
+    }
+  ],
+  "currentWrapperConsumers": [
+    "server/agent-page-reader.mjs",
+    "server/index.mjs",
+    "server/pdf-extractor.mjs",
+    "server/visual-reading.mjs",
+    "scripts/vision-input-diagnostics.mjs",
+    "scripts/vision-benchmark.mjs"
+  ]
+}

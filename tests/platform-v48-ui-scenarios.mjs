@@ -1,13 +1,17 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 
+// Match the actual page module in either Vite development or production output.
+// Keep failure injection scoped to the workbench, never a shared dependency.
+const workbenchModule=/\/(?:src\/components\/ResearchWorkbench\.jsx|assets\/ResearchWorkbench-[\w-]+\.js)(?:\?|$)/;
+
 export function registerPlatformV48Scenarios({test,makeJob,detail,detailActions,openProcess,textIncludes,noOverflow,screenshot}){
  for(const width of [320,1440]){
   test('platform-v48-status-'+width,{viewport:{width,height:1000}},async({page,requests})=>{
    await page.goto('/');
    const trigger=page.getByRole('button',{name:'平台与模型说明',exact:true});
    await trigger.click();
-   const panel=page.getByRole('dialog',{name:'知衡 · V4.8',exact:true});
+   const panel=page.getByRole('dialog',{name:'知衡 · V4.9',exact:true});
    await textIncludes(panel,'模型已配置');await textIncludes(panel,'实际可用性以本次请求结果为准');
    await textIncludes(panel,'平台版本不表示已启用自动升级');
    assert.doesNotMatch(await panel.innerText(),/当前已启用自动升级|已连接|已通过质量验收/);
@@ -47,7 +51,7 @@ export function registerPlatformV48Scenarios({test,makeJob,detail,detailActions,
  });
  for(const width of [320,1440])test('platform-v48-lazy-workbench-'+width,{viewport:{width,height:1000}},async({page,requests})=>{
   let release,requested=false;const loaded=new Promise(resolve=>release=resolve);
-  await page.route('**/src/components/ResearchWorkbench.jsx*',async route=>{requested=true;await loaded;await route.continue();});
+  await page.route(workbenchModule,async route=>{requested=true;await loaded;await route.continue();});
   await page.goto('/');await page.locator('.fw-hero').waitFor();
   assert.equal(requested,false,'Home must not load the workbench and its material editor');
   await page.getByRole('button',{name:'开始一项研究',exact:true}).click();
@@ -61,7 +65,7 @@ export function registerPlatformV48Scenarios({test,makeJob,detail,detailActions,
  });
  test('platform-v48-workbench-load-recovery',{},async({page,requests})=>{
   await page.addInitScript(()=>{if(!sessionStorage.getItem('zhiheng:composer:v1'))sessionStorage.setItem('zhiheng:composer:v1',JSON.stringify({version:1,savedAt:Date.now(),input:{question:'合成：加载失败后保留的草稿'}}));});
-  const pattern='**/src/components/ResearchWorkbench.jsx*';
+  const pattern=workbenchModule;
   await page.route(pattern,route=>route.fulfill({contentType:'text/javascript',body:'throw new Error("synthetic-workbench-module-failure"); export default function Workbench() {}'}));
   await page.goto('/workbench');await page.getByRole('heading',{name:'暂时无法打开研究工作台',exact:true}).waitFor();
   assert.equal(requests('POST','/api/jobs').length,0);

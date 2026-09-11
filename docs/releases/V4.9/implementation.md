@@ -1,5 +1,7 @@
 # V4.9 Implementation Plan
 
+Execution authority is [DETAILED_INDEX.md](DETAILED_INDEX.md). The five groupings below are historical overview headings, not executable subrelease numbers. Normalized V4.9.0–V4.9.8 implementation and offline validation are recorded in the [completion report](V4_9-completion-report.md). Batch-nine real quality is now [operator-approved](vision-operator-approval-20260911.md); production activation remains pending and still requires matching code/configuration. V4.9.0 owns the [Vision inventory](vision-call-inventory.md), and canonical requests start at normalized V4.9.1. V4.8.4 already migrated Vision transport into Gateway; that work is not repeated or claimed as new V4.9 implementation.
+
 ## Release goal
 Make Vision a capability-routed Gateway workload; benchmark and optionally introduce primary/fallback models without changing Vision evidence trust rules.
 

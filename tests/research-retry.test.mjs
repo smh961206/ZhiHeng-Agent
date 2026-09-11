@@ -57,3 +57,30 @@ test('failed persistence leaves the original record intact and releases the retr
  assert.deepEqual(h.db.get(h.id),prior);assert.equal(h.jobs.size,0);assert.equal(h.executions.length,0);assert.equal(h.mutations.size,0);assert.equal(h.pendingStarts.size,0);
  h.storage.restartJob=save;await h.retry(h.id,0);assert.equal(h.executions.length,1);
 });
+
+test('cancelled retry waits for durable finalization, rejects duplicates, and never releases the old controller early',async()=>{
+ const h=harness({...fixture(),status:'cancelled',retryCount:1});
+ const control=new AbortController();control.abort();h.controllers.set(h.id,control);
+ const closing=Promise.withResolvers(),finishing=new Map([[h.id,closing.promise]]);
+ h.jobs.set(h.id,{...h.db.get(h.id),status:'running',delivery:{status:'saving'}});
+ const retry=createResearchRetrier({...h,finishing,configured:()=>true,execute:job=>h.executions.push(job)});
+ const pending=retry(h.id,1);await Promise.resolve();
+ assert.equal(h.executions.length,0);assert.equal(h.controllers.get(h.id),control);
+ await assert.rejects(retry(h.id,1),error=>error.status===409);
+ h.jobs.delete(h.id);h.controllers.delete(h.id);finishing.delete(h.id);closing.resolve();
+ const next=await pending;assert.equal(next.retryCount,2);assert.equal(h.executions.length,1);
+ assert.equal(h.mutations.size,0);assert.equal(h.pendingStarts.size,0);
+ await assert.rejects(retry(h.id,1),error=>error.status===409);
+});
+
+test('cancel finalization timeout and failed delivery preserve locks and refuse unsafe retry',async()=>{
+ const h=harness({...fixture(),status:'cancelled',retryCount:1}),control=new AbortController();control.abort();
+ h.controllers.set(h.id,control);h.jobs.set(h.id,{...h.db.get(h.id),status:'running'});
+ const closing=Promise.withResolvers(),finishing=new Map([[h.id,closing.promise]]);
+ const retry=createResearchRetrier({...h,finishing,finishTimeoutMs:10,configured:()=>true,execute:job=>h.executions.push(job)});
+ await assert.rejects(retry(h.id,1),error=>error.status===409);
+ assert.equal(h.controllers.get(h.id),control);assert.equal(h.mutations.size,0);assert.equal(h.pendingStarts.size,0);
+ const pending=retry(h.id,1);
+ h.jobs.set(h.id,{...h.db.get(h.id),status:'failed',delivery:{recoverable:true}});h.controllers.delete(h.id);closing.resolve();
+ await assert.rejects(pending,error=>error.status===409);assert.equal(h.executions.length,0);
+});

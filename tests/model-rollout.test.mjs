@@ -56,7 +56,7 @@ for(const c of fixture.cases)test(`offline baseline/candidate safety ${c.id}: ${
  const g=createModelGateway({env,fetchImpl:async(u,o)=>{dispatched.push(JSON.parse(o.body));return Response.json({choices:[{message:{role:'assistant',content:'synthetic response; not a quality measurement'},finish_reason:'stop'}]});}});
  await g.complete({purpose:'research',messages});
  await withJobModelState(job,()=>g.complete({purpose:'research',messages}));
- assert.equal(dispatched.length,2);assert.equal(dispatched[0].model,env.LLM_MODEL||'deepseek-v4-pro');assert.equal(dispatched[0].reasoning_effort,undefined);
+ assert.equal(dispatched.length,2);assert.equal(dispatched[0].model,env.LLM_MODEL||'deepseek-flash');assert.equal(dispatched[0].reasoning_effort,undefined);
  assert.equal(dispatched[1].model,'glm-5.3-flash');assert.equal(dispatched[1].reasoning_effort,c.expectedEffort);
  assert.equal(fixture.qualityAcceptance,false);
 });

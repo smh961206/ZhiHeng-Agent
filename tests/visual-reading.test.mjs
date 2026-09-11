@@ -14,7 +14,7 @@ import {completion,runAgent} from '../server/agent.mjs';
 import {readVisualMaterial} from '../server/material-vision.mjs';
 import {reviewFixture} from './fixtures/research-review.mjs';
 import {materialPdf} from './fixtures/material-files.mjs';
-const env={LLM_MODEL:'deepseek-v4-pro',LLM_VISION_MODEL:'deepseek-v4-flash-vision-exp',LLM_API_KEY:'synthetic-key',LLM_BASE_URL:'https://model.example.invalid'};
+const env={LLM_MODEL:'deepseek-flash',LLM_VISION_MODEL:'deepseek-flash',LLM_API_KEY:'synthetic-key',LLM_BASE_URL:'https://model.example.invalid'};
 const image={page:1,region:'整页',dataUrl:'data:image/png;base64,YWJj'};
 const parsed={text:'程序提取的正文',pages:3,pageQuality:[{page:1},{page:2,needsReview:true},{page:3}],documentBlocks:[{id:'p3-b1',page:3,text:'营业收入 100'}]};
 const transcript=pages=>JSON.stringify({pages:pages.map(page=>({page,text:'营业收入 | 2025 年 | 人民币万元 | 100',uncertainties:['单位仍需核对']}))});
@@ -30,7 +30,7 @@ test('actual vision request carries image blocks in user messages and validates 
  const fetcher=async(url,options)=>{sent=JSON.parse(options.body);assert.equal(url.hostname,'model.example.invalid');return Response.json({choices:[{finish_reason:'stop',message:{content:'ok'}}]});};
  assert.equal(await readVisionImages([image],{env,fetcher,prompt:'read synthetic image'}),'ok');
  assert.equal(sent.messages[1].content[2].type,'image_url');assert.equal(sent.messages[0].role,'system');assert.equal(sent.messages[1].role,'user');
- assert.equal(sent.model,'deepseek-v4-flash-vision-exp');assert.equal(sent.thinking.type,'disabled');
+ assert.equal(sent.model,'deepseek-flash');assert.equal(sent.thinking.type,'disabled');
  await assert.rejects(readVisionImages([image],{env,prompt:'read',fetcher:async()=>Response.json({choices:[{finish_reason:'length',message:{content:'partial'}}]})}),/未完整完成/);
  await assert.rejects(readVisionImages([image],{env,prompt:'read',fetcher:async()=>Response.json({error:'secret'},{status:401})}),error=>!error.message.includes('secret')&&/401/.test(error.message));
 });
@@ -93,7 +93,7 @@ test('full research-to-audit request carries validated original images and store
  global.fetch=async(_url,options)=>{
   calls++;const body=JSON.parse(options.body);
   if(calls===1)return Response.json({choices:[{message:{role:'assistant',content:'合成研究草稿，资料不足。[S1]'}}]});
-  assert.ok(body.messages.some(m=>m.role==='user'&&Array.isArray(m.content)&&m.content.some(p=>p.type==='text'&&p.text.includes('Vision'))));assert.ok(!options.body.includes('image_url'));assert.equal(body.model,'deepseek-v4-pro');
+  assert.ok(body.messages.some(m=>m.role==='user'&&Array.isArray(m.content)&&m.content.some(p=>p.type==='text'&&p.text.includes('Vision'))));assert.ok(!options.body.includes('image_url'));assert.equal(body.model,'deepseek-flash');
   return Response.json({choices:[{message:{role:'assistant',content:JSON.stringify(reviewFixture(job.input))}}]});
  };
  try{

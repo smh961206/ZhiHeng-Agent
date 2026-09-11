@@ -1,4 +1,4 @@
-// Run against the existing Vite server; this script never starts a backend.
+// Run against an existing Vite dev server or production preview; no backend is started.
 // PLAYWRIGHT_MODULE may point to an installed Playwright entry module.
 // Run: pnpm test:ui (or node tests/workspace-ui.integration.mjs).
 // Optional: UI_BASE_URL (default http://127.0.0.1:5173), UI_TEST_FILTER (name regex).
@@ -2617,7 +2617,7 @@ for(const width of [320,1440]){
 
 for(const width of [320,1440])test(`reference-model-vision-${width}`,{viewport:{width,height:1100}},async({page,requests})=>{
  let uploads=0;
- await page.route('**/api/materials/capabilities',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({enabled:true,model:'deepseek-v4-flash-vision-exp'})}));
+ await page.route('**/api/materials/capabilities',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({enabled:true,model:'deepseek-flash'})}));
  await page.route('**/api/materials/read',async route=>{
   uploads++;assert.equal(route.request().headers()['content-type'],'application/octet-stream');assert.ok(route.request().postDataBuffer().subarray(0,5).toString().includes('%PDF'));
   await route.fulfill({contentType:'application/json',body:JSON.stringify({text:'【PDF第1页 · 模型视觉读取，待核实】\n营业收入：100 万元，2025 年。',visualAttachment:'a'.repeat(64),processing:{method:'vision',notice:'已读取第 1 页，其余页面未视觉核对'}})});
@@ -2706,7 +2706,7 @@ test('reference-visual-edit-binding',{},async({page,requests})=>{
 });
 
 {
- const job=makeJob(973);job.modelRouting={analysisModel:'deepseek-v4-pro',visionModel:'deepseek-v4-flash-vision-exp'};job.visualAudit={delivery:'rejected',included:[],omitted:[],notice:'原页复核请求超时，已有文字仍保留。'};
+ const job=makeJob(973);job.modelRouting={analysisModel:'deepseek-flash',visionModel:'deepseek-flash'};job.visualAudit={delivery:'rejected',included:[],omitted:[],notice:'原页复核请求超时，已有文字仍保留。'};
  test('visual-audit-rejected-copy',{jobs:[job],viewport:{width:320,height:1000}},async({page})=>{
   await detail(page,job);await openProcess(page);const panel=page.locator('.rd-document-reading');await textIncludes(panel.locator('summary'),'本次原页复核未完成');await panel.locator('summary').click();
   await textIncludes(panel,'原页复核请求超时');await textIncludes(panel,'读取完成不代表数据已经核实');await noOverflow(page,'rejected reading');
@@ -2976,6 +2976,9 @@ for(const width of [320,768,1024,1440]){
 
 async function main() {
   await mkdir(artifacts, {recursive: true});
+  const indexResponse=await fetch(baseURL);
+  assert.ok(indexResponse.ok,'UI server must serve the application entry');
+  const assetMode=(await indexResponse.text()).includes('/@vite/client')?'development':'production';
   // Concurrent agents may have created the components before wiring up App.
   // Report this as pending, never as a passing test or an old-UI regression.
   const app = await readFile(new URL('../src/App.jsx', import.meta.url), 'utf8');
@@ -3022,7 +3025,7 @@ async function main() {
   } finally {
     await browser.close();
     if (results.some(result => result.status === 'failed') && !process.exitCode) process.exitCode = 1;
-    await writeFile(new URL('ui-results.json', artifacts), JSON.stringify({baseURL, status: process.exitCode === 2 ? 'not-ready' : process.exitCode ? 'failed' : 'passed', results}, null, 2));
+    await writeFile(new URL('ui-results.json', artifacts), JSON.stringify({baseURL, assetMode, status: process.exitCode === 2 ? 'not-ready' : process.exitCode ? 'failed' : 'passed', results}, null, 2));
   }
   console.log(`${results.filter(result => result.status === 'passed').length}/${selectedScenarios.length} scenarios passed. API traffic used in-memory fixtures only. Screenshots: artifacts/ui-*.png`);
 }
@@ -3093,6 +3096,9 @@ registerPlatformV48Scenarios({test,makeJob,detail,detailActions,openProcess,text
 
 const {registerPlatformCleanupScenarios}=await import('./platform-cleanup-ui-scenarios.mjs');
 registerPlatformCleanupScenarios({test,makeJob,detail,workbench,textIncludes,noOverflow,screenshot});
+
+const {registerPlatformV49Scenarios}=await import('./platform-v49-ui-scenarios.mjs');
+await registerPlatformV49Scenarios({test,makeJob,detail,openProcess,textIncludes,noOverflow,screenshot});
 
 await main().catch(error => { console.error(error.stack || error); process.exitCode = 1; });
 

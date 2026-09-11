@@ -36,13 +36,22 @@ export async function prepareResearchRetry(job,loadJob,now=new Date().toISOStrin
   events:[{time:now,type:'progress',message:`第${retryCount}次重试，因${restartReason}，本轮重新采集、分析与复核。`,restartReason:recovery.reason||'no_checkpoint'}]};
 }
 
-export function createResearchRetrier({storage,jobs,controllers,pendingStarts,mutations,execute,configured,maxConcurrent=3}){
+export function createResearchRetrier({storage,jobs,controllers,pendingStarts,mutations,execute,configured,finishing=new Map(),maxConcurrent=3,finishTimeoutMs=5000}){
  return async(id,expectedRetryCount)=>{
   if(!Number.isSafeInteger(expectedRetryCount)||expectedRetryCount<0)throw failure(400,'重试版本无效，请刷新详情页');
-  if(mutations.has(id)||controllers.has(id))throw failure(409,'研究正在运行或处理中，请稍后再试');
-  if(controllers.size+pendingStarts.size>=maxConcurrent)throw failure(429,`已有${maxConcurrent}个任务运行或准备中，请稍后再试`);
-  mutations.add(id);pendingStarts.add(id);
+  if(mutations.has(id))throw failure(409,'研究正在运行或处理中，请稍后再试');
+  mutations.add(id);
   try{
+   const control=controllers.get(id);
+   if(control){
+    const settled=finishing.get(id);
+    const current=jobs.get(id);
+    if(!control.signal?.aborted||!settled||current&&(current.retryCount??0)!==expectedRetryCount)throw failure(409,'研究正在运行或处理中，请稍后再试');
+    let timer;try{await Promise.race([settled,new Promise((_,reject)=>{timer=setTimeout(()=>reject(failure(409,'取消结果仍在保存，请稍后再试')),finishTimeoutMs);})]);}finally{clearTimeout(timer);}
+   }
+   if(controllers.has(id))throw failure(409,'研究正在运行或处理中，请稍后再试');
+   if(controllers.size+pendingStarts.size>=maxConcurrent)throw failure(429,`已有${maxConcurrent}个任务运行或准备中，请稍后再试`);
+   pendingStarts.add(id);
    const previous=jobs.get(id)??await storage.getJob(id);
    if(!previous)throw failure(404,'研究记录不存在');
    if((previous.retryCount??0)!==expectedRetryCount)throw failure(409,'研究已经重试过，请刷新详情页查看最新进度');

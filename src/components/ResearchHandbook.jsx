@@ -25,7 +25,7 @@ export default function ResearchHandbook({config,checking,onRefresh,onStart}){
   setSearchParams(next);
  }
  return <section className="research-framework research-handbook" aria-labelledby="handbook-title">
-  <header className="handbook-heading"><h1 id="handbook-title">研究手册</h1><p>从使用步骤到研究方法，按问题查阅；阅读报告时，区分已核实依据、假设与待补资料。</p></header>
+  <header className="handbook-heading"><h1 id="handbook-title">研究手册</h1><p>从资料准备到报告核对，按问题查阅；了解文档、表格与截图如何参与研究。</p></header>
   <KnowledgeStatus config={config} checking={checking} onRefresh={onRefresh}/>
   <Tabs value={tab} onValueChange={selectTab} className="handbook-tabs"><TabsList aria-label="研究手册章节"><TabsTrigger value="guide"><BookOpen size={17}/>使用指南</TabsTrigger><TabsTrigger value="method"><BookOpen size={17}/>研究方法</TabsTrigger><TabsTrigger value="discipline"><ShieldCheck size={17}/>研究纪律</TabsTrigger><TabsTrigger value="glossary"><BookOpen size={17}/>术语速查</TabsTrigger></TabsList>
    <TabsContent value="guide"><ResearchUsageGuide/></TabsContent><TabsContent value="method"><ResearchMethod/></TabsContent><TabsContent value="discipline"><ResearchDiscipline/></TabsContent><TabsContent value="glossary"><ResearchGlossary/></TabsContent>

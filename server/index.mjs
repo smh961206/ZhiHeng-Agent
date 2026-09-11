@@ -35,9 +35,9 @@ configureModelTelemetry(process.env.MODEL_TELEMETRY_ENABLED==='false'?undefined:
 console.log('MongoDB 已连接；旧数据迁移：',await migrateLegacy(storage));
 await storage.recoverInterrupted();
 const jobs=new Map(),controllers=new Map(),streams=createJobStreams();
-const pendingStarts=new Set(),mutations=new Set();
+const pendingStarts=new Set(),mutations=new Set(),finishing=new Map();
 let activeVisualImports=0;
-const retryResearch=createResearchRetrier({storage,jobs,controllers,pendingStarts,mutations,execute,configured:()=>Boolean(process.env.LLM_API_KEY&&process.env.LLM_MODEL)});
+const retryResearch=createResearchRetrier({storage,jobs,controllers,pendingStarts,mutations,finishing,execute,configured:()=>Boolean(process.env.LLM_API_KEY&&process.env.LLM_MODEL)});
 const save=job=>storage.saveJob(job);
 const delivery=createResearchDelivery({save,loadJob:id=>storage.getJob(id),jobs,controllers,mutations,streams,onError:error=>console.error('结果保存失败',error.message)});
 const createResearch=createResearchCreator({storage,jobs,controllers,pendingStarts,mutations,execute,prepare:async(payload,id)=>{
@@ -71,7 +71,11 @@ async function execute(job){
  };
  try{assertModelRollout(job);await save(job);const result=await withModelCallContext(job.id,()=>withVisualBudget(()=>runAgent(job,emit,control.signal,{onCheckpoint:async()=>{checkpoints.request();await checkpoints.flush();},onModelCheckpoint:async()=>{await checkpoints.flush();await save(job);}})));control.signal.throwIfAborted();delete job.checkpoint;outcome={status:'completed',result,researchOutcome:{action:result.decision.action,confidence:result.decision.confidence,summary:result.decision.summary}};}
  catch(e){const status=control.signal.aborted?'cancelled':'failed';outcome={status,error:control.signal.aborted?'任务已取消':e.message};interruptWorkflow(job,status);}
- finally{await checkpoints.close();try{await delivery.finish(job,outcome);}finally{controllers.delete(job.id);streams.finish(job);}}
+ finally{
+  const settled=Promise.withResolvers();finishing.set(job.id,settled.promise);
+  try{await checkpoints.close();await delivery.finish(job,outcome);}
+  finally{controllers.delete(job.id);try{streams.finish(job);}finally{finishing.delete(job.id);settled.resolve();}}
+ }
 }
 const server=http.createServer(async(req,res)=>{
  try{

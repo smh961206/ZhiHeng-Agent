@@ -1,7 +1,7 @@
 # V4.9.6 — Vision challenger offline
 
 Release: `V4.9`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT implementation and offline validation. See [report](../V4_9_6-completion-report.md). Real candidate quality and production promotion remain unaccepted.
 
 ## 1. Why
 

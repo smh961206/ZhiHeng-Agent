@@ -38,7 +38,7 @@ test('retry API keeps ID and count, rejects duplicate requests, streams and pers
  const reservation=createServer();reservation.listen(0,'127.0.0.1');await once(reservation,'listening');
  const port=reservation.address().port;await new Promise(resolve=>reservation.close(resolve));
  const storage=await createStorage({uri,database});
- const child=spawn(process.execPath,['--import','./tests/fixtures/retry-api-runtime.mjs','server/index.mjs'],{cwd:new URL('../',import.meta.url),env:{...process.env,HOST:'127.0.0.1',PORT:String(port),MONGODB_URI:uri,MONGODB_DATABASE:database,LLM_API_KEY:'fixture-only',LLM_MODEL:'fixture-only'},stdio:['ignore','pipe','pipe']});
+ const child=spawn(process.execPath,['--import','./tests/fixtures/retry-api-runtime.mjs','server/index.mjs'],{cwd:new URL('../',import.meta.url),env:{...process.env,HOST:'127.0.0.1',PORT:String(port),MONGODB_URI:uri,MONGODB_DATABASE:database,LLM_API_KEY:'fixture-only',LLM_MODEL:'fixture-only',RETRY_TEST_ACK_HANDSHAKE:'true'},stdio:['ignore','pipe','pipe','ipc']});
  let output='';child.stdout.on('data',buffer=>{output+=buffer;});child.stderr.on('data',buffer=>{output+=buffer;});
  const base='http://127.0.0.1:'+port;
  const post=body=>({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
@@ -63,7 +63,12 @@ test('retry API keeps ID and count, rejects duplicate requests, streams and pers
   let finished;for(let attempt=0;attempt<100;attempt++){finished=await storage.getJob(old.id);if(finished.status==='cancelled')break;await pause(20);}
   assert.equal(finished.status,'cancelled');assert.equal(finished.retryCount,1);assert.equal(finished.createdAt,old.createdAt);
   assert.equal((await fetch(base+retryPath,post({expectedRetryCount:0}))).status,409,'Stale requests must not restart a newer cancelled run');
-  const second=await fetch(base+retryPath,post({expectedRetryCount:1}));assert.equal(second.status,200);assert.equal((await second.json()).id,old.id);
+  const waiting=new Promise(resolve=>{const onMessage=message=>{if(message.type==='retry-wait-entered'){child.off('message',onMessage);resolve();}};child.on('message',onMessage);});
+  let replied=false;const secondRequest=fetch(base+retryPath,post({expectedRetryCount:1})).then(response=>{replied=true;return response;});
+  await waiting;assert.equal(replied,false,'Retry must wait while the durable acknowledgement is held');
+  assert.equal((await fetch(base+retryPath,post({expectedRetryCount:1}))).status,409,'A duplicate cannot join the pending retry');
+  child.send('release-cancel-ack');
+  const second=await secondRequest;assert.equal(second.status,200);assert.equal((await second.json()).id,old.id);
   assert.equal((await storage.listJobs()).length,count);
  }finally{
   if(child.exitCode===null){const stopped=once(child,'exit');child.kill();await stopped;}

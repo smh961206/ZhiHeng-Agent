@@ -2,6 +2,14 @@
 
 Status: CURRENT + TARGET MAP
 
+V4.9 current acceptance update: all normalized V4.9.0–.8 engineering work is implemented; batch-nine live Vision quality is [operator-approved](../releases/V4.9/vision-operator-approval-20260911.md). Production routing remains disabled and activation still requires the approved code/configuration binding. Earlier release-stage statements below are historical snapshots, not the current acceptance status.
+
+V4.9 review fixes retain the diagram and owners below: durable local Vision comparison progress/resume, selected-profile status, admission cache invalidation, and coordinated cancel/retry finalization. No distributed infrastructure or Mongo schema change. See [fix report](../releases/V4.9/V4_9-review-fixes-report.md).
+
+V4.9 full implementation: canonical image requests/results and explicit challenger profiles now reuse the existing Gateway/adapter; bounded independent fallback and a separate Vision admission owner preserve job pins. A 48-original visual corpus and deterministic graders support comparison. Offline implementation is validated; actual candidate quality and production promotion are not accepted. See [report](../releases/V4.9/V4_9-completion-report.md). The earlier .0 activation paragraph below is historical.
+
+Release activation 2026-09-11: the user explicitly selected V4.9. V4.9.0 adds a [reviewed Vision inventory](../releases/V4.9/vision-call-inventory.md) and development checks without changing the runtime diagram. V4.9.1–.8 remain future work; V4.8.11 live text-policy quality acceptance remains deferred and legacy stays the production default. References below to V4.9 not having started retain their earlier V4.8 historical context.
+
 ## Current product baseline
 
 The current repository is a React + Node.js evidence-first investment research Agent. The public repository currently exposes:

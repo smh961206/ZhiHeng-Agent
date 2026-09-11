@@ -5,7 +5,7 @@ import {researchPreparation} from '../shared/research-preparation.mjs';
 import {knowledgeAvailability} from '../shared/research-knowledge.mjs';
 import {modeOf} from './lib/research-mode';
 
-import {ResearchWorkbenchPage,ResearchDetailPage,ResearchHandbookPage} from './components/ResearchPages';
+import {ResearchWorkbenchPage,ResearchDetailPage,ResearchHandbookPage,ResearchHistoryPage} from './components/ResearchPages';
 import RecentResearch from './components/RecentResearch';
 import './components/sidebar-layout.css';
 
@@ -16,7 +16,6 @@ import {createSubmissionTracker} from './lib/research-submission.mjs';
 import Brand from './components/Brand';
 import PlatformStatus from './components/PlatformStatus';
 import ResearchFramework from './components/ResearchFramework';
-import ResearchHistory from './components/ResearchHistory';
 import DeleteResearchDialog from './components/DeleteResearchDialog';
 import {useCallback,useEffect,useState,useRef} from 'react';
 
@@ -185,7 +184,7 @@ export default function App({page}){
  {page==='missing'&&<div className="empty-state"><FileText size={32}/><h1>页面不存在</h1><p>请检查地址，或返回研究工作台。</p><Button onClick={()=>navigate('work')}>研究工作台</Button></div>}
  {jobId&&!selected&&<div className="empty-state" role="status">{loadError?<><FileText size={32}/><h2>暂时无法打开研究</h2><p>{loadError}</p><Button variant="outline" onClick={()=>setLoadAttempt(n=>n+1)}>重新加载</Button><Button onClick={()=>navigate('history')}>查看研究记录</Button></>:<><LoaderCircle size={32} className="animate-spin"/><p>正在加载研究记录…</p></>}</div>}
  {page==='work'&&selected&&<ResearchDetailPage key={selected.id} currentConfig={config} job={selected} tab={tab} onTabChange={setTab} streamConnection={streamConnection} onRetry={['failed','cancelled'].includes(selected.status)?retryResearch:undefined} retrying={retryState.id===selected.id&&retryState.pending} retryError={retryState.id===selected.id?retryState.error:''} onReuse={reuseInput} onUpdate={updateResearch} onDeepen={prepareDeepResearch} onDownload={download} exporting={exporting} onCancel={cancelResearch} cancelling={cancelling}/>}
- {page==='history'&&<ResearchHistory jobs={jobs} jobsLoading={jobsLoading} jobsError={jobsError} onRefresh={refresh} onStart={newResearch} onOpen={open} renderDelete={deleteButton} Status={Status} opening={opening}/>}
+ {page==='history'&&<ResearchHistoryPage jobs={jobs} jobsLoading={jobsLoading} jobsError={jobsError} onRefresh={refresh} onStart={newResearch} onOpen={open} renderDelete={deleteButton} Status={Status} opening={opening}/>}
  {page==='rules'&&<ResearchFramework config={config} checking={configChecking} onRefresh={refreshConfig} onStart={newResearch}/>}
  {page==='handbook'&&<ResearchHandbookPage onStart={newResearch} config={config} checking={configChecking} onRefresh={refreshConfig}/>}
  </main></div></div></div>;

@@ -20,6 +20,7 @@ const migrated=[
 ];
 export const readSource=p=>fs.readFileSync(path.join(root,p),'utf8');
 export const loadInventory=()=>JSON.parse(readSource('docs/releases/V4.8/model-call-inventory.json'));
+export const loadVisionInventory=()=>JSON.parse(readSource('docs/releases/V4.9/vision-call-inventory.json'));
 const hash=text=>createHash('sha256').update(text.replaceAll('\r\n','\n'),'utf8').digest('hex');
 function walk(dir){return fs.readdirSync(path.join(root,dir),{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(dir+'/'+e.name):[dir+'/'+e.name]);}
 export function discoverEndpoints(read=readSource,files=scanRoots.flatMap(walk)){
@@ -41,6 +42,9 @@ const sourcePath=p=>{
  assert.ok(p.split('/').every(part=>part&&part!=='.'&&part!=='..'),'noncanonical repository source path');
 };
 export function validateGatewayBoundary({read=readSource}={}){
+ for(const file of ['server/vision-model.mjs','server/document-reader.mjs','server/material-vision.mjs','server/visual-reading.mjs','server/agent-page-reader.mjs','server/pdf-extractor.mjs','server/pdf-processing.mjs']){
+  assert.doesNotMatch(read(file),/\b(?:model|visionModel)\s*[!=]==|\bthinking\s*[:=]|(?:deepseek|glm|qwen)-/i,'Gateway Vision business capability must use Catalog/adapter: '+file);
+ }
  const adapter=read('server/model-adapter.mjs'),gateway=read('server/model-gateway.mjs');
  assert.equal([...adapter.matchAll(/\bawait abortable\(pending,/g)].length,1,'Gateway response await boundary changed');
  assert.equal([...adapter.matchAll(/\bfetchModel\(/g)].length,1,'Gateway must reuse one request owner');
@@ -130,10 +134,40 @@ export function validateInventory(inventory,{read=readSource,endpoints=discoverE
  validateGatewayBoundary({read});
  return {productionTransports:1,productionCallers:inventory.callers.length,directDiagnostics:0};
 }
+// V4.9.0 extends the existing inventory checker; it is not a second transport
+// scanner. Hashes and lexical anchors are drift alarms, not semantic proofs.
+export function validateVisionInventory(inventory,{read=readSource,files=scanRoots.flatMap(walk)}={}){
+ assert.equal(inventory.version,1);assert.equal(inventory.subrelease,'V4.9.0');
+ assert.deepEqual(inventory.scanRoots,scanRoots);assert.deepEqual(inventory.scanExtensions,scanExtensions);
+ assert.match(inventory.baselineCommit,/^[a-f0-9]{40}$/);assert.equal(inventory.hashNormalization,'utf8-lf');
+ const historical=loadInventory().callers.filter(c=>c.purpose==='vision');
+ assert.deepEqual(inventory.callers,historical,'Vision semantic callers differ from reviewed baseline');
+ const consumers=files.filter(file=>scanExtensions.includes(path.extname(file))&&file!=='scripts/check-model-call-inventory.mjs')
+  .filter(file=>/(?:from\s*|import\s*\()\s*['"][^'"]*vision-model\.mjs['"]/.test(read(file))).sort();
+ assert.deepEqual(consumers,[...(inventory.currentWrapperConsumers??inventory.wrapperConsumers)].sort(),'unmapped Vision wrapper consumer');
+ unique(inventory.owners.map(owner=>owner.file),'Vision owner');
+ for(const owner of inventory.owners){
+  if(owner.file!=='.env.example')sourcePath(owner.file);
+  assert.match(owner.sha256,/^[a-f0-9]{64}$/);
+  if(owner.currentSha256!==undefined)assert.match(owner.currentSha256,/^[a-f0-9]{64}$/);
+  assert.equal(hash(read(owner.file)),owner.currentSha256??owner.sha256,'Vision reviewed source changed: '+owner.file);
+ }
+ for(const group of ['limits','modelBranches','evidenceGuards']){
+  assert.ok(inventory[group].length,'empty Vision '+group);unique(inventory[group].map(entry=>entry.id),group);
+  for(const entry of inventory[group]){
+   sourcePath(entry.file);assert.ok(entry.description?.trim()&&entry.anchor?.trim(),'missing Vision annotation');
+   assert.ok(inventory.owners.some(owner=>owner.file===entry.file),'unreviewed Vision owner');
+   assert.ok(read(entry.file).includes(entry.anchor),'Vision '+group+' anchor missing: '+entry.id);
+  }
+ }
+ validateInventory(loadInventory(),{read,endpoints:discoverEndpoints(read,files)});
+ return {visionCallers:inventory.callers.length,visionWrapperConsumers:consumers.length,reviewedOwners:inventory.owners.length};
+}
 if(process.argv[1]&&pathToFileURL(path.resolve(process.argv[1])).href===import.meta.url){
  try{
-  assert.ok(process.argv.slice(2).every(arg=>arg==='--baseline'),'only --baseline is supported');
+  assert.ok(process.argv.slice(2).every(arg=>['--baseline','--vision'].includes(arg)),'only --baseline and --vision are supported');
   const inventory=loadInventory(),result={...validateInventory(inventory),...validateGatewayBoundary()};
+  if(process.argv.includes('--vision'))Object.assign(result,validateVisionInventory(loadVisionInventory()));
   if(process.argv.includes('--baseline')){
    // Optional historical provenance check; requires the pinned commit locally, never fetches it.
    for(const t of inventory.transports){

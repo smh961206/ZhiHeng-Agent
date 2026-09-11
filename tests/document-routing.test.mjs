@@ -8,7 +8,7 @@ import {materialDocx,materialXlsx,materialPdf} from './fixtures/material-files.m
 test('uploads and downloaded text, Word and Excel share identical parsing and Pro handoff',async()=>{
  for(const [name,bytes] of [['memo.md',Buffer.from('# 研究\n现金流待核对')],['memo.txt',Buffer.from('文本资料')],['report.docx',Buffer.from(materialDocx)],['report.xlsx',Buffer.from(materialXlsx)]]){
   const upload=await readDocument(bytes,{name,upload:true}),download=await readDocument(bytes,{name:'https://example.invalid/'+name});
-  assert.equal(upload.text,download.text);assert.equal(upload.modelRouting.analysisModel,'deepseek-v4-pro');assert.equal(download.modelRouting.visionModel,'deepseek-v4-flash-vision-exp');
+  assert.equal(upload.text,download.text);assert.equal(upload.modelRouting.analysisModel,'deepseek-flash');assert.equal(download.modelRouting.visionModel,'deepseek-flash');
   if(name.endsWith('xlsx'))assert.equal(JSON.parse(upload.text).worksheets[0].cells[1].address,'C1');
  }
  assert.equal(documentKind(Buffer.from('data'),'file.exe'),null);
@@ -27,7 +27,7 @@ test('large raster content and vector charts require Vision; a small logo alone 
  assert.equal(pageHasVisualContent({fnArray:Array(40).fill(5)},OPS,'收入趋势图',600*800),true);
 });
 test('analysis and vision credentials are separate and public metadata never contains credentials',()=>{
- const env={LLM_MODEL:'deepseek-v4-pro',LLM_API_KEY:'analysis-secret',LLM_VISION_API_KEY:'vision-secret',LLM_VISION_BASE_URL:'https://vision.example.invalid'};
+ const env={LLM_MODEL:'deepseek-flash',LLM_API_KEY:'analysis-secret',LLM_VISION_API_KEY:'vision-secret',LLM_VISION_BASE_URL:'https://vision.example.invalid'};
  const config=modelRouting(env);assert.equal(config.analysisKey,'analysis-secret');assert.equal(config.visionKey,'vision-secret');assert.equal(config.visionBase,'https://vision.example.invalid');
  assert.ok(!JSON.stringify(publicModelRouting(env)).includes('secret'));
 });

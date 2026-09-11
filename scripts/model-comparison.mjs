@@ -101,7 +101,7 @@ export function executionFingerprint(env=process.env){
 }
 export function comparisonEnv(env,offline){
  const result={...env,MODEL_ROUTING_MODE:'legacy',MODEL_POLICY_ACCEPTANCE_FILE:'',MODEL_TELEMETRY_ENABLED:'true'};
- if(offline)Object.assign(result,{LLM_API_KEY:'synthetic-comparison',LLM_MAIN_API_KEY:'synthetic-comparison',LLM_PRO_API_KEY:'synthetic-comparison',LLM_BASE_URL:'https://legacy.invalid',LLM_MAIN_BASE_URL:'https://main.invalid',LLM_PRO_BASE_URL:'https://pro.invalid',LLM_MODEL:'deepseek-v4-pro',LLM_MAIN_MODEL:'glm-5.3-flash',LLM_PRO_MODEL:'deepseek-v4-pro',LLM_REVIEW_FORMAT:'auto'});
+ if(offline)Object.assign(result,{LLM_API_KEY:'synthetic-comparison',LLM_MAIN_API_KEY:'synthetic-comparison',LLM_PRO_API_KEY:'synthetic-comparison',LLM_BASE_URL:'https://legacy.invalid',LLM_MAIN_BASE_URL:'https://main.invalid',LLM_PRO_BASE_URL:'https://pro.invalid',LLM_MODEL:'deepseek-flash',LLM_MAIN_MODEL:'glm-5.3-flash',LLM_PRO_MODEL:'deepseek-flash',LLM_REVIEW_FORMAT:'auto'});
  return result;
 }
 export function evidenceSummary(state,directory){

@@ -44,7 +44,10 @@ export async function completeLegacyChat(request,profile,{env,fetchImpl,now,wait
  const body={model:profile.model,messages:request.messages,stream:request.stream,
   ...(request.tools?{tools:request.tools,tool_choice:'auto'}:{}),...(request.responseFormat?{response_format:request.responseFormat}:{}),
   ...(request.maxOutputTokens!==undefined?{max_tokens:request.maxOutputTokens}:{})};
- if(request.reasoningEffort!==undefined){
+ if(profile.schemaVersion===3){
+  if(request.reasoningEffort!==undefined)fail('unsupported_capability');
+  if(profile.adapterOptions.thinking==='disabled')body.thinking={type:'disabled'};
+ }else if(request.reasoningEffort!==undefined){
   if(profile.schemaVersion===2){
    if(!['low','high','max'].includes(request.reasoningEffort))fail('unsupported_capability');
    body.thinking={type:'enabled'};body.reasoning_effort=request.reasoningEffort;
@@ -52,7 +55,7 @@ export async function completeLegacyChat(request,profile,{env,fetchImpl,now,wait
    if(request.reasoningEffort!=='off'||!/^deepseek-/i.test(profile.model))fail('unsupported_capability');
    body.thinking={type:'disabled'};
   }
- }else if(request.purpose==='router'&&/^deepseek-/i.test(profile.model)||request.purpose==='vision'&&profile.model==='deepseek-v4-flash-vision-exp')body.thinking={type:'disabled'};
+ }else if(request.purpose==='router'&&/^deepseek-/i.test(profile.model)||request.purpose==='vision'&&profile.model==='deepseek-flash')body.thinking={type:'disabled'};
  let serialized;try{serialized=JSON.stringify(body);}catch{fail('invalid_request');}
  if(Buffer.byteLength(serialized)>16*1024*1024)fail('invalid_request');
  const timeouts=request.purpose==='router'?{idleMs:8000,totalMs:8000}:request.purpose==='vision'?{idleMs:60000,totalMs:60000}:modelTimeouts(env);

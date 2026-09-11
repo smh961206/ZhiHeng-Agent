@@ -9,6 +9,7 @@ import {materialFileAccept,readMaterialFile} from '../lib/material-file.mjs';
 import {isMaterialImage} from '../lib/material-image.mjs';
 import MaterialEditor from './MaterialEditor';
 import MaterialPreview from './MaterialPreview';
+import {Link} from 'react-router';
 import './research-materials.css';
 
 const number=value=>value.toLocaleString();
@@ -119,7 +120,7 @@ export default function ResearchMaterials({value=[],onChange,disabled=false,onRe
  }
  return <section className="research-materials" aria-label="用户补充资料" aria-busy={reading} onPaste={receivePaste}>
   <div className="field-heading"><h3><span className="materials-heading-icon"><FileText size={17}/></span>补充资料<span className="materials-optional">选填</span></h3><span className={full?'materials-at-limit':''}>{value.length} / 6 份</span></div>
-  <p className="materials-intro">上传报告、表格或截图，系统会整理内容，供本次研究参考。</p>
+  <p className="materials-intro">报告、表格与截图可以一起补充；整理后的内容作为待核实线索。</p>
   <input ref={files} type="file" accept={materialFileAccept} multiple hidden disabled={pending||full} aria-label="选择补充资料文件" onChange={event=>{const selected=[...event.target.files];event.target.value='';void importFiles(selected);}}/>
   <Tabs value={tab} onValueChange={setTab} className="materials-tabs">
    <TabsList aria-label="添加资料方式"><TabsTrigger value="files"><UploadCloud size={15}/>导入文件</TabsTrigger><TabsTrigger value="paste"><FileText size={15}/>粘贴文字{text.trim()&&<span className="materials-draft-dot" aria-label="有未加入的文字"/>}</TabsTrigger></TabsList>
@@ -132,6 +133,7 @@ export default function ResearchMaterials({value=[],onChange,disabled=false,onRe
      <small>单份不超过 10 MB · 最多 6 份 · 支持多选</small>
     </div>
     <div className="materials-import-help">
+     <div className="materials-visual-guide"><div><strong>让原页更容易核对</strong><p>截图保留表头、单位、报告期间与脚注；模糊或缺页时，补充清晰原件。</p></div><Link to="/handbook?tab=guide#usage-materials" target="_blank" rel="noopener noreferrer" title="在新标签页打开资料准备指南">资料准备指南</Link></div>
      <details className="materials-format-help"><summary><span><ShieldCheck size={14}/>格式与限制</span><ChevronDown size={14}/></summary>
       <p><strong>支持格式</strong><br/>PDF、DOCX、XLSX、PPTX；TXT、Markdown、CSV、TSV、JSON；PNG、JPG、JPEG、WebP、BMP。</p>
       <p><strong>读取范围</strong><br/>PDF 最多 100 页，每份最多补读 2 页原图；其余页面按后端文字提取情况提供。Office 内嵌图片可单独导入。文本支持 UTF-8、带 BOM 的 UTF-16 和 GB18030。</p>

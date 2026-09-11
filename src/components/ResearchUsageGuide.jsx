@@ -2,6 +2,8 @@ import {ChevronDown,FileText,Activity,ShieldCheck,RotateCcw,Sparkles,RefreshCw} 
 import {Button} from './ui/button';
 import {Collapsible,CollapsibleTrigger,CollapsibleContent} from './ui/collapsible';
 import './research-usage.css';
+import {useEffect,useRef,useState} from 'react';
+import {Link,useLocation} from 'react-router';
 
 const topics=[
  {id:'start',icon:Sparkles,title:'开始一项研究',summary:'写下问题、确认路径、核对标的，再检查研究设置。',items:[
@@ -13,7 +15,9 @@ const topics=[
  ]},
  {id:'materials',icon:FileText,title:'准备与上传资料',summary:'支持文件、截图与文字笔记；失败文件可单独重试。',items:[
   ['如何加入资料','在工作台选择文件、拖入文件或粘贴截图，也可以直接粘贴文字。资料选填；有尚未加入的文字或未保存的修改时，先完成编辑再开始研究。'],
-  ['文件如何整理','上传后由平台整理文档文字、表格单元格和原始值；扫描页与图表按需识别。图片识别可能存在误差，关键数字仍需对照原页。'],
+  ['文件如何整理','文档先提取文字与表格；扫描页、图表和截图按需读取原图。读取完成不代表数字已经核实：负号、小数点、期间、单位和列归属都需对照原页。'],
+  ['截图和扫描件怎样准备','尽量使用清晰原件，保留公司名称、报告期间、表头、单位和脚注，避免只截一个数字。跨页表格需保留续表标题；若只提供部分页面，研究范围也会受限。'],
+  ['图片模糊或读取不完整怎么办','先查看处理提示与读取范围，再补充清晰页面或文字说明。重复提交同一张模糊图片不保证改善结果；无法读清的数字保留缺口，不推算填齐。'],
   ['格式与限制','支持 PDF、DOCX、XLSX、PPTX、TXT、Markdown、CSV、TSV、JSON，以及 PNG、JPG、JPEG、WebP、BMP。最多 6 份，每份文件 10 MB，每份正文 2 万字、合计 6 万字。PDF 最多 100 页，每份最多补读 2 页原图；未覆盖范围会标注。'],
   ['编辑与原页关联','可预览、查找和修改整理后的文字。已关联原页的资料仅改名称会保留关联；修改正文后作为你的核对笔记使用。如需重新读取原页，请重新导入。'],
   ['上传资料如何参与研究','资料选填，作为补充线索进入分析；关键财务数据仍需与原始证据核对。资料中的文字要求不会替换平台研究规则，图片识别结果不能单独支持财务计算。'],
@@ -56,8 +60,39 @@ const topics=[
  ]},
 ];
 export default function ResearchUsageGuide(){
- return <section className="research-usage" aria-labelledby="usage-title">
-  <div className="usage-heading handbook-chapter-heading"><div><h2 id="usage-title">使用指南</h2><p>按操作顺序查阅，从第一项研究开始；各部分可同时展开。</p></div></div>
-  <div className="usage-topics">{topics.map(({id,icon:Icon,title,summary,items},index)=><Collapsible key={id} defaultOpen={index===0} className="usage-topic"><CollapsibleTrigger asChild><Button variant="ghost" className="usage-trigger"><span className="usage-icon"><Icon size={19}/></span><span><strong>{title}</strong><small>{summary}</small></span><ChevronDown size={16}/></Button></CollapsibleTrigger><CollapsibleContent className="usage-body"><dl>{items.map(([label,copy])=><div key={label}><dt>{label}</dt><dd>{copy}</dd></div>)}</dl></CollapsibleContent></Collapsible>)}</div>
+ const {hash,key}=useLocation(),frame=useRef(null),root=useRef(null),returnPositions=useRef(new Map());
+ const [opened,setOpened]=useState(()=>new Set(['start']));
+ function reveal(id){
+  setOpened(current=>new Set([...current,id]));
+  cancelAnimationFrame(frame.current);
+  frame.current=requestAnimationFrame(()=>{
+   const target=document.getElementById('usage-'+id);
+   const tabs=target?.closest('.handbook-tabs')?.querySelector(':scope > [role="tablist"]');
+   if(target&&tabs)target.style.scrollMarginTop=`${tabs.getBoundingClientRect().height+16}px`;
+   target?.focus({preventScroll:true});target?.scrollIntoView({block:'start',behavior:'instant'});
+  });
+ }
+ useEffect(()=>{
+  const section=root.current,scroller=section?.closest('.page-scroll');
+  const id=topics.find(topic=>hash==='#usage-'+topic.id)?.id;
+  if(id)reveal(id);
+  else if(!hash&&scroller&&returnPositions.current.has(key)){
+   const saved=returnPositions.current.get(key);
+   frame.current=requestAnimationFrame(()=>{
+    if(saved.focus?.isConnected)saved.focus.focus({preventScroll:true});
+    scroller.scrollTo({top:saved.top,behavior:'instant'});
+   });
+  }
+  return()=>{
+   cancelAnimationFrame(frame.current);
+   // The app scrolls a nested container, so browser history cannot restore it.
+   // Save the unanchored guide entry before reveal moves to a topic.
+   if(!hash&&scroller)returnPositions.current.set(key,{top:scroller.scrollTop,focus:section.contains(document.activeElement)?document.activeElement:null});
+  };
+ },[hash,key]);
+ return <section ref={root} className="research-usage" aria-labelledby="usage-title">
+  <div className="usage-heading handbook-chapter-heading"><div><h2 id="usage-title">使用指南</h2><p>选择遇到的问题，直接定位说明；需要对照的章节可以同时保留。</p></div></div>
+  <nav className="usage-navigation" aria-label="使用指南快速定位">{topics.map(({id,title,icon:Icon})=><Link key={id} to={'?tab=guide#usage-'+id} aria-current={hash==='#usage-'+id?'location':undefined} onClick={()=>{if(hash==='#usage-'+id)reveal(id);}}><Icon size={16} aria-hidden="true"/>{title}</Link>)}</nav>
+  <div className="usage-topics">{topics.map(({id,icon:Icon,title,summary,items})=><Collapsible key={id} id={'usage-'+id} tabIndex={-1} open={opened.has(id)} onOpenChange={open=>setOpened(current=>{const next=new Set(current);if(open)next.add(id);else next.delete(id);return next;})} className="usage-topic"><CollapsibleTrigger asChild><Button variant="ghost" className="usage-trigger"><span className="usage-icon"><Icon size={19}/></span><span><strong>{title}</strong><small>{summary}</small></span><ChevronDown size={16}/></Button></CollapsibleTrigger><CollapsibleContent className="usage-body"><dl>{items.map(([label,copy])=><div key={label}><dt>{label}</dt><dd>{copy}</dd></div>)}</dl></CollapsibleContent></Collapsible>)}</div>
  </section>;
 }

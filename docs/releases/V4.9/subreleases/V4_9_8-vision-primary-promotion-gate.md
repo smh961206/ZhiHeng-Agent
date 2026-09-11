@@ -1,7 +1,7 @@
 # V4.9.8 — Vision primary promotion gate
 
 Release: `V4.9`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT implementation and offline validation. See [report](../V4_9_8-completion-report.md). Real candidate quality is now operator-approved; production activation remains pending. See [operator approval](../vision-operator-approval-20260911.md).
 
 ## 1. Why
 

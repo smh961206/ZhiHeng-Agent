@@ -1,3 +1,6 @@
 *.sh text eol=lf
 Dockerfile text eol=lf
 *.yaml text eol=lf
+tests/fixtures/vision-benchmark/*.pdf binary
+# Preserve release manifest hashes across checkout.
+docs/**/*.md -text

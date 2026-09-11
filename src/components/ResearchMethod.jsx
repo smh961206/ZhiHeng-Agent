@@ -23,9 +23,18 @@ export default function ResearchMethod(){
    </div>
    <div className="fw-reference-links"><Button variant="outline" asChild><Link to="/workbench">带着问题开始<ArrowRight size={16} aria-hidden="true"/></Link></Button></div>
   </section>
+  <section id="method-quality" tabIndex={-1} className="fw-section method-quality" aria-labelledby="method-quality-title">
+   <div className="fw-section-heading"><h3 id="method-quality-title">模型选择，先看研究质量</h3><p>适合某一类任务，需要相应的对照证据。模型名称、响应速度和平台版本都不能代替质量判断。</p></div>
+   <ol className="method-quality-steps" aria-label="模型评估原则">
+    <li><span aria-hidden="true">01</span><h4>同题、同资料对照</h4><p>固定问题、资料与时点，按研究任务比较结果，避免把输入差异当成模型进步。</p></li>
+    <li><span aria-hidden="true">02</span><h4>先质量，再效率</h4><p>先检查事实、计算、引用和缺失披露。质量达标后，再比较速度与成本。</p></li>
+    <li><span aria-hidden="true">03</span><h4>验收后才能启用</h4><p>测试通过不等于已用于你的研究。新模型还需完成真实研究对照与人工验收。</p></li>
+   </ol>
+   <div className="method-quality-record"><ShieldCheck size={18} aria-hidden="true"/><div><h4>回查这一次研究</h4><p>在详情页打开“研究过程”，核对任务保存的模型配置与规则依据。平台更新不会补写历史配置。</p><p>核对实际调用时，在“本次查证记录”点击“查看调用”，再在“执行轨迹”展开“查看调用详情”，对照已保存的输入与返回；未保存的内容不补造。</p><Link to="/handbook?tab=guide#usage-report">查看报告核对指南<ArrowRight size={15} aria-hidden="true"/></Link></div></div>
+  </section>
   <section id="method-loading" tabIndex={-1} className="fw-section" aria-labelledby="method-loading-title">
    <div className="fw-section-heading"><h3 id="method-loading-title">规则按需使用，研究依据可回查</h3><p>研究按问题加载相应规则，保留实际读取依据；计算与判断仍遵守各自的核验条件。</p></div>
-   <details className="method-version-note"><summary>研究规则版本与历史报告</summary><p>当前研究规则为 V{frameworkVersion}，与顶部的平台功能版本分别管理。平台的文档与图像读取能力独立更新，读取结果仍须遵守本套研究规则。报告中的版本来自任务保存的记录，历史报告保留原规则与快照；版本缺失时不补写。</p></details>
+   <details className="method-version-note"><summary>研究规则版本与历史报告</summary><p>当前研究规则为 V{frameworkVersion}，与顶部的平台功能版本分别管理。文档读取和模型评估独立更新，研究结果仍须遵守本套规则。报告中的版本来自任务保存的记录，历史报告保留原规则与快照；版本缺失时不补写。</p></details>
    <KnowledgeHighlights/>
    <div className="method-detail-copy"><h4>深度研究怎样选择展开程度</h4><dl>{Object.entries(depthGuidance).map(([depth,copy])=><div key={depth}><dt><strong>{{Quick:'简明研究',Standard:'标准研究',Deep:'完整展开'}[depth]}</strong></dt><dd>{copy}</dd></div>)}</dl><p>其他专项始终保留必需核对流程。交易执行说明与作战图分别触发；仅在明确要求作战图、估值图或买入区间图时加入图示规则。</p><p>同一框架版本内，新修订通过完整校验后供新任务使用。进行中的任务及可恢复的中断任务沿用原快照；历史报告不改写。跨程序版本升级仍需要部署匹配的服务。</p><p>在详情页的“研究过程”中展开“本次规则依据”，查看实际使用的规则与读取原因。旧记录没有保存的内容会显示“未记录”，不会按当前目录补齐。</p></div>
   </section>

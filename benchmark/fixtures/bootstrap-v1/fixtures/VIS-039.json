@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "id": "VIS-039",
+  "fixtureVersion": "v1",
+  "synthetic": true,
+  "scope": "component-extraction",
+  "prompt": "Extract the supplied table without inventing missing cells.",
+  "sources": [],
+  "market": [],
+  "assets": [
+    {
+      "path": "assets/VIS-039.pdf",
+      "sha256": "3067029a80882f4158dc578b26ca0e0b217059f3e507afe13d66d614c86b09a4",
+      "page": 1
+    }
+  ],
+  "expectedTable": {
+    "headers": [
+      "Metric",
+      "2023",
+      "2022"
+    ],
+    "cells": [
+      {
+        "row": "Net profit",
+        "column": "2023",
+        "value": "0",
+        "unit": "HKD million",
+        "date": "2023-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Net profit",
+        "column": "2022",
+        "value": "708.25",
+        "unit": "HKD million",
+        "date": "2022-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Nonrecurring gain",
+        "column": "2023",
+        "value": "(726.25)",
+        "unit": "HKD million",
+        "date": "2023-12-31",
+        "footnote": "[1]"
+      },
+      {
+        "row": "Nonrecurring gain",
+        "column": "2022",
+        "value": "(737.25)",
+        "unit": "HKD million",
+        "date": "2022-12-31",
+        "footnote": "[1]"
+      }
+    ],
+    "footnotes": [
+      "[1] Consolidated scope; not parent-only."
+    ]
+  },
+  "referenceOutput": {
+    "facts": [],
+    "citations": [],
+    "tools": [],
+    "validations": [
+      {
+        "id": "extraction_contract",
+        "passed": true
+      }
+    ],
+    "counterEvidence": [],
+    "violations": [],
+    "delivered": true,
+    "table": {
+      "headers": [
+        "Metric",
+        "2023",
+        "2022"
+      ],
+      "cells": [
+        {
+          "row": "Net profit",
+          "column": "2023",
+          "value": "0",
+          "unit": "HKD million",
+          "date": "2023-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Net profit",
+          "column": "2022",
+          "value": "708.25",
+          "unit": "HKD million",
+          "date": "2022-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Nonrecurring gain",
+          "column": "2023",
+          "value": "(726.25)",
+          "unit": "HKD million",
+          "date": "2023-12-31",
+          "footnote": "[1]"
+        },
+        {
+          "row": "Nonrecurring gain",
+          "column": "2022",
+          "value": "(737.25)",
+          "unit": "HKD million",
+          "date": "2022-12-31",
+          "footnote": "[1]"
+        }
+      ],
+      "footnotes": [
+        "[1] Consolidated scope; not parent-only."
+      ]
+    }
+  },
+  "origin": {
+    "manifestHash": "a2cec6d66c121dc6967e21ec7d98646aa952f316076779caa59fcad94a07dfae",
+    "originalSha256": "3067029a80882f4158dc578b26ca0e0b217059f3e507afe13d66d614c86b09a4"
+  }
+}

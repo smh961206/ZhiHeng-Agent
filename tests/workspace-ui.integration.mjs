@@ -3100,6 +3100,9 @@ registerPlatformCleanupScenarios({test,makeJob,detail,workbench,textIncludes,noO
 const {registerPlatformV49Scenarios}=await import('./platform-v49-ui-scenarios.mjs');
 await registerPlatformV49Scenarios({test,makeJob,detail,openProcess,textIncludes,noOverflow,screenshot});
 
+const {registerPlatformV50Scenarios}=await import('./platform-v50-ui-scenarios.mjs');
+registerPlatformV50Scenarios({test,makeJob,detail,openProcess,textIncludes,noOverflow,screenshot});
+
 await main().catch(error => { console.error(error.stack || error); process.exitCode = 1; });
 
 async function downloadReport(page,actions,scope='完整研究记录'){

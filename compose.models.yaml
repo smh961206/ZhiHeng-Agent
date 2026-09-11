@@ -1,0 +1,13 @@
+# Optional overlay for file-based production model definitions.
+# Basic + advanced env files still provide credentials and release controls.
+services:
+  app:
+    environment:
+      MODEL_CONFIG_FILE: /app/config/models.production.json
+    volumes:
+      - type: bind
+        source: ./config/models.production.json
+        target: /app/config/models.production.json
+        read_only: true
+        bind:
+          create_host_path: false

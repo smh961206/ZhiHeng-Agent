@@ -5,7 +5,7 @@ import {createVisionModelCatalog,createLegacyModelCatalog} from './model-catalog
 import {modelConnectionIdentity,resolveModelConnection} from './model-connection.mjs';
 import {gradeVisionTable,visionMetrics} from './vision-quality.mjs';
 const hash=value=>createHash('sha256').update(value).digest('hex');
-const owners=['vision-model','vision-policy','model-catalog','model-adapter','model-gateway','model-connection','model-state','model-gateway-result','model-stream','model-deadline','vision-quality','visual-reading','visual-render-worker'];
+const owners=['model-config','model-routing','vision-model','vision-policy','model-catalog','model-adapter','model-gateway','model-connection','model-state','model-gateway-result','model-stream','model-deadline','vision-quality','visual-reading','visual-render-worker'];
 const codeFiles=[...owners.map(name=>new URL('./'+name+'.mjs',import.meta.url)),new URL('../scripts/vision-benchmark.mjs',import.meta.url)];
 const stamp=file=>{const s=fs.statSync(file,{bigint:true});if(!s.isFile())throw new Error('Expected file');return [s.dev,s.ino,s.size,s.mtimeNs,s.ctimeNs].join(':');};
 let codeCache,admissionCache;

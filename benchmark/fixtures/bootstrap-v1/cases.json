@@ -1,0 +1,1722 @@
+[
+  {
+    "version": 1,
+    "id": "TEXT-001",
+    "category": "quick_screen",
+    "fixture": "TEXT-001",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput"
+    ],
+    "expectedFacts": [
+      {
+        "id": "metric",
+        "value": null,
+        "period": "FY2025",
+        "currency": "USD",
+        "unit": "million",
+        "shareBasis": null,
+        "accountingScope": "consolidated",
+        "valuationBasis": null,
+        "sourceId": "S1",
+        "blockId": "B1",
+        "kind": "observation"
+      }
+    ],
+    "expectedCitations": [
+      {
+        "sourceId": "S1",
+        "blockId": "B1",
+        "quote": "Revenue: not reported"
+      }
+    ],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "TEXT-002",
+    "category": "deep_research",
+    "fixture": "TEXT-002",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput"
+    ],
+    "expectedFacts": [
+      {
+        "id": "metric",
+        "value": null,
+        "period": "FY2025",
+        "currency": "USD",
+        "unit": "million",
+        "shareBasis": null,
+        "accountingScope": "consolidated",
+        "valuationBasis": null,
+        "sourceId": "S1",
+        "blockId": "B1",
+        "kind": "observation"
+      }
+    ],
+    "expectedCitations": [
+      {
+        "sourceId": "S1",
+        "blockId": "B1",
+        "quote": "Operating cash flow: not reported"
+      }
+    ],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "TEXT-003",
+    "category": "earnings_update",
+    "fixture": "TEXT-003",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput"
+    ],
+    "expectedFacts": [
+      {
+        "id": "metric",
+        "value": null,
+        "period": "FY2025",
+        "currency": "USD",
+        "unit": "million",
+        "shareBasis": null,
+        "accountingScope": "consolidated",
+        "valuationBasis": null,
+        "sourceId": "S1",
+        "blockId": "B1",
+        "kind": "observation"
+      }
+    ],
+    "expectedCitations": [
+      {
+        "sourceId": "S1",
+        "blockId": "B1",
+        "quote": "Quarterly revenue: not reported"
+      }
+    ],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "TEXT-004",
+    "category": "company_comparison",
+    "fixture": "TEXT-004",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput"
+    ],
+    "expectedFacts": [
+      {
+        "id": "metric",
+        "value": null,
+        "period": "FY2025",
+        "currency": "USD",
+        "unit": "million",
+        "shareBasis": null,
+        "accountingScope": "consolidated",
+        "valuationBasis": null,
+        "sourceId": "S1",
+        "blockId": "B1",
+        "kind": "observation"
+      }
+    ],
+    "expectedCitations": [
+      {
+        "sourceId": "S1",
+        "blockId": "B1",
+        "quote": "Comparable profit: not reported"
+      }
+    ],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "TEXT-005",
+    "category": "execution_review",
+    "fixture": "TEXT-005",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput"
+    ],
+    "expectedFacts": [
+      {
+        "id": "metric",
+        "value": null,
+        "period": "FY2025",
+        "currency": "USD",
+        "unit": "million",
+        "shareBasis": null,
+        "accountingScope": "consolidated",
+        "valuationBasis": null,
+        "sourceId": "S1",
+        "blockId": "B1",
+        "kind": "observation"
+      }
+    ],
+    "expectedCitations": [
+      {
+        "sourceId": "S1",
+        "blockId": "B1",
+        "quote": "Position valuation: not reported"
+      }
+    ],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "TEXT-006",
+    "category": "shareholder_return",
+    "fixture": "TEXT-006",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput"
+    ],
+    "expectedFacts": [
+      {
+        "id": "metric",
+        "value": null,
+        "period": "FY2025",
+        "currency": "USD",
+        "unit": "million",
+        "shareBasis": null,
+        "accountingScope": "consolidated",
+        "valuationBasis": null,
+        "sourceId": "S1",
+        "blockId": "B1",
+        "kind": "observation"
+      }
+    ],
+    "expectedCitations": [
+      {
+        "sourceId": "S1",
+        "blockId": "B1",
+        "quote": "Dividend: not reported"
+      }
+    ],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "TEXT-007",
+    "category": "missing_conflict",
+    "fixture": "TEXT-007",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput"
+    ],
+    "expectedFacts": [
+      {
+        "id": "metric",
+        "value": null,
+        "period": "FY2025",
+        "currency": "USD",
+        "unit": "million",
+        "shareBasis": null,
+        "accountingScope": "consolidated",
+        "valuationBasis": null,
+        "sourceId": "S1",
+        "blockId": "B1",
+        "kind": "observation"
+      }
+    ],
+    "expectedCitations": [
+      {
+        "sourceId": "S1",
+        "blockId": "B1",
+        "quote": "Restated earnings: not reported"
+      }
+    ],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "TEXT-008",
+    "category": "complex_valuation",
+    "fixture": "TEXT-008",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput"
+    ],
+    "expectedFacts": [
+      {
+        "id": "metric",
+        "value": null,
+        "period": "FY2025",
+        "currency": "USD",
+        "unit": "million",
+        "shareBasis": null,
+        "accountingScope": "consolidated",
+        "valuationBasis": null,
+        "sourceId": "S1",
+        "blockId": "B1",
+        "kind": "observation"
+      }
+    ],
+    "expectedCitations": [
+      {
+        "sourceId": "S1",
+        "blockId": "B1",
+        "quote": "FCFF: not reported"
+      }
+    ],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-001",
+    "category": "vision_table",
+    "fixture": "VIS-001",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-002",
+    "category": "vision_table",
+    "fixture": "VIS-002",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-003",
+    "category": "vision_table",
+    "fixture": "VIS-003",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-004",
+    "category": "vision_table",
+    "fixture": "VIS-004",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-005",
+    "category": "vision_table",
+    "fixture": "VIS-005",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-006",
+    "category": "vision_table",
+    "fixture": "VIS-006",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-007",
+    "category": "vision_table",
+    "fixture": "VIS-007",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-008",
+    "category": "vision_table",
+    "fixture": "VIS-008",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-009",
+    "category": "vision_table",
+    "fixture": "VIS-009",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-010",
+    "category": "vision_table",
+    "fixture": "VIS-010",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-011",
+    "category": "vision_table",
+    "fixture": "VIS-011",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-012",
+    "category": "vision_table",
+    "fixture": "VIS-012",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-013",
+    "category": "vision_table",
+    "fixture": "VIS-013",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-014",
+    "category": "vision_table",
+    "fixture": "VIS-014",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-015",
+    "category": "vision_table",
+    "fixture": "VIS-015",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-016",
+    "category": "vision_table",
+    "fixture": "VIS-016",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-017",
+    "category": "vision_table",
+    "fixture": "VIS-017",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-018",
+    "category": "vision_table",
+    "fixture": "VIS-018",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-019",
+    "category": "vision_table",
+    "fixture": "VIS-019",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-020",
+    "category": "vision_table",
+    "fixture": "VIS-020",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-021",
+    "category": "vision_table",
+    "fixture": "VIS-021",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-022",
+    "category": "vision_table",
+    "fixture": "VIS-022",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-023",
+    "category": "vision_table",
+    "fixture": "VIS-023",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-024",
+    "category": "vision_table",
+    "fixture": "VIS-024",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-025",
+    "category": "vision_table",
+    "fixture": "VIS-025",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-026",
+    "category": "vision_table",
+    "fixture": "VIS-026",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-027",
+    "category": "vision_table",
+    "fixture": "VIS-027",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-028",
+    "category": "vision_table",
+    "fixture": "VIS-028",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-029",
+    "category": "vision_table",
+    "fixture": "VIS-029",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-030",
+    "category": "vision_table",
+    "fixture": "VIS-030",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-031",
+    "category": "vision_table",
+    "fixture": "VIS-031",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-032",
+    "category": "vision_table",
+    "fixture": "VIS-032",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-033",
+    "category": "vision_table",
+    "fixture": "VIS-033",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-034",
+    "category": "vision_table",
+    "fixture": "VIS-034",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-035",
+    "category": "vision_table",
+    "fixture": "VIS-035",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-036",
+    "category": "vision_table",
+    "fixture": "VIS-036",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-037",
+    "category": "vision_table",
+    "fixture": "VIS-037",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-038",
+    "category": "vision_table",
+    "fixture": "VIS-038",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-039",
+    "category": "vision_table",
+    "fixture": "VIS-039",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-040",
+    "category": "vision_table",
+    "fixture": "VIS-040",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-041",
+    "category": "vision_table",
+    "fixture": "VIS-041",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-042",
+    "category": "vision_table",
+    "fixture": "VIS-042",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-043",
+    "category": "vision_table",
+    "fixture": "VIS-043",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-044",
+    "category": "vision_table",
+    "fixture": "VIS-044",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-045",
+    "category": "vision_table",
+    "fixture": "VIS-045",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-046",
+    "category": "vision_table",
+    "fixture": "VIS-046",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-047",
+    "category": "vision_table",
+    "fixture": "VIS-047",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  },
+  {
+    "version": 1,
+    "id": "VIS-048",
+    "category": "vision_table",
+    "fixture": "VIS-048",
+    "fixtureVersion": "v1",
+    "cutoff": "2026-09-06T23:59:59Z",
+    "qualityCriticality": "critical",
+    "requiredCapabilities": [
+      "textInput",
+      "imageInput"
+    ],
+    "expectedFacts": [],
+    "expectedCitations": [],
+    "expectedToolBehavior": [],
+    "requiredValidations": [
+      "extraction_contract"
+    ],
+    "forbiddenBehaviors": [
+      "invented_fact",
+      "wrong_basis",
+      "future_evidence",
+      "missing_as_zero",
+      "hidden_reasoning",
+      "forecast_as_fact",
+      "dropped_counter_evidence"
+    ]
+  }
+]

@@ -4,3 +4,4 @@ Dockerfile text eol=lf
 tests/fixtures/vision-benchmark/*.pdf binary
 # Preserve release manifest hashes across checkout.
 docs/**/*.md -text
+benchmark/fixtures/**/*.pdf binary

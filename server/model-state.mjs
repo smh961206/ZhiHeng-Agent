@@ -1,9 +1,11 @@
 import {AsyncLocalStorage} from 'node:async_hooks';
 import {isDeepStrictEqual} from 'node:util';
-import {createLegacyModelCatalog,createPolicyModelCatalog} from './model-catalog.mjs';
+import {createLegacyModelCatalog,createPolicyModelCatalog,createBenchmarkModelCatalog} from './model-catalog.mjs';
 import {modelConnectionIdentity} from './model-connection.mjs';
 import {modelRoutingMode} from './model-routing.mjs';
 import {configuredVisionProfile} from './vision-policy.mjs';
+import {validateModelExperiment} from './model-experiment.mjs';
+import {objectHash} from '../benchmark/fixtures.mjs';
 
 const scope=new AsyncLocalStorage();
 export const modelStateError=()=>Object.assign(new Error('已保存的模型配置与当前配置不兼容；请恢复原配置后续跑，不会重新采集或替换已有进度'),{code:'model_state_incompatible',status:409});
@@ -20,6 +22,30 @@ export function createPolicyJobModelState(env=process.env,initial,visionId){
  if(!escalationSteps.some(s=>isDeepStrictEqual(s,start)))throw modelStateError();
  return {version:2,routingMode:'policy',policyVersion:1,profiles:policyProfiles(env,visionId),...(initial?{initial:{...initial}}:{}),active:{...start},escalationHistory:[],failures:{invalid_tool_arguments:0,structured_output:0}};
 }
+// A v3 job executes a single fixed MAIN profile. It never enters v2 escalation.
+export function createChampionJobModelState(env=process.env,selection,visionId){
+ try{
+  const saved=validateModelExperiment(selection),catalog=createBenchmarkModelCatalog(env);
+  const configuration=[saved.baselineId,saved.candidateId].map(id=>{
+   const profile=catalog.profiles.find(p=>p.id===id);
+   if(!profile)throw modelStateError();
+   return {profile,connectionIdentity:modelConnectionIdentity(profile,env)};
+  });
+  if(objectHash(configuration)!==saved.configurationHash)throw modelStateError();
+  const selected=configuration.find(entry=>entry.profile.id===saved.profileId).profile;
+  if(!['textInput','streaming','toolCalling'].every(k=>selected.capabilities[k]===true)||!['research','review','followup'].every(p=>selected.purposes.includes(p)))throw modelStateError();
+  const enabled=selected.schemaVersion===2||selected.adapterOptions?.thinking==='enabled';
+  if(enabled?(saved.effort===null||selected.capabilities.reasoningControl!==true):saved.effort!==null)throw modelStateError();
+  const profiles=withVision(createLegacyModelCatalog(env).profiles,env,visionId).map(p=>p.id==='legacy-analysis'?selected:p)
+   .map(p=>({id:p.id,model:p.model,connectionIdentity:modelConnectionIdentity(p,env),reasoningEffort:p.id===saved.profileId?saved.effort:null,purposes:[...p.purposes]}));
+  return {version:3,routingMode:'champion',policyVersion:1,selection:saved,configurationHash:saved.configurationHash,
+   profiles,active:{profileId:saved.profileId,reasoningEffort:saved.effort},escalationHistory:[]};
+ }catch{throw modelStateError();}
+}
+function validChampionState(job,env){
+ const state=job.modelState;validateModelExperiment(state.selection,{job});
+ return isDeepStrictEqual(state,createChampionJobModelState(env,state.selection,savedVisionId(state)));
+}
 export const escalationSteps=Object.freeze([Object.freeze({profileId:'main',reasoningEffort:'low'}),Object.freeze({profileId:'main',reasoningEffort:'high'}),Object.freeze({profileId:'pro',reasoningEffort:'high'}),Object.freeze({profileId:'pro',reasoningEffort:'max'})]);
 function validPolicyState(state,env){
  const expected=createPolicyJobModelState(env,state.initial,savedVisionId(state)),history=state.escalationHistory,start=escalationSteps.findIndex(s=>isDeepStrictEqual(s,expected.active));
@@ -32,7 +58,7 @@ export function assertJobModelState(job,env=process.env){
  const hasJob=Object.hasOwn(job,'modelState'),hasCheckpoint=job.checkpoint&&Object.hasOwn(job.checkpoint,'modelState');
  if(!hasJob&&!hasCheckpoint)return; // Absence only: no fabricated historical pin.
  if(!hasJob||!job.modelState)throw modelStateError();
- let valid;try{valid=job.modelState.version===2?validPolicyState(job.modelState,env):isDeepStrictEqual(job.modelState,createJobModelState(env,savedVisionId(job.modelState)));}catch{throw modelStateError();}
+ let valid;try{valid=job.modelState.version===3?validChampionState(job,env):job.modelState.version===2?validPolicyState(job.modelState,env):isDeepStrictEqual(job.modelState,createJobModelState(env,savedVisionId(job.modelState)));}catch{throw modelStateError();}
  if(!valid||job.checkpoint&&(!hasCheckpoint||!isDeepStrictEqual(job.checkpoint.modelState,job.modelState)))throw modelStateError();
  if(job.mode==='A'&&job.modelState.version===2&&!isDeepStrictEqual(job.modelState.active,escalationSteps[0]))throw modelStateError();
 }
@@ -45,6 +71,8 @@ export function modelStatePin(purpose,env){
  return state?.profiles.find(p=>p.purposes.includes(purpose));
 }
 export const hasPolicyModelState=()=>scope.getStore()?.modelState?.version===2;
+export const hasChampionModelState=()=>scope.getStore()?.modelState?.version===3;
+export const currentModelJob=()=>scope.getStore();
 export const hasJobModelScope=()=>scope.getStore()!==undefined;
 export function noteModelFailure(job,kind){
  if(job.modelState?.version!==2||!['invalid_tool_arguments','structured_output'].includes(kind))return;

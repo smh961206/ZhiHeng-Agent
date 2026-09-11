@@ -4,13 +4,15 @@ set -Eeuo pipefail
 source_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 work="$(mktemp -d)"
 project="zhiheng-deploy-test-$(date +%s)-$$"
-cp "$source_dir"/{Dockerfile,.dockerignore,package.json,pnpm-lock.yaml,pnpm-workspace.yaml,index.html,vite.config.js,jsconfig.json,compose.production.yaml,deploy.sh,.env.production.example} "$work/"
-cp -r "$source_dir"/{src,public,server,shared,scripts,knowledge} "$work/"
+cp "$source_dir"/{Dockerfile,.dockerignore,package.json,pnpm-lock.yaml,pnpm-workspace.yaml,index.html,vite.config.js,jsconfig.json,compose.production.yaml,compose.models.yaml,deploy.sh,.env.production.example} "$work/"
+cp -r "$source_dir"/{src,public,server,shared,scripts,benchmark,knowledge} "$work/"
 cd "$work"
 sed -i "s/^name: zhiheng-production/name: $project/" compose.production.yaml
+mkdir -p config
+cp "$source_dir/config/models.example.json" config/models.production.json
 cp .env.production.example .env.production
 printf '\nAPP_PORT=0\n' >> .env.production
-dc() { docker compose --env-file .env.production -f compose.production.yaml "$@"; }
+dc() { docker compose --env-file .env.production -f compose.production.yaml -f compose.models.yaml "$@"; }
 cleanup() {
   dc down -v --remove-orphans
   # Only the mktemp directory created above is removed.

@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "id": "VIS-019",
+  "fixtureVersion": "v1",
+  "synthetic": true,
+  "scope": "component-extraction",
+  "prompt": "Extract the supplied table without inventing missing cells.",
+  "sources": [],
+  "market": [],
+  "assets": [
+    {
+      "path": "assets/VIS-019.png",
+      "sha256": "aa7cbfe90c3c5620b8641c93a20c583394c5867cddccee2844d137b9c6728d92",
+      "page": 1
+    }
+  ],
+  "expectedTable": {
+    "headers": [
+      "Metric",
+      "2022",
+      "2021"
+    ],
+    "cells": [
+      {
+        "row": "Revenue",
+        "column": "2022",
+        "value": "357.25",
+        "unit": "CNY million",
+        "date": "2022-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Revenue",
+        "column": "2021",
+        "value": "368.25",
+        "unit": "CNY million",
+        "date": "2021-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Operating costs",
+        "column": "2022",
+        "value": "(386.25)",
+        "unit": "CNY million",
+        "date": "2022-12-31",
+        "footnote": "[1]"
+      },
+      {
+        "row": "Operating costs",
+        "column": "2021",
+        "value": "(397.25)",
+        "unit": "CNY million",
+        "date": "2021-12-31",
+        "footnote": "[1]"
+      }
+    ],
+    "footnotes": [
+      "[1] Restated comparative period."
+    ]
+  },
+  "referenceOutput": {
+    "facts": [],
+    "citations": [],
+    "tools": [],
+    "validations": [
+      {
+        "id": "extraction_contract",
+        "passed": true
+      }
+    ],
+    "counterEvidence": [],
+    "violations": [],
+    "delivered": true,
+    "table": {
+      "headers": [
+        "Metric",
+        "2022",
+        "2021"
+      ],
+      "cells": [
+        {
+          "row": "Revenue",
+          "column": "2022",
+          "value": "357.25",
+          "unit": "CNY million",
+          "date": "2022-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Revenue",
+          "column": "2021",
+          "value": "368.25",
+          "unit": "CNY million",
+          "date": "2021-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Operating costs",
+          "column": "2022",
+          "value": "(386.25)",
+          "unit": "CNY million",
+          "date": "2022-12-31",
+          "footnote": "[1]"
+        },
+        {
+          "row": "Operating costs",
+          "column": "2021",
+          "value": "(397.25)",
+          "unit": "CNY million",
+          "date": "2021-12-31",
+          "footnote": "[1]"
+        }
+      ],
+      "footnotes": [
+        "[1] Restated comparative period."
+      ]
+    }
+  },
+  "origin": {
+    "manifestHash": "a2cec6d66c121dc6967e21ec7d98646aa952f316076779caa59fcad94a07dfae",
+    "originalSha256": "aa7cbfe90c3c5620b8641c93a20c583394c5867cddccee2844d137b9c6728d92"
+  }
+}

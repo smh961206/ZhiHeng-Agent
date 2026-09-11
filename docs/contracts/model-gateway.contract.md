@@ -1,5 +1,19 @@
 # Model Gateway Contract
 
+## V5.0 unified configuration input
+
+MODEL_CONFIG_FILE is optional. Without it, all legacy env defaults and role semantics remain. With it, the version-1 connections/profiles/roles document is the explicit source of model definitions; credentials are resolved only by apiKeyEnv and execution/promotion controls remain in the environment. Unknown/duplicate fields, invalid references and conflicting nonempty legacy definitions fail closed with a sanitized configuration error. A startup/first-use file snapshot is retained until process restart. Gateway captures effective values and credential references for each call; custom configuration cannot bypass existing ModelProfile validators or promotion gates.
+
+External profile references do not replace legacy-analysis/main/pro/etc. internal IDs. Saved modelState versions and connection identity algorithms are unchanged. API config adds a boolean configurationError; file-invalid configuration returns configured=false/model=null while health and historical reads remain available. Missing required dispatch credentials cannot fall back to another role's key. See [runbook](../releases/V5.0/model-config-migration-runbook.md).
+
+## V5.0 public configuration summary
+
+GET /api/config adds modelSelection: mode, analysisModel, visionModel and candidatesEnabled. This is a read-only snapshot for new work using existing admission owners; it is not a job pin or health observation. Adaptive research modes omit a single analysis model; inactive Vision returns null. Unknown status remains unknown. No credentials, endpoints, policy paths, groups, approval identities or dormant candidate names are exposed. Existing fields and all execution/recovery gates remain unchanged.
+
+## V5.0 current additions
+
+Explicit MAIN ModelProfile v4 uses challenger-config, declared capabilities and adapter thinking omit/disabled/enabled; no business caller infers capabilities from model names. Structured candidate requests require explicit true capability. The default Catalog remains legacy. Private job modelState v3 freezes experiment policy/group/task/classifier/job time/profile/effort and both-arm configuration. No v2 escalation occurs. Approval binds complete research/grading code, active Knowledge, dependencies, effective review/deadline settings and connection identity; secret key rotation is permitted. New jobs require explicit matching enable/version/registry, and each v3 Gateway call rechecks retained policy and invalidation. Revocation pauses the next call, preserving progress; in-flight calls are not cancelled by file edits. Simulation and component extraction cannot authorize a research champion. Registry is a trusted operator-owned local record. See [V5.0 schema](../releases/V5.0/schema.md) and [runbook](../releases/V5.0/runbook.md).
+
 V4.9 output clarification: the existing Vision system instruction preserves exact footnote markers and caller-requested field types / extraction scope. Benchmark cells require JSON null for absent or unreadable values and only table-associated marked footnotes; ordinary transcript callers keep their requested schema. This changes instructions, not response rewriting or grading. See [review](../releases/V4.9/vision-output-constraints-review-20260911.md).
 
 V4.9 review clarification: capability status identifies the selected profile in the current context, while each canonical extraction identifies the actual response profile (including fallback). These meanings must not be conflated. Admission caching cannot preserve approval after relevant file/config/code identity changes or missing credentials. Local benchmark reservations and incomplete results are operational evidence only; unfinished runs cannot authorize routing.

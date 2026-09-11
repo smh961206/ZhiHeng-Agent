@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "id": "VIS-032",
+  "fixtureVersion": "v1",
+  "synthetic": true,
+  "scope": "component-extraction",
+  "prompt": "Extract the supplied table without inventing missing cells.",
+  "sources": [],
+  "market": [],
+  "assets": [
+    {
+      "path": "assets/VIS-032.png",
+      "sha256": "a5ff2ef017e934358c02d846a31154fc8d32e9cb3e43b2d0ea61e555d6f5eadf",
+      "page": 1
+    }
+  ],
+  "expectedTable": {
+    "headers": [
+      "Metric",
+      "2024",
+      "2023"
+    ],
+    "cells": [
+      {
+        "row": "Operating cash flow",
+        "column": "2024",
+        "value": "578.25",
+        "unit": "USD thousand",
+        "date": "2024-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Operating cash flow",
+        "column": "2023",
+        "value": "589.25",
+        "unit": "USD thousand",
+        "date": "2023-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Capital expenditure",
+        "column": "2024",
+        "value": null,
+        "unit": "USD thousand",
+        "date": "2024-12-31",
+        "footnote": "[1]"
+      },
+      {
+        "row": "Capital expenditure",
+        "column": "2023",
+        "value": "618.25",
+        "unit": "USD thousand",
+        "date": "2023-12-31",
+        "footnote": "[1]"
+      }
+    ],
+    "footnotes": [
+      "[1] Restated comparative period."
+    ]
+  },
+  "referenceOutput": {
+    "facts": [],
+    "citations": [],
+    "tools": [],
+    "validations": [
+      {
+        "id": "extraction_contract",
+        "passed": true
+      }
+    ],
+    "counterEvidence": [],
+    "violations": [],
+    "delivered": true,
+    "table": {
+      "headers": [
+        "Metric",
+        "2024",
+        "2023"
+      ],
+      "cells": [
+        {
+          "row": "Operating cash flow",
+          "column": "2024",
+          "value": "578.25",
+          "unit": "USD thousand",
+          "date": "2024-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Operating cash flow",
+          "column": "2023",
+          "value": "589.25",
+          "unit": "USD thousand",
+          "date": "2023-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Capital expenditure",
+          "column": "2024",
+          "value": null,
+          "unit": "USD thousand",
+          "date": "2024-12-31",
+          "footnote": "[1]"
+        },
+        {
+          "row": "Capital expenditure",
+          "column": "2023",
+          "value": "618.25",
+          "unit": "USD thousand",
+          "date": "2023-12-31",
+          "footnote": "[1]"
+        }
+      ],
+      "footnotes": [
+        "[1] Restated comparative period."
+      ]
+    }
+  },
+  "origin": {
+    "manifestHash": "a2cec6d66c121dc6967e21ec7d98646aa952f316076779caa59fcad94a07dfae",
+    "originalSha256": "a5ff2ef017e934358c02d846a31154fc8d32e9cb3e43b2d0ea61e555d6f5eadf"
+  }
+}

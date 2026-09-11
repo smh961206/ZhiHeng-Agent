@@ -1,5 +1,7 @@
 # V5.0 Implementation Plan
 
+This older five-part grouping is retained as design history. The executable sequence is the fourteen entries in [DETAILED_INDEX.md](DETAILED_INDEX.md). Current implementation and remaining acceptance are recorded in [completion-report.md](completion-report.md).
+
 ## Release goal
 Make model selection evidence-based using ZhiHeng-specific benchmarks and task champions.
 

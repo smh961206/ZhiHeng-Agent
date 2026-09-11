@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "id": "VIS-006",
+  "fixtureVersion": "v1",
+  "synthetic": true,
+  "scope": "component-extraction",
+  "prompt": "Extract the supplied table without inventing missing cells.",
+  "sources": [],
+  "market": [],
+  "assets": [
+    {
+      "path": "assets/VIS-006.pdf",
+      "sha256": "03e478c65fadcdd2eab67837f9d8fcb2524c0b37c264e4ccbdf17d770d765710",
+      "page": 1
+    }
+  ],
+  "expectedTable": {
+    "headers": [
+      "Metric",
+      "2025",
+      "2024"
+    ],
+    "cells": [
+      {
+        "row": "Assets",
+        "column": "2025",
+        "value": "136.25",
+        "unit": "EUR million",
+        "date": "2025-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Assets",
+        "column": "2024",
+        "value": "147.25",
+        "unit": "EUR million",
+        "date": "2024-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Liabilities",
+        "column": "2025",
+        "value": "(165.25)",
+        "unit": "EUR million",
+        "date": "2025-12-31",
+        "footnote": "[1]"
+      },
+      {
+        "row": "Liabilities",
+        "column": "2024",
+        "value": "(176.25)",
+        "unit": "EUR million",
+        "date": "2024-12-31",
+        "footnote": "[1]"
+      }
+    ],
+    "footnotes": [
+      "[1] Consolidated scope; not parent-only."
+    ]
+  },
+  "referenceOutput": {
+    "facts": [],
+    "citations": [],
+    "tools": [],
+    "validations": [
+      {
+        "id": "extraction_contract",
+        "passed": true
+      }
+    ],
+    "counterEvidence": [],
+    "violations": [],
+    "delivered": true,
+    "table": {
+      "headers": [
+        "Metric",
+        "2025",
+        "2024"
+      ],
+      "cells": [
+        {
+          "row": "Assets",
+          "column": "2025",
+          "value": "136.25",
+          "unit": "EUR million",
+          "date": "2025-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Assets",
+          "column": "2024",
+          "value": "147.25",
+          "unit": "EUR million",
+          "date": "2024-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Liabilities",
+          "column": "2025",
+          "value": "(165.25)",
+          "unit": "EUR million",
+          "date": "2025-12-31",
+          "footnote": "[1]"
+        },
+        {
+          "row": "Liabilities",
+          "column": "2024",
+          "value": "(176.25)",
+          "unit": "EUR million",
+          "date": "2024-12-31",
+          "footnote": "[1]"
+        }
+      ],
+      "footnotes": [
+        "[1] Consolidated scope; not parent-only."
+      ]
+    }
+  },
+  "origin": {
+    "manifestHash": "a2cec6d66c121dc6967e21ec7d98646aa952f316076779caa59fcad94a07dfae",
+    "originalSha256": "03e478c65fadcdd2eab67837f9d8fcb2524c0b37c264e4ccbdf17d770d765710"
+  }
+}

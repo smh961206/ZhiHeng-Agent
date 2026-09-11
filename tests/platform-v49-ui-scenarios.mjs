@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import {platformVersion} from '../src/config/platform-release.mjs';
 
 export async function registerPlatformV49Scenarios({test,makeJob,detail,openProcess,textIncludes,noOverflow,screenshot}){
  const historyModule=/\/(?:src\/components\/ResearchHistory\.jsx|assets\/ResearchHistory-[\w-]+\.js)(?:\?|$)/;
@@ -15,7 +15,7 @@ export async function registerPlatformV49Scenarios({test,makeJob,detail,openProc
   await page.waitForFunction(()=>document.querySelector('.platform-status-trigger')?.getAttribute('aria-busy')==='true');
   await requested;
   assert.equal(statusRequested,true);assert.equal(await trigger.isDisabled(),true);
-  release();await page.getByRole('dialog',{name:'知衡 · V4.9',exact:true}).waitFor();
+  release();await page.getByRole('dialog',{name:'知衡 · V'+platformVersion,exact:true}).waitFor();
   await page.keyboard.press('Escape');await trigger.evaluate(el=>el.focus());
   await page.goto('/history?q=retain&status=failed');await page.getByRole('searchbox',{name:'搜索研究问题、模式或标的',exact:true}).waitFor();
   assert.equal(historyRequested,true);assert.equal(new URL(page.url()).searchParams.get('q'),'retain');
@@ -29,10 +29,10 @@ export async function registerPlatformV49Scenarios({test,makeJob,detail,openProc
   await page.unroute(pattern);
   await page.getByRole('button',{name:name==='history'?'刷新重试':'平台与模型说明',exact:true}).click();
   if(name==='history'){await page.getByRole('searchbox',{name:'搜索研究问题、模式或标的',exact:true}).waitFor();assert.equal(new URL(page.url()).searchParams.get('q'),'keep');}
-  else {await page.locator('.fw-hero').waitFor();await page.getByRole('button',{name:'平台与模型说明',exact:true}).click();await page.getByRole('dialog',{name:'知衡 · V4.9',exact:true}).waitFor();}
+  else {await page.locator('.fw-hero').waitFor();await page.getByRole('button',{name:'平台与模型说明',exact:true}).click();await page.getByRole('dialog',{name:'知衡 · V'+platformVersion,exact:true}).waitFor();}
   assert.equal(requests('POST','/api/jobs').length,0);
  });
- const release=(await readFile(new URL('../docs/releases/CURRENT',import.meta.url),'utf8')).trim();
+ const release='V'+platformVersion;
  for(const width of [320,1440,2560]){
   test('platform-v49-pages-'+width,{viewport:{width,height:1000}},async({page,requests})=>{
    for(const path of ['/','/workbench','/history','/handbook']){

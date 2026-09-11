@@ -1,7 +1,7 @@
 # V5.0.9 — Task classification for champion
 
 Release: `V5.0`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT. Engineering implementation is recorded in [the execution log](../execution-log.md) and [completion report](../completion-report.md). This status does not certify real candidate quality or authorize production routing.
 
 ## 1. Why
 

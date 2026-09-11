@@ -33,7 +33,7 @@ export function createResearchCreator({storage,jobs,controllers,pendingStarts,mu
    if(controllers.size+pendingStarts.size>=maxConcurrent)throw failure(429,`已有${maxConcurrent}个任务运行或准备中，请稍后再试`);
    pendingStarts.add(id);
    const job=candidate??await prepare(structuredClone(payload),id);
-   if(!candidate)job.modelState=createConfiguredJobModelState(process.env,{mode:job.mode,historyYears:job.plan?.historyYears});
+   if(!candidate)job.modelState=createConfiguredJobModelState(process.env,{mode:job.mode,historyYears:job.plan?.historyYears},job);
    job.submission={fingerprint,attemptId:candidate?.submission.attemptId??randomUUID()};uncertain.set(id,job);
    try{await storage.createJob(job);}
    catch(error){

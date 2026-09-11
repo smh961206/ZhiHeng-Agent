@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "id": "TEXT-006",
+  "fixtureVersion": "v1",
+  "synthetic": true,
+  "scope": "component-extraction",
+  "mode": "F",
+  "prompt": "Extract the one requested metric (Dividend) as id metric with its explicit basis and one exact source quote. Preserve unavailable values as null.",
+  "sources": [
+    {
+      "id": "S1",
+      "publishedAt": "2026-09-01T00:00:00Z",
+      "blocks": [
+        {
+          "id": "B1",
+          "text": "Synthetic component fixture, not a company disclosure. Dividend: not reported. Period FY2025; currency USD; unit million; scope consolidated. Share basis and valuation basis are unavailable. Missing is not zero."
+        }
+      ]
+    }
+  ],
+  "market": [],
+  "assets": [],
+  "referenceOutput": {
+    "facts": [
+      {
+        "id": "metric",
+        "value": null,
+        "period": "FY2025",
+        "currency": "USD",
+        "unit": "million",
+        "shareBasis": null,
+        "accountingScope": "consolidated",
+        "valuationBasis": null,
+        "sourceId": "S1",
+        "blockId": "B1",
+        "kind": "observation"
+      }
+    ],
+    "citations": [
+      {
+        "sourceId": "S1",
+        "blockId": "B1",
+        "quote": "Dividend: not reported"
+      }
+    ],
+    "tools": [],
+    "validations": [
+      {
+        "id": "extraction_contract",
+        "passed": true
+      }
+    ],
+    "counterEvidence": [],
+    "violations": [],
+    "delivered": true
+  }
+}

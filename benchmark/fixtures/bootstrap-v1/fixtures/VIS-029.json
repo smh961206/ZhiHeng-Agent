@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "id": "VIS-029",
+  "fixtureVersion": "v1",
+  "synthetic": true,
+  "scope": "component-extraction",
+  "prompt": "Extract the supplied table without inventing missing cells.",
+  "sources": [],
+  "market": [],
+  "assets": [
+    {
+      "path": "assets/VIS-029.png",
+      "sha256": "807189413813ab67990214f86f516ab77924e338f6139a9116e8431056f0459f",
+      "page": 1
+    }
+  ],
+  "expectedTable": {
+    "headers": [
+      "Metric",
+      "2025",
+      "2024"
+    ],
+    "cells": [
+      {
+        "row": "Basic shares",
+        "column": "2025",
+        "value": "527.25",
+        "unit": "shares thousand",
+        "date": "2025-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Basic shares",
+        "column": "2024",
+        "value": null,
+        "unit": "shares thousand",
+        "date": "2024-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Diluted shares",
+        "column": "2025",
+        "value": "-556.25",
+        "unit": "shares thousand",
+        "date": "2025-12-31",
+        "footnote": "[1]"
+      },
+      {
+        "row": "Diluted shares",
+        "column": "2024",
+        "value": "-567.25",
+        "unit": "shares thousand",
+        "date": "2024-12-31",
+        "footnote": "[1]"
+      }
+    ],
+    "footnotes": [
+      "[1] Consolidated scope; not parent-only."
+    ]
+  },
+  "referenceOutput": {
+    "facts": [],
+    "citations": [],
+    "tools": [],
+    "validations": [
+      {
+        "id": "extraction_contract",
+        "passed": true
+      }
+    ],
+    "counterEvidence": [],
+    "violations": [],
+    "delivered": true,
+    "table": {
+      "headers": [
+        "Metric",
+        "2025",
+        "2024"
+      ],
+      "cells": [
+        {
+          "row": "Basic shares",
+          "column": "2025",
+          "value": "527.25",
+          "unit": "shares thousand",
+          "date": "2025-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Basic shares",
+          "column": "2024",
+          "value": null,
+          "unit": "shares thousand",
+          "date": "2024-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Diluted shares",
+          "column": "2025",
+          "value": "-556.25",
+          "unit": "shares thousand",
+          "date": "2025-12-31",
+          "footnote": "[1]"
+        },
+        {
+          "row": "Diluted shares",
+          "column": "2024",
+          "value": "-567.25",
+          "unit": "shares thousand",
+          "date": "2024-12-31",
+          "footnote": "[1]"
+        }
+      ],
+      "footnotes": [
+        "[1] Consolidated scope; not parent-only."
+      ]
+    }
+  },
+  "origin": {
+    "manifestHash": "a2cec6d66c121dc6967e21ec7d98646aa952f316076779caa59fcad94a07dfae",
+    "originalSha256": "807189413813ab67990214f86f516ab77924e338f6139a9116e8431056f0459f"
+  }
+}

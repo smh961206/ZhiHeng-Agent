@@ -1,0 +1,603 @@
+{
+  "version": 1,
+  "release": "V5.0",
+  "implementedSubreleases": 14,
+  "releaseAcceptance": "partial",
+  "productionEnabled": false,
+  "paidCalls": 0,
+  "finalImage": {
+    "exitCode": 0,
+    "hash": "6e351fb62fa93a36213b3abaff4a61a538337b712e73f13ab21ed3a8c697380b",
+    "owners": 191,
+    "localFingerprintMatches": true
+  },
+  "unit": {
+    "tests": 868,
+    "pass": 868,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "deployment": {
+    "exitCode": 0,
+    "groups": 9,
+    "passed": true
+  },
+  "mongo": {
+    "groups": 12,
+    "tests": 17,
+    "pass": 17,
+    "fail": 0,
+    "results": [
+      {
+        "name": "mongo-storage",
+        "code": 0,
+        "durationMs": 959,
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "mongo-schema",
+        "code": 0,
+        "durationMs": 289,
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "mongo-jobs-delete",
+        "code": 0,
+        "durationMs": 833,
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "mongo-jobs-retry",
+        "code": 0,
+        "durationMs": 1267,
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "mongo-jobs-delivery",
+        "code": 0,
+        "durationMs": 2902,
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "mongo-jobs-create",
+        "code": 0,
+        "durationMs": 972,
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "mongo-knowledge-api",
+        "code": 0,
+        "durationMs": 719,
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "mongo-research-resume",
+        "code": 0,
+        "durationMs": 996,
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "mongo-model-telemetry",
+        "code": 0,
+        "durationMs": 570,
+        "tests": 3,
+        "pass": 3,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "mongo-model-state",
+        "code": 0,
+        "durationMs": 2309,
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "mongo-vision-state",
+        "code": 0,
+        "durationMs": 1298,
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      {
+        "name": "mongo-model-experiment",
+        "code": 0,
+        "durationMs": 2750,
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "ui": {
+    "status": "passed",
+    "scenarios": 307,
+    "passed": 307
+  },
+  "routes": 5,
+  "benchmarks": [
+    {
+      "kind": "text",
+      "runId": "58c1343d-016d-45d9-a214-0347412ec707",
+      "binding": "d223ef333e8546718214fd9a71e55d564e8463ae6ac9101cae0b78f840ce25e1",
+      "resultsHash": "2ef2c2852d97b7784ec0e927d0f40c8055bc8cb2f42747e2f08f3bd429dcedd7",
+      "codeHash": "b87be1be882c83e9c0086c2f9b344f64f89b3328ec57964bd66a2a32329404c0",
+      "suiteHash": "263164046034e8f4f7b330a5eca00b8587ec5dac4e1d50a311f0be27608acc7e",
+      "caseCount": 8,
+      "repeats": 2,
+      "attempts": 32,
+      "passed": 32,
+      "evidenceKind": "simulation",
+      "qualityAccepted": false,
+      "comparison": {
+        "version": 1,
+        "kind": "benchmark-statistical-comparison",
+        "baselineId": "main",
+        "candidateId": "main-challenger",
+        "policy": {
+          "version": "1.0.0",
+          "minUniqueCases": 50,
+          "minRepeats": 2,
+          "minPassRate": 0.95,
+          "tolerance": 0.1,
+          "confidence": 0.95
+        },
+        "samplesHash": "f64ece0dc057ef1cb55f8f957191210701a0d950fc1cf9f340f642122cb9a30d",
+        "tasks": [
+          {
+            "taskClass": "agent_tooling",
+            "uniqueCases": 1,
+            "repeatedSamples": 4,
+            "baseline": {
+              "passed": 1,
+              "total": 1,
+              "rate": 1,
+              "interval": {
+                "lower": 0.20654931437723745,
+                "upper": 1
+              }
+            },
+            "candidate": {
+              "passed": 1,
+              "total": 1,
+              "rate": 1,
+              "interval": {
+                "lower": 0.20654931437723745,
+                "upper": 1
+              }
+            },
+            "difference": {
+              "observed": 0,
+              "lower": -0.7934506856227626,
+              "upper": 0.7934506856227626
+            },
+            "statisticallyEligible": false,
+            "liveEvidence": false,
+            "eligible": false,
+            "reasons": [
+              "minimum_sample_required",
+              "noninferiority_unproven",
+              "live_evidence_required"
+            ]
+          },
+          {
+            "taskClass": "financial_analysis",
+            "uniqueCases": 6,
+            "repeatedSamples": 24,
+            "baseline": {
+              "passed": 6,
+              "total": 6,
+              "rate": 1,
+              "interval": {
+                "lower": 0.6096657120978346,
+                "upper": 1
+              }
+            },
+            "candidate": {
+              "passed": 6,
+              "total": 6,
+              "rate": 1,
+              "interval": {
+                "lower": 0.6096657120978346,
+                "upper": 1
+              }
+            },
+            "difference": {
+              "observed": 0,
+              "lower": -0.3903342879021654,
+              "upper": 0.3903342879021654
+            },
+            "statisticallyEligible": false,
+            "liveEvidence": false,
+            "eligible": false,
+            "reasons": [
+              "minimum_sample_required",
+              "noninferiority_unproven",
+              "live_evidence_required"
+            ]
+          },
+          {
+            "taskClass": "quick_screen",
+            "uniqueCases": 1,
+            "repeatedSamples": 4,
+            "baseline": {
+              "passed": 1,
+              "total": 1,
+              "rate": 1,
+              "interval": {
+                "lower": 0.20654931437723745,
+                "upper": 1
+              }
+            },
+            "candidate": {
+              "passed": 1,
+              "total": 1,
+              "rate": 1,
+              "interval": {
+                "lower": 0.20654931437723745,
+                "upper": 1
+              }
+            },
+            "difference": {
+              "observed": 0,
+              "lower": -0.7934506856227626,
+              "upper": 0.7934506856227626
+            },
+            "statisticallyEligible": false,
+            "liveEvidence": false,
+            "eligible": false,
+            "reasons": [
+              "minimum_sample_required",
+              "noninferiority_unproven",
+              "live_evidence_required"
+            ]
+          }
+        ],
+        "qualityAccepted": false
+      }
+    },
+    {
+      "kind": "vision",
+      "runId": "23f6d947-5340-44c5-b87a-db95b39a8ad5",
+      "binding": "053100b1c54bd5e1dc2501a82580b429b01327a6d45369189a986f6e86a2a1c8",
+      "resultsHash": "960612bf2ca0e0dfeff6c68ce89141246669bc2a1748f278a9ca0d539386beb2",
+      "codeHash": "b87be1be882c83e9c0086c2f9b344f64f89b3328ec57964bd66a2a32329404c0",
+      "suiteHash": "263164046034e8f4f7b330a5eca00b8587ec5dac4e1d50a311f0be27608acc7e",
+      "caseCount": 48,
+      "repeats": 2,
+      "attempts": 192,
+      "passed": 192,
+      "evidenceKind": "simulation",
+      "qualityAccepted": false,
+      "comparison": {
+        "version": 1,
+        "kind": "benchmark-statistical-comparison",
+        "baselineId": "legacy-vision",
+        "candidateId": "vision-challenger",
+        "policy": {
+          "version": "1.0.0",
+          "minUniqueCases": 50,
+          "minRepeats": 2,
+          "minPassRate": 0.95,
+          "tolerance": 0.1,
+          "confidence": 0.95
+        },
+        "samplesHash": "1fae5c2462a1b20c2436245a24f79ec29cf54c93ca3eef4cd87e739ae40c95ae",
+        "tasks": [
+          {
+            "taskClass": "vision_table",
+            "uniqueCases": 48,
+            "repeatedSamples": 192,
+            "baseline": {
+              "passed": 48,
+              "total": 48,
+              "rate": 1,
+              "interval": {
+                "lower": 0.9258998703338824,
+                "upper": 0.9999999999999999
+              }
+            },
+            "candidate": {
+              "passed": 48,
+              "total": 48,
+              "rate": 1,
+              "interval": {
+                "lower": 0.9258998703338824,
+                "upper": 0.9999999999999999
+              }
+            },
+            "difference": {
+              "observed": 0,
+              "lower": -0.07410012966611745,
+              "upper": 0.07410012966611745
+            },
+            "statisticallyEligible": false,
+            "liveEvidence": false,
+            "eligible": false,
+            "reasons": [
+              "minimum_sample_required",
+              "live_evidence_required"
+            ]
+          }
+        ],
+        "qualityAccepted": false
+      }
+    }
+  ],
+  "baselines": {
+    "version": 1,
+    "codeHash": "b87be1be882c83e9c0086c2f9b344f64f89b3328ec57964bd66a2a32329404c0",
+    "evidenceKind": "simulation",
+    "description": "Frozen baseline-arm replay from verified mock Gateway comparison, no additional model calls.",
+    "records": [
+      {
+        "kind": "text",
+        "source": {
+          "runId": "58c1343d-016d-45d9-a214-0347412ec707",
+          "binding": "d223ef333e8546718214fd9a71e55d564e8463ae6ac9101cae0b78f840ce25e1",
+          "resultsHash": "b960012f6550264b360aa5b2842d2930d54fb06ff13dbd70314296f56a0a936e"
+        },
+        "baselineHash": "b683cbb90a5ba442a58726193e6bb6271f22d64e9b9bc6ccee88ef19a06cce4d",
+        "baselineBinding": "28e1db720e83be77eba0032c72532ff9dbb0a42514cefca0a270b7ef7ebc94dc",
+        "passed": 16,
+        "attempts": 16,
+        "qualityAccepted": false
+      },
+      {
+        "kind": "vision",
+        "source": {
+          "runId": "23f6d947-5340-44c5-b87a-db95b39a8ad5",
+          "binding": "053100b1c54bd5e1dc2501a82580b429b01327a6d45369189a986f6e86a2a1c8",
+          "resultsHash": "56e65ea5ca99a92bccb6fb51f2f05984d584c521783504f418442b6e90a9cc86"
+        },
+        "baselineHash": "4c6b310f048c27a60f60936709955f05bca93d923df78fc7821fd203c706daec",
+        "baselineBinding": "c5595f4d5fdaa806df70b4f463ddb030052c71140422d502251d79c225de7ffd",
+        "passed": 96,
+        "attempts": 96,
+        "qualityAccepted": false
+      }
+    ]
+  },
+  "files": {
+    "modified": [
+      ".env.example",
+      ".env.production.example",
+      "Dockerfile",
+      "MANIFEST.json",
+      "README.md",
+      "benchmark/README.md",
+      "docs/architecture/00-system-map.md",
+      "docs/architecture/current-implementation-map.md",
+      "docs/contracts/model-gateway.contract.md",
+      "docs/invariants/model.invariants.md",
+      "docs/releases/CURRENT",
+      "docs/releases/V4.9/vision-call-inventory.json",
+      "docs/releases/V5.0/DETAILED_INDEX.md",
+      "docs/releases/V5.0/README.md",
+      "docs/releases/V5.0/acceptance.md",
+      "docs/releases/V5.0/benchmark.md",
+      "docs/releases/V5.0/implementation.md",
+      "docs/releases/V5.0/migration.md",
+      "docs/releases/V5.0/rollback.md",
+      "docs/releases/V5.0/schema.md",
+      "docs/releases/V5.0/subreleases/V5_0_0-benchmark-case-contract.md",
+      "docs/releases/V5.0/subreleases/V5_0_1-fixture-loader.md",
+      "docs/releases/V5.0/subreleases/V5_0_10-champion-registry.md",
+      "docs/releases/V5.0/subreleases/V5_0_11-a-b-assignment.md",
+      "docs/releases/V5.0/subreleases/V5_0_12-production-champion-rollout.md",
+      "docs/releases/V5.0/subreleases/V5_0_13-model-drift-monitor-baseline.md",
+      "docs/releases/V5.0/subreleases/V5_0_2-deterministic-graders.md",
+      "docs/releases/V5.0/subreleases/V5_0_3-semantic-grader-policy.md",
+      "docs/releases/V5.0/subreleases/V5_0_4-benchmark-runner.md",
+      "docs/releases/V5.0/subreleases/V5_0_5-baseline-snapshot.md",
+      "docs/releases/V5.0/subreleases/V5_0_6-challenger-profile-integration.md",
+      "docs/releases/V5.0/subreleases/V5_0_7-offline-challenger-run.md",
+      "docs/releases/V5.0/subreleases/V5_0_8-statistical-comparison.md",
+      "docs/releases/V5.0/subreleases/V5_0_9-task-classification-for-champion.md",
+      "package.json",
+      "server/model-adapter.mjs",
+      "server/model-catalog.mjs",
+      "server/model-connection.mjs",
+      "server/model-gateway.mjs",
+      "server/model-rollout.mjs",
+      "server/model-routing.mjs",
+      "server/model-state.mjs",
+      "server/model-telemetry.mjs",
+      "server/research-create.mjs",
+      "src/config/platform-release.mjs",
+      "tests/deploy.integration.sh",
+      "tests/harness.test.mjs",
+      "tests/platform-v48-ui-scenarios.mjs",
+      "tests/platform-v49-ui-scenarios.mjs"
+    ],
+    "new": [
+      "benchmark/baseline.mjs",
+      "benchmark/case.mjs",
+      "benchmark/champions.mjs",
+      "benchmark/contracts/semantic-policy.md",
+      "benchmark/executor.mjs",
+      "benchmark/fixtures.mjs",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-001.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-002.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-003.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-004.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-005.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-006.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-007.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-008.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-009.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-010.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-011.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-012.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-013.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-014.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-015.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-016.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-017.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-018.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-019.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-020.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-021.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-022.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-023.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-024.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-025.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-026.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-027.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-028.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-029.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-030.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-031.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-032.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-033.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-034.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-035.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-036.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-037.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-038.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-039.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-040.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-041.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-042.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-043.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-044.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-045.pdf",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-046.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-047.png",
+      "benchmark/fixtures/bootstrap-v1/assets/VIS-048.pdf",
+      "benchmark/fixtures/bootstrap-v1/cases.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/TEXT-001.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/TEXT-002.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/TEXT-003.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/TEXT-004.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/TEXT-005.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/TEXT-006.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/TEXT-007.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/TEXT-008.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-001.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-002.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-003.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-004.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-005.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-006.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-007.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-008.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-009.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-010.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-011.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-012.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-013.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-014.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-015.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-016.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-017.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-018.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-019.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-020.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-021.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-022.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-023.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-024.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-025.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-026.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-027.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-028.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-029.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-030.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-031.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-032.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-033.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-034.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-035.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-036.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-037.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-038.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-039.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-040.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-041.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-042.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-043.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-044.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-045.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-046.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-047.json",
+      "benchmark/fixtures/bootstrap-v1/fixtures/VIS-048.json",
+      "benchmark/fixtures/bootstrap-v1/manifest.json",
+      "benchmark/graders.mjs",
+      "benchmark/runner.mjs",
+      "benchmark/semantic.mjs",
+      "benchmark/statistics.mjs",
+      "docs/releases/V5.0/completion-report.md",
+      "docs/releases/V5.0/execution-log.md",
+      "docs/releases/V5.0/runbook.md",
+      "docs/releases/V5.0/validation-results.json",
+      "scripts/benchmark.mjs",
+      "scripts/build-benchmark-fixtures.mjs",
+      "scripts/model-drift.mjs",
+      "server/model-champion.mjs",
+      "server/model-drift.mjs",
+      "server/model-experiment.mjs",
+      "server/model-task-class.mjs",
+      "tests/benchmark-baseline.test.mjs",
+      "tests/benchmark-case.test.mjs",
+      "tests/benchmark-executor.test.mjs",
+      "tests/benchmark-fixtures.test.mjs",
+      "tests/benchmark-graders.test.mjs",
+      "tests/benchmark-runner.test.mjs",
+      "tests/benchmark-semantic.test.mjs",
+      "tests/benchmark-statistics.test.mjs",
+      "tests/fixtures/benchmark.mjs",
+      "tests/fixtures/champion.mjs",
+      "tests/model-challenger.test.mjs",
+      "tests/model-champion-rollout.test.mjs",
+      "tests/model-champion.test.mjs",
+      "tests/model-drift.test.mjs",
+      "tests/model-experiment.integration.mjs",
+      "tests/model-experiment.test.mjs",
+      "tests/model-task-class.test.mjs"
+    ],
+    "removed": []
+  }
+}

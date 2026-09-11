@@ -2,7 +2,7 @@
   "harnessVersion": "3.0.0",
   "normalizedTemplateSections": 26,
   "executableSubreleases": 197,
-  "fileCount": 508,
+  "fileCount": 553,
   "files": [
     {
       "path": "AGENTS.md",
@@ -56,8 +56,8 @@
     },
     {
       "path": "benchmark/README.md",
-      "bytes": 824,
-      "sha256": "e14ad7e74502f85a19f60577f27750c9546d387f5944c9d4bb5dcdc630a63edf"
+      "bytes": 1269,
+      "sha256": "913a2c0cb0e5a8f5a0304c59cc1d06afe52daa6ec2f562faacf3affce937a784"
     },
     {
       "path": "benchmark/RED_TEAM_PLAN.md",
@@ -68,6 +68,11 @@
       "path": "benchmark/contracts/case-schema.md",
       "bytes": 668,
       "sha256": "b1985b6549bd2fb71507e6d413df307cab6b9c7a856af4bfd97a6eb6d153daf4"
+    },
+    {
+      "path": "benchmark/contracts/semantic-policy.md",
+      "bytes": 7541,
+      "sha256": "7ad20051176277e8eb06494b61f3d75367ce2f27ab0d9595f4cf0f550f733ff6"
     },
     {
       "path": "docs/adr/ADR-001-evidence-first.md",
@@ -156,8 +161,8 @@
     },
     {
       "path": "docs/architecture/00-system-map.md",
-      "bytes": 6610,
-      "sha256": "46b98a6ecc6a34957359d70db2c92f4676888dece2fde2c0db629a7921cbe584"
+      "bytes": 7081,
+      "sha256": "5a9871753ba07e03a77127aabea69bce4176beef04b40d34241fc1d8c98cce6b"
     },
     {
       "path": "docs/architecture/01-domain-model.md",
@@ -216,8 +221,8 @@
     },
     {
       "path": "docs/architecture/current-implementation-map.md",
-      "bytes": 47278,
-      "sha256": "807ef8974aea949c786aa6836f817d999251b6d81fb4e66bb51070ac76c20dd4"
+      "bytes": 51654,
+      "sha256": "102f6f7863d19205c58a0df0d64ee2c65c7228490e87bf3c75578ad5f9813668"
     },
     {
       "path": "docs/contracts/README.md",
@@ -296,8 +301,8 @@
     },
     {
       "path": "docs/contracts/model-gateway.contract.md",
-      "bytes": 50447,
-      "sha256": "0712ed0d046d0d8860c8900d3a3f3934a7b6f180e1889e5eb1a544c2a53b00d3"
+      "bytes": 53244,
+      "sha256": "730ef720c24a13900e724b138efebe3ce5bdfb0e6edec7d3882b574cb1c83075"
     },
     {
       "path": "docs/contracts/outcome.contract.md",
@@ -396,8 +401,8 @@
     },
     {
       "path": "docs/invariants/model.invariants.md",
-      "bytes": 13777,
-      "sha256": "d2fb9aeec0457fbcd85dcc3ef963d4e5f3745b054d6d5bb3efbde0e8a87a80fe"
+      "bytes": 14530,
+      "sha256": "785cac2726e50654df14db9b784109115e575dbad5d432934f0bcfd617fdd19b"
     },
     {
       "path": "docs/invariants/point-in-time.invariants.md",
@@ -412,7 +417,7 @@
     {
       "path": "docs/releases/CURRENT",
       "bytes": 5,
-      "sha256": "39fd20ab28c61c98fa8e881844f22ac3e37aabbe964dbcde45ece0c43caa34fe"
+      "sha256": "9057ec40a1c5a0a8dc814ded08c0639c04d3121001d4b1b81e40f9253c676a4e"
     },
     {
       "path": "docs/releases/H0/DETAILED_INDEX.md",
@@ -931,8 +936,8 @@
     },
     {
       "path": "docs/releases/V4.9/vision-call-inventory.json",
-      "bytes": 17603,
-      "sha256": "5735e7acaf4288705ffed588cb80c3c2bd7a3b839c98c40b610b352a8d6a13e1"
+      "bytes": 18600,
+      "sha256": "281ccc582a7f699a2772e0148fc8e1f206345e191bab17fae43d43488226fe99"
     },
     {
       "path": "docs/releases/V4.9/vision-call-inventory.md",
@@ -976,8 +981,8 @@
     },
     {
       "path": "docs/releases/V5.0/DETAILED_INDEX.md",
-      "bytes": 1400,
-      "sha256": "11d4fdcbc3f1eeaf7242a4b83278e443e326c0e063c1ebbe39b8e92a7606c785"
+      "bytes": 2806,
+      "sha256": "a0923b04347568b6a75fc2905b82cb109fb7bcbb32893d30c53b25edd65f4de3"
     },
     {
       "path": "docs/releases/V5.0/NORMALIZED_EXECUTION.md",
@@ -986,108 +991,143 @@
     },
     {
       "path": "docs/releases/V5.0/README.md",
-      "bytes": 1384,
-      "sha256": "8becd3caa34a1b4369a1a29eb31a5bda57eb313402f681290529faf74e593d7d"
+      "bytes": 1843,
+      "sha256": "fccfce5908c8e6ee414eba944d9864b33f163befe91649b9011fbb6948ad44cf"
     },
     {
       "path": "docs/releases/V5.0/acceptance.md",
-      "bytes": 596,
-      "sha256": "971b080e8c243b0a78312794436b47a046e10e38d530405f8023c19c9c1c51ef"
+      "bytes": 1172,
+      "sha256": "afb26150e6fa88be5880daf8da5304d2fe9adef9932da69121e6b244246305c1"
     },
     {
       "path": "docs/releases/V5.0/benchmark.md",
-      "bytes": 416,
-      "sha256": "6c3d0a8df99bdca04009842e906e31c4f7389dd9011dfc7d84847a703ecf4bd4"
+      "bytes": 882,
+      "sha256": "25e2db1160778bc6b65385fd3c012de2c75459ec72e5f01e4f223eef9dda6b7d"
+    },
+    {
+      "path": "docs/releases/V5.0/completion-report.md",
+      "bytes": 9439,
+      "sha256": "eb3d0bb19a95488b455e1d089d79cd516f2709c0ca9e32e9f3926e0e15605511"
+    },
+    {
+      "path": "docs/releases/V5.0/execution-log.md",
+      "bytes": 18092,
+      "sha256": "956fdf074f12a66690b288f387142c6b1bb0dea0b990dd86435523999616ba90"
+    },
+    {
+      "path": "docs/releases/V5.0/frontend-completion-report.md",
+      "bytes": 9675,
+      "sha256": "5a732ab0a71db121094aab4668da4eab6a91b4f3ac74f46a152c9692f65465da"
     },
     {
       "path": "docs/releases/V5.0/implementation.md",
-      "bytes": 3207,
-      "sha256": "d25619da4c07f72e27198c764877d16abceab01d8c152e1ca79e37568d74d36b"
+      "bytes": 3470,
+      "sha256": "efd1839fbf92bd4c36e5774af15fa10306e1533a876a25ff85e6f99d3e760f30"
     },
     {
       "path": "docs/releases/V5.0/migration.md",
-      "bytes": 362,
-      "sha256": "9efae0bd8826b1f6c940d81440cefb1d91bc6362779ae13f542c5203716b31a0"
+      "bytes": 2350,
+      "sha256": "6a6094942909e762281e4d51b27f01e5f401aa92621b0c9f7ab34b216ef53616"
+    },
+    {
+      "path": "docs/releases/V5.0/regression-optimization-report.md",
+      "bytes": 8729,
+      "sha256": "f05f815157b2994b37fef6f770b1e2d948935a0e4360e5337775e5a831725aa8"
+    },
+    {
+      "path": "docs/releases/V5.0/regression-review2-report.md",
+      "bytes": 6528,
+      "sha256": "47716fb80b8fe9663bf00d36c83c9c437b40414cd9ac150e9d3a41607dd77fa3"
     },
     {
       "path": "docs/releases/V5.0/rollback.md",
-      "bytes": 325,
-      "sha256": "1cfcdbf7efca571dd5673be356f80290cfed3f44e6b4b949629be0dd154fb4a8"
+      "bytes": 1534,
+      "sha256": "6a9feb8fc9ae1cbd251170327576d423275c3f07364788afbc7c7ba87c6a4fc6"
+    },
+    {
+      "path": "docs/releases/V5.0/runbook.md",
+      "bytes": 9967,
+      "sha256": "605f3884860edc2aa781933b66dc947378dc0d0bfe814d542eb7c4ada269684f"
     },
     {
       "path": "docs/releases/V5.0/schema.md",
-      "bytes": 322,
-      "sha256": "81724a65558a22d32e51e7e1c99f2814cac91bb602b99722df68786920c662f3"
+      "bytes": 2350,
+      "sha256": "d7e03729eab96b5aa950af0b8a98c2be05ca26cbdca2da636d57fc090c8608c5"
     },
     {
       "path": "docs/releases/V5.0/subreleases/V5_0_0-benchmark-case-contract.md",
-      "bytes": 5730,
-      "sha256": "a1116854237e75e1c99d08962dd4dfc385eefa4d63d0798fa6afec39d3035d39"
+      "bytes": 5797,
+      "sha256": "f4d2c1e3692e7ca1b140c06057c218bca5a210ab200ea771c00a642f00ee58e5"
     },
     {
       "path": "docs/releases/V5.0/subreleases/V5_0_1-fixture-loader.md",
-      "bytes": 5621,
-      "sha256": "ef898540b01e5bdcdeb7e9d6a154bc50f9e0bfd414c6e91f447b47c9f80a25fe"
+      "bytes": 5688,
+      "sha256": "b3e0b054b8e19f443c40e57ca6978cf5bdf7ed3efbe15996e307f4346b492673"
     },
     {
       "path": "docs/releases/V5.0/subreleases/V5_0_10-champion-registry.md",
-      "bytes": 5620,
-      "sha256": "d7f0e9ac640167ea7668ac53565b98787158e78358cb271e2bfe76363d4ef6a6"
+      "bytes": 5697,
+      "sha256": "bb87742816c7ade71414fd05d73f9708ac48d21f01111a8486d194507e9a3ee2"
     },
     {
       "path": "docs/releases/V5.0/subreleases/V5_0_11-a-b-assignment.md",
-      "bytes": 5632,
-      "sha256": "7a80e6e42383896b40262e22da87a8b2d85e2789c560d00f4c80faf257ec11ef"
+      "bytes": 5699,
+      "sha256": "6d9f9b87c6f43387fd2705c07ed56df7e2455e240d9bffbeebf806cf57601291"
     },
     {
       "path": "docs/releases/V5.0/subreleases/V5_0_12-production-champion-rollout.md",
-      "bytes": 5714,
-      "sha256": "3bfbb60e3849fc238103c72b3a19a643d1c7e4c8cdb1d28a20c36d6b66947f4b"
+      "bytes": 5791,
+      "sha256": "1bb4520c0397ff536b0d0faa3660275391c04c986774c677f4ea6e94af043349"
     },
     {
       "path": "docs/releases/V5.0/subreleases/V5_0_13-model-drift-monitor-baseline.md",
-      "bytes": 5759,
-      "sha256": "5c3795d9f2430724f108e7bae43369f43ccc5b3b21284eeff246266c38a0a5cc"
+      "bytes": 5836,
+      "sha256": "6c6bb4aad48dc9469193aca3f1377677fe4fad938c9c50245e51b52724414fe2"
     },
     {
       "path": "docs/releases/V5.0/subreleases/V5_0_2-deterministic-graders.md",
-      "bytes": 5711,
-      "sha256": "83549b1988d6b35d129e4fa23db7c41ff778e0236a8accf945a3fa1243e4dc27"
+      "bytes": 5778,
+      "sha256": "8ccff54e1fa71aecaef3588f23f4e675891ca901575ec91f59b88b387d40cbc3"
     },
     {
       "path": "docs/releases/V5.0/subreleases/V5_0_3-semantic-grader-policy.md",
-      "bytes": 5769,
-      "sha256": "4e0dedf646787b3c0768bdc5261f42a646c6156f9db48ea544bb9b88ee2753af"
+      "bytes": 5836,
+      "sha256": "2beec01c4d3277f26571eeb75830da6e885d7de91cbc9fc3d153fc42f14fe723"
     },
     {
       "path": "docs/releases/V5.0/subreleases/V5_0_4-benchmark-runner.md",
-      "bytes": 5620,
-      "sha256": "7eb32e21203c31801d25caf01229037ba94738af191c25909d1fdd336ca3795d"
+      "bytes": 5687,
+      "sha256": "dcff153c29c2a73f0bb6323ac6c0c394710be4e13d465b07d77dc2fea35b433e"
     },
     {
       "path": "docs/releases/V5.0/subreleases/V5_0_5-baseline-snapshot.md",
-      "bytes": 5646,
-      "sha256": "df4e1d1dfb97f99aa2babebf0cba591845f3d5c61987c9c202c5b1583f2c548b"
+      "bytes": 5723,
+      "sha256": "6719bd4c0b8466bb05d359e00c73bc323601e92e19fa915e8671d446c6e14ddc"
     },
     {
       "path": "docs/releases/V5.0/subreleases/V5_0_6-challenger-profile-integration.md",
-      "bytes": 5745,
-      "sha256": "25368c92ffaea06ba75aea747674225ba122f8aa903e3989e5c91fec1808bbd7"
+      "bytes": 5812,
+      "sha256": "e4784fcf6b76d9a750d89eb08da4fe00301139412602f6fb0be5b2f0fd103990"
     },
     {
       "path": "docs/releases/V5.0/subreleases/V5_0_7-offline-challenger-run.md",
-      "bytes": 5663,
-      "sha256": "0ae645d159e09e70d13733225fe7c9f33168af05ec1b8a7bb43500663b4cbe3a"
+      "bytes": 5740,
+      "sha256": "bac14930887de49f2844635d44d4f824bea46bfee0f73b68afd845a71da026e8"
     },
     {
       "path": "docs/releases/V5.0/subreleases/V5_0_8-statistical-comparison.md",
-      "bytes": 5703,
-      "sha256": "f5aa8d37901519241d8e46fc215cdbe70890895cb821e46aaea0a3af0dedc800"
+      "bytes": 5770,
+      "sha256": "09b4a8ed0cb43fff5f470dd9001a402c9f306c3d4e0baacc5e1bbda4e466c27d"
     },
     {
       "path": "docs/releases/V5.0/subreleases/V5_0_9-task-classification-for-champion.md",
-      "bytes": 5760,
-      "sha256": "c42eedec516cc207724fe4c8962600ffa59e3de7a08058fe74b53feb6fab03a5"
+      "bytes": 5827,
+      "sha256": "e935fa9a1d424369dfd29cbc0787b472a89f411fb4ddc1e8a8c42be7d2b5c287"
+    },
+    {
+      "path": "docs/releases/V5.0/validation-results.json",
+      "bytes": 21428,
+      "sha256": "7ef8d78ec90a69b521dbaeb36e61a935e3c11cde64c6eef7a94fecee21a4e0be"
     },
     {
       "path": "docs/releases/V5.1/DETAILED_INDEX.md",
@@ -2536,13 +2576,198 @@
     },
     {
       "path": "tests/harness.test.mjs",
-      "bytes": 5701,
-      "sha256": "76da95d8783fe2f7882d7cb0382dd2dd8222c6cbb67b52f1643f595136a8bfab"
+      "bytes": 6685,
+      "sha256": "0d8f06181b9eb77e0c057b699608eb1845b86f4f8e03dc6c753b29639183094b"
     },
     {
       "path": "tests/model-call-inventory.test.mjs",
       "bytes": 8021,
       "sha256": "639b5b5d59c94e1cc59ea0a63a284def252f598bd4a3f43aa915d1c5a10af89b"
+    },
+    {
+      "path": "docs/releases/V5.0/configuration-cleanup-report.md",
+      "bytes": 5006,
+      "sha256": "9798bf44221b151e4a11be67a5a0ca907dbc1aa124dd6228ad2c4ae4886fbe89"
+    },
+    {
+      "path": ".env.example",
+      "bytes": 3783,
+      "sha256": "741b76f648ea04fd643fc2832cbd225f38fc7dedafee42f1d7525aea9ccc2492"
+    },
+    {
+      "path": ".env.production.example",
+      "bytes": 4066,
+      "sha256": "fba90d1f68401fd0f45abc8aad5faad9696b8edac5623e62de16d99f86b368d7"
+    },
+    {
+      "path": "docs/releases/V5.0/environment-layout-report.md",
+      "bytes": 4131,
+      "sha256": "7343e20eb32577ce5330c7ffa6cb8939001dd5a07ed3e487ffa2568134e869a6"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 209,
+      "sha256": "b37f9792306230b0a7c8d8cd94a1517b19d0b980099f629994d158e6033e8a89"
+    },
+    {
+      "path": "package.json",
+      "bytes": 2899,
+      "sha256": "0583919703ee49360ed11ae18654444268f964f60919f4cd0cbb31ed4179c835"
+    },
+    {
+      "path": "scripts/dev.mjs",
+      "bytes": 1751,
+      "sha256": "d21690fbc8f5ff21c6d0cc59bc1f6f41a3914a73ba397ae99f9a33845d0e0aea"
+    },
+    {
+      "path": "compose.production.yaml",
+      "bytes": 1211,
+      "sha256": "91f82b17fa3addc54b913e8251d08500447bff24829233e5df58b7fcfc788a7a"
+    },
+    {
+      "path": "README.md",
+      "bytes": 85449,
+      "sha256": "9efbaac4c81a913d8542539846c1beaee3a4f387b521a9f9b27c7d165f9c964a"
+    },
+    {
+      "path": "DEPLOY.md",
+      "bytes": 9498,
+      "sha256": "1d7bad784eaffe14c753d5cde240cfb284094e652970c0b191ece48f775ce0e7"
+    },
+    {
+      "path": "tests/env-loading.test.mjs",
+      "bytes": 2736,
+      "sha256": "174bbff71eb79fd60cad35b96d3551eb753586c85b5d4cc37425aafd32a1de2b"
+    },
+    {
+      "path": "docs/releases/V5.0/environment-split-report.md",
+      "bytes": 4816,
+      "sha256": "ee914c998a8ae5bc5bfe3fb40d67c88d20ab7ad16b338d10ea410b094e98b076"
+    },
+    {
+      "path": "server/model-config.mjs",
+      "bytes": 8137,
+      "sha256": "dd73ecc724c95fa36805ee0082940f750b6d5a5c28181142239cb0b441a242f8"
+    },
+    {
+      "path": "server/model-routing.mjs",
+      "bytes": 1125,
+      "sha256": "518c954b730cf15d089983fd4a4b8d644c8037b58a43bb90b0fdbb1d910a022b"
+    },
+    {
+      "path": "server/model-catalog.mjs",
+      "bytes": 10770,
+      "sha256": "d7629c9fb0d866e5add9a5d60615e678f23b4a85320fda847dc7f6a53e452dc2"
+    },
+    {
+      "path": "server/model-connection.mjs",
+      "bytes": 1714,
+      "sha256": "2ab259e5af61d884bb1e9b23c6f00f5f0fe0e1f1bd84e6b862773ebf928f5333"
+    },
+    {
+      "path": "server/model-gateway.mjs",
+      "bytes": 13081,
+      "sha256": "02b70a493d2dca5956c2e63297f8986d131f784a5cd97309d2638e6d4f4c348c"
+    },
+    {
+      "path": "server/model-rollout.mjs",
+      "bytes": 8720,
+      "sha256": "6c3116771e286ea0cb017f2efbfa0f4e52b402c3ef8e7410456d3ae995dc1d33"
+    },
+    {
+      "path": "server/vision-policy.mjs",
+      "bytes": 6698,
+      "sha256": "0600b22c68d4e5c20d6b5c417d2defa45b82919310d1dde5ea9b37233c38bd78"
+    },
+    {
+      "path": "server/index.mjs",
+      "bytes": 14614,
+      "sha256": "92b202729019136e8d0bbdcd74ff0e648868bf6d45374d006d360b772220d444"
+    },
+    {
+      "path": "server/research-retry.mjs",
+      "bytes": 4753,
+      "sha256": "09361b00fcaf6678fe41eeabf83dc8066375846c0d936dfd497e9897be43392c"
+    },
+    {
+      "path": "scripts/model-config.mjs",
+      "bytes": 5102,
+      "sha256": "ee8b9aade9a46744451ab4f99931bf7e5e5214e97b66319210cf626aacc45cbd"
+    },
+    {
+      "path": "scripts/model-comparison.mjs",
+      "bytes": 17792,
+      "sha256": "45716f715fb9a97f1307bc11cab6670635c76a74ea1e487b331ccbfdf0170cbd"
+    },
+    {
+      "path": "deploy.sh",
+      "bytes": 3933,
+      "sha256": "21568fd80d2cb2399642c1a9c9cb0ecc7361d91f1dbbe514adb6db379740c3bc"
+    },
+    {
+      "path": "tests/deploy.integration.sh",
+      "bytes": 3077,
+      "sha256": "d20a1498516ff81a70701013d085a67e61ef4bb772283921bdf100a98410896b"
+    },
+    {
+      "path": ".dockerignore",
+      "bytes": 126,
+      "sha256": "4dc44624da6726b974d5a987c78cd3369aad601a223299b218a0ececeb45b988"
+    },
+    {
+      "path": "compose.models.yaml",
+      "bytes": 438,
+      "sha256": "6d6c69d6b3c9ee671485b61e7e5eef194802df6c749bd2d687a6415203e0a831"
+    },
+    {
+      "path": "config/models.example.json",
+      "bytes": 2503,
+      "sha256": "43d351b24e0473f73f4c2e0b164cd896695742f6621a0a478c504aa8e8b4349a"
+    },
+    {
+      "path": "tests/model-config.test.mjs",
+      "bytes": 8672,
+      "sha256": "3d5642daedd53ed38ae241f9a91fa0409eaf31721578a2c6e9ca4adf9443eecf"
+    },
+    {
+      "path": "tests/model-config.integration.mjs",
+      "bytes": 6144,
+      "sha256": "7344485c251d949f93dc955ce38e5d2d06a6b95517fd99963c3e7162e7afdcc9"
+    },
+    {
+      "path": "docs/releases/V5.0/model-config-migration-runbook.md",
+      "bytes": 4567,
+      "sha256": "ff48818b3d59ccef94288c7e8fc5688d0d637b335a8212d9b49faa377c50d432"
+    },
+    {
+      "path": "docs/releases/V5.0/model-config-migration-report.md",
+      "bytes": 6433,
+      "sha256": "d5f47f4d6d8a717021971613dd0ca3af7fbd16739e144f5b55a0fb07178b4627"
+    },
+    {
+      "path": "tests/vision-call-inventory.test.mjs",
+      "bytes": 3223,
+      "sha256": "45bef0a6ade8c9d8e3369a201b90feebc743a7cc84e67796a8969cd83a7e4ffc"
+    },
+    {
+      "path": "docs/releases/V5.0/config-examples-upgrade-report.md",
+      "bytes": 3274,
+      "sha256": "444086ee7d5c93c06c5d5b0d72cca7ddf8653b42c58cc86de8b7b88565dfd94a"
+    },
+    {
+      "path": "docs/releases/V5.0/environment-consolidation-report.md",
+      "bytes": 2523,
+      "sha256": "5a196a0ee582ca7a725b205723f4206d58dbb2e5ca9d52e897fdc48ea6ffb55d"
+    },
+    {
+      "path": "docs/configuration-guide.md",
+      "bytes": 13134,
+      "sha256": "18325e5401f18384b31a4f9f7c5349806654181e3baa436d5d3a7cb0018af750"
+    },
+    {
+      "path": "docs/releases/V5.0/configuration-guide-report.md",
+      "bytes": 1483,
+      "sha256": "a1755492c501b6570e92c784cac74f8ead573bbf80d41a804759ddcb938f526d"
     }
   ]
 }

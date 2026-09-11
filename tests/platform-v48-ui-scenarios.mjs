@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
+import {platformVersion} from '../src/config/platform-release.mjs';
 
 // Match the actual page module in either Vite development or production output.
 // Keep failure injection scoped to the workbench, never a shared dependency.
@@ -11,7 +12,7 @@ export function registerPlatformV48Scenarios({test,makeJob,detail,detailActions,
    await page.goto('/');
    const trigger=page.getByRole('button',{name:'平台与模型说明',exact:true});
    await trigger.click();
-   const panel=page.getByRole('dialog',{name:'知衡 · V4.9',exact:true});
+   const panel=page.getByRole('dialog',{name:'知衡 · V'+platformVersion,exact:true});
    await textIncludes(panel,'模型已配置');await textIncludes(panel,'实际可用性以本次请求结果为准');
    await textIncludes(panel,'平台版本不表示已启用自动升级');
    assert.doesNotMatch(await panel.innerText(),/当前已启用自动升级|已连接|已通过质量验收/);

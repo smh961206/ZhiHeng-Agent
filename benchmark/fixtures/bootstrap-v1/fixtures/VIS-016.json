@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "id": "VIS-016",
+  "fixtureVersion": "v1",
+  "synthetic": true,
+  "scope": "component-extraction",
+  "prompt": "Extract the supplied table without inventing missing cells.",
+  "sources": [],
+  "market": [],
+  "assets": [
+    {
+      "path": "assets/VIS-016.png",
+      "sha256": "c8affc380bfe2a50c4adfb1824134f1b676b5e64b37b88ef611676c963efeed2",
+      "page": 1
+    }
+  ],
+  "expectedTable": {
+    "headers": [
+      "Metric",
+      "2023",
+      "2022"
+    ],
+    "cells": [
+      {
+        "row": "Return on equity",
+        "column": "2023",
+        "value": "6.5%",
+        "unit": "%",
+        "date": "2023-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Return on equity",
+        "column": "2022",
+        "value": "17.5%",
+        "unit": "%",
+        "date": "2022-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Operating margin",
+        "column": "2023",
+        "value": "5.5%",
+        "unit": "%",
+        "date": "2023-12-31",
+        "footnote": "[1]"
+      },
+      {
+        "row": "Operating margin",
+        "column": "2022",
+        "value": "16.5%",
+        "unit": "%",
+        "date": "2022-12-31",
+        "footnote": "[1]"
+      }
+    ],
+    "footnotes": [
+      "[1] Consolidated scope; not parent-only."
+    ]
+  },
+  "referenceOutput": {
+    "facts": [],
+    "citations": [],
+    "tools": [],
+    "validations": [
+      {
+        "id": "extraction_contract",
+        "passed": true
+      }
+    ],
+    "counterEvidence": [],
+    "violations": [],
+    "delivered": true,
+    "table": {
+      "headers": [
+        "Metric",
+        "2023",
+        "2022"
+      ],
+      "cells": [
+        {
+          "row": "Return on equity",
+          "column": "2023",
+          "value": "6.5%",
+          "unit": "%",
+          "date": "2023-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Return on equity",
+          "column": "2022",
+          "value": "17.5%",
+          "unit": "%",
+          "date": "2022-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Operating margin",
+          "column": "2023",
+          "value": "5.5%",
+          "unit": "%",
+          "date": "2023-12-31",
+          "footnote": "[1]"
+        },
+        {
+          "row": "Operating margin",
+          "column": "2022",
+          "value": "16.5%",
+          "unit": "%",
+          "date": "2022-12-31",
+          "footnote": "[1]"
+        }
+      ],
+      "footnotes": [
+        "[1] Consolidated scope; not parent-only."
+      ]
+    }
+  },
+  "origin": {
+    "manifestHash": "a2cec6d66c121dc6967e21ec7d98646aa952f316076779caa59fcad94a07dfae",
+    "originalSha256": "c8affc380bfe2a50c4adfb1824134f1b676b5e64b37b88ef611676c963efeed2"
+  }
+}

@@ -8,11 +8,13 @@
 
 ```bash
 cp .env.production.example .env.production
+cp config/models.example.json config/models.production.json
 nano .env.production
+nano config/models.production.json
 bash deploy.sh up
 ```
 
-填写 LLM_API_KEY、LLM_BASE_URL、LLM_MODEL。无配置文件时脚本会生成模板并退出，不会猜测密钥。项目不需要在服务器安装 Node.js；镜像构建包含前端编译和生产依赖安装。首次构建需要访问容器镜像与 npm 仓库。
+在环境文件填写 LLM_API_KEY，在 JSON 文件填写模型、接口和能力。无配置文件时脚本会生成模板并退出，不会猜测密钥。项目不需要在服务器安装 Node.js；镜像构建包含前端编译和生产依赖安装。首次构建需要访问容器镜像与 npm 仓库。
 
 可选数据源在 `.env.production` 配置 `TUSHARE_TOKEN` 与长桥的 `LONGBRIDGE_APP_KEY`、`LONGBRIDGE_APP_SECRET`、`LONGBRIDGE_ACCESS_TOKEN`。长桥凭证完整时优先为适用标的提供行情与股本，并按权限补充港美股基本面；Tushare 提供三市场结构化财务及A股股东回报、股本和历史估值。官方披露仍由巨潮、港交所和SEC读取，网页正文按已配置的搜索服务与资料缺口补充；具体覆盖取决于任务及账户权限。Compose 已通过 `env_file` 注入这些变量。长桥 SDK 含原生模块，沿用项目的 Debian/glibc 镜像；不要直接改用 Alpine。配置和验证说明见 [README 的可选数据源章节](README.md#可选接入长桥行情基本面与-tushare-财务数据)。修改凭证后需重建应用容器使新环境生效。
 
@@ -22,7 +24,7 @@ bash deploy.sh up
 
 ## 后续代码和结构升级
 
-将新版代码同步到相同目录，保留 `.env.production`、`.deploy/`、`backups/`；Git 项目也可先拉取经过审核的发布版本。然后：
+将新版代码同步到相同目录，保留 `.env.production`、`config/models.production.json`、`.deploy/`、`backups/`；Git 项目也可先拉取经过审核的发布版本。然后：
 
 ```bash
 bash deploy.sh upgrade
@@ -55,7 +57,7 @@ bash deploy.sh rollback backups/实际文件名.archive.gz --confirm-data-loss
 
 备份会短暂停止应用，保存在 backups/，配有 .sha256 和旧镜像 .image 记录。升级或健康检查失败会返回非零，不会自动降级数据库。可修复后重试 upgrade，或显式回滚。回滚先验证原备份和旧镜像存在，再备份当前数据库、删除当前应用库、恢复原备份并启动配套旧镜像；删除数据库用于避免新版本新增集合残留。首次空库备份没有旧镜像，因此不能用作代码回滚目标。恢复失败时应用保持停止，应修复原因后重试。
 
-不要删除持久化卷或执行 `down -v`。不要清理仍被备份引用的镜像；镜像标签不会自动过期。将备份、.env.production 和所需镜像另存到服务器外，定期在独立环境演练恢复。此方案覆盖应用集合、字段和索引升级；MongoDB 服务端大版本升级需另行遵循官方兼容性和 FCV 流程，不能只替换镜像标签。
+不要删除持久化卷或执行 `down -v`。不要清理仍被备份引用的镜像；镜像标签不会自动过期。将备份、.env.production、config/models.production.json 和所需镜像另存到服务器外，定期在独立环境演练恢复。此方案覆盖应用集合、字段和索引升级；MongoDB 服务端大版本升级需另行遵循官方兼容性和 FCV 流程，不能只替换镜像标签。
 
 参考：[Compose 启动顺序](https://docs.docker.com/compose/how-tos/startup-order/)、[MongoDB 备份与恢复](https://www.mongodb.com/docs/manual/tutorial/backup-and-restore-tools/)。
 
@@ -68,3 +70,20 @@ bash deploy.sh rollback backups/实际文件名.archive.gz --confirm-data-loss
 `pnpm test` 验证业务和域名访问限制；`pnpm test:mongodb` 在随机临时库验证数据保存、迁移幂等、迁移锁、失败重试及禁止结构降级。Linux 上运行 `bash tests/deploy.integration.sh` 会创建独立 Compose 项目，演练首次部署、升级保留数据、备份与回滚、新集合清理、构建失败和迁移失败；结束后只删除该测试项目的容器及数据卷。
 
 修改 APP_PORT 后，如浏览器使用非默认端口，请将完整访问 origin 也加入 PUBLIC_ORIGINS，例如 `http://127.0.0.1:8080`。独立 backup 操作仅恢复原先运行中的应用，已停止的应用保持停止；维护阶段健康检查失败也会停止应用。
+
+## 可选模型策略配置
+
+生产环境只使用 `.env.production` 保存凭据、运行参数、策略开关和批准路径，使用 `config/models.production.json` 保存模型定义。模板内发布开关关闭、批准路径为空；正式启用仍需匹配的质量验收及容器可读的批准文件，不能把填写模型当成通过验收。
+
+
+### 生产配置的加载
+
+完整字段说明、生产示例、检查结果解释和回滚步骤见 [配置使用说明与教程](docs/configuration-guide.md)。
+
+统一模型文件为可选入口。先执行 `node --env-file-if-exists=.env.production scripts/model-config.mjs --preview --out config/models.production.preview.json`，再用同一环境文件执行 `scripts/model-config.mjs --check config/models.production.preview.json`。不要把本地配置覆盖到生产。
+
+完成生产审核后再将预览文件发布为 `config/models.production.json`。`deploy.sh` 检测到这个确切文件时会添加 `compose.models.yaml`，只读挂载至容器并设置 `MODEL_CONFIG_FILE`；预览文件不会触发切换。本次已验证的环境文件移除了重复模型定义；旧入口仍兼容未迁移部署。回退前从受控回滚文件恢复原定义和原选择器，再撤下正式模型文件；历史任务和审批记录不删除。升级与备份时同时保留受控的实际模型配置文件。
+
+`.env.production` 和 `config/models.production.json` 必须存在。旧部署的环境变量入口仍兼容。
+
+Compose 的显式 environment 设置继续优先。实际环境和模型文件均不进入 Git 或镜像；修改后按正常部署流程重建应用容器。

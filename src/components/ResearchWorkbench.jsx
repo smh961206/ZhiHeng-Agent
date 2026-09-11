@@ -56,7 +56,7 @@ export default function ResearchWorkbench({focusRequest=0,pathDecision,question,
  function goToStep(value){const target=value==='execution'?document.getElementById('execution-background'):value===2||value==='path'?document.getElementById('research-path'):value===1||value==='question'?questionInput.current:value===3||value==='securities'?securitiesSection.current:value==='materials'?materialsSection.current:settingsSection.current;target?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});target?.focus({preventScroll:true});}
  function selectMode(value){setMode(value);if(value==='B')setDepth('Deep');}
  return <section className="research-workbench">
-  <header className="page-heading workbench-heading"><div><h1>研究工作台</h1><p>先写公司与问题，再核对标的和研究范围；报告、表格或截图可按需补充。</p></div></header>
+  <header className="page-heading workbench-heading"><div><h1>研究工作台</h1><p>先明确问题，再确认标的、研究路径和资料范围。模型由平台按已启用的配置执行。</p></div></header>
   <KnowledgeStatus config={config} checking={configChecking} onRefresh={onRefreshConfig}/>
   <div className="workspace-grid">
    <Card className="workbench-composer gap-0 py-0">

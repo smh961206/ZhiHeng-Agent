@@ -4,6 +4,7 @@ dist
 .git
 .env
 .env.*
+config/models.*.json
 data
 artifacts
 outputs

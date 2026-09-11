@@ -1,7 +1,7 @@
 # V5.0.7 — Offline challenger run
 
 Release: `V5.0`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: PARTIAL. Engineering implementation is recorded in [the execution log](../execution-log.md) and [completion report](../completion-report.md). Actual measured quality/promotion remains unaccepted; simulation is engineering evidence only.
 
 ## 1. Why
 

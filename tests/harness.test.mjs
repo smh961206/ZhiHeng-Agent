@@ -5,6 +5,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {parseEnv} from 'node:util';
+import {modelDefinitionKeys,validateModelConfig} from '../server/model-config.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
@@ -12,12 +13,28 @@ const exists=p=>fs.existsSync(path.join(root,p));
 const manifest=()=>JSON.parse(read('MANIFEST.json'));
 
 test('Public deployment templates agree on model routing and never ship credentials or enabled promotion',()=>{
- const local=parseEnv(read('.env.example')),production=parseEnv(read('.env.production.example'));
- const keys=['LLM_MODEL','LLM_VISION_MODEL','LLM_VISION_INPUT','LLM_MAIN_MODEL','LLM_PRO_MODEL','MODEL_ROUTING_MODE','FEATURE_VISION_ROUTING','VISION_ACCEPTANCE_FILE','LLM_TIMEOUT_MS','LLM_MAX_DURATION_MS',
-  'LLM_VISION_CHALLENGER_MODEL','LLM_VISION_CHALLENGER_PROVIDER','LLM_VISION_CHALLENGER_BASE_URL','LLM_VISION_CHALLENGER_INPUT','LLM_VISION_CHALLENGER_THINKING'];
+ const basic=[parseEnv(read('.env.example')),parseEnv(read('.env.production.example'))];
+ for(const env of basic){
+  assert.equal(env.MODEL_ROUTING_MODE,'legacy');
+  assert.equal(env.MODEL_TELEMETRY_ENABLED,'true');
+ }
+ for(const file of ['.env.example','.env.production.example']){
+  const keys=[...read(file).matchAll(/^([A-Z][A-Z0-9_]*)=/gm)].map(m=>m[1]);
+  assert.equal(new Set(keys).size,keys.length,file+' duplicate setting');
+ }
+ const [local,production]=basic;
+ const config=validateModelConfig(JSON.parse(read('config/models.example.json')));
+ assert.equal(local.MODEL_CONFIG_FILE,'./config/models.local.json');
+ assert.equal(production.MODEL_CONFIG_FILE,'./config/models.production.json');
+ for(const env of [local,production]){
+  for(const key of modelDefinitionKeys)assert.equal(Object.hasOwn(env,key),false,key+' must live in JSON');
+  for(const connection of Object.values(config.connections))assert.equal(env[connection.apiKeyEnv],'');
+ }
+ const keys=['MODEL_ROUTING_MODE','FEATURE_VISION_ROUTING','VISION_ACCEPTANCE_FILE','LLM_TIMEOUT_MS','LLM_MAX_DURATION_MS','MODEL_CHAMPION_ENABLED','MODEL_AB_ENABLED','MODEL_CHAMPION_REGISTRY_FILE','MODEL_CHAMPION_POLICY_VERSION','MODEL_CHAMPION_INVALIDATION_FILE'];
  for(const key of keys){assert.ok(Object.hasOwn(local,key),key);assert.equal(production[key],local[key],key);}
  for(const env of [local,production]){
   assert.equal(env.MODEL_ROUTING_MODE,'legacy');assert.equal(env.FEATURE_VISION_ROUTING,'false');
+  assert.equal(env.MODEL_CHAMPION_ENABLED,'false');assert.equal(env.MODEL_AB_ENABLED,'false');assert.equal(env.MODEL_CHAMPION_POLICY_VERSION,'');
   for(const key of Object.keys(env).filter(key=>key.endsWith('_API_KEY')))assert.equal(env[key],'',key+' must be an empty placeholder');
  }
 });

@@ -1,15 +1,17 @@
-import {createLegacyModelCatalog,createPolicyModelCatalog,createModelProfile} from './model-catalog.mjs';
+import {createLegacyModelCatalog,createPolicyModelCatalog,createBenchmarkModelCatalog,createModelProfile} from './model-catalog.mjs';
 import {completeLegacyChat,modelConnectionIdentity} from './model-adapter.mjs';
 import {modelRoutingMode,observeModelPolicy} from './model-policy.mjs';
 import {createModelCallRecorder} from './model-telemetry.mjs';
 import {modelHealth,healthConfiguration,canUseHealthFallback} from './model-health.mjs';
-import {modelStatePin,modelStateError,hasPolicyModelState} from './model-state.mjs';
+import {modelStatePin,modelStateError,hasPolicyModelState,hasChampionModelState,currentModelJob} from './model-state.mjs';
+import {objectHash} from '../benchmark/fixtures.mjs';
 import {ModelGatewayError,publicMessage,estimateBilling,syncModelCallback} from './model-gateway-result.mjs';
+import {modelEnvironment} from './model-config.mjs';
 export {ModelGatewayError} from './model-gateway-result.mjs';
 
 const fail=category=>{throw new ModelGatewayError(category);};
 const text=value=>typeof value==='string'&&value.trim().length>0;
-const executionMode=env=>hasPolicyModelState()?'policy':modelRoutingMode(env);
+const executionMode=env=>hasChampionModelState()?'champion':hasPolicyModelState()?'policy':modelRoutingMode(env);
 function prepare(request,catalog,onProfile){
  if(!request||!['research','review','followup','router','vision'].includes(request.purpose))fail('invalid_request');
  if(request.signal!==undefined&&!(request.signal instanceof AbortSignal))fail('invalid_request');
@@ -61,7 +63,7 @@ function prepare(request,catalog,onProfile){
   const capability=responseFormat.type==='json_schema'?'jsonSchema':responseFormat.type==='json_object'?'jsonObject':null;
   // Unknown optional format support is negotiated by an explicit request;
   // provider refusal is normalized, never silently downgraded here.
-  if(capability&&profile.capabilities[capability]===false)fail('unsupported_capability');
+  if(capability&&(profile.capabilities[capability]===false||profile.schemaVersion===4&&profile.capabilities[capability]!==true))fail('unsupported_capability');
  }
  if(request.reasoningEffort!==undefined&&!['off','low','medium','high','max'].includes(request.reasoningEffort))fail('invalid_request');
  if(profile.schemaVersion===2&&request.reasoningEffort===undefined)fail('invalid_request');
@@ -88,7 +90,9 @@ export function createModelGateway({env=process.env,catalog,fetchImpl,now=()=>pe
    // Pin configuration before observation: a logging hook may reload env.
    // Subsequent complete() calls still see the latest configuration.
    try{
-    callEnv={...env};
+    callEnv=modelEnvironment({...env});
+    // Recheck local approval at every call boundary; revocation keeps the original pin.
+    if(hasChampionModelState())(await import('./model-rollout.mjs')).assertModelRollout(currentModelJob(),callEnv);
     if(input?.routingContext!==undefined&&(!input.routingContext||typeof input.routingContext!=='object'||Array.isArray(input.routingContext)))fail('invalid_request');
     const pin=modelStatePin(input?.purpose,callEnv);
     callPin=pin;
@@ -96,13 +100,17 @@ export function createModelGateway({env=process.env,catalog,fetchImpl,now=()=>pe
      if(input?.routingContext?.profileId!==undefined&&input.routingContext.profileId!==pin.id||input?.reasoningEffort!==undefined&&input.reasoningEffort!==pin.reasoningEffort)throw modelStateError();
      input={...input,reasoningEffort:pin.reasoningEffort??input.reasoningEffort,routingContext:{...input.routingContext,profileId:pin.id}};
     }
-    callCatalog=configured??(hasPolicyModelState()?createPolicyModelCatalog(callEnv):createLegacyModelCatalog(callEnv));
+    callCatalog=configured??(hasChampionModelState()?createBenchmarkModelCatalog(callEnv):hasPolicyModelState()?createPolicyModelCatalog(callEnv):createLegacyModelCatalog(callEnv));
+    if(callPin&&hasChampionModelState()&&['research','review','followup'].includes(input.purpose)){
+     const selected=callCatalog.profiles.find(p=>p.id===callPin.id),expected=createBenchmarkModelCatalog(callEnv).profiles.find(p=>p.id===callPin.id);
+     if(!selected||objectHash(selected)!==objectHash(expected))throw modelStateError();
+    }
     explicitProfile=input?.routingContext?.profileId;
     if(recorder.enabled)recorder.attribute(input?.purpose,undefined,executionMode(callEnv));
     const selectionCatalog=explicitProfile===undefined?{profiles:callCatalog.profiles.filter(p=>!healthConfig.fallbacks.some(pair=>pair.fallback===p.id))}:callCatalog;
     prepared=prepare(input,selectionCatalog,recorder.enabled?profile=>recorder.attribute(input.purpose,profile.id,executionMode(callEnv)):undefined);
     if(callPin&&(prepared.profile.model!==callPin.model||modelConnectionIdentity(prepared.profile,callEnv)!==callPin.connectionIdentity))throw modelStateError();
-   }catch(error){if(error instanceof ModelGatewayError||error?.code==='model_state_incompatible')throw error;fail('invalid_request');}
+   }catch(error){if(error instanceof ModelGatewayError||['model_state_incompatible','model_rollout_closed'].includes(error?.code))throw error;fail('invalid_request');}
    if(healthConfig.mode==='fallback'&&explicitProfile===undefined&&canUseHealthFallback(prepared.request)&&health.cooling(modelConnectionIdentity(prepared.profile,callEnv))){
     const primary=prepared.profile;let alternate;
     for(const pair of healthConfig.fallbacks.filter(p=>p.primary===primary.id)){

@@ -1,5 +1,17 @@
 # V5.0 — Fully Normalized Detailed Index
 
+User-authorized configuration migration: [unified model configuration runbook](model-config-migration-runbook.md). This extends the current release's configuration boundary; it does not activate future releases or resume paused live acceptance.
+
+Configuration usage and onboarding: [configuration guide](../../configuration-guide.md) and [delivery report](configuration-guide-report.md). These document the current single-env-file plus model-JSON layout without activating any model policy.
+
+User-authorized platform copy and interaction alignment: [frontend completion report](frontend-completion-report.md). This does not resume paused live acceptance or enable production candidates.
+
+Current execution: all 14 engineering steps have implementations; release acceptance remains PARTIAL pending real full-research quality and operator review. See [completion report](completion-report.md), [execution log](execution-log.md) and [operations runbook](runbook.md).
+
+Whole-release regression and maintenance: [regression report](regression-optimization-report.md). Completed-run budget validation, CLI argument checks and the unified release gate are covered; paused live acceptance remains paused.
+
+Second whole-release regression: [review report](regression-review2-report.md), including strict drift CLI arguments and a fresh complete UI run against one production build. Real acceptance remains paused.
+
 Every subrelease below follows `docs/development/NORMALIZED_RELEASE_STANDARD.md`.
 
 Codex must execute them in order unless the user explicitly requests one specific subrelease.

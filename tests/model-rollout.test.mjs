@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {randomUUID} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
-import {modelRolloutFingerprint,validateModelRollout,modelRolloutStatus,createConfiguredJobModelState,assertModelRollout} from '../server/model-rollout.mjs';
+import {modelRolloutFingerprint,validateModelRollout,modelRolloutStatus,createConfiguredJobModelState,assertModelRollout,publicModelSelection} from '../server/model-rollout.mjs';
 import {createPolicyJobModelState,withJobModelState,noteModelFailure} from '../server/model-state.mjs';
 import {escalateAtCheckpoint} from '../server/model-escalation.mjs';
 import {createModelGateway} from '../server/model-gateway.mjs';
@@ -11,6 +11,17 @@ const fixture=JSON.parse(fs.readFileSync(new URL('./fixtures/model-routing-offli
 const env={...process.env,MODEL_ROUTING_MODE:'policy',LLM_MAIN_API_KEY:'synthetic',LLM_API_KEY:'synthetic'};
 // Synthetic validator fixture only; never publish this as a real acceptance report.
 const report=()=>({version:1,kind:'live-model-comparison',fingerprint:modelRolloutFingerprint(env),dryRunAccepted:true,rollbackVerified:true,approvedBy:'SYNTHETIC-UNIT-TEST',approvedAt:'2026-09-10T00:00:00Z',cases:Array.from({length:60},(_,i)=>({id:'synthetic-'+i,mode:'ABCDEF'[i%6],source:'live',baseline:{deliveryPassed:true,citationPassed:true,criticalFactErrors:0},candidate:{deliveryPassed:true,citationPassed:true,criticalFactErrors:0}}))});
+
+test('public model settings describe admitted execution, not configured candidates or private approval details',()=>{
+ const e={LLM_API_KEY:'PRIVATE_TEST_KEY',LLM_MODEL:'configured-analysis',LLM_VISION_MODEL:'configured-vision',LLM_VISION_INPUT:'images',
+  LLM_VISION_CHALLENGER_MODEL:'DORMANT_CANDIDATE',LLM_MAIN_CHALLENGER_MODEL:'DORMANT_MAIN',MODEL_CHAMPION_REGISTRY_FILE:'PRIVATE_REGISTRY_PATH'};
+ const expected={mode:'legacy',analysisModel:'configured-analysis',visionModel:'configured-vision',candidatesEnabled:false};
+ assert.deepEqual(publicModelSelection(e),expected);
+ assert.deepEqual(publicModelSelection({...e,MODEL_ROUTING_MODE:'dry-run'}),{...expected,mode:'dry-run'});
+ for(const mode of ['policy','champion','unknown'])assert.deepEqual(publicModelSelection({...e,MODEL_ROUTING_MODE:mode}),expected);
+ assert.deepEqual(publicModelSelection({...e,LLM_VISION_INPUT:'off'}),{...expected,visionModel:null});
+ assert.doesNotMatch(JSON.stringify(publicModelSelection(e)),/PRIVATE|DORMANT|approvedBy|connection|reasons/);
+});
 
 test('rollout accepts only current live evidence with fifty unique cases, six modes, dry-run and rollback acceptance',()=>{
  assert.deepEqual(validateModelRollout(report(),env),{accepted:true,reasons:[]});

@@ -14,3 +14,6 @@ output/
 !.env.example
 !.env.production.example
 artifacts/
+
+config/models.*.json
+!config/models.example.json

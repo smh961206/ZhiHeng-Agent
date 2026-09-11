@@ -4,7 +4,7 @@ import {createHash} from 'node:crypto';
 import {loadVisionInventory,readSource,validateVisionInventory} from '../scripts/check-model-call-inventory.mjs';
 
 test('V4.9.0 inventories four Vision paths under the existing single Gateway adapter',()=>{
- assert.deepEqual(validateVisionInventory(loadVisionInventory()),{visionCallers:4,visionWrapperConsumers:6,reviewedOwners:20});
+ assert.deepEqual(validateVisionInventory(loadVisionInventory()),{visionCallers:4,visionWrapperConsumers:6,reviewedOwners:21});
 });
 
 test('Vision inventory rejects omitted callers and unmapped static or dynamic wrapper consumers',()=>{
@@ -22,7 +22,7 @@ test('Vision inventory detects limit and trust-boundary source drift even when c
   ['server/model-adapter.mjs','totalMs:60000','totalMs:120000'],
   ['server/visual-reading.mjs','needsReview:true','needsReview:false'],
   ['server/agent-page-reader.mjs','digest(bytes)!==originalHash','false'],
-  ['server/model-catalog.mjs',"inputMode!=='off'","inputMode==='off'"],
+  ['server/model-config.mjs',"inputMode!=='off'","inputMode==='off'"],
  ])assert.throws(()=>validateVisionInventory(loadVisionInventory(),{read:p=>p===file?readSource(p).replace(before,after):readSource(p)}),/reviewed source changed/);
 });
 
@@ -46,5 +46,5 @@ test('Vision inventory rejects unsafe owner paths and narrowed scan scope',()=>{
 });
 
 test('Vision review fingerprints normalize Windows line endings without changing historical inventory',()=>{
- assert.deepEqual(validateVisionInventory(loadVisionInventory(),{read:p=>readSource(p).replace(/\r?\n/g,'\r\n')}),{visionCallers:4,visionWrapperConsumers:6,reviewedOwners:20});
+ assert.deepEqual(validateVisionInventory(loadVisionInventory(),{read:p=>readSource(p).replace(/\r?\n/g,'\r\n')}),{visionCallers:4,visionWrapperConsumers:6,reviewedOwners:21});
 });

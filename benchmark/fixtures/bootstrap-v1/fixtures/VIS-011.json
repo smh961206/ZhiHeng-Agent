@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "id": "VIS-011",
+  "fixtureVersion": "v1",
+  "synthetic": true,
+  "scope": "component-extraction",
+  "prompt": "Extract the supplied table without inventing missing cells.",
+  "sources": [],
+  "market": [],
+  "assets": [
+    {
+      "path": "assets/VIS-011.png",
+      "sha256": "eae39ca04eaf51efd83c28db026c877e3b3a84b7fcc66c8f7554b05197006b7c",
+      "page": 1
+    }
+  ],
+  "expectedTable": {
+    "headers": [
+      "Metric",
+      "2024",
+      "2023"
+    ],
+    "cells": [
+      {
+        "row": "Basic shares",
+        "column": "2024",
+        "value": "221.25",
+        "unit": "shares thousand",
+        "date": "2024-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Basic shares",
+        "column": "2023",
+        "value": "232.25",
+        "unit": "shares thousand",
+        "date": "2023-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Diluted shares",
+        "column": "2024",
+        "value": "-250.25",
+        "unit": "shares thousand",
+        "date": "2024-12-31",
+        "footnote": "[1]"
+      },
+      {
+        "row": "Diluted shares",
+        "column": "2023",
+        "value": "-261.25",
+        "unit": "shares thousand",
+        "date": "2023-12-31",
+        "footnote": "[1]"
+      }
+    ],
+    "footnotes": [
+      "[1] Restated comparative period."
+    ]
+  },
+  "referenceOutput": {
+    "facts": [],
+    "citations": [],
+    "tools": [],
+    "validations": [
+      {
+        "id": "extraction_contract",
+        "passed": true
+      }
+    ],
+    "counterEvidence": [],
+    "violations": [],
+    "delivered": true,
+    "table": {
+      "headers": [
+        "Metric",
+        "2024",
+        "2023"
+      ],
+      "cells": [
+        {
+          "row": "Basic shares",
+          "column": "2024",
+          "value": "221.25",
+          "unit": "shares thousand",
+          "date": "2024-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Basic shares",
+          "column": "2023",
+          "value": "232.25",
+          "unit": "shares thousand",
+          "date": "2023-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Diluted shares",
+          "column": "2024",
+          "value": "-250.25",
+          "unit": "shares thousand",
+          "date": "2024-12-31",
+          "footnote": "[1]"
+        },
+        {
+          "row": "Diluted shares",
+          "column": "2023",
+          "value": "-261.25",
+          "unit": "shares thousand",
+          "date": "2023-12-31",
+          "footnote": "[1]"
+        }
+      ],
+      "footnotes": [
+        "[1] Restated comparative period."
+      ]
+    }
+  },
+  "origin": {
+    "manifestHash": "a2cec6d66c121dc6967e21ec7d98646aa952f316076779caa59fcad94a07dfae",
+    "originalSha256": "eae39ca04eaf51efd83c28db026c877e3b3a84b7fcc66c8f7554b05197006b7c"
+  }
+}

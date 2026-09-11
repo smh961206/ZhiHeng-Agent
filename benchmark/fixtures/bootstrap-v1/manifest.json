@@ -1,0 +1,533 @@
+{
+  "version": 1,
+  "id": "zhiheng-bootstrap",
+  "benchmarkVersion": "v5.0-bootstrap-1",
+  "frozenAt": "2026-09-11T00:00:00Z",
+  "files": [
+    {
+      "path": "fixtures/TEXT-001.json",
+      "kind": "fixture",
+      "sha256": "58b307c746147f9c03ca3a0f2f8145256fd97b3efafe52e0ddfad70d53ee4e00"
+    },
+    {
+      "path": "fixtures/TEXT-002.json",
+      "kind": "fixture",
+      "sha256": "ea2e83340c420c6840e0c0aa5e91720660c713df17cf8a1f326dadc195e34526"
+    },
+    {
+      "path": "fixtures/TEXT-003.json",
+      "kind": "fixture",
+      "sha256": "71fcb27ccf1ffae921530904b7ba9fbf250807da10612d1f6f889bda12ef2741"
+    },
+    {
+      "path": "fixtures/TEXT-004.json",
+      "kind": "fixture",
+      "sha256": "c8a9f87a1162137ec4311e088e60821c1d7c3b73421cbf0c9b6a8e6ed1114580"
+    },
+    {
+      "path": "fixtures/TEXT-005.json",
+      "kind": "fixture",
+      "sha256": "280a85caed1155e44cf1870df4fe4b5c312fc4d1e54cf025cf6c7b51f3751159"
+    },
+    {
+      "path": "fixtures/TEXT-006.json",
+      "kind": "fixture",
+      "sha256": "c2aa16bd21deb1a7c80da993a8903e332779baa08df3ad0411a9c00d1057d3d6"
+    },
+    {
+      "path": "fixtures/TEXT-007.json",
+      "kind": "fixture",
+      "sha256": "c7027b11dfece1053cc343fe88bfb5679e7cce0ab6d214cb9137df1e34d2fbb7"
+    },
+    {
+      "path": "fixtures/TEXT-008.json",
+      "kind": "fixture",
+      "sha256": "ce427bdb163ee89523519fd6c3bbde277906cda0b6294cca15bfe294aff585a4"
+    },
+    {
+      "path": "assets/VIS-001.png",
+      "kind": "asset",
+      "sha256": "5a73faa1e636bc328d750101367a7e81b3cf5017d2c8c2e47cdd5a42a708c979"
+    },
+    {
+      "path": "fixtures/VIS-001.json",
+      "kind": "fixture",
+      "sha256": "33573ad2845bff0d365acb8a778b47b1ad91800ac3f97b07151768dd9faf8ccf"
+    },
+    {
+      "path": "assets/VIS-002.png",
+      "kind": "asset",
+      "sha256": "cb20df98c3b5f6e6978293502e20e188f0f037ad1a896228b576755283d5b463"
+    },
+    {
+      "path": "fixtures/VIS-002.json",
+      "kind": "fixture",
+      "sha256": "3e24f165d305f8849df34c5c8d65041aa67e690c75e7518a7ad0561df861909f"
+    },
+    {
+      "path": "assets/VIS-003.pdf",
+      "kind": "asset",
+      "sha256": "2e5d0a76fbd9acac188d0793d14d22fcb0c8f12b96072cebe1297233738d7d2a"
+    },
+    {
+      "path": "fixtures/VIS-003.json",
+      "kind": "fixture",
+      "sha256": "a44fae86add6d8982bf02a3026b5956cc64027aa48c3b94cef7b61ea3c00fd9a"
+    },
+    {
+      "path": "assets/VIS-004.png",
+      "kind": "asset",
+      "sha256": "ff5d58b8e8e71cc90f8ad86556f8b09d94ff280c6a92b9a538db613d3f2c4263"
+    },
+    {
+      "path": "fixtures/VIS-004.json",
+      "kind": "fixture",
+      "sha256": "888a8b4aeea60a4da47fc5b9da0c77198ba9fab4960059848182ce25294ee4b9"
+    },
+    {
+      "path": "assets/VIS-005.png",
+      "kind": "asset",
+      "sha256": "99039934657a98507f08aa82623a1203a505e34df4561126e20e3593f42705dc"
+    },
+    {
+      "path": "fixtures/VIS-005.json",
+      "kind": "fixture",
+      "sha256": "6d92e2df472e3c080c579f24f7ef64390b65559ecaec304ffafa9291c6ed2ee4"
+    },
+    {
+      "path": "assets/VIS-006.pdf",
+      "kind": "asset",
+      "sha256": "03e478c65fadcdd2eab67837f9d8fcb2524c0b37c264e4ccbdf17d770d765710"
+    },
+    {
+      "path": "fixtures/VIS-006.json",
+      "kind": "fixture",
+      "sha256": "93eff1f6f424c6b320722df152a80aba1fe09c29ec7456dab61fdc516989171f"
+    },
+    {
+      "path": "assets/VIS-007.png",
+      "kind": "asset",
+      "sha256": "39e0249908170b0a824d0dfec9650c5e3bfb243539c355f8c94829b4b4bca387"
+    },
+    {
+      "path": "fixtures/VIS-007.json",
+      "kind": "fixture",
+      "sha256": "3892a781bbf8c66f4a19c1d5225fb0364731738b577758386277154813a6ea84"
+    },
+    {
+      "path": "assets/VIS-008.png",
+      "kind": "asset",
+      "sha256": "0685e21fb565c8779f9476de50479e57d053ece96fca979699aa67f5ebd97794"
+    },
+    {
+      "path": "fixtures/VIS-008.json",
+      "kind": "fixture",
+      "sha256": "1e1701cbc5ade0a9242bd78dbccb99c36c791f099f47dfbf4e8dc3075d29e81e"
+    },
+    {
+      "path": "assets/VIS-009.pdf",
+      "kind": "asset",
+      "sha256": "fd24cc860e47489d725dbc3ac66cd15dae3205ab6905137d6b294722575bc96c"
+    },
+    {
+      "path": "fixtures/VIS-009.json",
+      "kind": "fixture",
+      "sha256": "15526ebc56cecac77c92847f72364bb70437f15f6243db71602ce5d007f39f21"
+    },
+    {
+      "path": "assets/VIS-010.png",
+      "kind": "asset",
+      "sha256": "9083af8927145a3c8a3176c18de33d7e299628adcbf118bd55cdcd620eabe998"
+    },
+    {
+      "path": "fixtures/VIS-010.json",
+      "kind": "fixture",
+      "sha256": "f30accf20d8022c6ded212797ffe267769def10a5c30b0fd2fb77382b5f19c73"
+    },
+    {
+      "path": "assets/VIS-011.png",
+      "kind": "asset",
+      "sha256": "eae39ca04eaf51efd83c28db026c877e3b3a84b7fcc66c8f7554b05197006b7c"
+    },
+    {
+      "path": "fixtures/VIS-011.json",
+      "kind": "fixture",
+      "sha256": "4ffae4f284874fb1d71dd2ed2fbf38a529ba654f1c7104e9561670d84b94f04a"
+    },
+    {
+      "path": "assets/VIS-012.pdf",
+      "kind": "asset",
+      "sha256": "6b44508e84d79497c3d8e9fd95f4f787f039e77806497945399a457105804a4d"
+    },
+    {
+      "path": "fixtures/VIS-012.json",
+      "kind": "fixture",
+      "sha256": "724323281ef0bb4c17f60d088bbc480013d570d67ec1b2055e797f2b49a0a1af"
+    },
+    {
+      "path": "assets/VIS-013.png",
+      "kind": "asset",
+      "sha256": "5b9e0183ce72d2fe398d4045ac1a047a941d28d5a605cbc36fd81a30bbfd17cc"
+    },
+    {
+      "path": "fixtures/VIS-013.json",
+      "kind": "fixture",
+      "sha256": "e0ae4bcfeec4e02752d1ffe8f138d0a8c56a3a00428ddd678b7a4ba49e83354d"
+    },
+    {
+      "path": "assets/VIS-014.png",
+      "kind": "asset",
+      "sha256": "0ad39d76fb808e3940fe569430c7e0171eedc6ed591cc38792aca54395511416"
+    },
+    {
+      "path": "fixtures/VIS-014.json",
+      "kind": "fixture",
+      "sha256": "181158e2157dc36394e3b465b29ea89deaa43e83ff8f5c00ff8d67871d02ac3e"
+    },
+    {
+      "path": "assets/VIS-015.pdf",
+      "kind": "asset",
+      "sha256": "efeca0893ffe42439f7a0603f8147cc31d10f6ac03cac3f2ec51af71dd083f95"
+    },
+    {
+      "path": "fixtures/VIS-015.json",
+      "kind": "fixture",
+      "sha256": "193c627bfd27e6d17dbbd5daca87c092c8ca70bcbe3642798713dd0c400096b4"
+    },
+    {
+      "path": "assets/VIS-016.png",
+      "kind": "asset",
+      "sha256": "c8affc380bfe2a50c4adfb1824134f1b676b5e64b37b88ef611676c963efeed2"
+    },
+    {
+      "path": "fixtures/VIS-016.json",
+      "kind": "fixture",
+      "sha256": "c33fa7da70959f2a45722ccd04c8475a4e0ee221a7c48d49ac27d3d725da23fc"
+    },
+    {
+      "path": "assets/VIS-017.png",
+      "kind": "asset",
+      "sha256": "96c722bb0d530b639e58cb79a0020c54c595d646becddd32e8f379112b6224d6"
+    },
+    {
+      "path": "fixtures/VIS-017.json",
+      "kind": "fixture",
+      "sha256": "fab982914bf8e09de6bb6e3ea18c5d813202cb8e5c31c688313aa6b3fea3213a"
+    },
+    {
+      "path": "assets/VIS-018.pdf",
+      "kind": "asset",
+      "sha256": "a558605504d42d564400e8abf5de5d862c02a74b10fd506c28e03dcac42955e8"
+    },
+    {
+      "path": "fixtures/VIS-018.json",
+      "kind": "fixture",
+      "sha256": "8487b74a74443ddc8e532f52fda7f7ee3c9be6518599ec66f2f4cdc9a4253996"
+    },
+    {
+      "path": "assets/VIS-019.png",
+      "kind": "asset",
+      "sha256": "aa7cbfe90c3c5620b8641c93a20c583394c5867cddccee2844d137b9c6728d92"
+    },
+    {
+      "path": "fixtures/VIS-019.json",
+      "kind": "fixture",
+      "sha256": "c1bd0a319773dfced2944a109b5928f1774dccd013a589418b59f3adfbde2c14"
+    },
+    {
+      "path": "assets/VIS-020.png",
+      "kind": "asset",
+      "sha256": "402d413e65d8de0ad9f38817c02c4cd29beb46eb4371ad562860da2f6381b930"
+    },
+    {
+      "path": "fixtures/VIS-020.json",
+      "kind": "fixture",
+      "sha256": "f9d2bd3c7abf9e75677d972e361eff35b4663de98e08c15b4fa51222289c9257"
+    },
+    {
+      "path": "assets/VIS-021.pdf",
+      "kind": "asset",
+      "sha256": "9cb7e4b3d7214346bf80b9d09af9d752269e88b23dd4d61c39fbcf7689272a6a"
+    },
+    {
+      "path": "fixtures/VIS-021.json",
+      "kind": "fixture",
+      "sha256": "9e23bb45a52e0e7142773cda87d21299fc53b5a95beb50fda00e6f2d48ff2d0f"
+    },
+    {
+      "path": "assets/VIS-022.png",
+      "kind": "asset",
+      "sha256": "6483f738e97b42e5ca97e8ec86d9ee48ae4b9af803c6f3569821c9587fe83e92"
+    },
+    {
+      "path": "fixtures/VIS-022.json",
+      "kind": "fixture",
+      "sha256": "6dcfa10a909bd029ebba8351f0ed02c68c7300028185696ac13838f8b689041f"
+    },
+    {
+      "path": "assets/VIS-023.png",
+      "kind": "asset",
+      "sha256": "17e86c33e6b5248579f83f62a3cbc640f06d92241c91ae5fc6ed5c4564fe90e3"
+    },
+    {
+      "path": "fixtures/VIS-023.json",
+      "kind": "fixture",
+      "sha256": "183ff9c79033a010ddd1108fe909b87e873c41d295dc8199acf68f43ad591184"
+    },
+    {
+      "path": "assets/VIS-024.pdf",
+      "kind": "asset",
+      "sha256": "33b25dff18a50262f3786c677d8206240cc6b70acf3583429fab498249243394"
+    },
+    {
+      "path": "fixtures/VIS-024.json",
+      "kind": "fixture",
+      "sha256": "05fbf22bad64e789a76a4fd6a466c198c0b6ee4bcd03aefb9f58e438be03878c"
+    },
+    {
+      "path": "assets/VIS-025.png",
+      "kind": "asset",
+      "sha256": "d40e82d8c4f0eca726d32fa2401ae3b4a9bf947c892163fb33084644427904c3"
+    },
+    {
+      "path": "fixtures/VIS-025.json",
+      "kind": "fixture",
+      "sha256": "b8b4070aa1a6df385babe5eb514ac76a67861b2b064a9e1faa4308aa3adae711"
+    },
+    {
+      "path": "assets/VIS-026.png",
+      "kind": "asset",
+      "sha256": "fbda738777f67c6b5fb75ca1b98da38f60259dbf48f0ab4f9ebf0197966e6563"
+    },
+    {
+      "path": "fixtures/VIS-026.json",
+      "kind": "fixture",
+      "sha256": "0962c2815214ad28046f5c63d98bcc6f80389f53db9f303f74e4400477acd6b4"
+    },
+    {
+      "path": "assets/VIS-027.pdf",
+      "kind": "asset",
+      "sha256": "111b1a9f1019542f954fb3e36ff18fbdd04d47302b358d7d775d239fbc002b1a"
+    },
+    {
+      "path": "fixtures/VIS-027.json",
+      "kind": "fixture",
+      "sha256": "d09fd42aa012e7241b9baca161d180a5d4b8b07b665a6628f6e4fa6b7c8b8b6c"
+    },
+    {
+      "path": "assets/VIS-028.png",
+      "kind": "asset",
+      "sha256": "e23286f179f3345568e5f900a3e02c37a25a9f90b636b107fe105117f5a2990e"
+    },
+    {
+      "path": "fixtures/VIS-028.json",
+      "kind": "fixture",
+      "sha256": "8bd9f153d4955d5af2515e450824f9ca84ada3f726d09e6430a382defe73887a"
+    },
+    {
+      "path": "assets/VIS-029.png",
+      "kind": "asset",
+      "sha256": "807189413813ab67990214f86f516ab77924e338f6139a9116e8431056f0459f"
+    },
+    {
+      "path": "fixtures/VIS-029.json",
+      "kind": "fixture",
+      "sha256": "39e61f47cf3064dabe3138200969c3de80c4a5e65fdeb4a17a0d0fbb7084ffde"
+    },
+    {
+      "path": "assets/VIS-030.pdf",
+      "kind": "asset",
+      "sha256": "1bbfe2a696cc6578078cdc4eb7d7416e183d5ca000a80c1c9c3edb3654b873ce"
+    },
+    {
+      "path": "fixtures/VIS-030.json",
+      "kind": "fixture",
+      "sha256": "80ae4863d9b86e48006e8825bac7ed63c4a3f4d825b8e46231a374d7568a3e34"
+    },
+    {
+      "path": "assets/VIS-031.png",
+      "kind": "asset",
+      "sha256": "738da707019a48adc1189e939dacbd02a05ca7b7501fa6335ebad9ef0393c37f"
+    },
+    {
+      "path": "fixtures/VIS-031.json",
+      "kind": "fixture",
+      "sha256": "3dc6d934ae5aa11c6347ae3eb034183bdf3176ef21d3da1c4d9651f76298455d"
+    },
+    {
+      "path": "assets/VIS-032.png",
+      "kind": "asset",
+      "sha256": "a5ff2ef017e934358c02d846a31154fc8d32e9cb3e43b2d0ea61e555d6f5eadf"
+    },
+    {
+      "path": "fixtures/VIS-032.json",
+      "kind": "fixture",
+      "sha256": "52270503b813a9b70d9d434d22febc7004a6ed65258bbee55358dc544aaac4e9"
+    },
+    {
+      "path": "assets/VIS-033.pdf",
+      "kind": "asset",
+      "sha256": "ecbdbe39524d995b8bdf5f0e17c9a2deb80aa4fdbd76c0d415b7f1cc95617a4c"
+    },
+    {
+      "path": "fixtures/VIS-033.json",
+      "kind": "fixture",
+      "sha256": "1d84ade54a1a9d5b5d070bc9d9109dcde399651298bcf43a2c96e054b3cf196d"
+    },
+    {
+      "path": "assets/VIS-034.png",
+      "kind": "asset",
+      "sha256": "1dc65180887d0661d87e8646e05cc01b31c41f7900afd67db62b90a7279f13c9"
+    },
+    {
+      "path": "fixtures/VIS-034.json",
+      "kind": "fixture",
+      "sha256": "4687727fcc0f4cce19a53f7dfedde184b5017d3f8f547c6a2c9be92f4d7a2fad"
+    },
+    {
+      "path": "assets/VIS-035.png",
+      "kind": "asset",
+      "sha256": "2fb555321da772096c95f5913ba70ff08720f6e9b3ee7ba416b987830c582cf4"
+    },
+    {
+      "path": "fixtures/VIS-035.json",
+      "kind": "fixture",
+      "sha256": "2f9060fec5c56b77fed14f9febed9fb6820946e7a906824263fa7c8b47631ded"
+    },
+    {
+      "path": "assets/VIS-036.pdf",
+      "kind": "asset",
+      "sha256": "ec9c4c29bdeba6b88672cf12323dee040ab8c245f7575328a870a98d3605ab14"
+    },
+    {
+      "path": "fixtures/VIS-036.json",
+      "kind": "fixture",
+      "sha256": "3b7fd213c669595165a1df1a63cbbb842c59a447d4663eea8d8df9a8224773d5"
+    },
+    {
+      "path": "assets/VIS-037.png",
+      "kind": "asset",
+      "sha256": "bf7026e1d836b97b35f645d0df88ba30b9d48f1e7eb331f0774373129836da8f"
+    },
+    {
+      "path": "fixtures/VIS-037.json",
+      "kind": "fixture",
+      "sha256": "f55b471cb2ec2d37a96bea66f737c216560597e677fe5e343f02eeafb8576534"
+    },
+    {
+      "path": "assets/VIS-038.png",
+      "kind": "asset",
+      "sha256": "2b8d98f8a2574ef2c4013a49232d903c84a8eb1ff705dc5de45abcf832c54061"
+    },
+    {
+      "path": "fixtures/VIS-038.json",
+      "kind": "fixture",
+      "sha256": "988ffaf997b6854b22cdf55434056a41303cb4efc85b1a6697f3b7c56e7a6cf0"
+    },
+    {
+      "path": "assets/VIS-039.pdf",
+      "kind": "asset",
+      "sha256": "3067029a80882f4158dc578b26ca0e0b217059f3e507afe13d66d614c86b09a4"
+    },
+    {
+      "path": "fixtures/VIS-039.json",
+      "kind": "fixture",
+      "sha256": "89cca160c0523d66b2b8330074657f8c27a35965fe5bfa6da5093fc7ebee1475"
+    },
+    {
+      "path": "assets/VIS-040.png",
+      "kind": "asset",
+      "sha256": "d0ce41c4ebfc232ed45c0b817c3f46662fd3e5589f48f09735366413e04b5e45"
+    },
+    {
+      "path": "fixtures/VIS-040.json",
+      "kind": "fixture",
+      "sha256": "b96c8466921d68304cbbb64f3e13c3fa6cbda0ec0d090fcae5940ba4d7db4b77"
+    },
+    {
+      "path": "assets/VIS-041.png",
+      "kind": "asset",
+      "sha256": "b0914f9e84ce2f64a2ad4e37267fcaa8591d18ad85c40e9b184e4ea47ba75796"
+    },
+    {
+      "path": "fixtures/VIS-041.json",
+      "kind": "fixture",
+      "sha256": "5a7e5014d4f7fdfd55f6995616920faa4baba203d96923ab4250a40f6f8ea53c"
+    },
+    {
+      "path": "assets/VIS-042.pdf",
+      "kind": "asset",
+      "sha256": "495a4352d958b99d7369c613622b5ae3495aea0be482f2ea508baa6014186014"
+    },
+    {
+      "path": "fixtures/VIS-042.json",
+      "kind": "fixture",
+      "sha256": "3ee89491b6c715e649c2400a45292a884f633a80b2c58764ff5312d722ed31d6"
+    },
+    {
+      "path": "assets/VIS-043.png",
+      "kind": "asset",
+      "sha256": "6f1ed9dd81359236a5ee36d72d988459faad32e60522e8f6e4d3bdacc9e503a2"
+    },
+    {
+      "path": "fixtures/VIS-043.json",
+      "kind": "fixture",
+      "sha256": "34d35b821648da00335e21c64a3dcb5756cbf2d408dcbaffdb8fde5d02134282"
+    },
+    {
+      "path": "assets/VIS-044.png",
+      "kind": "asset",
+      "sha256": "683ff02cb2023058e8a99a6a81868f24054d56301ce9c109e6bcf24537d95633"
+    },
+    {
+      "path": "fixtures/VIS-044.json",
+      "kind": "fixture",
+      "sha256": "4df9e2755aee96da61a7de6ee93d6b8b15ccfe6416ae39dfdfdaf27fb8ee42dc"
+    },
+    {
+      "path": "assets/VIS-045.pdf",
+      "kind": "asset",
+      "sha256": "3d280617815c70dd0e6130ce30c66919d44493bc6110f6683e71f707cf6fc5a1"
+    },
+    {
+      "path": "fixtures/VIS-045.json",
+      "kind": "fixture",
+      "sha256": "1fd02ed72161eca167c80c8604d50c3d382f3a1ebe337a5c1b0051e8a50b9a64"
+    },
+    {
+      "path": "assets/VIS-046.png",
+      "kind": "asset",
+      "sha256": "dfbc4a31558f920d861da9cf91b335ed3352e24671218ec8af5833212487ed3c"
+    },
+    {
+      "path": "fixtures/VIS-046.json",
+      "kind": "fixture",
+      "sha256": "62116a6a52be2e195a2496b967f924b1bf442747cfd7876818078471a2623e0e"
+    },
+    {
+      "path": "assets/VIS-047.png",
+      "kind": "asset",
+      "sha256": "f0642e4b21b267a307b11e7064f50e2053998885e06235f20f5de37c9276207f"
+    },
+    {
+      "path": "fixtures/VIS-047.json",
+      "kind": "fixture",
+      "sha256": "8b7f61c073940a12b43302c61c8464225437e5f804b1695839519b47ce5f43cc"
+    },
+    {
+      "path": "assets/VIS-048.pdf",
+      "kind": "asset",
+      "sha256": "fe90c0025969ac251b8ad7b3cfa85189c239cc1e9be90e27b166866f4f4d2cf2"
+    },
+    {
+      "path": "fixtures/VIS-048.json",
+      "kind": "fixture",
+      "sha256": "fbed0ba756b0694d4897d78941811f5126efd1302e75d81ddf1b3f39140f1a88"
+    },
+    {
+      "path": "cases.json",
+      "kind": "cases",
+      "sha256": "a4a320a1bc5f205a5556bda2b34a422dce6b724357cf9f75a98a1a03f71f2ed8"
+    }
+  ]
+}

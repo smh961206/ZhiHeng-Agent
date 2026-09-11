@@ -5,7 +5,9 @@ services:
     build: .
     init: true
     restart: unless-stopped
-    env_file: .env.production
+    env_file:
+      - path: .env.production
+        required: true
     volumes:
       - visual_attachments:/app/data/visual-attachments
     environment:

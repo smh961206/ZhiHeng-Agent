@@ -55,7 +55,7 @@ export function createResearchRetrier({storage,jobs,controllers,pendingStarts,mu
    const previous=jobs.get(id)??await storage.getJob(id);
    if(!previous)throw failure(404,'研究记录不存在');
    if((previous.retryCount??0)!==expectedRetryCount)throw failure(409,'研究已经重试过，请刷新详情页查看最新进度');
-   if(!configured())throw failure(400,'请先在.env配置LLM_API_KEY和LLM_MODEL');
+   if(!configured())throw failure(400,'请检查模型配置文件与所引用的密钥');
    const next=await prepareResearchRetry(previous,id=>storage.getJob(id));
    try{await storage.restartJob(next,expectedRetryCount);}
    catch(error){if(error.status===409)throw error;throw failure(503,'重试未能保存，请检查数据库连接后再试');}

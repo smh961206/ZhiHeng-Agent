@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "id": "VIS-013",
+  "fixtureVersion": "v1",
+  "synthetic": true,
+  "scope": "component-extraction",
+  "prompt": "Extract the supplied table without inventing missing cells.",
+  "sources": [],
+  "market": [],
+  "assets": [
+    {
+      "path": "assets/VIS-013.png",
+      "sha256": "5b9e0183ce72d2fe398d4045ac1a047a941d28d5a605cbc36fd81a30bbfd17cc",
+      "page": 1
+    }
+  ],
+  "expectedTable": {
+    "headers": [
+      "Metric",
+      "2023",
+      "2022"
+    ],
+    "cells": [
+      {
+        "row": "Revenue",
+        "column": "2023",
+        "value": "255.25",
+        "unit": "CNY million",
+        "date": "2023-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Revenue",
+        "column": "2022",
+        "value": "266.25",
+        "unit": "CNY million",
+        "date": "2022-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Operating costs",
+        "column": "2023",
+        "value": "284.25",
+        "unit": "CNY million",
+        "date": "2023-12-31",
+        "footnote": "[1]"
+      },
+      {
+        "row": "Operating costs",
+        "column": "2022",
+        "value": "295.25",
+        "unit": "CNY million",
+        "date": "2022-12-31",
+        "footnote": "[1]"
+      }
+    ],
+    "footnotes": [
+      "[1] Consolidated scope; not parent-only."
+    ]
+  },
+  "referenceOutput": {
+    "facts": [],
+    "citations": [],
+    "tools": [],
+    "validations": [
+      {
+        "id": "extraction_contract",
+        "passed": true
+      }
+    ],
+    "counterEvidence": [],
+    "violations": [],
+    "delivered": true,
+    "table": {
+      "headers": [
+        "Metric",
+        "2023",
+        "2022"
+      ],
+      "cells": [
+        {
+          "row": "Revenue",
+          "column": "2023",
+          "value": "255.25",
+          "unit": "CNY million",
+          "date": "2023-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Revenue",
+          "column": "2022",
+          "value": "266.25",
+          "unit": "CNY million",
+          "date": "2022-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Operating costs",
+          "column": "2023",
+          "value": "284.25",
+          "unit": "CNY million",
+          "date": "2023-12-31",
+          "footnote": "[1]"
+        },
+        {
+          "row": "Operating costs",
+          "column": "2022",
+          "value": "295.25",
+          "unit": "CNY million",
+          "date": "2022-12-31",
+          "footnote": "[1]"
+        }
+      ],
+      "footnotes": [
+        "[1] Consolidated scope; not parent-only."
+      ]
+    }
+  },
+  "origin": {
+    "manifestHash": "a2cec6d66c121dc6967e21ec7d98646aa952f316076779caa59fcad94a07dfae",
+    "originalSha256": "5b9e0183ce72d2fe398d4045ac1a047a941d28d5a605cbc36fd81a30bbfd17cc"
+  }
+}

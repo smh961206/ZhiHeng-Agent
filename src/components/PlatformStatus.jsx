@@ -22,5 +22,5 @@ export default function PlatformStatus({config,checking,onRefresh}){
   {...(!Panel?{'aria-haspopup':'dialog','aria-expanded':false,'aria-describedby':loadError?titleId:undefined,onClick:showPanel}:{})}>
   <span className={'platform-status-dot is-'+state} aria-hidden="true"/><span className="platform-status-label">{label}</span><span className="platform-version">V{platformVersion}</span><Info size={14} aria-hidden="true"/>
  </Button>;
- return Panel?<Panel trigger={trigger} open={open} onOpenChange={setOpen} titleId={titleId} state={state} label={label} checking={checking} onRefresh={onRefresh}/>:<>{trigger}{loadError&&<span id={titleId} role="alert">说明暂时无法加载，请点击说明按钮刷新重试。</span>}</>;
+ return Panel?<Panel trigger={trigger} open={open} onOpenChange={setOpen} titleId={titleId} state={state} label={label} checking={checking} onRefresh={onRefresh} selection={config?.modelSelection}/>:<>{trigger}{loadError&&<span id={titleId} role="alert">说明暂时无法加载，请点击说明按钮刷新重试。</span>}</>;
 }

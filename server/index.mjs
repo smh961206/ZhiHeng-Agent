@@ -15,7 +15,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {runAgent} from './agent.mjs';
 import {configureModelTelemetry,withModelCallContext} from './model-telemetry.mjs';
-import {assertModelRollout} from './model-rollout.mjs';
+import {assertModelRollout,publicModelSelection,modelConfigurationStatus} from './model-rollout.mjs';
 import {modes,validateInput} from './router.mjs';
 import {validateSecurities,fetchQuote} from './market-data.mjs';
 import {resolveSecurities} from './security-resolver.mjs';
@@ -28,6 +28,7 @@ import {createAccessPolicy} from './access.mjs';
 import {visionStatus} from './vision-model.mjs';
 import {withVisualBudget} from './visual-reading.mjs';
 import {readDocument} from './document-reader.mjs';
+modelConfigurationStatus(); // Freeze explicit model file at startup; invalid settings close only model work.
 const allowRequest=createAccessPolicy(process.env.PUBLIC_ORIGINS);
 const root=fileURLToPath(new URL('../',import.meta.url));
 const storage=await getStorage();
@@ -37,7 +38,7 @@ await storage.recoverInterrupted();
 const jobs=new Map(),controllers=new Map(),streams=createJobStreams();
 const pendingStarts=new Set(),mutations=new Set(),finishing=new Map();
 let activeVisualImports=0;
-const retryResearch=createResearchRetrier({storage,jobs,controllers,pendingStarts,mutations,finishing,execute,configured:()=>Boolean(process.env.LLM_API_KEY&&process.env.LLM_MODEL)});
+const retryResearch=createResearchRetrier({storage,jobs,controllers,pendingStarts,mutations,finishing,execute,configured:()=>modelConfigurationStatus().configured});
 const save=job=>storage.saveJob(job);
 const delivery=createResearchDelivery({save,loadJob:id=>storage.getJob(id),jobs,controllers,mutations,streams,onError:error=>console.error('结果保存失败',error.message)});
 const createResearch=createResearchCreator({storage,jobs,controllers,pendingStarts,mutations,execute,prepare:async(payload,id)=>{
@@ -49,7 +50,7 @@ const createResearch=createResearchCreator({storage,jobs,controllers,pendingStar
  const pathDecision=await researchPathResolver.resolve(payload),mode=pathDecision.mode;
  let input=validateInput({...payload,mode});input.mode=payload.mode||'auto';input.pathDecision=pathDecision;
  input=await attachResearchBaseline(input,mode,id=>storage.getJob(id));
- if(!(process.env.LLM_API_KEY&&process.env.LLM_MODEL))throw new Error('请先在.env配置LLM_API_KEY和LLM_MODEL');
+ if(!modelConfigurationStatus().configured)throw new Error('请检查模型配置文件与所引用的密钥');
  const job={id,input,mode,status:'queued',createdAt:new Date().toISOString(),events:[]};
  job.plan=createResearchPlan(input,mode);bindKnowledge(job.plan);
  job.input.depth=job.plan.depth;job.input.historyYears=job.plan.historyYears;return job;
@@ -94,7 +95,7 @@ const server=http.createServer(async(req,res)=>{
     const result=await readDocument(Buffer.concat(chunks),{name,signal:control.signal,upload:true});return send(res,200,result);
    }finally{clearTimeout(timeout);activeVisualImports--;}
   }
-  if(url.pathname==='/api/config')return send(res,200,{configured:!!(process.env.LLM_API_KEY&&process.env.LLM_MODEL),model:process.env.LLM_MODEL||null,modes,knowledgeVersion:frameworkVersion,...currentKnowledge(),researchStages,dataProvider:'行情与股本：长桥优先，多源备用；官方财报与公告：巨潮、港交所、SEC正文/XBRL；三市场结构化财务：Tushare；历史估值与股东回报：Tushare及长桥基本面；原文归档与缺口核验；网页补充：先查资料、按缺口定位原始正文',dataProviders:providerStatus(),webSearch:webSearchStatus(),markets:['CN','HK','US'],secUserAgentConfigured:!!process.env.SEC_USER_AGENT});
+  if(url.pathname==='/api/config')return send(res,200,{...modelConfigurationStatus(),modelSelection:publicModelSelection(),modes,knowledgeVersion:frameworkVersion,...currentKnowledge(),researchStages,dataProvider:'行情与股本：长桥优先，多源备用；官方财报与公告：巨潮、港交所、SEC正文/XBRL；三市场结构化财务：Tushare；历史估值与股东回报：Tushare及长桥基本面；原文归档与缺口核验；网页补充：先查资料、按缺口定位原始正文',dataProviders:providerStatus(),webSearch:webSearchStatus(),markets:['CN','HK','US'],secUserAgentConfigured:!!process.env.SEC_USER_AGENT});
   if(url.pathname==='/api/research/path'&&req.method==='POST'){
    const {question}=await body(req),control=new AbortController();res.on('close',()=>{if(!res.writableEnded)control.abort();});
    return send(res,200,await researchPathResolver.recommend(question,{signal:control.signal}));

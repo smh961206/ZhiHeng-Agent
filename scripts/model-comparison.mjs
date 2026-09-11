@@ -1,3 +1,4 @@
+import {modelEnvironment} from '../server/model-config.mjs';
 // V4.8.11 isolated comparison harness. Importing this module never starts a run.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -100,6 +101,7 @@ export function executionFingerprint(env=process.env){
  return digest({rollout:modelRolloutFingerprint(env),files});
 }
 export function comparisonEnv(env,offline){
+ env=offline?{...env,MODEL_CONFIG_FILE:''}:env;
  const result={...env,MODEL_ROUTING_MODE:'legacy',MODEL_POLICY_ACCEPTANCE_FILE:'',MODEL_TELEMETRY_ENABLED:'true'};
  if(offline)Object.assign(result,{LLM_API_KEY:'synthetic-comparison',LLM_MAIN_API_KEY:'synthetic-comparison',LLM_PRO_API_KEY:'synthetic-comparison',LLM_BASE_URL:'https://legacy.invalid',LLM_MAIN_BASE_URL:'https://main.invalid',LLM_PRO_BASE_URL:'https://pro.invalid',LLM_MODEL:'deepseek-flash',LLM_MAIN_MODEL:'glm-5.3-flash',LLM_PRO_MODEL:'deepseek-flash',LLM_REVIEW_FORMAT:'auto'});
  return result;
@@ -134,7 +136,7 @@ export async function runComparison({plan,directory,offline=true,allowPaid=false
  requireThat(offline||allowPaid===true,'Live mode requires explicit --allow-paid');
  requireThat(!retryIncomplete||resume,'Retry requires --resume');
  const scopedEnv=comparisonEnv(env,offline);
- if(!offline)requireThat(scopedEnv.LLM_API_KEY&&scopedEnv.LLM_MAIN_API_KEY&&(scopedEnv.LLM_PRO_API_KEY||scopedEnv.LLM_API_KEY),'Legacy, MAIN and PRO credentials required');
+ if(!offline){const effective=modelEnvironment(scopedEnv);requireThat(effective.LLM_API_KEY&&effective.LLM_MAIN_API_KEY&&(effective.LLM_PRO_API_KEY||effective.LLM_API_KEY),'Legacy, MAIN and PRO credentials required');}
  directory=path.resolve(directory);
  if(!fs.existsSync(directory))fs.mkdirSync(directory,{recursive:true,mode:0o700});
  const lock=path.join(directory,'.lock'),fd=fs.openSync(lock,'wx',0o600);

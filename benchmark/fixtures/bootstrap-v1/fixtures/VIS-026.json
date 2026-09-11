@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "id": "VIS-026",
+  "fixtureVersion": "v1",
+  "synthetic": true,
+  "scope": "component-extraction",
+  "prompt": "Extract the supplied table without inventing missing cells.",
+  "sources": [],
+  "market": [],
+  "assets": [
+    {
+      "path": "assets/VIS-026.png",
+      "sha256": "fbda738777f67c6b5fb75ca1b98da38f60259dbf48f0ab4f9ebf0197966e6563",
+      "page": 1
+    }
+  ],
+  "expectedTable": {
+    "headers": [
+      "Metric",
+      "2025",
+      "2024"
+    ],
+    "cells": [
+      {
+        "row": "Operating cash flow",
+        "column": "2025",
+        "value": "476.25",
+        "unit": "USD thousand",
+        "date": "2025-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Operating cash flow",
+        "column": "2024",
+        "value": null,
+        "unit": "USD thousand",
+        "date": "2024-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Capital expenditure",
+        "column": "2025",
+        "value": "-505.25",
+        "unit": "USD thousand",
+        "date": "2025-12-31",
+        "footnote": "[1]"
+      },
+      {
+        "row": "Capital expenditure",
+        "column": "2024",
+        "value": "-516.25",
+        "unit": "USD thousand",
+        "date": "2024-12-31",
+        "footnote": "[1]"
+      }
+    ],
+    "footnotes": [
+      "[1] Consolidated scope; not parent-only."
+    ]
+  },
+  "referenceOutput": {
+    "facts": [],
+    "citations": [],
+    "tools": [],
+    "validations": [
+      {
+        "id": "extraction_contract",
+        "passed": true
+      }
+    ],
+    "counterEvidence": [],
+    "violations": [],
+    "delivered": true,
+    "table": {
+      "headers": [
+        "Metric",
+        "2025",
+        "2024"
+      ],
+      "cells": [
+        {
+          "row": "Operating cash flow",
+          "column": "2025",
+          "value": "476.25",
+          "unit": "USD thousand",
+          "date": "2025-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Operating cash flow",
+          "column": "2024",
+          "value": null,
+          "unit": "USD thousand",
+          "date": "2024-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Capital expenditure",
+          "column": "2025",
+          "value": "-505.25",
+          "unit": "USD thousand",
+          "date": "2025-12-31",
+          "footnote": "[1]"
+        },
+        {
+          "row": "Capital expenditure",
+          "column": "2024",
+          "value": "-516.25",
+          "unit": "USD thousand",
+          "date": "2024-12-31",
+          "footnote": "[1]"
+        }
+      ],
+      "footnotes": [
+        "[1] Consolidated scope; not parent-only."
+      ]
+    }
+  },
+  "origin": {
+    "manifestHash": "a2cec6d66c121dc6967e21ec7d98646aa952f316076779caa59fcad94a07dfae",
+    "originalSha256": "fbda738777f67c6b5fb75ca1b98da38f60259dbf48f0ab4f9ebf0197966e6563"
+  }
+}

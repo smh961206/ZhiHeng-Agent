@@ -1,5 +1,31 @@
 # Current Implementation Map
 
+## V5.0 unified model configuration
+
+Existing routing/Catalog/connection/Gateway owners now consume server/model-config.mjs as a configuration-only adapter. It validates and freezes the explicit MODEL_CONFIG_FILE document, resolves credential references and preserves legacy internal IDs. server/index.mjs and model-rollout own safe readiness; model-comparison retains raw env when spawning workers while checking effective credentials. scripts/model-config.mjs provides preview/check and non-overwriting in-project output. compose.models.yaml is an opt-in read-only deployment overlay. No research schema, new provider transport or approval bypass was introduced. See [migration runbook](../releases/V5.0/model-config-migration-runbook.md).
+
+## V5.0 environment file loading
+
+Existing package commands and scripts/dev.mjs load .env followed by optional .env.models through Node native flags. compose.production.yaml injects required .env.production followed by optional .env.production.models (Compose >=2.24.0). Old single-file configurations remain supported; no new environment key, custom loader, model policy or saved identity is introduced. See [split configuration report](../releases/V5.0/environment-split-report.md).
+
+## V5.0 configuration presentation
+
+Daily and advanced examples have separate ownership; no new configuration loader or environment key was introduced. Existing server/model-rollout.mjs owns the whitelist-only publicModelSelection snapshot using current admission and Vision owners; server/index.mjs adds it to the existing config endpoint. PlatformStatus and PlatformStatusPanel show current new-work settings, preserve unknown old-server state and never rewrite saved models. See [completion report](../releases/V5.0/configuration-cleanup-report.md).
+
+## V5.0 frontend alignment
+
+Existing PlatformStatusPanel and ResearchMethod explain quality-before-cost model evaluation without asserting live acceptance or production activation. ResearchHandbook owns sticky-tab-aware method anchors; ResearchUsageGuide retains local history restoration. Homepage, workbench, history and DocumentReadingSummary distinguish platform features from saved research configuration and evidence. Help from the platform panel opens separately to preserve work in progress. No API, persistent schema, model policy or research recovery change. See [frontend report](../releases/V5.0/frontend-completion-report.md).
+
+## V5.0 current owners
+
+Regression maintenance: benchmark/runner retains the exclusive writer lock while invoking executor-owned preparation; benchmark/executor validates live budgets even for completed resumes. scripts/benchmark validates CLI intent before any file or execution action. Existing result schemas, graders, provider adapters and job pins are unchanged. See [regression report](../releases/V5.0/regression-optimization-report.md).
+
+`benchmark/runner.mjs` owns durable evaluation and strict regrading; `benchmark/baseline.mjs` owns immutable snapshots; `benchmark/executor.mjs` reuses Gateway and existing Vision rendering/grading; `benchmark/statistics.mjs` owns quality-before-cost comparison. `server/model-task-class.mjs`, `server/model-champion.mjs`, `server/model-experiment.mjs` and `server/model-drift.mjs` own task classification, approved policy, immutable assignment and alert evaluation. Existing Catalog/adapter/Gateway, model-state/rollout and research-create remain runtime owners. Job admission and every v3 Gateway call recheck policy; original pins and checkpoints remain intact after rollback. No production candidate is enabled. [Report and acceptance limits](../releases/V5.0/completion-report.md).
+
+## V5.0 authorized iteration — CURRENT engineering progress
+
+CURRENT now selects V5.0 under the user's full-release authorization. Normalized subrelease order applies. `benchmark/case.mjs`, `benchmark/fixtures.mjs` and `benchmark/graders.mjs` own the new unified evaluation contract, frozen loader and deterministic graders; the existing `server/vision-quality.mjs` remains the Vision grading owner. These local benchmark records are separate from investment research state. Existing text/Vision executors, Gateway, model pins and rollout owners remain; no production candidate is activated. See [execution evidence](../releases/V5.0/execution-log.md). Historical FUTURE statements below describe earlier releases.
+
 Current V4.9 acceptance: batch-nine live Vision quality is [operator-approved](../releases/V4.9/vision-operator-approval-20260911.md), with both models passing 48/48. Production activation remains pending; the admission owner still validates the exact code/configuration and file. Earlier unaccepted-quality statements below record implementation-stage evidence.
 
 V4.9 output constraints: existing server/vision-model.mjs strengthens shared source-reading instructions while scripts/vision-benchmark.mjs clarifies the table schema. No new normalization subsystem or grader relaxation; current prompts are included in the existing comparison code binding. See [review](../releases/V4.9/vision-output-constraints-review-20260911.md).

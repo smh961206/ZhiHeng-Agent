@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "id": "VIS-020",
+  "fixtureVersion": "v1",
+  "synthetic": true,
+  "scope": "component-extraction",
+  "prompt": "Extract the supplied table without inventing missing cells.",
+  "sources": [],
+  "market": [],
+  "assets": [
+    {
+      "path": "assets/VIS-020.png",
+      "sha256": "402d413e65d8de0ad9f38817c02c4cd29beb46eb4371ad562860da2f6381b930",
+      "page": 1
+    }
+  ],
+  "expectedTable": {
+    "headers": [
+      "Metric",
+      "2022",
+      "2021"
+    ],
+    "cells": [
+      {
+        "row": "Operating cash flow",
+        "column": "2022",
+        "value": "374.25",
+        "unit": "USD thousand",
+        "date": "2022-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Operating cash flow",
+        "column": "2021",
+        "value": "385.25",
+        "unit": "USD thousand",
+        "date": "2021-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Capital expenditure",
+        "column": "2022",
+        "value": "(403.25)",
+        "unit": "USD thousand",
+        "date": "2022-12-31",
+        "footnote": "[1]"
+      },
+      {
+        "row": "Capital expenditure",
+        "column": "2021",
+        "value": "(414.25)",
+        "unit": "USD thousand",
+        "date": "2021-12-31",
+        "footnote": "[1]"
+      }
+    ],
+    "footnotes": [
+      "[1] Restated comparative period."
+    ]
+  },
+  "referenceOutput": {
+    "facts": [],
+    "citations": [],
+    "tools": [],
+    "validations": [
+      {
+        "id": "extraction_contract",
+        "passed": true
+      }
+    ],
+    "counterEvidence": [],
+    "violations": [],
+    "delivered": true,
+    "table": {
+      "headers": [
+        "Metric",
+        "2022",
+        "2021"
+      ],
+      "cells": [
+        {
+          "row": "Operating cash flow",
+          "column": "2022",
+          "value": "374.25",
+          "unit": "USD thousand",
+          "date": "2022-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Operating cash flow",
+          "column": "2021",
+          "value": "385.25",
+          "unit": "USD thousand",
+          "date": "2021-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Capital expenditure",
+          "column": "2022",
+          "value": "(403.25)",
+          "unit": "USD thousand",
+          "date": "2022-12-31",
+          "footnote": "[1]"
+        },
+        {
+          "row": "Capital expenditure",
+          "column": "2021",
+          "value": "(414.25)",
+          "unit": "USD thousand",
+          "date": "2021-12-31",
+          "footnote": "[1]"
+        }
+      ],
+      "footnotes": [
+        "[1] Restated comparative period."
+      ]
+    }
+  },
+  "origin": {
+    "manifestHash": "a2cec6d66c121dc6967e21ec7d98646aa952f316076779caa59fcad94a07dfae",
+    "originalSha256": "402d413e65d8de0ad9f38817c02c4cd29beb46eb4371ad562860da2f6381b930"
+  }
+}

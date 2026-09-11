@@ -54,6 +54,21 @@
 .rd-model-records dt{font-size:12px;color:#52685b}
 .rd-model-records dd{font-size:13px;overflow-wrap:anywhere}
 .rd-model-record-note{font-size:12px;color:#5c6f64}
+.rd-model-history-note{padding-top:12px;border-top:1px solid var(--border);font-size:12px;line-height:1.8;color:#617567}
+.platform-panel-actions{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 12px}
+.platform-panel-actions>a,.fw-quality-link,.method-quality-record a{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:#355f4b;font-size:13px;text-underline-offset:4px}
+.platform-panel-actions>a:hover,.fw-quality-link:hover,.method-quality-record a:hover{text-decoration:underline}
+.fw-quality-link{margin-top:8px}
+.method-quality{scroll-margin-top:88px}
+.method-quality-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;list-style:none;margin:0;padding:0}
+.method-quality-steps>li{min-width:0;padding:20px;border:1px solid var(--border);border-radius:12px;background:#fff}
+.method-quality-steps>li>span{display:block;margin-bottom:16px;font-size:12px;color:#748a7b;font-variant-numeric:tabular-nums}
+.method-quality h4{margin:0;font-size:15px;line-height:1.7;color:#294d3b}
+.method-quality-steps p,.method-quality-record p{margin:8px 0 0;font-size:14px;line-height:1.85;color:#596f60;overflow-wrap:anywhere}
+.method-quality-record{display:flex;align-items:flex-start;gap:12px;margin-top:16px;padding:18px 20px;border-radius:12px;background:#edf3ee}
+.method-quality-record>svg{flex-shrink:0;margin-top:4px;color:#52765e}
+.method-quality-record>div{min-width:0}
+@media(max-width:767px){.method-quality-steps{grid-template-columns:minmax(0,1fr);gap:10px}.method-quality-steps>li{padding:16px}.method-quality-steps>li>span{margin-bottom:8px}.method-quality-record{padding:16px}}
 .research-progress .rp-next{border-left:3px solid #94b39e}
 .app-shell :is(button,a,input,textarea,summary,[role=tab]):focus-visible{outline:2px solid #39705c;outline-offset:3px}
 .platform-status-panel dl>div{padding-left:12px;border-left:2px solid #d8e5dc}
@@ -83,3 +98,11 @@
  .materials-visual-guide{align-items:flex-start;flex-direction:column;gap:0}
  .rd-reading-steps{grid-template-columns:minmax(0,1fr);gap:12px}
 }
+
+.platform-current-models{margin:16px 0;padding:14px;border:1px solid var(--border);border-radius:12px;background:#f5f8f6}
+.platform-model-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;margin-bottom:12px;font-size:13px}
+.platform-model-heading span{font-size:11px;color:#52665b}
+.platform-current-models dl{gap:8px}
+.platform-current-models dl>div{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px;padding:0;border:0}
+.platform-current-models dd{overflow-wrap:anywhere}
+.platform-current-models p{margin:10px 0 0;font-size:11px}

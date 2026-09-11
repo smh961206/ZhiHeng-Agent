@@ -10,15 +10,16 @@ SKILL 原始版本备份与合并、升级关系见 [版本归档](knowledge/ver
 
 ## 启动
 
-Linux Docker 一键部署、代码更新、数据库版本迁移与备份回滚见 [部署文档](DEPLOY.md)。配置 `.env.production` 后执行 `bash deploy.sh up`，后续执行 `bash deploy.sh upgrade`。
+Linux Docker 一键部署、代码更新、数据库版本迁移与备份回滚见 [部署文档](DEPLOY.md)。配置 `.env.production` 和 `config/models.production.json` 后执行 `bash deploy.sh up`，后续执行 `bash deploy.sh upgrade`。
 
 要求 Node.js **22.13+**、pnpm、已启动的 Docker Desktop（Linux 容器）。
 
 ```powershell
 pnpm install
 Copy-Item .env.example .env
+Copy-Item config/models.example.json config/models.local.json
 pnpm db:up
-# 在.env配置模型后运行
+# 在 .env 填写密钥，在 JSON 配置模型后运行
 pnpm dev
 ```
 
@@ -33,13 +34,47 @@ pnpm start
 
 构建后统一使用 `http://127.0.0.1:3001`。Windows也可运行 `./start.ps1`，优先系统Node，找不到时使用本机已有Codex Node运行时。本应用仅监听本机，无多用户鉴权，不应直接暴露到公网。
 
-必须填写 `LLM_API_KEY`、`LLM_BASE_URL`、`LLM_MODEL`。模型需支持Chat Completions工具调用及按协议返回JSON。密钥只在后端读取；问题、组合信息、选用的历史研究快照和相关财报片段会发送给配置的模型服务。未配置模型直接报错。可设置 `SEC_USER_AGENT=应用名 真实联系邮箱` 以符合SEC来源访问要求。
+必须在 `.env` 填写 `LLM_API_KEY`，在 JSON 中确认模型和接口。模型需支持Chat Completions工具调用及按协议返回JSON。密钥只在后端读取；问题、组合信息、选用的历史研究快照和相关财报片段会发送给配置的模型服务。未配置模型直接报错。可设置 `SEC_USER_AGENT=应用名 真实联系邮箱` 以符合SEC来源访问要求。
+
+
+### 模型配置分层
+
+#### 统一模型文件
+
+模型定义集中到 `connections`、`profiles`、`roles` 三层 JSON 配置中；密钥和策略开关保存在当前环境唯一的环境文件（本地 `.env`，生产 `.env.production`），JSON 仅引用密钥变量名。默认研究与 MAIN／PRO 仍保留各自角色。
+
+旧变量环境迁移时，本地运行 `pnpm models:preview --out config/models.local.json` 生成不覆盖已有文件的迁移预览，再运行 `pnpm models:check config/models.local.json` 校验。全部等价后，在 `.env` 添加 `MODEL_CONFIG_FILE=./config/models.local.json`，重启服务。未设置此项时仍使用原环境变量入口；设置后文件错误或新旧定义冲突会停止模型派发，不自动改用另一模型。文件内容在启动／首次读取后固定，修改文件需重启进程。
+
+首次配置、字段解释、常见修改、生产检查与回滚见 [配置使用说明与教程](docs/configuration-guide.md)。参考 [统一配置示例](config/models.example.json) 与 [迁移操作说明](docs/releases/V5.0/model-config-migration-runbook.md)。升级后的示例与实际环境只保留 JSON 模型定义，迁移前的定义单独保留用于回滚；模型定义、能力或连接不同的角色不会自动合并。配置切换不是质量验收，已有策略的代码绑定仍须按原规则检查。
+
+| 环境 | 环境配置 | 模型配置 |
+|---|---|---|
+| 本地 | `.env` | `config/models.local.json` |
+| 生产 | `.env.production` | `config/models.production.json` |
+
+本地 `dev`、`start`、`start:legacy` 及相关命令只加载 `.env`。手动运行 Node 工具时使用 `node --env-file-if-exists=.env 脚本路径`。已有进程环境变量优先；每个键只保留一处。修改环境或模型 JSON 后需重新启动对应进程。生产通过 Compose 注入 `.env.production`，模型 JSON 只读挂载。
+
+日常运行使用 [.env.example](.env.example)，Docker 使用 [.env.production.example](.env.production.example)。环境文件填写密钥，JSON 填写接口地址和默认研究模型；视觉模型和路径识别角色可按需配置。日常不需要填写 MAIN、PRO、候选或 A/B。
+
+| 日常项 | 作用 |
+|---|---|
+| JSON roles.defaultResearch | 固定模式的研究与审计模型 |
+| JSON roles.router | 路径／证券意图识别，可指向共享 profile |
+| JSON roles.vision | 原页与截图读取模型 |
+| MODEL_ROUTING_MODE | 默认 legacy；高级策略另行验收 |
+| MODEL_TELEMETRY_ENABLED | 默认 true，保存调用元数据，不改变模型选择 |
+
+高级凭据、策略开关和批准路径已归入 [.env.example](.env.example) 与 [.env.production.example](.env.production.example)；型号、接口、能力和角色统一在 JSON 文件中维护。不要用示例覆盖正在使用的真实配置。生产批准路径须自行填写并挂载，示例不附带批准。
+
+原环境变量继续兼容，现有部署不需要重建配置；三个候选／实验开关缺省均关闭，固定模式不会启用 MAIN/PRO 策略。真实验收仍按当前暂停决定执行。开启策略、调整候选、模型或接口可能影响已固定身份的任务续跑，详见 [V5.0 操作说明](docs/releases/V5.0/runbook.md)。
+
+页面“平台与模型说明”展示服务返回的新研究模式与模型；缺少新状态字段时显示未确认，不推断候选启用情况。已保存研究以任务记录为准，配置不是模型健康检查或已经发生的调用。
 
 ## 使用与数据源
 
 ### 从输入到交付的操作衔接
 
-研究路径默认在输入停顿 800 毫秒后请求后端 `/api/research/path`，仅发送问题文本。后端使用配置的模型理解主要诉求、否定和引用，并返回六类路径之一与简短理由；可用 `LLM_ROUTER_MODEL` 单独指定分类模型，留空复用 `LLM_MODEL`，地址和密钥复用主模型配置。请求最多等待 8 秒，并发最多 2 个；相同问题的成功判断缓存 10 分钟，失败时按关键词兜底并显示「规则推荐」。该判断不调用研究工具、不创建研究任务。手动选择后停止自动判断，可一键恢复。
+研究路径默认在输入停顿 800 毫秒后请求后端 `/api/research/path`，仅发送问题文本。后端使用配置的模型理解主要诉求、否定和引用，并返回六类路径之一与简短理由；在 JSON 的 `roles.router` 指定分类模型档案，通过 connection 显式选择地址和凭据。请求最多等待 8 秒，并发最多 2 个；相同问题的成功判断缓存 10 分钟，失败时按关键词兜底并显示「规则推荐」。该判断不调用研究工具、不创建研究任务。手动选择后停止自动判断，可一键恢复。
 
 判断期间不能开始研究；确认后的判断编号随自动模式提交，后端据此校验标的数量并生成实际计划。记录过期或服务重启时会要求重新确认；浏览器收到失效提示后重新识别。网络失败时明确提交规则兜底，保持预览与执行路径一致。
 
@@ -59,7 +94,7 @@ pnpm start
 
 扫描 PDF、财务图表和截图先由 deepseek-flash 读取，再把带页码与不确定性的转写交给分析模型。普通文字 PDF 不无条件调用 Vision。每份 PDF 最多补读 2 页，自动获取每任务最多新增读取 6 页；未覆盖范围和失败分别披露。Vision 的读数会与程序文字对照，但不自动成为已核实计算依据。
 
-主模型配置 LLM_MODEL=deepseek-flash；视觉模型配置 LLM_VISION_MODEL=deepseek-flash。Vision 默认复用主模型的地址和密钥，可分别配置 LLM_VISION_BASE_URL、LLM_VISION_API_KEY；LLM_VISION_INPUT=off 可关闭视觉读取。密钥仅保存在后端。
+JSON 的 roles.defaultResearch 与 roles.vision 分别指定研究和视觉档案；连接可共享或独立，凭据由 apiKeyEnv 显式引用。视觉档案的 capabilities.imageInput=false 可关闭图片输入；未知能力不得凭名称设为 true。密钥仅保存在后端。
 
 Vision 使用非思考模式读取，分析模型保持默认思考模式负责深度分析。分析模型工具调用所需的模型上下文仅在请求间传递，不输出到报告、执行轨迹或用户界面。
 
@@ -459,3 +494,9 @@ V4.7 平台体验优化：详情与手册在访问时加载，资源失败时提
 ### V4.9 发布检查与按需加载
 
 发布前执行 `pnpm test:release`，同时核对文档 MANIFEST、Gateway/Vision 审核清单与公开配置模板。完整功能回归仍执行 `pnpm test`；界面测试可对开发服务器或正式构建预览运行，结果中的 assetMode 标明实际资源环境。研究记录页和平台说明面板按访问加载；模型配置状态仍即时显示。详见 [优化报告](docs/releases/V4.9/V4_9-regression-optimization-report.md)。
+
+### V5.0 模型基准与候选策略
+
+统一基准支持冻结样例、确定性评分、可恢复执行、基线快照、候选模型对照、按任务类别统计、固定到研究任务的 A/B 分组及漂移失效检查。模型调用继续使用原有 Gateway，生产候选开关默认关闭。
+
+运行 `pnpm benchmark -- --kind text --out artifacts/benchmark-text` 或直接执行 `node scripts/benchmark.mjs --kind text --out artifacts/benchmark-text` 可进行无网络的模拟对照；视觉样例使用 `--kind vision`。模拟通过不等于真实研究质量达标。V5.0.0–.13 的工程实现和本地回归已完成，完整验收仍需真实候选模型、冻结的完整研究样例、付费测试预算与人工审阅。详见 [验收报告](docs/releases/V5.0/completion-report.md) 和 [操作说明](docs/releases/V5.0/runbook.md)。

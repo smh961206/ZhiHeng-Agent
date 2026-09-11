@@ -44,7 +44,12 @@ export async function completeLegacyChat(request,profile,{env,fetchImpl,now,wait
  const body={model:profile.model,messages:request.messages,stream:request.stream,
   ...(request.tools?{tools:request.tools,tool_choice:'auto'}:{}),...(request.responseFormat?{response_format:request.responseFormat}:{}),
   ...(request.maxOutputTokens!==undefined?{max_tokens:request.maxOutputTokens}:{})};
- if(profile.schemaVersion===3){
+ if(profile.schemaVersion===4){
+  const thinking=profile.adapterOptions.thinking;
+  if(request.reasoningEffort!==undefined&&(thinking!=='enabled'||profile.capabilities.reasoningControl!==true||!['low','high','max'].includes(request.reasoningEffort)))fail('unsupported_capability');
+  if(thinking!=='omit')body.thinking={type:thinking};
+  if(request.reasoningEffort!==undefined)body.reasoning_effort=request.reasoningEffort;
+ }else if(profile.schemaVersion===3){
   if(request.reasoningEffort!==undefined)fail('unsupported_capability');
   if(profile.adapterOptions.thinking==='disabled')body.thinking={type:'disabled'};
  }else if(request.reasoningEffort!==undefined){

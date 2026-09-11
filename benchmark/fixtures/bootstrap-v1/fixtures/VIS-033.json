@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "id": "VIS-033",
+  "fixtureVersion": "v1",
+  "synthetic": true,
+  "scope": "component-extraction",
+  "prompt": "Extract the supplied table without inventing missing cells.",
+  "sources": [],
+  "market": [],
+  "assets": [
+    {
+      "path": "assets/VIS-033.pdf",
+      "sha256": "ecbdbe39524d995b8bdf5f0e17c9a2deb80aa4fdbd76c0d415b7f1cc95617a4c",
+      "page": 1
+    }
+  ],
+  "expectedTable": {
+    "headers": [
+      "Metric",
+      "2024",
+      "2023"
+    ],
+    "cells": [
+      {
+        "row": "Net profit",
+        "column": "2024",
+        "value": "595.25",
+        "unit": "HKD million",
+        "date": "2024-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Net profit",
+        "column": "2023",
+        "value": "606.25",
+        "unit": "HKD million",
+        "date": "2023-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Nonrecurring gain",
+        "column": "2024",
+        "value": null,
+        "unit": "HKD million",
+        "date": "2024-12-31",
+        "footnote": "[1]"
+      },
+      {
+        "row": "Nonrecurring gain",
+        "column": "2023",
+        "value": "635.25",
+        "unit": "HKD million",
+        "date": "2023-12-31",
+        "footnote": "[1]"
+      }
+    ],
+    "footnotes": [
+      "[1] Restated comparative period."
+    ]
+  },
+  "referenceOutput": {
+    "facts": [],
+    "citations": [],
+    "tools": [],
+    "validations": [
+      {
+        "id": "extraction_contract",
+        "passed": true
+      }
+    ],
+    "counterEvidence": [],
+    "violations": [],
+    "delivered": true,
+    "table": {
+      "headers": [
+        "Metric",
+        "2024",
+        "2023"
+      ],
+      "cells": [
+        {
+          "row": "Net profit",
+          "column": "2024",
+          "value": "595.25",
+          "unit": "HKD million",
+          "date": "2024-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Net profit",
+          "column": "2023",
+          "value": "606.25",
+          "unit": "HKD million",
+          "date": "2023-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Nonrecurring gain",
+          "column": "2024",
+          "value": null,
+          "unit": "HKD million",
+          "date": "2024-12-31",
+          "footnote": "[1]"
+        },
+        {
+          "row": "Nonrecurring gain",
+          "column": "2023",
+          "value": "635.25",
+          "unit": "HKD million",
+          "date": "2023-12-31",
+          "footnote": "[1]"
+        }
+      ],
+      "footnotes": [
+        "[1] Restated comparative period."
+      ]
+    }
+  },
+  "origin": {
+    "manifestHash": "a2cec6d66c121dc6967e21ec7d98646aa952f316076779caa59fcad94a07dfae",
+    "originalSha256": "ecbdbe39524d995b8bdf5f0e17c9a2deb80aa4fdbd76c0d415b7f1cc95617a4c"
+  }
+}

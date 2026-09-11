@@ -14,14 +14,19 @@
     "knowledge:backup": "node scripts/backup-knowledge.mjs",
     "knowledge:index": "node scripts/index-knowledge.mjs",
     "test": "node --test tests/*.test.mjs",
-    "test:release": "node --test tests/harness.test.mjs tests/model-call-inventory.test.mjs tests/vision-call-inventory.test.mjs",
+    "test:release": "node --test tests/harness.test.mjs tests/model-call-inventory.test.mjs tests/vision-call-inventory.test.mjs tests/benchmark-*.test.mjs tests/model-challenger.test.mjs tests/model-task-class.test.mjs tests/model-champion.test.mjs tests/model-experiment.test.mjs tests/model-champion-rollout.test.mjs tests/model-drift.test.mjs",
     "test:model-comparison": "node scripts/model-comparison.mjs",
     "test:mongodb": "node --env-file-if-exists=.env --test tests/storage.integration.mjs tests/schema.integration.mjs tests/jobs-delete.integration.mjs tests/jobs-retry.integration.mjs tests/jobs-delivery.integration.mjs tests/jobs-create.integration.mjs",
     "db:up": "docker compose up -d --wait",
     "db:stop": "docker compose stop mongodb",
     "db:migrate": "node --env-file-if-exists=.env scripts/migrate-mongodb.mjs",
     "test:routes": "node tests/routes.integration.mjs",
-    "test:ui": "node tests/workspace-ui.integration.mjs"
+    "test:ui": "node tests/workspace-ui.integration.mjs",
+    "benchmark": "node --env-file-if-exists=.env scripts/benchmark.mjs",
+    "benchmark:drift": "node scripts/model-drift.mjs",
+    "test:benchmark": "node --test tests/benchmark-*.test.mjs tests/model-challenger.test.mjs tests/model-task-class.test.mjs tests/model-champion.test.mjs tests/model-experiment.test.mjs tests/model-champion-rollout.test.mjs tests/model-drift.test.mjs",
+    "models:preview": "node --env-file-if-exists=.env scripts/model-config.mjs --preview",
+    "models:check": "node --env-file-if-exists=.env scripts/model-config.mjs --check"
   },
   "dependencies": {
     "@napi-rs/canvas": "1.0.8",

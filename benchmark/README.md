@@ -1,5 +1,9 @@
 # ZhiHeng Benchmark
 
+## V5.0 current implementation
+
+The unified case contract, frozen loader, deterministic/semantic grading policy, durable runner, baseline, challenger executor and statistical comparison are implemented. See [V5.0 operations](../docs/releases/V5.0/runbook.md). The bootstrap corpus exercises component extraction; it is not a full-research quality baseline. Promotion is disabled and unaccepted. The H0 paragraph below records historical scope.
+
 Benchmark is an executable definition of acceptable research quality.
 
 Initial categories:

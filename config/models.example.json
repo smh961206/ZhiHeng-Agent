@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "connections": {
+    "legacy-analysis": {
+      "protocol": "openai-chat-completions",
+      "baseUrl": "https://api.deepseek.com",
+      "apiKeyEnv": "LLM_API_KEY"
+    },
+    "main": {
+      "protocol": "openai-chat-completions",
+      "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
+      "apiKeyEnv": "LLM_MAIN_API_KEY"
+    }
+  },
+  "profiles": {
+    "legacy-analysis": {
+      "model": "deepseek-flash",
+      "provider": null,
+      "connectionRef": "legacy-analysis",
+      "capabilities": {
+        "textInput": true,
+        "imageInput": false,
+        "streaming": true,
+        "toolCalling": true,
+        "jsonObject": null,
+        "jsonSchema": null,
+        "reasoningControl": null
+      },
+      "adapterOptions": null
+    },
+    "legacy-router": {
+      "model": "deepseek-flash",
+      "provider": null,
+      "connectionRef": "legacy-analysis",
+      "capabilities": {
+        "textInput": true,
+        "imageInput": false,
+        "streaming": false,
+        "toolCalling": false,
+        "jsonObject": null,
+        "jsonSchema": null,
+        "reasoningControl": null
+      },
+      "adapterOptions": null
+    },
+    "legacy-vision": {
+      "model": "deepseek-flash",
+      "provider": null,
+      "connectionRef": "legacy-analysis",
+      "capabilities": {
+        "textInput": true,
+        "imageInput": true,
+        "streaming": false,
+        "toolCalling": false,
+        "jsonObject": null,
+        "jsonSchema": null,
+        "reasoningControl": null
+      },
+      "adapterOptions": null
+    },
+    "main": {
+      "model": "glm-5.3-flash",
+      "provider": "zai",
+      "connectionRef": "main",
+      "capabilities": {
+        "textInput": true,
+        "imageInput": false,
+        "streaming": true,
+        "toolCalling": true,
+        "jsonObject": true,
+        "jsonSchema": null,
+        "reasoningControl": true
+      },
+      "adapterOptions": null
+    },
+    "pro": {
+      "model": "deepseek-flash",
+      "provider": "deepseek",
+      "connectionRef": "legacy-analysis",
+      "capabilities": {
+        "textInput": true,
+        "imageInput": false,
+        "streaming": true,
+        "toolCalling": true,
+        "jsonObject": true,
+        "jsonSchema": null,
+        "reasoningControl": true
+      },
+      "adapterOptions": null
+    }
+  },
+  "roles": {
+    "defaultResearch": "legacy-analysis",
+    "router": "legacy-router",
+    "vision": "legacy-vision",
+    "policyMain": "main",
+    "policyPro": "pro"
+  }
+}

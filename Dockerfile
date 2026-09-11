@@ -11,10 +11,11 @@ ENV NODE_ENV=production HOST=0.0.0.0 PORT=3001
 WORKDIR /app
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/dist ./dist
-COPY --chown=node:node package.json ./
+COPY --chown=node:node package.json pnpm-lock.yaml ./
 COPY --chown=node:node server ./server
 COPY --chown=node:node shared ./shared
 COPY --chown=node:node scripts ./scripts
+COPY --chown=node:node benchmark ./benchmark
 COPY --chown=node:node knowledge ./knowledge
 RUN mkdir -p /app/data/visual-attachments && chown -R node:node /app/data
 USER node

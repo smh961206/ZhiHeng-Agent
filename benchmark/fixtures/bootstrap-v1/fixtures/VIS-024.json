@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "id": "VIS-024",
+  "fixtureVersion": "v1",
+  "synthetic": true,
+  "scope": "component-extraction",
+  "prompt": "Extract the supplied table without inventing missing cells.",
+  "sources": [],
+  "market": [],
+  "assets": [
+    {
+      "path": "assets/VIS-024.pdf",
+      "sha256": "33b25dff18a50262f3786c677d8206240cc6b70acf3583429fab498249243394",
+      "page": 1
+    }
+  ],
+  "expectedTable": {
+    "headers": [
+      "Metric",
+      "2022",
+      "2021"
+    ],
+    "cells": [
+      {
+        "row": "Assets",
+        "column": "2022",
+        "value": "442.25",
+        "unit": "EUR million",
+        "date": "2022-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Assets",
+        "column": "2021",
+        "value": "453.25",
+        "unit": "EUR million",
+        "date": "2021-12-31",
+        "footnote": null
+      },
+      {
+        "row": "Liabilities",
+        "column": "2022",
+        "value": "(471.25)",
+        "unit": "EUR million",
+        "date": "2022-12-31",
+        "footnote": "[1]"
+      },
+      {
+        "row": "Liabilities",
+        "column": "2021",
+        "value": "(482.25)",
+        "unit": "EUR million",
+        "date": "2021-12-31",
+        "footnote": "[1]"
+      }
+    ],
+    "footnotes": [
+      "[1] Restated comparative period."
+    ]
+  },
+  "referenceOutput": {
+    "facts": [],
+    "citations": [],
+    "tools": [],
+    "validations": [
+      {
+        "id": "extraction_contract",
+        "passed": true
+      }
+    ],
+    "counterEvidence": [],
+    "violations": [],
+    "delivered": true,
+    "table": {
+      "headers": [
+        "Metric",
+        "2022",
+        "2021"
+      ],
+      "cells": [
+        {
+          "row": "Assets",
+          "column": "2022",
+          "value": "442.25",
+          "unit": "EUR million",
+          "date": "2022-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Assets",
+          "column": "2021",
+          "value": "453.25",
+          "unit": "EUR million",
+          "date": "2021-12-31",
+          "footnote": null
+        },
+        {
+          "row": "Liabilities",
+          "column": "2022",
+          "value": "(471.25)",
+          "unit": "EUR million",
+          "date": "2022-12-31",
+          "footnote": "[1]"
+        },
+        {
+          "row": "Liabilities",
+          "column": "2021",
+          "value": "(482.25)",
+          "unit": "EUR million",
+          "date": "2021-12-31",
+          "footnote": "[1]"
+        }
+      ],
+      "footnotes": [
+        "[1] Restated comparative period."
+      ]
+    }
+  },
+  "origin": {
+    "manifestHash": "a2cec6d66c121dc6967e21ec7d98646aa952f316076779caa59fcad94a07dfae",
+    "originalSha256": "33b25dff18a50262f3786c677d8206240cc6b70acf3583429fab498249243394"
+  }
+}

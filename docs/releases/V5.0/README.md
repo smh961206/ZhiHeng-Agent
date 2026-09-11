@@ -1,6 +1,8 @@
 # V5.0 — Model Benchmark / Challenger
 
-Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
+Implementation Status: PARTIAL. All fourteen normalized engineering steps are implemented with passing local regression. Real full-research baseline/challenger quality, operator acceptance and production promotion remain unaccepted. See [completion report](completion-report.md), [execution log](execution-log.md) and [operations runbook](runbook.md).
+
+2026-09-11 用户决定：暂停本轮真实验收。工程实现与已有验证证据保留；真实模型对照、付费测试和生产候选启用不继续执行，等待用户明确恢复。暂停不代表质量验收通过，CURRENT 仍为 V5.0。
 
 ## Goal
 

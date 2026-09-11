@@ -1,5 +1,7 @@
 # ZhiHeng System Map
 
+V5.0 current engineering: the unified local benchmark platform is implemented through .13, with explicit MAIN challengers behind the existing Gateway, append-only operator-reviewed champion policies, immutable job A/B pins and read-only drift evaluation. Default production remains legacy; full-research measured quality/promotion remain unaccepted. See [V5.0 report](../releases/V5.0/completion-report.md). No distributed infrastructure or investment schema was added.
+
 Status: CURRENT + TARGET MAP
 
 V4.9 current acceptance update: all normalized V4.9.0–.8 engineering work is implemented; batch-nine live Vision quality is [operator-approved](../releases/V4.9/vision-operator-approval-20260911.md). Production routing remains disabled and activation still requires the approved code/configuration binding. Earlier release-stage statements below are historical snapshots, not the current acceptance status.

@@ -15,7 +15,7 @@ export function normalizeModelCall(input){
  const timestamp=v=>typeof v==='string'&&Number.isFinite(Date.parse(v))?v:null;
  const category=input.errorCategory===null?null:new ModelGatewayError(input.errorCategory).category;
  return {schemaVersion:1,id:text(input.id),jobId:text(input.jobId),purpose:purposes.includes(input.purpose)?input.purpose:null,
-  profile:text(input.profile),routingMode:['dry-run','policy'].includes(input.routingMode)?input.routingMode:'legacy',policyVersion:['dry-run','policy'].includes(input.routingMode)?1:null,
+  profile:text(input.profile),routingMode:['dry-run','policy','champion'].includes(input.routingMode)?input.routingMode:'legacy',policyVersion:['dry-run','policy','champion'].includes(input.routingMode)?1:null,
   status:['started','succeeded','failed','cancelled'].includes(input.status)?input.status:'failed',
   startedAt:timestamp(input.startedAt),finishedAt:timestamp(input.finishedAt),
   errorCategory:category,httpStatus:Number.isInteger(input.httpStatus)&&input.httpStatus>=400&&input.httpStatus<=599?input.httpStatus:null,

@@ -30,22 +30,26 @@
     {
       "file": "server/model-routing.mjs",
       "sha256": "0e1f75d4fe5faf1041e74ae26f6227a07b3ead5c420b8c74cb7714ecfe7f6cc2",
-      "currentSha256": "f4d15a31cf62f61b094aff825cc1ab943a551b58f2c8e112070ef9681a533a73"
+      "currentSha256": "518c954b730cf15d089983fd4a4b8d644c8037b58a43bb90b0fdbb1d910a022b",
+      "currentReview": "V5.0 reviewed explicit MAIN challenger and fixed approved job pin; original Vision limits, input and evidence guards retained"
     },
     {
       "file": "server/model-catalog.mjs",
       "sha256": "3ea706c39c0082008e62b5b08b2749483710951edc9e91c0caa262e22e3d2b03",
-      "currentSha256": "18cf8be6e482bc874ab7a996822e710ba424b6f31e70440e134402c70d4dab77"
+      "currentSha256": "d7629c9fb0d866e5add9a5d60615e678f23b4a85320fda847dc7f6a53e452dc2",
+      "currentReview": "V5.0.6 explicit MAIN challenger; Vision limits and trust unchanged"
     },
     {
       "file": "server/model-gateway.mjs",
       "sha256": "9a135b798f45b69c11de42e81396bfdd8b39b848e4a897e21342dc92101b966b",
-      "currentSha256": "d8f311d815eef2ac0fa73d28bdff6b4560b27111ab18014dd9801baaa2424f81"
+      "currentSha256": "02b70a493d2dca5956c2e63297f8986d131f784a5cd97309d2638e6d4f4c348c",
+      "currentReview": "V5.0 reviewed explicit MAIN challenger and fixed approved job pin; original Vision limits, input and evidence guards retained"
     },
     {
       "file": "server/model-adapter.mjs",
       "sha256": "e2bfd01715acc6998b0dbff338b7bdc18f5186ab7af67bd1c691558c9dc3322e",
-      "currentSha256": "cad5b207fab4f83e82879361544eb581cd5b65c1ca720e8e50bb158600058daf"
+      "currentSha256": "8fb1ca75f76a0d6a4b5708d1b7e306c0e71fe228b43b9b0d15078001f12c7b9c",
+      "currentReview": "V5.0.6 explicit MAIN challenger; Vision limits and trust unchanged"
     },
     {
       "file": "server/model-stream.mjs",
@@ -94,7 +98,7 @@
     {
       "file": "server/index.mjs",
       "sha256": "a04904c1497155ef54cfd1b159a027f07c504fb1be0137f70c6a0c14c7b548cb",
-      "currentSha256": "77cd5edbfc337836033355b122acbe15929a5e9f7693937ea133304f7a1500d0"
+      "currentSha256": "92b202729019136e8d0bbdcd74ff0e648868bf6d45374d006d360b772220d444"
     },
     {
       "file": "scripts/vision-input-diagnostics.mjs",
@@ -107,7 +111,14 @@
     {
       "file": ".env.example",
       "sha256": "0822808113792ce25aab5c6779d30dc0dc8b4c8902b827cb388266a41708c962",
-      "currentSha256": "2c68fad05079e68a6c017ad8ff1fde6a2607026f9a295cbc8cd3331ce49655fb"
+      "currentSha256": "741b76f648ea04fd643fc2832cbd225f38fc7dedafee42f1d7525aea9ccc2492",
+      "currentReview": "V5.0 reviewed explicit MAIN challenger and fixed approved job pin; original Vision limits, input and evidence guards retained"
+    },
+    {
+      "file": "server/model-config.mjs",
+      "sha256": "dd73ecc724c95fa36805ee0082940f750b6d5a5c28181142239cb0b441a242f8",
+      "currentSha256": "dd73ecc724c95fa36805ee0082940f750b6d5a5c28181142239cb0b441a242f8",
+      "introducedIn": "V5.0 unified model configuration"
     }
   ],
   "limits": [
@@ -343,9 +354,10 @@
   "modelBranches": [
     {
       "id": "legacy-image-capability",
-      "file": "server/model-catalog.mjs",
+      "file": "server/model-config.mjs",
       "anchor": "inputMode!=='off'&&(model==='deepseek-flash'||inputMode==='images')",
-      "description": "Catalog exact legacy image support plus explicit images/off overrides; unknown models are not automatically image-capable."
+      "description": "Existing legacy image declaration moved to the configuration owner and re-exported by Catalog; explicit images/off semantics remain unchanged.",
+      "previousFile": "server/model-catalog.mjs"
     },
     {
       "id": "vision-thinking",

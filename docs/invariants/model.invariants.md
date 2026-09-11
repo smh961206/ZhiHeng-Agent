@@ -1,5 +1,9 @@
 # Model Invariants
 
+## V5.0 local enforcement
+
+Benchmark outputs cannot introduce model-authored tool/validation receipts, hidden reasoning, invented facts, future citations or missing-as-zero without failing their scoped graders. Exact frozen artifacts and paired independent sample gates precede cost. Simulation cannot admit a champion or produce a live drift invalidation. v3 jobs pin one group/profile/effort; code/configuration/registry changes pause later calls without rewriting cutoff, completed tools or original selection. Tests in benchmark and model-champion/model-experiment/model-drift suites cover these local guards; genuine model quality still requires measured full-pipeline evidence and operator review. Existing global TARGET labels remain unchanged.
+
 V4.9 local evidence: Vision request/result/capability/fallback/policy tests enforce explicit image capability, user-only images, no private continuation, fixed independent fallback bounds and unchanged unverified trust. Candidate/legacy/no-state jobs preserve their selected identity through activation and rollback; tests/vision-state.integration.mjs exercises real process restart, safe rollback pause, key rotation and no duplicated completed tools. Simulated comparisons cannot activate policy. These local tests do not promote all TARGET invariants to global enforcement or certify real model quality.
 
 V4.8.11 executor enforcement: resume of a different run/arm/mode/input must fail before a model request or new budget reservation. A frozen quote or filing directory must not bypass Agent's existing official-report coverage gate. The CLI parent/worker and tests/model-comparison.test.mjs enforce these local comparison boundaries; valid compatible history is retained. This does not certify the semantic truth of operator-supplied source labels or authorize the deferred live pilot.

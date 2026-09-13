@@ -24,7 +24,7 @@ function RuleExcerpt({jobId,record}){
   <div id={contentId} hidden={!open} aria-busy={state.loading||undefined}>
    {state.loading&&<p role="status">正在核对并读取本次规则原文…</p>}
    {state.error&&<p role="alert">{state.error}</p>}
-   {state.content!==undefined&&<><p>来自本次固定快照{record.truncated?'，仅展示当时读取的部分':''}。</p><pre tabIndex={0} aria-label={record.heading+' · 当时读取的原文'}>{state.content}</pre></>}
+   {state.content!==undefined&&<><p>来自本次研究依据存档{record.truncated?'，仅展示当时读取的部分':''}。</p><pre tabIndex={0} aria-label={record.heading+' · 当时读取的原文'}>{state.content}</pre></>}
   </div>
  </div>;
 }
@@ -55,17 +55,17 @@ function RuleUsagePanel({job,currentConfig}){
  const changed=Boolean(view.snapshot&&currentConfig?.knowledgeSnapshot&&view.snapshot.id!==currentConfig.knowledgeSnapshot.id);
  const words=query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
  const rows=view.records.filter(row=>(filter==='all'||(filter==='audit'?row.reason==='正式输出前审计':row.reason?.startsWith('规则补读')))&&words.every(word=>[row.heading,row.reason,row.path].join(' ').toLocaleLowerCase().includes(word)));
- return <Collapsible className="knowledge-usage" aria-label="本次规则依据">
-  <CollapsibleTrigger asChild><Button type="button" variant="ghost" className="knowledge-usage-trigger"><BookOpen size={18}/><span><strong>本次规则依据{view.version?' · 规则 V'+view.version:''}</strong><small>{view.recorded?`${view.moduleCount} 项规则 · ${view.sectionCount} 条使用记录`:'此记录未保存实际读取明细'}</small></span><ChevronDown size={16}/></Button></CollapsibleTrigger>
+ return <Collapsible className="knowledge-usage" aria-label="本次研究依据">
+  <CollapsibleTrigger asChild><Button type="button" variant="ghost" className="knowledge-usage-trigger"><BookOpen size={18}/><span><strong>本次研究依据</strong><small>{view.recorded?`${view.moduleCount} 类依据 · ${view.sectionCount} 条引用记录`:'此记录未保存依据明细'}</small></span><ChevronDown size={16}/></Button></CollapsibleTrigger>
   <CollapsibleContent className="knowledge-usage-body">
    <p>{view.snapshot?'本次研究固定创建时的规则，研究、补读与复核使用同一份依据。':'此记录未保存固定规则快照，不根据当前规则补写历史使用情况。'}{changed?' 当前已有更新，本报告仍保留原依据。':''}</p>
-   {view.recorded&&<><ToggleGroup type="single" value={filter} onValueChange={value=>{if(value){setFilter(value);setLimit(20);}}} size="sm" className="knowledge-filters" aria-label="规则记录筛选">{[['all','全部'],['lookup','按需补读'],['audit','审计']].map(([id,label])=><ToggleGroupItem value={id} key={id}>{label}</ToggleGroupItem>)}</ToggleGroup>
-   {view.records.length>0&&<div className="knowledge-search"><Input ref={searchInput} aria-label="搜索规则记录" placeholder="搜索标题、读取原因或文件名" value={query} onChange={event=>{setQuery(event.target.value);setLimit(20);}}/>{query&&<Button type="button" size="sm" variant="ghost" onClick={()=>{setQuery('');setLimit(20);searchInput.current?.focus();}}>清除搜索</Button>}</div>}
+   {view.recorded&&<><ToggleGroup type="single" value={filter} onValueChange={value=>{if(value){setFilter(value);setLimit(20);}}} size="sm" className="knowledge-filters" aria-label="依据记录筛选">{[['all','全部'],['lookup','研究补充'],['audit','交付复核']].map(([id,label])=><ToggleGroupItem value={id} key={id}>{label}</ToggleGroupItem>)}</ToggleGroup>
+   {view.records.length>0&&<div className="knowledge-search"><Input ref={searchInput} aria-label="搜索研究依据" placeholder="搜索依据名称或使用原因" value={query} onChange={event=>{setQuery(event.target.value);setLimit(20);}}/>{query&&<Button type="button" size="sm" variant="ghost" onClick={()=>{setQuery('');setLimit(20);searchInput.current?.focus();}}>清除搜索</Button>}</div>}
    <p role="status" className="knowledge-result-count">{rows.length?`显示 ${Math.min(limit,rows.length)} / ${rows.length} 条记录`:'没有匹配的记录'}</p>
-   {rows.length?<ul className="knowledge-read-list">{rows.slice(0,limit).map((row,index)=><li key={row.key??index}><strong>{row.heading}</strong><p>{row.reason} · 第 {row.line}–{row.endLine} 行{row.truncated?' · 部分内容':''}</p><details><summary>核对文件与校验值</summary><code>{row.path}</code><code>文件：{row.sha256}</code><code>本次内容：{row.contentSha256}</code></details>{view.snapshot&&row.key&&<RuleExcerpt jobId={job.id} record={row}/>}</li>)}</ul>:<p className="knowledge-empty">{query?'尝试更短的关键词，或清除搜索条件。':view.records.length?'尚无此类读取记录。':'尚未记录规则正文的使用；目录中的文件不代表已经读取。'}</p>}
+   {rows.length?<ul className="knowledge-read-list">{rows.slice(0,limit).map((row,index)=><li key={row.key??index}><strong>{row.heading}</strong><p>{row.reason} · 第 {row.line}–{row.endLine} 行{row.truncated?' · 部分内容':''}</p><details><summary>技术校验信息</summary><code>{row.path}</code><code>文件：{row.sha256}</code><code>本次内容：{row.contentSha256}</code></details>{view.snapshot&&row.key&&<RuleExcerpt jobId={job.id} record={row}/>}</li>)}</ul>:<p className="knowledge-empty">{query?'尝试更短的关键词，或清除搜索条件。':view.records.length?'尚无此类读取记录。':'尚未保存依据正文的使用记录；目录中的内容不代表已经读取。'}</p>}
    {rows.length>20&&<Button type="button" size="sm" variant="outline" className="knowledge-more" aria-disabled={limit>=rows.length} onClick={()=>{if(limit<rows.length)setLimit(value=>value+20);}}>{limit<rows.length?`显示更多记录（剩余 ${rows.length-limit} 条）`:'全部记录已展开'}</Button>}</>}
-   {view.snapshot&&<details className="knowledge-snapshot"><summary>查看本次规则快照编号</summary><code>{view.snapshot.id}</code></details>}
-   <Link to="/handbook?tab=method#method-loading">了解规则如何使用与更新</Link>
+   {view.snapshot&&<details className="knowledge-snapshot"><summary>查看依据存档编号</summary><code>{view.snapshot.id}</code></details>}
+   <Link to="/handbook?tab=method#method-loading">了解研究依据如何保留</Link>
   </CollapsibleContent>
  </Collapsible>;
 }

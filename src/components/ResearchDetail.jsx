@@ -35,12 +35,13 @@ import {Sheet,SheetTrigger,SheetContent,SheetHeader,SheetTitle,SheetDescription}
 import {Popover,PopoverTrigger,PopoverContent} from './ui/popover';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from './ui/tabs';
 import DocumentReadingSummary from './DocumentReadingSummary';
+import ResearchModelSummary from './ResearchModelSummary';
 import ResearchCostSummary from './ResearchCostSummary';
 import ResearchProgress from './ResearchProgress';
 import {researchProgress} from '../../shared/research-progress.mjs';
 import ResearchDecision from './ResearchDecision';
 import ExecutionReview from './ExecutionReview';
-import {modes,frameworkVersion} from '../../shared/research-framework.mjs';
+import {modes} from '../../shared/research-framework.mjs';
 import {remarkReportCitations} from '../lib/report-citations.mjs';
 import {reportPreview} from '../../shared/report-preview.mjs';
 import {deduplicateReportHeadings} from '../../shared/report-headings.mjs';
@@ -155,8 +156,7 @@ function ReportPanel({job, exchanges, prefix, preview, onRetry, retrying, retryE
   const failed=job.status==='failed'||job.delivery?.status==='failed';
   const guide=recovery&&<RecoveryGuide {...{recovery,onSources,onTrace,onReuse,retrying}} errorInOverview={failed}/>;
   if(recovery&&['save','saving','save-unavailable'].includes(recovery.kind))return <EmptyState failed={failed} title={recovery.title} icon={isSavingResult(job)?LoaderCircle:CircleAlert} active={isSavingResult(job)} actions={<>{needsSaveRetry(job)&&onRetry&&<RetryButton onRetry={onRetry} retrying={retrying} saveOnly/>}{guide}</>}>{recovery.text}</EmptyState>;
-  const recordedVersion=job.result?.framework?.version||job.plan?.version;
-  if (job.result?.report?.trim()) return <><div className="rd-provenance" aria-label="报告版本" title="按本次任务保存的研究规则记录，与平台功能版本分别管理。"><span>{recordedVersion?'本报告规则 V'+recordedVersion:'本报告规则版本未记录'}{recordedVersion&&recordedVersion!==frameworkVersion?' · 历史报告保留原始判断':''}</span><Link to="/handbook?tab=method">当前方法说明</Link></div><div className="rd-report-intro"><ResearchDecision job={job} onUpdate={onUpdate} onDeepen={onDeepen} onExecutionAudit={onExecutionAudit}/></div><ReportDocument text={reportSecurityHeadings(job.result.report,job,exchanges)} prefix={prefix} onOutline={onOutline} sources={job.input?.sources} onCitation={onCitation}/>{modeOf(job)==='D'&&<ComparisonResults job={job} onSources={onSources} exchanges={exchanges}/>} {guide}</>;
+  if (job.result?.report?.trim()) return <><div className="rd-provenance" aria-label="报告依据"><span>本报告保留研究时点与当时依据</span><Link to="/handbook?tab=method">研究方法说明</Link></div><div className="rd-report-intro"><ResearchDecision job={job} onUpdate={onUpdate} onDeepen={onDeepen} onExecutionAudit={onExecutionAudit}/></div><ReportDocument text={reportSecurityHeadings(job.result.report,job,exchanges)} prefix={prefix} onOutline={onOutline} sources={job.input?.sources} onCitation={onCitation}/>{modeOf(job)==='D'&&<ComparisonResults job={job} onSources={onSources} exchanges={exchanges}/>} {guide}</>;
   const active = isActive(job.status);
   if (!job.result && active && preview.trim()) return <>
     <div className="rd-notice rd-draft-notice" role="status"><LoaderCircle size={17} className="rd-spin" aria-hidden="true"/>
@@ -688,19 +688,19 @@ function DetailView({job, currentConfig, tab, onTabChange, streamConnection, onR
         <div className={'rd-overview rd-context-strip rd-overview-'+job.status} data-progress-state={progressState.status} data-recovery={compactFailure||undefined} aria-label="研究进展">
           <span className="rd-overview-icon" aria-hidden="true"><ProgressIcon size={21} className={progressState.busy?'rd-spin':undefined}/></span>
           <span className="rd-overview-copy" role="status" aria-atomic="true">{compactFailure?<><span className="rd-progress-label">未完成原因</span><strong><span className="rd-progress-error">{failureReason}</span></strong></>:<><span className="rd-progress-label">研究进展<span aria-hidden="true">·</span>{progressState.label}</span><strong>{screenState?.title||overview}{failureReason&&<span className="rd-progress-error">（{job.delivery?.status==='failed'?'保存问题：':'失败原因：'}{failureReason}{executionReason&&executionReason!==failureReason?`；原执行问题：${executionReason}`:''}）</span>}</strong></>}</span>
-          <Sheet open={processOpen} onOpenChange={setProcessOpen}><SheetTrigger asChild><Button type="button" variant="outline" size="sm" className="rd-process-trigger" aria-label="研究过程"><Activity size={16} aria-hidden="true"/>查看研究过程<ArrowUpRight size={16} aria-hidden="true"/></Button></SheetTrigger><SheetContent side="right" className="research-detail rd-process-sheet" onCloseAutoFocus={closeProcess}><SheetHeader><SheetTitle>研究过程</SheetTitle><SheetDescription>查看研究设置、规则依据、执行阶段与资料覆盖。</SheetDescription></SheetHeader><div className="rd-process-body">
+          <Sheet open={processOpen} onOpenChange={setProcessOpen}><SheetTrigger asChild><Button type="button" variant="outline" size="sm" className="rd-process-trigger" aria-label="研究过程"><Activity size={16} aria-hidden="true"/>查看研究过程<ArrowUpRight size={16} aria-hidden="true"/></Button></SheetTrigger><SheetContent side="right" className="research-detail rd-process-sheet" onCloseAutoFocus={closeProcess}><SheetHeader><SheetTitle>研究过程</SheetTitle><SheetDescription>查看本次研究的范围、进展、依据和资料覆盖。</SheetDescription></SheetHeader><div className="rd-process-body">
     <dl className="rd-meta">
-      <div><dt>本次研究规则版本</dt><dd>{job.result?.framework?.version||job.plan?.version?'V'+(job.result?.framework?.version||job.plan.version):'未记录'}</dd></div><div><dt>研究路径</dt><dd>{modes[job.mode]?.name||(job.mode==='auto'?'自动匹配':job.plan?.name||'研究路径未记录')}</dd></div>
+      <div><dt>研究路径</dt><dd>{modes[job.mode]?.name||(job.mode==='auto'?'自动匹配':job.plan?.name||'研究路径未记录')}</dd></div>
       {job.input?.depth&&<div><dt>{quick?'研究目标':'报告深度'}</dt><dd>{quick?'判断是否继续研究':depthLabels[job.input.depth]||job.input.depth}</dd></div>}
       {(job.plan?.historyYears||job.input?.historyYears)&&<div><dt>财报范围</dt><dd>近 {job.plan?.historyYears||job.input.historyYears} 年</dd></div>}
       <div><dt>创建时间</dt><dd>{formatDate(job.createdAt)}</dd></div>
       {job.lastRetriedAt&&<div><dt>最近重试</dt><dd>{formatDate(job.lastRetriedAt)}</dd></div>}
     </dl>
 
-            <ResearchRuleUsage key={job.retryCount??0} job={job} currentConfig={currentConfig}/>
             <ResearchProgress job={job} expanded/>
+            <ResearchRuleUsage key={job.retryCount??0} job={job} currentConfig={currentConfig}/>
             <DocumentReadingSummary job={job} onSources={showProcessSources}/>
-            <ResearchCostSummary key={job.id} job={job}/>
+            {(job.modelRouting||job.id)&&<details className="rd-advanced-records"><summary><span><strong>服务与用量记录</strong><small>仅用于排查服务状态或了解费用</small></span><span>按需查看</span><ChevronDown size={16} aria-hidden="true"/></summary><div><ResearchModelSummary job={job}/><ResearchCostSummary key={job.id} job={job}/></div></details>}
           </div></SheetContent></Sheet>
         </div>
         {streamConnection&&<p className="rd-connection" role="status"><Activity size={15} aria-hidden="true"/>{streamConnection}</p>}

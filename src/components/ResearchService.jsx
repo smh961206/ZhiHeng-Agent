@@ -16,12 +16,12 @@ export default function ResearchService({onStart}){
  const [open,setOpen]=useState(false);
  const destination=service.purchaseUrl||service.contactUrl;
  return <section id="fw-plans" className="fw-section fw-plans" aria-labelledby="fw-plans-title">
-  <div className="fw-section-heading"><span>03 / 服务方案</span><h2 id="fw-plans-title">从了解方法，到持续开展研究。</h2><p>先熟悉知衡的研究方式，再了解适合长期使用的研究服务。</p></div>
+  <div className="fw-section-heading"><span>03 / 服务方案</span><h2 id="fw-plans-title">先体验，再决定是否长期使用。</h2><p>你可以先完成一项研究，了解报告内容和查证方式；需要持续覆盖时，再选择研究服务。</p></div>
   <div className="fw-plan-grid">
-   <Card className="fw-guide-plan"><CardContent><span className="fw-icon"><BookOpen size={22}/></span><h3>先了解如何使用</h3><p>第一次接触知衡，从一份清晰的使用指南开始。</p><ul>{['三步上手与提问示例','六种研究场景说明','报告阅读与来源核对方法'].map(text=><li key={text}><Check size={15}/>{text}</li>)}</ul><Button asChild variant="outline"><a href="#fw-guide">查看使用指南<ArrowRight size={16}/></a></Button></CardContent></Card>
+   <Card className="fw-guide-plan"><CardContent><span className="fw-icon"><BookOpen size={22}/></span><h3>体验一次研究</h3><p>用一个真实的公司问题，查看知衡如何组织资料、判断和依据。</p><ul>{['六种研究场景可选','报告、证据与复核记录一并交付','完成后可继续深研或更新'].map(text=><li key={text}><Check size={15}/>{text}</li>)}</ul><Button variant="outline" onClick={()=>onStart()}>开始体验<ArrowRight size={16}/></Button></CardContent></Card>
    <Card className="fw-service-plan"><CardContent>
     <div className="fw-service-heading"><span className="fw-service-kicker"><Sparkles size={16}/>系统研究 · 持续跟踪</span><Badge variant="outline">{destination?'了解开通':'开通筹备中'}</Badge></div>
-    <h3>{service.name}</h3><p className="fw-service-description">适合希望深入理解公司，并在每次新披露后重新核对判断的研究者。</p>
+    <h3>{service.name}</h3><p className="fw-service-description">适合希望系统研究公司、持续跟踪财报，并长期积累投资判断的用户。</p>
     <div className="fw-service-benefits">{benefits.map(([Icon,title,copy])=><div key={title}><Icon size={19}/><span><strong>{title}</strong><p>{copy}</p></span></div>)}</div>
     <div className="fw-service-purchase"><div><strong>{service.priceLabel}</strong><p>{service.terms}</p></div>
      {destination?<Button asChild><a href={destination} target="_blank" rel="noopener noreferrer">{service.purchaseUrl?'前往开通':service.contactLabel}<ArrowUpRight size={16}/></a></Button>:<Sheet open={open} onOpenChange={setOpen}>

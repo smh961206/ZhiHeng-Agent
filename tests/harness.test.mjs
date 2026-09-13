@@ -49,7 +49,7 @@ test('Harness active release and H0 sequence navigate to real specifications',()
  for(const [,target] of index.matchAll(/\]\(([^)]+)\)/g))assert.ok(exists(path.join('docs/releases/H0',target)),target);
 });
 
-test('Unified release gate includes current V5.1, V5.2 and M1.0 owners',()=>{
+test('Unified release gate includes current V5.1, V5.2, M1.0 and M1.1 owners',()=>{
  const command=JSON.parse(read('package.json')).scripts['test:release'],tokens=command.split(/\s+/);
  const covered=owner=>tokens.some(token=>new RegExp('^'+token.replace(/[.+?^${}()|[\]\\]/g,'\\$&').replaceAll('*','.*')+'$').test(owner));
  for(const owner of [
@@ -59,6 +59,7 @@ test('Unified release gate includes current V5.1, V5.2 and M1.0 owners',()=>{
   'tests/judge-contract.test.mjs',
   'tests/model-config.test.mjs',
   'tests/model-pipeline.test.mjs',
+  'tests/model-context-baseline.test.mjs',
  ])assert.equal(covered(owner),true,owner);
 });
 
@@ -66,6 +67,15 @@ test('M1.0 release records are included in the packaged manifest',()=>{
  const paths=new Set(manifest().files.map(file=>file.path));
  for(const name of ['README.md','completion-report.md','frontend-completion-report.md','migration.md','rollback.md']){
   const file='docs/releases/M1.0/'+name;
+  assert.ok(exists(file),file);
+  assert.ok(paths.has(file),file+' must be packaged');
+ }
+});
+
+test('M1.1 phase-one release records are included in the packaged manifest',()=>{
+ const paths=new Set(manifest().files.map(file=>file.path));
+ for(const name of ['README.md','completion-report.md','schema.md','migration.md','rollback.md']){
+  const file='docs/releases/M1.1/'+name;
   assert.ok(exists(file),file);
   assert.ok(paths.has(file),file+' must be packaged');
  }

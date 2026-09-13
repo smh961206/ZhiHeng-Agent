@@ -10,9 +10,9 @@ export function registerPlatformCleanupScenarios({test,makeJob,detail,workbench,
     await noOverflow(page,'cleaned page '+route+' '+width);
     await screenshot(page,'platform-cleanup-'+owner.slice(1)+'-'+width);
    }
-   await page.getByText('研究规则版本与历史报告',{exact:true}).click();
-   await textIncludes(page.locator('.method-version-note'),'当前研究规则为 V4.7');
-   await textIncludes(page.locator('.method-version-note'),'历史报告保留原规则与快照');
+   await textIncludes(page.locator('.research-method'),'每项研究保留当时的资料与规则');
+   await textIncludes(page.locator('.method-version-note'),'历史报告不会随平台更新改变');
+   assert.doesNotMatch(await page.locator('.research-method').innerText(),/当前研究规则为 V4\.7/);
    assert.equal(requests('POST','/api/jobs').length,0);
   });
   test('platform-cleanup-step-alignment-'+width,{viewport:{width,height:1000}},async({page})=>{
@@ -36,9 +36,9 @@ export function registerPlatformCleanupScenarios({test,makeJob,detail,workbench,
   if(version)job.plan.version=version;else delete job.plan.version;
   test('platform-cleanup-saved-rule-version-'+(version||'missing'),{jobs:[job]},async({page})=>{
    await detail(page,job);
-   const provenance=page.getByLabel('报告版本',{exact:true});
-   await textIncludes(provenance,version?'本报告规则 V'+version:'本报告规则版本未记录');
-   assert.doesNotMatch(await provenance.innerText(),/V4\.8/);
+   const provenance=page.getByLabel('报告依据',{exact:true});
+   await textIncludes(provenance,'本报告保留研究时点与当时依据');
+   assert.doesNotMatch(await provenance.innerText(),/V\d|规则版本/);
    await noOverflow(page,'saved rules '+version);
   });
  }

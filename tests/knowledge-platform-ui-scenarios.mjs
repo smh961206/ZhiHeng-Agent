@@ -38,9 +38,9 @@ export function registerKnowledgePlatformScenarios({test,makeJob,detail,workbenc
    await page.route('**/api/jobs/*/rules?*',route=>{attempts++;return route.fulfill({status:attempts===1?409:200,contentType:'application/json',body:JSON.stringify(attempts===1?{error:'原规则快照暂不可读取，已保留读取记录'}:{content:'当时读取的规则正文。\n仅用于界面测试。'})});});
    await detail(page,job);await page.getByRole('button',{name:'研究过程',exact:true}).click();
    const panel=page.getByRole('dialog',{name:'研究过程'}).locator('.knowledge-usage');
-   await panel.locator('.knowledge-usage-trigger').click();await textIncludes(panel,'2 项规则 · 2 条使用记录');await textIncludes(panel,'当前已有更新');
-   const filters=panel.getByRole('radiogroup',{name:'规则记录筛选',exact:true});assert.equal(await filters.getAttribute('data-slot'),'toggle-group');assert.equal(await filters.locator('[data-slot=toggle-group-item]').count(),3);
-   await panel.getByRole('radio',{name:'按需补读',exact:true}).click();assert.equal(await panel.locator('.knowledge-read-list>li').count(),1);
+   await panel.locator('.knowledge-usage-trigger').click();await textIncludes(panel,'2 类依据 · 2 条引用记录');await textIncludes(panel,'当前已有更新');
+   const filters=panel.getByRole('radiogroup',{name:'依据记录筛选',exact:true});assert.equal(await filters.getAttribute('data-slot'),'toggle-group');assert.equal(await filters.locator('[data-slot=toggle-group-item]').count(),3);
+   await panel.getByRole('radio',{name:'研究补充',exact:true}).click();assert.equal(await panel.locator('.knowledge-read-list>li').count(),1);
    await panel.getByRole('button',{name:'查看当时读取的原文'}).click();await textIncludes(panel,'原规则快照暂不可读取');
    await panel.getByRole('button',{name:'重试读取原文'}).click();await textIncludes(panel,'当时读取的规则正文');
    const toggle=panel.getByRole('button',{name:'收起原文',exact:true});
@@ -48,7 +48,7 @@ export function registerKnowledgePlatformScenarios({test,makeJob,detail,workbenc
    await toggle.click();assert.equal(await panel.locator('.knowledge-excerpt pre:visible').count(),0);
    await panel.getByRole('button',{name:'查看当时读取的原文'}).click();await textIncludes(panel,'当时读取的规则正文');assert.equal(attempts,2);
    await noOverflow(page,'knowledge excerpt');await screenshot(page,'knowledge-detail-'+width);
-   await panel.getByRole('radio',{name:'审计',exact:true}).click();await textIncludes(panel,'正式输出前审计');
+   await panel.getByRole('radio',{name:'交付复核',exact:true}).click();await textIncludes(panel,'正式输出前审计');
    assert.equal(attempts,2);
   });
  }
@@ -62,14 +62,14 @@ export function registerKnowledgePlatformScenarios({test,makeJob,detail,workbenc
    };
   });
   await detail(page,running);await page.getByRole('button',{name:'研究过程',exact:true}).click();
-  const panel=page.locator('.knowledge-usage');await panel.locator('.knowledge-usage-trigger').click();await textIncludes(panel,'0 项规则');
+  const panel=page.locator('.knowledge-usage');await panel.locator('.knowledge-usage-trigger').click();await textIncludes(panel,'0 类依据');
   const event={type:'knowledge_read',message:'已加载规则',ruleRead:{key:'c'.repeat(64),kind:'context',snapshotId:ref.id,moduleId:'07-valuation',path:'knowledge/modules/rules/07-valuation.md',heading:'DCF 实时记录',line:1,endLine:3,reason:'规则补读：DCF'}};
-  await page.evaluate(event=>window.emitRule(event),{...event,ruleRead:{...event.ruleRead,snapshotId:current.id}});await textIncludes(panel,'0 项规则');
-  await page.evaluate(event=>{window.emitRule(event);window.emitRule(event);},event);await textIncludes(panel,'1 项规则 · 1 条使用记录');
+  await page.evaluate(event=>window.emitRule(event),{...event,ruleRead:{...event.ruleRead,snapshotId:current.id}});await textIncludes(panel,'0 类依据');
+  await page.evaluate(event=>{window.emitRule(event);window.emitRule(event);},event);await textIncludes(panel,'1 类依据 · 1 条引用记录');
  });
  test('knowledge-v47-legacy-report',{jobs:[legacy],configOverrides},async({page})=>{
   await detail(page,legacy);await page.getByRole('button',{name:'研究过程',exact:true}).click();const panel=page.locator('.knowledge-usage');
-  await panel.locator('.knowledge-usage-trigger').click();await textIncludes(panel,'V4.3');await textIncludes(panel,'未保存实际读取明细');
+  await panel.locator('.knowledge-usage-trigger').click();await textIncludes(panel,'此记录未保存依据明细');await textIncludes(panel,'此记录未保存固定规则快照');
   assert.equal(await panel.getByRole('button',{name:'查看当时读取的原文'}).count(),0);
  });
 
@@ -81,8 +81,8 @@ export function registerKnowledgePlatformScenarios({test,makeJob,detail,workbenc
    assert.equal(await panel.locator('.knowledge-read-list>li').count(),20);
    await panel.getByRole('button',{name:/显示更多记录/}).click();assert.equal(await panel.locator('.knowledge-read-list>li').count(),40);
    await panel.getByRole('button',{name:/显示更多记录/}).click();assert.equal(await panel.locator('.knowledge-read-list>li').count(),45);
-   const search=panel.getByRole('textbox',{name:'搜索规则记录'});await search.fill('dcf 最终');await textIncludes(panel,'显示 1 / 1 条记录');await textIncludes(panel,'DCF 最终核对');
-   await panel.getByRole('radio',{name:'审计',exact:true}).click();await textIncludes(panel,'没有匹配的记录');
+   const search=panel.getByRole('textbox',{name:'搜索研究依据'});await search.fill('dcf 最终');await textIncludes(panel,'显示 1 / 1 条记录');await textIncludes(panel,'DCF 最终核对');
+   await panel.getByRole('radio',{name:'交付复核',exact:true}).click();await textIncludes(panel,'没有匹配的记录');
    await panel.getByRole('button',{name:'清除搜索'}).click();assert.equal(await search.evaluate(node=>node===document.activeElement),true);await textIncludes(panel,'显示 20 / 22 条记录');
    await noOverflow(page,'rule search '+width);await screenshot(page,'knowledge-search-'+width);
   });

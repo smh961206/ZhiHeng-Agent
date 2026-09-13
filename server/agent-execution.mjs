@@ -8,6 +8,11 @@ export function executionBudget(plan={}){
  const turns=plan.mode==='A'||plan.depth==='Quick'?24:plan.depth==='Deep'?48:32;
  return {maxTurns:turns,maxToolCalls:turns*8,maxTargetPages:16};
 }
+export function executionContextProfile(plan={}){
+ if(plan.mode==='A'||plan.depth==='Quick')return {version:1,threshold:100000,evidenceBudget:36000,toolBudget:36000};
+ if(plan.depth==='Deep')return {version:1,threshold:180000,evidenceBudget:50000,toolBudget:50000};
+ return {version:1,threshold:140000,evidenceBudget:40000,toolBudget:40000};
+}
 export function updateExecutionPlan(args,{job,records=[]}){
  const text=(v,max)=>typeof v==='string'&&v.trim()&&v.length<=max;
  if(!text(args.objective,1000)||!Array.isArray(args.hypotheses)||args.hypotheses.length>4||args.hypotheses.some(v=>!text(v,700))||!Array.isArray(args.steps)||!args.steps.length||args.steps.length>12)throw new Error('公开计划须包含目标、最多4项待验证解释与1至12个步骤');
@@ -28,14 +33,16 @@ export function researchStatus(job,records,budget,turn){
   sources:job.input.sources.map(s=>({id:s.id,type:s.type,reportPeriod:s.reportPeriod,readPages:s.readPages,totalPages:s.pages,truncated:!!s.truncated})),
   failedCalls:records.filter(r=>r.result?.error).map(r=>({toolCallId:r.toolCallId,toolName:r.toolName,error:r.result.error})),unresolvedWebGaps:job.webResearch?.gaps?.filter(g=>g.status!=='evidence-located')??[],notice:'这是执行覆盖与预算，不是事实核验结论。'};
 }
-export function compactExecutionContext({messages,job,evidence,records,threshold=220000}){
+export function compactExecutionContext({messages,job,evidence,records,threshold}){
+ const profile=executionContextProfile(job.plan);
+ threshold??=profile.threshold;
  if(JSON.stringify(messages).length<=threshold)return null;
  const lastAssistant=messages.findLastIndex(m=>m.role==='assistant'),returned=new Set(messages.slice(lastAssistant+1).filter(m=>m.role==='tool').map(m=>m.tool_call_id));
  if(messages[lastAssistant]?.tool_calls?.some(c=>!returned.has(c.id)))return null;
- const context=buildResearchContext({evidence,tools:records,evidenceBudget:50000,toolBudget:50000});
+ const context=buildResearchContext({evidence,tools:records,evidenceBudget:profile.evidenceBudget,toolBudget:profile.toolBudget});
  const input=job.input;
  const anchor={question:input.question,mode:job.mode,depth:job.plan.depth,portfolio:input.portfolio,portfolioContext:input.portfolioContext,previousResearch:input.previousResearch,baseline:input.baseline,referenceMaterials:input.referenceMaterials,
-  publicPlan:job.agentPlan??job.plan.researchApproach,financialCoverage:recordedFinancialCoverage(records),sourceCatalog:input.sources.map(s=>({id:s.id,title:s.title,type:s.type,security:s.security,url:s.url,reportPeriod:s.reportPeriod,pages:s.pages,readPages:s.readPages,truncated:s.truncated,date:s.date,publishedAt:s.publishedAt,reportDate:s.reportDate,fetchedAt:s.fetchedAt,stale:s.stale,currency:s.currency,asOf:s.asOf})),context,
+  publicPlan:job.agentPlan??job.plan.researchApproach,financialCoverage:recordedFinancialCoverage(records),sourceCatalog:input.sources.map(s=>({id:s.id,title:s.title,type:s.type,security:s.security,url:s.url,reportPeriod:s.reportPeriod,pages:s.pages,readPages:s.readPages,truncated:s.truncated,date:s.date,publishedAt:s.publishedAt,reportDate:s.reportDate,fetchedAt:s.fetchedAt,stale:s.stale,currency:s.currency,asOf:s.asOf})),incrementalContext:{version:1,profile,retainedEvidence:context.window.evidenceIncluded,retainedTools:context.window.toolsIncluded},context,
   instruction:'这是同一研究的上下文整理，保留完整证据和工具记录；窗口遗漏项不是失败或已核实，可通过原来源重新读取。继续未完成事项，必要时从固定快照重新read_rules；不要重新采集已保存来源或重复已完成计算。'};
  messages.splice(1,messages.length-1,{role:'user',content:JSON.stringify(anchor)});
  return context.window;

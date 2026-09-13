@@ -103,8 +103,8 @@
     {
       "file": "server/agent.mjs",
       "sha256": "297e24f0123ea88b10e87c4e69371173717666636d9225cd74ac09f479ecff8b",
-      "currentSha256": "8955b948cea7a13955729d2dd45bd6a11df54e9950581cc034a48665f0a6e2b0",
-      "currentReview": "M1.0 budget-configuration cleanup changed cost exposure only; Vision request limits, evidence guards and trust boundaries remain enforced."
+      "currentSha256": "4d329f708723927d53702629afe0c5d4fea78a0545d03b599b8f6113e65a5cdd",
+      "currentReview": "M1.1 stage-context optimization changed path tool selection, rule projection and Writer context checks; Vision request limits, page selection, evidence guards and trust boundaries remain enforced."
     },
     {
       "file": "server/index.mjs",

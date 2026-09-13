@@ -27,9 +27,11 @@ test('v2 defines each model once and derives stage capabilities without secrets'
 test('new jobs pin every stage while historical state versions remain separate',()=>fixture(({env})=>{
  const state=createConfiguredJobModelState(env,{},{}),job={mode:'B',modelState:state};
  assert.equal(state.version,4);
+ assert.equal(state.contextVersion,1);
  assert.equal(state.stages.input.active,'configured-fast');
  assert.equal(state.stages.researcher.active,'configured-strong');
  assert.doesNotThrow(()=>assertJobModelState(job,env));
+ const historical=structuredClone(job);delete historical.modelState.contextVersion;assert.doesNotThrow(()=>assertJobModelState(historical,env));
  assert.throws(()=>assertJobModelState(job,{...env,STRONG_KEY:'rotated',MODEL_CONFIG_FILE:env.MODEL_CONFIG_FILE.replace('models.json','missing.json')}));
 }));
 
@@ -53,19 +55,21 @@ test('new stage names retain legacy purpose identities for historical configurat
 });
 
 test('modelState v4 rebuilds public context for a dedicated Writer before Auditor',async()=>fixture(async({env})=>{
- const originalEnv=process.env,originalFetch=globalThis.fetch,calls=[];
- const input={question:'研究测试企业',depth:'Standard',portfolio:'',sources:[{id:'S1',title:'测试资料',text:'合成证据，仅用于验证 Writer 环节。[S1]',url:'',date:''}]};
+ const originalEnv=process.env,originalFetch=globalThis.fetch,calls=[];let firstToolNames=[],writerIntegrity;
+ const input={question:'研究测试企业',depth:'Standard',portfolio:'',sources:[{id:'S1',title:'研究测试企业资料',text:'研究测试企业的合成证据，仅用于验证 Writer 环节。[S1]',url:'',date:''}]};
  const job={mode:'B',input,modelState:createPipelineJobModelState(env)};
  process.env={...originalEnv,...env,MODEL_TELEMETRY_ENABLED:'false'};
  globalThis.fetch=async(_url,options)=>{
   const body=JSON.parse(options.body);calls.push(body);
-  if(calls.length===1)return Response.json({choices:[{message:{role:'assistant',content:'研究初稿[S1]'}}]});
-  if(calls.length===2){assert.match(body.messages[0].content,/报告撰写员/);assert.doesNotMatch(JSON.stringify(body.messages),/reasoning_content/);return Response.json({choices:[{message:{role:'assistant',content:'Writer 整理稿[S1]'}}]});}
+  if(calls.length===1){firstToolNames=(body.tools??[]).map(item=>item.function.name);return Response.json({choices:[{message:{role:'assistant',content:'研究初稿[S1]'}}]});}
+  if(calls.length===2){assert.match(body.messages[0].content,/报告撰写员/);const packet=JSON.parse(body.messages[1].content);writerIntegrity=packet.contextIntegrity;assert.doesNotMatch(JSON.stringify(body.messages),/reasoning_content/);return Response.json({choices:[{message:{role:'assistant',content:'Writer 整理稿[S1]'}}]});}
   return Response.json({choices:[{message:{role:'assistant',content:JSON.stringify(reviewFixture(input))}}]});
  };
  try{
   const result=await runAgent(job,()=>{},new AbortController().signal,{onModelCheckpoint:async()=>{}});
   assert.equal(calls.length,3);assert.equal(calls[0].model,'strong-model');assert.equal(calls[1].model,'strong-model');assert.equal(calls[2].model,'strong-model');
+  assert.ok(!firstToolNames.includes('calculate_dcf_sensitivity'));assert.ok(!firstToolNames.includes('calculate_dividend_scenarios'));assert.ok(!firstToolNames.includes('review_valuation_models'));
+  assert.equal(writerIntegrity.status,'complete');
   assert.equal(job.checkpoint.writerCompleted,true);assert.match(result.report,/经审计/);
  }finally{process.env=originalEnv;globalThis.fetch=originalFetch;}
 }));

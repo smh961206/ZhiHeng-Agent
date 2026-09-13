@@ -1,9 +1,9 @@
 import {frameworkVersion} from './research-framework.mjs';
 
 export const knowledgeBenefits=[
- {title:'研究按问题展开',description:'简明、标准与完整展开各有侧重，详细规则在需要时补充。'},
- {title:'同一任务，依据一致',description:'新研究采用已校验的更新，进行中的研究和续跑保留创建时的规则。'},
- {title:'实际使用可以回查',description:'在详情查看用到了哪些规则、为何读取；旧报告保留当时的记录。'},
+ {title:'研究按问题展开',description:'简明、标准与完整展开各有侧重，研究范围会随问题调整。'},
+ {title:'同一任务，依据不变',description:'研究开始后保留当时的资料与依据，继续研究不会被后续更新改写。'},
+ {title:'查证过程可以回看',description:'在详情查看核对了什么、依据来自哪里；旧报告保留当时的记录。'},
 ];
 export const depthGuidance={
  Quick:'先看核心业务、财务质量与估值快照；详细计算和评分按任务需要补读。',

@@ -10,7 +10,7 @@
 
 Track changes must remain compatible with the owning Core Release contracts and invariants.
 
-## M1.0 — User-defined stage model pipeline (CURRENT implementation)
+## M1.0 — User-defined stage model pipeline (IMPLEMENTED)
 
 M1.0 is scheduled after core release V5.2. It does not replace the already assigned V5.3 Knowledge Engineering release.
 
@@ -25,7 +25,7 @@ M1.0 is scheduled after core release V5.2. It does not replace the already assig
 
 Detailed proposal: [Stage-oriented model pipeline redesign](../architecture/model-pipeline-redesign-proposal.md).
 
-## M1.1 — Token-efficient stage contexts (PLANNED)
+## M1.1 — Token-efficient stage contexts (CURRENT phase 1)
 
 M1.1 reduces repeated model input while preserving evidence, calculation, missing-data, audit and recovery guarantees. It extends the existing research-context, Agent, Gateway cache and telemetry owners; it does not add a token budget, price-based routing, paid trials, Champion/A-B or a parallel evidence subsystem.
 
@@ -34,6 +34,8 @@ M1.1 reduces repeated model input while preserving evidence, calculation, missin
 - Incremental tool-boundary compaction and stable provider-cache prefixes.
 - Read-only per-stage and per-validated-delivery Token metrics.
 - Sequential subrelease rollout with hard quality gates and independent rollback.
+
+M1.1.0–M1.1.3 are implemented for new schema-v2/modelState-v4 tasks pinned with `contextVersion=1`: an automatic context-footprint check, path-scoped tool/rule input, safe incremental Researcher compaction and a dedicated Writer context with deterministic integrity receipts. Historical modelState v1–v3 tasks and pre-M1.1 v4 tasks without the pin keep their original request wire and recovery behavior. Auditor repair-loop, stable-prefix and Vision-specific refinements remain deferred to later M1.1 phases.
 
 Detailed proposal: [Model Token efficiency plan](../architecture/model-token-efficiency-proposal.md).
 

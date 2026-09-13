@@ -8,13 +8,10 @@
 .platform-status-dot.is-configured{background:#3b7b60}
 .platform-status-dot.is-unconfigured,.platform-status-dot.is-unknown{background:#a07630}
 .platform-status-dot.is-incompatible{background:#b24b35}
-.platform-version{font-size:11px;font-weight:650;letter-spacing:.03em;padding:2px 6px;border:1px solid #dce5df;border-radius:5px}
 .platform-status-panel{width:min(380px,calc(100vw - 24px));padding:22px;border-radius:16px;max-height:calc(100dvh - 90px);overflow-y:auto;color:#29453a}
 .platform-panel-heading{display:flex;align-items:flex-start;gap:12px}
 .platform-panel-heading>svg{margin-top:4px;flex-shrink:0}
 .platform-panel-heading h2{font-size:17px;font-weight:650}
-.platform-title-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.platform-title-line>span{padding:3px 7px;border-radius:999px;background:#e9f1eb;color:#4f705e;font-size:10px;font-weight:650;letter-spacing:.02em}
 .platform-panel-heading p,.platform-status-panel p{font-size:13px;line-height:1.8;color:#52665b}
 .platform-connection{margin:18px 0;padding:12px 14px;border:1px solid #dce5df;border-radius:10px;background:#f4f7f4}
 .platform-connection strong{font-size:14px}
@@ -22,11 +19,10 @@
 .platform-status-panel dt{font-size:13px;font-weight:650;margin-bottom:3px}
 .platform-status-panel dd{font-size:13px;line-height:1.8;color:#52665b}
 .platform-status-panel .platform-policy-note{padding-top:14px;margin:16px 0;border-top:1px solid var(--border);font-size:12px}
-.platform-version-explainer{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--border);font-size:12px}
-.platform-version-explainer summary,.method-version-note summary{cursor:pointer;font-weight:600;line-height:1.7}
-.platform-version-explainer p{margin-top:8px}
-.research-handbook .handbook-heading{margin-bottom:0;padding-bottom:24px;border-bottom:0}
+.method-version-note summary{cursor:pointer;font-weight:600;line-height:1.7}
+.research-handbook .handbook-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:0;padding-bottom:24px;border-bottom:0}
 .research-handbook .handbook-heading p{max-width:720px;line-height:1.9}
+.research-handbook .handbook-heading>[data-slot=button]{flex:0 0 auto;min-height:42px}
 .method-version-note{padding:14px 18px;margin:0 0 22px;border:1px solid #dce5df;border-radius:10px;background:#f6f8f6;color:#405e4c}
 .method-version-note p{font-size:14px;line-height:1.9;margin-top:10px}
 .research-detail .rd-provenance{flex-wrap:wrap;gap:8px 16px;padding-block:10px}
@@ -36,8 +32,6 @@
 .sidebar-layout .nav-current{background:#e7efe9!important;box-shadow:inset 3px 0 #285c47}
 .sidebar-layout .nav-button{border-radius:9px}
 .research-home .fw-hero{padding:32px 0 42px;gap:36px}
-.fw-release-note{display:inline-flex;align-items:center;gap:9px;color:#355f4b;font-size:12px;letter-spacing:.04em}
-.fw-release-note span{background:#e6eee6;border:1px solid #d0ded1;border-radius:5px;padding:2px 7px;font-weight:650}
 .research-home .fw-question-card{background:#204a3a;border-color:#204a3a;border-radius:20px;box-shadow:0 12px 32px #123c3508}
 .research-home .fw-guide-steps>li{border-radius:14px;border-top:3px solid #b9cdbd}
 .fw-rotation-control{display:flex;justify-content:flex-end;margin:-8px 0 14px}
@@ -50,7 +44,7 @@
 .composer-shortcut{display:block;font-size:11px;color:#60766a;margin-top:3px}
 .composer-shortcut kbd{font:inherit;border:1px solid #cddbd1;border-radius:4px;padding:1px 4px;background:#f8faf8}
 .rh-heading{padding-bottom:20px;border-bottom:1px solid var(--border)}
-.research-detail :is(.rd-document-reading,.rd-cost-summary){border-radius:12px}
+.research-detail :is(.rd-document-reading,.rd-model-assignment,.rd-cost-summary){border-radius:12px}
 .rd-model-records{display:grid;gap:6px;margin:14px 0;padding:12px 14px;background:#f4f7f4;border:1px solid #dbe5dc;border-radius:9px}
 .rd-model-records>div{display:flex;flex-wrap:wrap;gap:5px 14px;justify-content:space-between}
 .rd-model-records dt{font-size:12px;color:#52685b}
@@ -58,9 +52,8 @@
 .rd-model-record-note{font-size:12px;color:#5c6f64}
 .rd-model-history-note{padding-top:12px;border-top:1px solid var(--border);font-size:12px;line-height:1.8;color:#617567}
 .platform-panel-actions{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 12px}
-.platform-panel-actions>a,.fw-quality-link,.method-quality-record a{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:#355f4b;font-size:13px;text-underline-offset:4px}
-.platform-panel-actions>a:hover,.fw-quality-link:hover,.method-quality-record a:hover{text-decoration:underline}
-.fw-quality-link{margin-top:8px}
+.platform-panel-actions>a,.method-quality-record a{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:#355f4b;font-size:13px;text-underline-offset:4px}
+.platform-panel-actions>a:hover,.method-quality-record a:hover{text-decoration:underline}
 .method-quality{scroll-margin-top:88px}
 .method-quality-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;list-style:none;margin:0;padding:0}
 .method-quality-steps>li{min-width:0;padding:20px;border:1px solid var(--border);border-radius:12px;background:#fff}
@@ -74,9 +67,6 @@
 .research-progress .rp-next{border-left:3px solid #94b39e}
 .app-shell :is(button,a,input,textarea,summary,[role=tab]):focus-visible{outline:2px solid #39705c;outline-offset:3px}
 .platform-status-panel dl>div{padding-left:12px;border-left:2px solid #d8e5dc}
-.platform-status-panel .platform-version-explainer p{font-size:12px;overflow-wrap:anywhere}
-.research-home .fw-release-note{flex-wrap:wrap;row-gap:4px;line-height:1.8}
-.research-home .fw-release-note .fw-model-track{background:#eef3ef;color:#4f6f5d}
 .history-page .rh-row:focus-within{background:#f3f7f4;box-shadow:inset 3px 0 #39705c}
 .history-page .rh-row .rh-source-total{color:#62766a}
 .materials-visual-guide{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0 14px;color:#476151}
@@ -89,9 +79,10 @@
 .rd-reading-steps strong{font-size:13px;line-height:1.8}
 .rd-reading-steps small{font-size:12px;color:#617567;line-height:1.8;overflow-wrap:anywhere}
 @media(max-width:639px){
+ .research-handbook .handbook-heading{display:block}
+ .research-handbook .handbook-heading>[data-slot=button]{width:100%;margin-top:18px}
  .platform-status-label{display:none}
  .platform-status-trigger{padding-inline:5px;gap:5px}
- .platform-version{font-size:10px}
  .app-shell .topbar{gap:4px}
  .research-home .fw-hero{padding-top:12px;gap:22px}
  .research-home .fw-hero h1{font-size:32px;line-height:1.45}
@@ -102,21 +93,20 @@
  .rd-reading-steps{grid-template-columns:minmax(0,1fr);gap:12px}
 }
 
-.platform-current-models{margin:16px 0;padding:14px;border:1px solid var(--border);border-radius:12px;background:#f5f8f6}
-.platform-model-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;margin-bottom:12px;font-size:13px}
-.platform-model-heading span{font-size:11px;color:#52665b}
-.platform-current-models dl{gap:8px}
-.platform-current-models dl>div{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px;padding:0;border:0}
-.platform-current-models .platform-model-mode{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)}
-.platform-current-models .platform-stage-models{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px}
-.platform-current-models .platform-stage-models>div{display:block;min-width:0;padding:8px 0;border-bottom:1px solid #e4ebe6}
-.platform-current-models .platform-stage-models dt{font-size:11px;color:#667a6e}
-.platform-current-models .platform-stage-models dd{margin-top:3px;font-size:12px;color:#315748}
-.platform-current-models dd{overflow-wrap:anywhere}
-.platform-current-models p{margin:10px 0 0;font-size:11px}
+.platform-m11-highlights{display:grid;gap:8px;list-style:none;margin:16px 0 0;padding:0}
+.platform-m11-highlights li{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1px solid #e0e8e2;border-radius:9px;background:#fbfcfb;color:#53695d;font-size:12px;line-height:1.65}
+.platform-m11-highlights svg{flex-shrink:0;margin-top:2px;color:#4c765e}
+.platform-m11-highlights strong{display:block;color:#315748;font-size:12px}
+.rd-usage-overview{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px!important;margin:12px 0 16px}
+.rd-usage-overview>div{display:block!important;padding:11px 12px!important;border:1px solid #dfe8e1!important;border-radius:9px;background:#f5f8f6}
+.rd-usage-overview dt{font-size:11px!important;color:#687c70!important}
+.rd-usage-overview dd{margin-top:5px;font-size:17px!important;font-weight:650;color:#285440!important;font-variant-numeric:tabular-nums}
+.rd-cost-billing{margin:0 0 14px}
+.rd-cost-billing>strong{display:block;font-size:12px;color:#425f50}
+.rd-cost-billing .rd-model-records{margin:8px 0 0}
+.rd-cost-state{margin-left:auto}
+.rd-cost-state.is-error{background:#fcf0ed;color:#9a5748}
 @media(max-width:420px){
  .platform-status-panel{padding:18px}
- .platform-current-models{padding:12px}
- .platform-current-models .platform-stage-models{gap:4px 12px}
- .platform-current-models .platform-stage-models>div{padding:6px 0}
+ .rd-usage-overview{grid-template-columns:minmax(0,1fr)}
 }

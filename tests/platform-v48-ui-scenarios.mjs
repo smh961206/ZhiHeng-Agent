@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {platformVersion} from '../src/config/platform-release.mjs';
 
 // Match the actual page module in either Vite development or production output.
 // Keep failure injection scoped to the workbench, never a shared dependency.
@@ -10,34 +9,34 @@ export function registerPlatformV48Scenarios({test,makeJob,detail,detailActions,
  for(const width of [320,1440]){
   test('platform-v48-status-'+width,{viewport:{width,height:1000}},async({page,requests})=>{
    await page.goto('/');
-   const trigger=page.getByRole('button',{name:'平台与模型说明',exact:true});
+   const trigger=page.getByRole('button',{name:'平台运行说明',exact:true});
    await trigger.click();
-   const panel=page.getByRole('dialog',{name:'知衡 · V'+platformVersion,exact:true});
-   await textIncludes(panel,'模型已配置');await textIncludes(panel,'实际可用性以本次请求结果为准');
-   await textIncludes(panel,'模型按环节分工');
-   await textIncludes(panel,'配置模型不代表事实已经核验');
+   const panel=page.getByRole('dialog',{name:'平台说明',exact:true});
+   await textIncludes(panel,'研究服务已就绪');await textIncludes(panel,'可以开始新的研究');
+   await textIncludes(panel,'按问题研究');
+   await textIncludes(panel,'先核对依据');
    assert.doesNotMatch(await panel.innerText(),/自动升级|已连接|已通过质量验收|Champion|Challenger|A\/B/);
    await noOverflow(page,'platform status '+width);await screenshot(page,'platform-v48-status-'+width);
    await page.keyboard.press('Escape');await panel.waitFor({state:'hidden'});
    assert.equal(await trigger.evaluate(el=>el===document.activeElement),true);
    await page.route('**/api/config',route=>route.fulfill({status:503,json:{error:'fixture unavailable'}}));
    await trigger.click();await page.getByRole('button',{name:'重新检查服务',exact:true}).click();
-   await textIncludes(panel,'状态待确认');assert.doesNotMatch(await panel.locator('.platform-connection').innerText(),/模型已配置/);
-   await page.unroute('**/api/config');await page.getByRole('button',{name:'重新检查服务',exact:true}).click();await textIncludes(panel,'模型已配置');
+   await textIncludes(panel,'状态待确认');assert.doesNotMatch(await panel.locator('.platform-connection').innerText(),/研究服务已就绪/);
+   await page.unroute('**/api/config');await page.getByRole('button',{name:'重新检查服务',exact:true}).click();await textIncludes(panel,'研究服务已就绪');
    assert.equal(requests('POST','/api/jobs').length,0);
   });
   const job=makeJob(5480+width);job.modelRouting={analysisModel:'saved-analysis-only',visionModel:'saved-vision-only'};
   test('platform-v48-saved-model-'+width,{jobs:[job],viewport:{width,height:1000}},async({page})=>{
    await detail(page,job);await openProcess(page);
-   const reading=page.locator('.rd-document-reading');await reading.locator('summary').click();
-   await textIncludes(reading,'saved-analysis-only');await textIncludes(reading,'saved-vision-only');
-   await textIncludes(reading,'配置存在不表示已调用');assert.doesNotMatch(await reading.innerText(),/交给 Pro|Pro 结合/);
+   const advanced=page.locator('.rd-advanced-records');await advanced.locator(':scope > summary').click();const models=advanced.locator('.rd-model-assignment');await models.locator('summary').click();
+   await textIncludes(models,'saved-analysis-only');await textIncludes(models,'saved-vision-only');
+   await textIncludes(models,'有记录不表示实际执行');assert.doesNotMatch(await models.innerText(),/交给 Pro|Pro 结合/);
    await noOverflow(page,'saved models '+width);await screenshot(page,'platform-v48-models-'+width);
   });
  }
  test('platform-v48-unconfigured',{configOverrides:{configured:false}},async({page,requests})=>{
-  await page.goto('/workbench');await page.getByRole('button',{name:'平台与模型说明',exact:true}).click();
-  await textIncludes(page.locator('.platform-connection'),'模型待配置');assert.equal(requests('POST','/api/jobs').length,0);
+  await page.goto('/workbench');await page.getByRole('button',{name:'平台运行说明',exact:true}).click();
+  await textIncludes(page.locator('.platform-connection'),'研究服务待配置');assert.equal(requests('POST','/api/jobs').length,0);
  });
  test('platform-v48-pause-rotation',{reducedMotion:'no-preference'},async({page})=>{
   await page.goto('/');
@@ -56,7 +55,7 @@ export function registerPlatformV48Scenarios({test,makeJob,detail,detailActions,
   await page.route(workbenchModule,async route=>{requested=true;await loaded;await route.continue();});
   await page.goto('/');await page.locator('.fw-hero').waitFor();
   assert.equal(requested,false,'Home must not load the workbench and its material editor');
-  await page.getByRole('button',{name:'开始一项研究',exact:true}).click();
+  await page.locator('.fw-hero').getByRole('button',{name:'体验一次研究',exact:true}).click();
   await page.getByText('正在加载研究工作台…',{exact:true}).waitFor();
   assert.equal(requested,true);assert.equal(requests('POST','/api/jobs').length,0);
   release();const input=page.locator('#question');await input.waitFor();

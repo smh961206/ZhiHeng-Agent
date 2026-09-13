@@ -4,7 +4,6 @@ import {Link} from 'react-router';
 import {ArrowRight,BookOpen,ChevronDown,ShieldCheck} from 'lucide-react';
 import {Button} from './ui/button';
 import {Collapsible,CollapsibleTrigger,CollapsibleContent} from './ui/collapsible';
-import {frameworkVersion} from '../../shared/research-framework.mjs';
 import {researchMethodology} from '../../shared/valuation-policy.mjs';
 import './research-reference.css';
 import './research-method.css';
@@ -15,31 +14,30 @@ export function ResearchMethodSteps({compact=false}){
 }
 export default function ResearchMethod(){
  return <section className="research-method" aria-labelledby="research-method-title">
-  <header className="handbook-chapter-heading method-chapter-heading"><h2 id="research-method-title">研究方法</h2><p>了解从公司分析到研究判断的基本顺序，按主题查阅估值方法与证据处理。</p></header>
-  <section className="fw-section" aria-labelledby="method-sequence-title">
-   <div className="fw-section-heading"><h3 id="method-sequence-title">研究的基本顺序</h3><p>六种路径共用同一套证据规则，按问题决定研究范围和交付深度。</p></div>
-   <div className="fw-principle-panel"><span className="fw-principle-label">证据优先的研究方法</span><p className="fw-principle-question">先判断公司与价值，再讨论执行。</p>
+  <header className="handbook-chapter-heading method-chapter-heading"><span className="handbook-chapter-kicker">理解判断如何形成</span><h2 id="research-method-title">从问题、证据到研究结论</h2><p>不同研究路径共享同一套证据原则，再由问题决定分析范围；估值适用性和资料缺口共同影响结论强度。</p></header>
+  <section className="fw-section" aria-label="研究判断顺序">
+   <div className="fw-principle-panel"><span className="fw-principle-label">统一判断框架</span><p className="fw-principle-question">先看公司，再核对价值，最后讨论怎样行动。</p>
     <Collapsible className="fw-principle-details"><CollapsibleTrigger asChild><Button variant="ghost" className="fw-reference-trigger"><span>查看研究判断的四个步骤</span><ChevronDown size={18} aria-hidden="true"/></Button></CollapsibleTrigger><CollapsibleContent><ResearchMethodSteps/></CollapsibleContent></Collapsible>
    </div>
    <div className="fw-reference-links"><Button variant="outline" asChild><Link to="/workbench">带着问题开始<ArrowRight size={16} aria-hidden="true"/></Link></Button></div>
   </section>
   <section id="method-quality" tabIndex={-1} className="fw-section method-quality" aria-labelledby="method-quality-title">
-   <div className="fw-section-heading"><h3 id="method-quality-title">模型按研究环节分工</h3><p>管理员在模型文件中指定各环节使用的模型；模型配置只决定由谁执行，不能代替证据和质量判断。</p></div>
-   <ol className="method-quality-steps" aria-label="模型使用原则">
-    <li><span aria-hidden="true">01</span><h4>按环节配置</h4><p>Input、Vision、研究、写作、证据核验与审计分别读取自己的配置；关键复核与裁决属于条件式环节，未启用时不会调用。</p></li>
-    <li><span aria-hidden="true">02</span><h4>每次研究都要核对</h4><p>无论使用哪个模型，都要检查事实、计算、引用和缺失披露；配置成功不表示结论已经核实。</p></li>
-    <li><span aria-hidden="true">03</span><h4>任务固定并可回查</h4><p>新任务保存创建时的环节模型配置；恢复任务和历史报告沿用原记录，不按当前配置补写或替换。</p></li>
+   <div className="fw-section-heading"><span>从问题到结论</span><h3 id="method-quality-title">问题决定范围，证据决定结论强度</h3><p>开始前确认研究问题、公司、路径和资料；平台按研究目的推进查证、计算与复核，无法确认的内容会明确保留。</p></div>
+   <ol className="method-quality-steps" aria-label="研究推进原则">
+    <li><span aria-hidden="true">01</span><h4>问题决定研究范围</h4><p>快速筛选、深度研究、财报更新、公司比较、组合分析和股东回报各有不同重点。</p></li>
+    <li><span aria-hidden="true">02</span><h4>重要判断回到依据</h4><p>关键数字结合原始资料和计算核对；无法确认的内容不会为了形成结论而补齐。</p></li>
+    <li><span aria-hidden="true">03</span><h4>结论保留适用条件</h4><p>报告同时说明置信度、资料缺口、风险和需要重新审视判断的条件。</p></li>
    </ol>
-   <div className="method-quality-record"><ShieldCheck size={18} aria-hidden="true"/><div><h4>回查这一次研究</h4><p>在详情页打开“研究过程”，核对任务保存的模型配置与规则依据。平台更新不会补写历史配置。</p><p>核对实际调用时，在“本次查证记录”点击“查看调用”，再在“执行轨迹”展开“查看调用详情”，对照已保存的输入与返回；未保存的内容不补造。</p><Link to="/handbook?tab=guide#usage-report">查看报告核对指南<ArrowRight size={15} aria-hidden="true"/></Link></div></div>
+   <div className="method-quality-record"><ShieldCheck size={18} aria-hidden="true"/><div><h4>研究设置保持简单</h4><p>开始前只确认问题、标的、研究路径、补充资料和该路径对应的设置。其余处理由平台自动完成。</p><p>研究完成后，先读结论和限制，再从审计记录与证据来源核对重要依据。</p><Link to="/handbook?tab=guide#usage-report">查看报告核对指南<ArrowRight size={15} aria-hidden="true"/></Link></div></div>
   </section>
   <section id="method-loading" tabIndex={-1} className="fw-section" aria-labelledby="method-loading-title">
-   <div className="fw-section-heading"><h3 id="method-loading-title">规则按需使用，研究依据可回查</h3><p>研究按问题加载相应规则，保留实际读取依据；计算与判断仍遵守各自的核验条件。</p></div>
-   <details className="method-version-note"><summary>研究规则版本与历史报告</summary><p>当前研究规则为 V{frameworkVersion}，与顶部的平台功能版本分别管理。模型配置和研究规则分别更新，研究结果仍须遵守本套规则。报告中的版本来自任务保存的记录，历史报告保留原规则与快照；版本缺失时不补写。</p></details>
+   <div className="fw-section-heading"><h3 id="method-loading-title">每项研究保留当时的资料与规则</h3><p>研究范围随问题确定，实际使用的依据随任务保存，方便以后按当时的信息重新核对判断。</p></div>
+   <details className="method-version-note"><summary>为什么历史报告不会随平台更新改变</summary><p>每项研究都会保留创建时使用的资料、规则与判断。之后的平台更新只用于新的研究，不会改写已经完成的报告；这样才能按当时的信息重新核对原判断。</p></details>
    <KnowledgeHighlights/>
-   <div className="method-detail-copy"><h4>深度研究怎样选择展开程度</h4><dl>{Object.entries(depthGuidance).map(([depth,copy])=><div key={depth}><dt><strong>{{Quick:'简明研究',Standard:'标准研究',Deep:'完整展开'}[depth]}</strong></dt><dd>{copy}</dd></div>)}</dl><p>其他专项始终保留必需核对流程。交易执行说明与作战图分别触发；仅在明确要求作战图、估值图或买入区间图时加入图示规则。</p><p>同一框架版本内，新修订通过完整校验后供新任务使用。进行中的任务及可恢复的中断任务沿用原快照；历史报告不改写。跨程序版本升级仍需要部署匹配的服务。</p><p>在详情页的“研究过程”中展开“本次规则依据”，查看实际使用的规则与读取原因。旧记录没有保存的内容会显示“未记录”，不会按当前目录补齐。</p></div>
+   <div className="method-detail-copy"><h4>深度研究怎样选择展开程度</h4><dl>{Object.entries(depthGuidance).map(([depth,copy])=><div key={depth}><dt><strong>{{Quick:'简明研究',Standard:'标准研究',Deep:'完整展开'}[depth]}</strong></dt><dd>{copy}</dd></div>)}</dl><p>其他专项始终保留必要的核对步骤。只有明确提出需要图示时，报告才会加入相应图表。</p><p>平台更新用于之后的新研究；进行中的任务仍沿用开始时的资料与依据，历史报告不会改写。</p><p>在详情页打开“研究过程”，再展开“本次研究依据”，即可查看实际使用的内容。旧记录没有保存的部分会显示“未记录”。</p></div>
   </section>
   <section className="fw-section" aria-labelledby="method-evidence-title">
-   <div className="fw-section-heading"><h3 id="method-evidence-title">估值与证据处理</h3><p>先核对估值适用性与证据质量，再形成与资料充分程度相匹配的研究判断。</p></div>
+   <div className="fw-section-heading"><h3 id="method-evidence-title">估值与证据怎样配合</h3><p>先判断估值方法是否适用，再检查参数和证据质量；资料越有限，结论就越需要保留条件。</p></div>
    <div className="fw-data-boundaries"><div><h4>估值如何使用</h4><p>先选适合业务的主估值，再检查关键参数、情景与敏感性。</p></div><div><h4>证据不足怎么办</h4><p>保留缺口与影响，降低判断强度；不适用的估值不填零，也不补造参数。</p></div></div>
    <div className="fw-boundary-grid method-detail-grid">
     <Collapsible className="fw-boundary-group"><CollapsibleTrigger asChild><Button variant="ghost" className="fw-reference-trigger"><span><span className="fw-reference-label"><BookOpen size={18} aria-hidden="true"/><strong>查看估值使用说明</strong></span><span className="fw-reference-summary">交叉验证、方法限制与股息收益率锚的适用边界。</span></span><ChevronDown size={18} aria-hidden="true"/></Button></CollapsibleTrigger><CollapsibleContent><div className="method-detail-copy"><p>完整深度研究原则上用独立方法交叉验证；只能采用一种方法时，说明例外与限制。</p><p>同一模型的情景变化不算第二种方法。股息收益率锚用于观察现金回报条件，不能直接替代企业价值。</p></div></CollapsibleContent></Collapsible>

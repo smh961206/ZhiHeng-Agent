@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {boundedReads} from '../server/bounded-reads.mjs';
 import {collectMarketData} from '../server/market-data.mjs';
-import {buildResearchContext} from '../server/research-context.mjs';
+import {buildResearchContext,buildWriterContext,writerContextIssues} from '../server/research-context.mjs';
 import {exportResearchMarkdown} from '../shared/research-export.mjs';
 import {auditCoverage} from '../shared/audit-coverage.mjs';
 const deferred=()=>{let resolve;const promise=new Promise(done=>{resolve=done;});return {promise,resolve};};
@@ -85,6 +85,16 @@ test('citation variants receive priority and independent calculation scenarios a
  assert.deepEqual(context.evidence,[b]);assert.deepEqual(context.window.citedSourcesWithoutExcerpt,[]);
  const calls=[{toolCallId:'base',result:{value:1}},{toolCallId:'error',result:{error:'失败'}},{toolCallId:'stress',result:{value:2}}].map(item=>({toolName:'calculate_dcf',...item}));
  assert.deepEqual(buildResearchContext({tools:calls}).tools.map(item=>item.toolCallId),['stress','base','error']);
+});
+
+test('writer context expands once and exposes every unresolved citation or calculation dependency',()=>{
+ const small={id:'S1',blockId:'small',text:'已引用原文'},large={id:'S2',blockId:'large',text:'完整计算依据'.repeat(3000)};
+ const calculation={toolName:'calculate_dcf',toolCallId:'dcf',result:{value:10,basis:{sourceIds:['S2'],evidenceBlocks:[{sourceId:'S2',blockId:'large'}]}}};
+ const complete=buildWriterContext({evidence:[small,large],tools:[calculation],draft:'结论[S1][S2]',evidenceBudget:100,toolBudget:100});
+ assert.equal(complete.integrity.status,'complete');assert.ok(complete.window.evidenceCharacters>100);assert.deepEqual(writerContextIssues(complete,{tools:[calculation]}),[]);
+ const limited=buildWriterContext({evidence:[small],tools:[calculation],draft:'结论[S1][S9]',evidenceBudget:100,toolBudget:100,maxEvidenceBudget:100,maxToolBudget:100});
+ assert.equal(limited.integrity.status,'limited');assert.ok(limited.integrity.issues.some(issue=>issue.type==='citation-without-excerpt'&&issue.sourceId==='S9'));
+ assert.ok(limited.integrity.issues.some(issue=>['calculation-block-missing','calculation-result-omitted'].includes(issue.type)));
 });
 
 test('audit coverage separates initial and supplemental packets, preserves omissions and supports historical records',()=>{

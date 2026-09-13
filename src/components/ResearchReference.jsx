@@ -25,10 +25,9 @@ const termGroups=[
 
 export function ResearchDiscipline(){
  return <>
-  <header className="handbook-chapter-heading discipline-heading"><h2>研究纪律</h2><p>了解研究遵循的原则、证据要求与判断边界，按主题查阅具体规则。</p></header>
-  <section id="fw-principles" className="fw-section" aria-labelledby="fw-principles-title">
-   <div className="fw-section-heading"><h2 id="fw-principles-title">研究的基本原则</h2><p>按研究问题选择范围，用可追溯证据验证假设；资料不足时保留缺口，结论随新证据修正。</p></div>
-   <div className="fw-principle-panel"><span className="fw-principle-label">研究围绕的核心问题</span><p className="fw-principle-question">以当前价格成为这家公司的长期股东，未来承担的风险和可能获得的回报是否匹配？</p>
+  <header className="handbook-chapter-heading discipline-heading"><span className="handbook-chapter-kicker">明确可以做什么、不能做什么</span><h2>研究规范与使用边界</h2><p>按问题确定范围，用可追溯证据检查假设，资料不足时保留缺口；同时明确估值、结论表达和组合执行的约束。</p></header>
+  <section id="fw-principles" className="fw-section" aria-label="研究基本原则">
+   <div className="fw-principle-panel"><span className="fw-principle-label">首先回答这个问题</span><p className="fw-principle-question">以当前价格成为这家公司的长期股东，未来承担的风险和可能获得的回报是否匹配？</p>
     <Collapsible className="fw-principle-details"><CollapsibleTrigger asChild><Button variant="ghost" className="fw-reference-trigger"><span>查看研究链路与股东回报原则</span><ChevronDown size={18}/></Button></CollapsibleTrigger><CollapsibleContent>
     <div className="fw-dividend-principle"><span>对于成熟分红型公司</span><p>公司能否持续把真实可分配现金转化为分红或注销式回购，以及当前价格对应的现金回报是否足以补偿增长、周期、利率、政策和估值风险？</p></div>
     <ol className="fw-principle-chain" aria-label="持续验证的研究链路">{principles.map((text,index)=><li key={text}>{index>0&&<ArrowRight size={13} aria-hidden="true"/>}<span>{text}</span></li>)}</ol>
@@ -44,7 +43,7 @@ export function ResearchDiscipline(){
    <ol className="execution-guide-cards">{executionGuideCards.map(item=><li key={item.title}><h3>{item.title}</h3><p>{item.text}</p></li>)}</ol>
   </section>
   <section id="fw-prohibitions" className="fw-section" aria-labelledby="fw-prohibitions-title">
-   <div className="fw-section-heading"><h2 id="fw-prohibitions-title">{prohibitions.length} 条禁止事项</h2><p>{prohibitions.length} 条研究纪律，按五类展开查看。</p></div>
+   <div className="fw-section-heading"><h2 id="fw-prohibitions-title">研究中不能做什么</h2><p>{prohibitions.length} 条禁止事项按五类整理，可按需要展开核对。</p></div>
    <div className="fw-boundary-grid">{boundaries.map(group=><Collapsible key={group.title} className="fw-boundary-group">
     <CollapsibleTrigger asChild><Button variant="ghost" className="fw-reference-trigger"><span><span className="fw-reference-label"><ShieldCheck size={18}/><strong>{group.title}</strong><Badge variant="outline">{group.end-group.start} 条</Badge></span><span className="fw-reference-summary">{group.summary}</span></span><ChevronDown size={18}/></Button></CollapsibleTrigger>
     <CollapsibleContent><ol start={group.start+1} className="fw-prohibition-list">{prohibitions.slice(group.start,group.end).map(item=><li key={item.number} value={item.number}>{item.text}</li>)}</ol></CollapsibleContent>
@@ -56,7 +55,7 @@ export function ResearchDiscipline(){
 
 export function ResearchGlossary(){
  return <section id="fw-glossary" className="fw-section" aria-labelledby="fw-glossary-title">
-   <div className="fw-section-heading handbook-chapter-heading"><h2 id="fw-glossary-title">术语速查</h2><p>按主题查阅 {terms.length} 个术语，点击名称展开解释，可同时展开多项对照。</p></div>
+   <div className="fw-section-heading handbook-chapter-heading"><span className="handbook-chapter-kicker">统一概念与计算口径</span><h2 id="fw-glossary-title">常用研究术语</h2><p>按估值、现金流和组合主题查阅 {terms.length} 个术语；每项包含定义、实际含义、示例和使用边界。</p></div>
    <Tabs defaultValue="valuation" className="fw-glossary"><TabsList className="fw-glossary-tabs" aria-label="术语分类">{termGroups.map(group=><TabsTrigger value={group.id} key={group.id}>{group.label}<span>{group.items.length}</span></TabsTrigger>)}</TabsList>
     {termGroups.map(group=><TabsContent value={group.id} key={group.id}><dl className="fw-term-list">{group.items.map((item,index)=><Collapsible key={item.term} defaultOpen={index===0} className="fw-term-item">
      <dt><CollapsibleTrigger asChild><Button variant="ghost" className="fw-term-trigger"><span>{item.term}</span><ChevronDown size={17} aria-hidden="true"/></Button></CollapsibleTrigger></dt>

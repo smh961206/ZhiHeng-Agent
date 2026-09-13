@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {summarizeModelCalls} from '../server/model-telemetry.mjs';
+import {summarizeModelCalls,publicModelCostSummary} from '../server/model-telemetry.mjs';
 import {effectiveTaskCost} from '../server/model-telemetry.mjs';
 import {compareEffectiveTaskCosts} from '../benchmark/statistics.mjs';
 import {createModelGateway} from '../server/model-gateway.mjs';
@@ -33,4 +33,12 @@ test('aggregation deduplicates lifecycle/replay while rejecting conflicting term
  assert.throws(()=>summarizeModelCalls([call,{...call,billing:{currency:'USD',estimatedCost:3}}]),/Conflicting/);
  assert.equal(summarizeModelCalls([]).costCoverage.complete,false);
  assert.equal(summarizeModelCalls([call,{...call,id:'d',billing:{currency:'CNY',estimatedCost:2}}]).costCoverage.complete,false);
+});
+test('public cost summary exposes safe total and per-stage token baselines without prompt data',()=>{
+ const rows=[{id:'a',status:'succeeded',purpose:'researcher',profile:'configured-researcher',transportAttempts:1,errorCategory:null,usage:{inputTokens:120,outputTokens:30,totalTokens:150,cachedInputTokens:80},billing:{currency:'USD',estimatedCost:.01}},
+  {id:'b',status:'succeeded',purpose:'writer',profile:'configured-writer',transportAttempts:1,errorCategory:null,usage:{inputTokens:70,outputTokens:20,totalTokens:90,cachedInputTokens:null},billing:{currency:'USD',estimatedCost:.02},prompt:'private'}];
+ const result=publicModelCostSummary(summarizeModelCalls(rows));
+ assert.deepEqual(result.usage.inputTokens,{knownTotal:190,unknownCalls:0});assert.deepEqual(result.usage.outputTokens,{knownTotal:50,unknownCalls:0});
+ assert.deepEqual(result.usage.cachedInputTokens,{knownTotal:80,unknownCalls:1});assert.equal(result.byPurpose.find(item=>item.purpose==='writer').usage.inputTokens.knownTotal,70);
+ assert.doesNotMatch(JSON.stringify(result),/private|prompt/);
 });

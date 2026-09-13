@@ -1,5 +1,13 @@
 # Current Implementation Map
 
+## M1.1 token-efficient stage contexts
+
+New schema-v2/modelState-v4 research tasks pin optional `contextVersion=1`, use path-scoped tool definitions and load detailed shareholder rules only when the selected path or question requires them. Dependent valuation tools are exposed only after their prerequisite calculation receipts exist. Researcher history is compacted at safe completed-tool boundaries using Quick, Standard and Deep profiles; pending tool calls are never compacted. Writer receives a separately rebuilt evidence/calculation packet with an additive integrity receipt and must remove or mark unsupported material as missing. Historical modelState v1–v3 tasks and pre-M1.1 v4 tasks without this pin retain their previous tool set, system rules, request wire and recovery behavior.
+
+The existing cost endpoint now exposes whitelisted total and per-stage input/output/cache Token observations. Unknown provider usage remains unknown. `scripts/model-context-baseline.mjs` measures serialized tool-definition size without network calls, paid trials or manual validation. No Token budget, price routing, new evidence store or model acceptance gate was introduced. See the [M1.1 implementation record](../releases/M1.1/README.md).
+
+The M1.1 platform presentation stays in existing owners. `ResearchFramework` and `ResearchMethod` explain path-scoped preparation without exposing internal platform or model-track versions; `research-settings.js` owns the distinct user-visible execution preview for all six paths; `ResearchWorkbench` renders that preview without exposing model configuration; `PlatformStatusPanel` shows investor-facing research principles; `ResearchDetail` prioritizes research basis, progress and source reading, with saved model assignment and observed use retained in a collapsed advanced section; `ResearchModelSummary` keeps saved assignment separate from `ResearchCostSummary` actual calls and Token observations. No front-end control can select a model, change a saved task, authorize a review stage or impose a research budget.
+
 ## M1.0 stage-oriented model configuration
 
 `server/model-config.mjs` accepts schema v2 with a single model registry and eight stage assignments: Input, Vision, Researcher, Writer, Evidence Verifier, Auditor, Critical Reviewer and Judge. `server/model-catalog.mjs` compiles these assignments into internal ModelProfiles; business code declares only a stage purpose. `server/model-gateway.mjs` remains the sole dispatch boundary and `server/model-adapter.mjs` remains the sole provider transport.

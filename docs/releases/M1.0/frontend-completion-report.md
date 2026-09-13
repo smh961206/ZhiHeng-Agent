@@ -17,7 +17,7 @@
 | 项目 | 本轮记录 |
 | --- | --- |
 | 1. Release / subrelease | 核心 V5.1、V5.2 前端能力同步；独立模型轨道 M1.0。CURRENT 保持 V5.2 |
-| 2. Modified files | `src/config/platform-release.mjs`；`src/components/PlatformStatus.jsx`、`PlatformStatusPanel.jsx`、`ResearchFramework.jsx`、`ResearchMethod.jsx`、`ResearchDecision.jsx`、`DocumentReadingSummary.jsx`、`ResearchCostSummary.jsx`、`ResearchUsageGuide.jsx`、`ResearchAnalysisReceipts.jsx`、`ResearchWorkbench.jsx`、`ResearchContext.jsx`、`PortfolioConstraints.jsx`、`MaterialEditor.jsx`、`ResearchProgress.jsx`、`Brand.jsx`、`ReportWarnings.jsx`、`ResearchDetail.jsx`、`ResearchMaterials.jsx`、`ResearchHistory.jsx`、`ResearchKnowledge.jsx`、`ExecutionReview.jsx`；`src/styles.css`、`src/platform.css`、`src/components/research-detail.css`、`src/components/research-analysis-receipts.css`、`src/components/research-workbench.css`、`src/components/report-warnings.css`、`src/components/research-report-first.css`、`src/components/research-materials.css`、`src/components/research-history.css`、`src/components/execution-ui.css`；`tests/platform-v50-ui-scenarios.mjs`、`tests/agent-capabilities-ui-scenarios.mjs`、`tests/workflow-ui-scenarios.mjs`、`tests/knowledge-platform-ui-scenarios.mjs`、`tests/workspace-ui.integration.mjs`；本说明及 M1.0 README |
+| 2. Modified files | `src/config/platform-release.mjs`；`src/components/PlatformStatus.jsx`、`PlatformStatusPanel.jsx`、`ResearchFramework.jsx`、`ResearchHandbook.jsx`、`ResearchMethod.jsx`、`ResearchReference.jsx`、`ResearchDecision.jsx`、`DocumentReadingSummary.jsx`、`ResearchCostSummary.jsx`、`ResearchUsageGuide.jsx`、`ResearchAnalysisReceipts.jsx`、`ResearchWorkbench.jsx`、`ResearchContext.jsx`、`PortfolioConstraints.jsx`、`MaterialEditor.jsx`、`ResearchProgress.jsx`、`Brand.jsx`、`ReportWarnings.jsx`、`ResearchDetail.jsx`、`ResearchMaterials.jsx`、`ResearchHistory.jsx`、`ResearchKnowledge.jsx`、`ExecutionReview.jsx`；`src/styles.css`、`src/platform.css`、`src/components/research-framework.css`、`src/components/research-home.css`、`src/components/research-reference.css`、`src/components/research-method.css`、`src/components/research-usage.css`、`src/components/research-detail.css`、`src/components/research-analysis-receipts.css`、`src/components/research-workbench.css`、`src/components/report-warnings.css`、`src/components/research-report-first.css`、`src/components/research-materials.css`、`src/components/research-history.css`、`src/components/execution-ui.css`；`tests/platform-v49-ui-scenarios.mjs`、`tests/platform-v50-ui-scenarios.mjs`、`tests/platform-m10-ui-scenarios.mjs`、`tests/agent-capabilities-ui-scenarios.mjs`、`tests/workflow-ui-scenarios.mjs`、`tests/knowledge-platform-ui-scenarios.mjs`、`tests/workspace-ui.integration.mjs`；本说明及 M1.0 README |
 | 3. New files | `src/components/ui/radio-group.jsx`、`src/components/ui/progress.jsx`、`src/components/ui/toggle.jsx`、`src/components/ui/toggle-group.jsx`、`src/components/ui/label.jsx`、`tests/platform-m10-ui-scenarios.mjs`、本报告；验证工件位于忽略目录 `artifacts/m10-frontend-sync/`、`artifacts/shadcn-components-production/`、`artifacts/shadcn-rescan-production/`、`artifacts/shadcn-third-scan-production/` |
 | 4. Removed files | 无 |
 | 5. Architecture changes | 无新子系统或接口。复用现有公开配置快照、任务保存的 `modelRouting`、费用 API、研究过程面板和完整 UI 运行器 |
@@ -28,7 +28,7 @@
 | 10. Resume / recovery impact | 无执行逻辑变化；恢复任务仍使用原模型身份、截止日、证据和已完成调用。界面只读取保存状态 |
 | 11. Feature flags | 无变化；Critical Reviewer/Judge 是否可用取决于配置，页面不把可用表述为已调用，也不启用任何真实模型路径 |
 | 12. Tests executed | 重点 UI 回归、完整正式构建 UI、模型管线/费用/用量/定价/缓存/Judge/关键复核测试、前端生产构建、全量单元与路由、Harness 和差异格式检查 |
-| 13. Test results | 首轮重点 UI 30/30；二次复查重点 UI 6/6；最终完整正式构建 UI 338/338；计算记录选择器专项 UI 2/2；底部操作区专项正式构建 UI 2/2；shadcn 组件统一专项正式构建 UI 7/7；二次全量组件扫描专项正式构建 UI 8/8；第三次结构组件扫描专项正式构建 UI 10/10；相关域测试 30/30；全量单元 937/937；路由 5/5；Harness 8/8；构建与差异格式检查通过 |
+| 13. Test results | 首轮重点 UI 30/30；二次复查重点 UI 6/6；最终完整正式构建 UI 338/338；计算记录选择器专项 UI 2/2；底部操作区专项正式构建 UI 2/2；shadcn 组件统一专项正式构建 UI 7/7；二次全量组件扫描专项正式构建 UI 8/8；第三次结构组件扫描专项正式构建 UI 10/10；首页研究方法卡专项正式构建 UI 2/2；手册单行章节导航专项正式构建 UI 2/2；操作教程快捷入口移除专项正式构建 UI 6/6；首页首屏辅助信息移除专项正式构建 UI 6/6；手册四章内容优化专项正式构建 UI 12/12；手册单标题结构专项正式构建 UI 4/4；相关域测试 30/30；全量单元 937/937；路由 5/5；Harness 8/8；构建与差异格式检查通过 |
 | 14. Benchmark results | 未运行模型质量、成本或性能基准；真实模型调用 0。构建包体仅作为构建记录，不声称线上性能改善 |
 | 15. Security / privacy | 前端只显示白名单模型名称和费用汇总；不显示端点、密钥、私有策略、提示正文或隐藏推理。UI API 全部使用内存合成夹具 |
 | 16. Rollback path | 仅撤销本报告列出的前端、样式和测试增量；不回滚 V5.1/V5.2/M1.0 后端、配置、历史任务或数据 |
@@ -48,6 +48,12 @@
 | 正式构建 | 通过；入口 480.58 kB / gzip 159.75 kB | `artifacts/m10-frontend-sync/build.log` |
 | 差异格式 | 通过，仅有 Git 的 CRLF 转换提示 | 本轮最终检查 |
 | 第三次结构组件扫描 | 10/10 | `artifacts/shadcn-third-scan-production/ui-results.json` |
+| 首页研究方法卡 | 2/2 | `artifacts/homepage-value-card-restored/ui-results.json` |
+| 手册单行章节导航 | 2/2 | `artifacts/handbook-section-nav-production/ui-results.json` |
+| 操作教程快捷入口移除 | 6/6 | `artifacts/handbook-quick-nav-removed/ui-results.json` |
+| 首页首屏辅助信息移除 | 6/6 | `artifacts/homepage-hero-cleanup/ui-results.json` |
+| 手册四章内容优化 | 12/12 | `artifacts/handbook-content-refresh-final/ui-results.json` |
+| 手册单标题结构 | 4/4 | `artifacts/handbook-single-heading/ui-results.json` |
 
 ## 二次整体复查
 
@@ -72,5 +78,25 @@
 ## shadcn 第三次结构组件扫描
 
 再次扫描 62 个 JSX 文件后，将 13 个原生表单标签统一为共享 `Label`，覆盖工作台问题与路径、旧研究上下文、资料编辑、组合约束、研究详情筛选和导出选项；平台版本、资料格式及研究执行状态改为复用共享 `Badge`。新增断言验证组件身份、标签与控件关联、导出单选点击区域和执行状态展示。语义化财务表格继续使用原生 table，隐藏文件选择继续使用原生 input，报告正文与规则快照中的披露结构继续使用 `details/summary`；页面提示按实际状态语义保留现有结构，没有把普通说明全部强制改成 Alert。正式构建通过，320px 与 1440px 共 10 个专项场景全部通过，并检查工作台、资料编辑、导出弹层、计算记录菜单和研究过程截图；视觉工件位于 `artifacts/shadcn-third-scan-production/`。没有业务、架构、Schema、迁移、环境、恢复、证据、费用、安全或隐私变化。
+
+## 首页研究方法卡恢复
+
+首页右侧卡片恢复为“顶部说明、四步研究判断、底部方法入口”的简洁深色结构，复用现有 `ResearchMethodSteps`，避免首页和研究手册维护两套研究顺序。移除内层小卡片、勾选装饰和整行浅色按钮，按参考样式保留编号、分隔线与文字链接；同时明确覆盖深色背景下的标题和说明颜色，修复此前浅色卡片样式造成的低对比度。正式构建通过，320px 与 1440px 专项 UI 2/2 通过，截图位于 `artifacts/homepage-value-card-restored/`。没有业务、架构、Schema、迁移、环境、恢复、证据或隐私变化。
+
+## 手册章节导航统一
+
+研究手册顶部继续使用现有 shadcn/Radix Tabs 和标准 tablist/tab 键盘语义，但将外观统一为首页内容导航：去掉重复图标和整组灰色底板，使用上下分隔线、文字型选项与浅绿色当前态。桌面端保持一行左对齐，窄屏保持一行横向滚动，不再排成两行宫格；URL 参数、浏览器前进后退、焦点和吸顶行为不变。正式构建通过，320px 与 1440px 专项 UI 2/2 通过，截图位于 `artifacts/handbook-section-nav-production/`。没有业务、架构、Schema、迁移、环境、恢复、证据或隐私变化。
+
+## 操作教程快捷入口移除
+
+研究手册“操作教程”标题下方重复的六个章节快捷入口已移除，页面现在直接进入教程折叠内容，并清理了对应的桌面与手机端遗留样式。外部或历史 `#usage-*` 深链接继续可用：进入页面后会自动展开并聚焦目标章节，浏览器前进后退与顶部章节导航吸顶行为保持正常。正式构建通过，320px 与 1440px 共 6 个专项场景全部通过，截图与结果位于 `artifacts/handbook-quick-nav-removed/`。没有业务、架构、Schema、迁移、环境、恢复、证据或隐私变化。
+
+## 首页首屏辅助信息移除
+
+首页主标题上方的“证据优先 / 过程可回查 / 面向长期投资者”标签，以及主操作按钮下方的依据说明和首次使用入口已移除。标题、说明、主操作与研究方法卡自然收拢，桌面和手机端均未留下占位空白；相关图标导入、选择器样式和旧文案断言同步清理。研究手册仍可通过全局导航和首页内容中的使用指南入口访问。正式构建通过，320px 与 1440px 共 6 个专项场景全部通过，截图与结果位于 `artifacts/homepage-hero-cleanup/`。没有业务、架构、Schema、迁移、环境、恢复、证据或隐私变化。
+
+## 手册四章内容优化
+
+研究手册的四个主标签统一为“使用指南 / 研究方法 / 研究规范 / 术语速查”，用用户任务替代原先偏抽象的“说明”和“边界”命名。每章增加用途提示并重写主标题、引导说明和关键小标题：使用指南按创建、资料、进度、结果、更新与恢复组织；研究方法解释问题、证据、估值与结论强度的关系；研究规范明确必须遵循和不能执行的事项；术语速查说明每项包含定义、实际含义、示例与边界。后续复查移除了研究方法与研究规范中紧邻章节头部的重复内容标题，将说明合并进章节引导，使四个标签页都采用一个章节标题后直接进入内容的结构。手机端收紧标签间距，使四项在 320px 宽度完整保持一行。URL 参数、深链接、折叠状态、键盘操作和浏览器前进后退保持不变。正式构建通过，四章内容专项 12/12、单标题结构专项 4/4，截图与结果位于 `artifacts/handbook-content-refresh-final/` 和 `artifacts/handbook-single-heading/`。没有业务、架构、Schema、迁移、环境、恢复、证据或隐私变化。
 
 重点交互覆盖 320px 与 1440px，完整回归继续覆盖 2560px、侧栏固定、报告阅读、详情右栏、执行轨迹、导出、恢复、键盘导航及滚动。首次开发预览基线有两项因同期热更新导致执行上下文被页面导航销毁；正式构建回归不受热更新影响并全部通过。新增场景的首次失败还识别并修正了“按需关闭/未启用”的旧断言及“执行预算”的遗留文案，没有为通过测试而放宽业务边界。

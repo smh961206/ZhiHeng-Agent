@@ -4,10 +4,11 @@ import {createHash} from 'node:crypto';
 import {createAgentPageReader,extractReportPages} from '../server/agent-page-reader.mjs';
 import {verifyFinancialInputs} from '../server/financial-input-verification.mjs';
 import {valuationSnapshot} from '../server/valuation-snapshot.mjs';
-import {executionBudget,updateExecutionPlan,compactExecutionContext} from '../server/agent-execution.mjs';
-import {toolsForMode,runAgent} from '../server/agent.mjs';
+import {executionBudget,executionContextProfile,updateExecutionPlan,compactExecutionContext} from '../server/agent-execution.mjs';
+import {legacyToolsForMode,toolsForMode,toolsForResearchState,usesShareholderRules,runAgent} from '../server/agent.mjs';
 import {reviewFixture} from './fixtures/research-review.mjs';
 import {materialPdf} from './fixtures/material-files.mjs';
+import {researchSettings} from '../src/config/research-settings.js';
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const body='2025年度 人民币元 营业收入 1,200.00 1,100.00；归母净利润 100；经营现金流 -100.25；毛利率 20%；投资损失 (25.50)。';
 const sources=()=>[{id:'S1',type:'official-report',official:true,title:'合成财务报告',text:body,pages:2,documentBlocks:[{id:'p1-b1',page:1,method:'native',text:body,needsReview:false}],sha256:sha('original'),url:'https://static.cninfo.com.cn/original.pdf'},
@@ -16,6 +17,13 @@ const job=()=>({mode:'A',input:{mode:'A',question:'合成企业值不值得研�
 const flow=(start,end,value)=>({start,end,value,sourceIds:['S1']});
 const valuation=()=>({valuationBasis:'single-class',equityBasis:'common',otherEquity:null,quote:{sourceId:'Q1',price:20,currency:'CNY',asOf:'2026-09-08T07:00:00Z'},shares:{date:'2026-06-30',value:100,changesReviewed:false,sourceIds:['S1']},annual:flow('2025-01-01','2025-12-31',100),previous:flow('2025-01-01','2025-06-30',40),current:flow('2026-01-01','2026-06-30',50),equity:{date:'2026-06-30',value:1000,sourceIds:['S1']},earningsFactors:[.9,1,1.1],peMultiples:[15,20],basis:{currency:'CNY',period:'2025FY与2026/2025H1',shareBasis:'普通股股数；金额为元',assumptions:'合成数据，资本变动未完整核对',sourceIds:['S1','Q1']}});
 const item=(value,overrides={})=>({key:'revenue',sourceId:'S1',blockId:'p1-b1',quote:body,label:'营业收入',period:'2025',unit:'元',value,scale:1,...overrides});
+
+test('each research path explains its own automatic execution without model selection',()=>{
+ const settings=Object.values(researchSettings);
+ assert.equal(settings.length,6);
+ assert.equal(new Set(settings.map(item=>item.processing)).size,6);
+ for(const item of settings){assert.equal(item.steps.length,3);assert.ok(item.steps.every(Boolean));assert.doesNotMatch(item.processing+item.steps.join(''),/选择模型|人工验收/);}
+});
 
 test('raw verification preserves signed complete tokens, columns, percentages, parentheses and scaling',()=>{
  const items=[item(1200),item(-100.25,{key:'outflow',label:'经营现金流'}),item(.2,{key:'ratio',label:'毛利率',unit:'小数'}),item(-25.5,{key:'loss',label:'投资损失'}),item(12000000,{key:'scaled',scale:10000})];
@@ -70,6 +78,28 @@ test('public plans require actual receipts for completed steps and budgets follo
  assert.throws(()=>updateExecutionPlan(args,{job:j}),/实际工具/);args.steps[0].toolCallIds=['real'];assert.throws(()=>updateExecutionPlan(args,{job:j,records:[{toolCallId:'real',result:{error:'failed'}}]}),/非错误/);
  const plan=updateExecutionPlan(args,{job:j,records:[{toolCallId:'real',result:{matched:1}}]});assert.equal(plan.revision,1);assert.equal(j.agentPlan.steps[0].status,'completed');
  assert.equal(executionBudget({mode:'A',depth:'Deep'}).maxTurns,24);assert.equal(executionBudget({mode:'B',depth:'Deep'}).maxTurns,48);
+ assert.deepEqual(executionContextProfile({mode:'A',depth:'Quick'}),{version:1,threshold:100000,evidenceBudget:36000,toolBudget:36000});
+ assert.equal(executionContextProfile({mode:'B',depth:'Deep'}).threshold,180000);assert.equal(executionContextProfile({mode:'C',depth:'Standard'}).threshold,140000);
+});
+
+test('research paths load relevant tools and unlock dependent tools only after their prerequisites return',()=>{
+ const names=mode=>toolsForMode(mode).map(item=>item.function.name);
+ assert.ok(names('A').includes('calculate_screen_metrics'));assert.ok(!names('A').includes('calculate_dcf'));
+ assert.ok(names('C').includes('calculate_dcf'));assert.ok(!names('C').includes('calculate_shareholder_return'));
+ assert.ok(names('D').includes('calculate_comparison'));assert.ok(!names('E').includes('calculate_dcf'));
+ assert.ok(toolsForMode('C',{input:{question:'更新本期分红与回购'}}).some(item=>item.function.name==='calculate_shareholder_return'));
+ const initial=toolsForResearchState('B',[]).map(item=>item.function.name);assert.ok(!initial.includes('calculate_dcf_sensitivity'));assert.ok(!initial.includes('calculate_dividend_scenarios'));assert.ok(!initial.includes('review_valuation_models'));
+ const records=[{toolName:'calculate_dcf',result:{value:1}},{toolName:'calculate_normalized_earnings',result:{value:2}}];
+ const ready=toolsForResearchState('B',records).map(item=>item.function.name);assert.ok(ready.includes('calculate_dcf_sensitivity'));assert.ok(ready.includes('calculate_dividend_scenarios'));assert.ok(ready.includes('review_valuation_models'));
+ assert.equal(usesShareholderRules('C',{question:'分析最新财报'}),false);assert.equal(usesShareholderRules('C',{question:'分析最新财报和分红变化'}),true);assert.equal(usesShareholderRules('F',{}),true);
+});
+
+test('automatic tool-definition baseline is no larger than legacy and shrinks every non-screen initial path',()=>{
+ for(const mode of ['A','B','C','D','E','F']){
+  const before=JSON.stringify(legacyToolsForMode(mode)).length,after=JSON.stringify(toolsForResearchState(mode,[])).length;
+  assert.ok(after<=before,`${mode} tool definitions must not grow`);
+  if(mode!=='A')assert.ok(after<before,`${mode} initial tool definitions should shrink`);
+ }
 });
 
 test('long-run context packs complete evidence and calls without interrupting pending tool responses',()=>{

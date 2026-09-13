@@ -48,7 +48,13 @@ export function createPipelineJobModelState(env=process.env){
  const catalog=createPipelineModelCatalog(env);
  const profiles=catalog.profiles.map(p=>({id:p.id,model:p.model,connectionIdentity:modelConnectionIdentity(p,env),reasoningEffort:null,purposes:[...p.purposes]}));
  const stages=Object.fromEntries(Object.keys(modelPipelineStages).map(stage=>[stage,{pool:[...pipelineStageProfiles(stage,env)],active:pipelineStageProfiles(stage,env)[0]??null}]));
- return {version:4,routingMode:'pipeline',policyVersion:1,configurationVersion:2,profiles,stages,escalationHistory:[]};
+ return {version:4,routingMode:'pipeline',policyVersion:1,configurationVersion:2,contextVersion:1,profiles,stages,escalationHistory:[]};
+}
+function validPipelineState(state,env){
+ const expected=createPipelineJobModelState(env);
+ if(isDeepStrictEqual(state,expected))return true;
+ const legacy={...expected};delete legacy.contextVersion;
+ return isDeepStrictEqual(state,legacy);
 }
 function validChampionState(job,env){
  const state=job.modelState;validateModelExperiment(state.selection,{job});
@@ -66,7 +72,7 @@ export function assertJobModelState(job,env=process.env){
  const hasJob=Object.hasOwn(job,'modelState'),hasCheckpoint=job.checkpoint&&Object.hasOwn(job.checkpoint,'modelState');
  if(!hasJob&&!hasCheckpoint)return; // Absence only: no fabricated historical pin.
  if(!hasJob||!job.modelState)throw modelStateError();
- let valid;try{valid=job.modelState.version===4?isDeepStrictEqual(job.modelState,createPipelineJobModelState(env)):job.modelState.version===3?validChampionState(job,env):job.modelState.version===2?validPolicyState(job.modelState,env):isDeepStrictEqual(job.modelState,createJobModelState(env,savedVisionId(job.modelState)));}catch{throw modelStateError();}
+ let valid;try{valid=job.modelState.version===4?validPipelineState(job.modelState,env):job.modelState.version===3?validChampionState(job,env):job.modelState.version===2?validPolicyState(job.modelState,env):isDeepStrictEqual(job.modelState,createJobModelState(env,savedVisionId(job.modelState)));}catch{throw modelStateError();}
  if(!valid||job.checkpoint&&(!hasCheckpoint||!isDeepStrictEqual(job.checkpoint.modelState,job.modelState)))throw modelStateError();
  if(job.mode==='A'&&job.modelState.version===2&&!isDeepStrictEqual(job.modelState.active,escalationSteps[0]))throw modelStateError();
 }

@@ -84,3 +84,29 @@ export function buildResearchContext({evidence=[],tools=[],draft='',evidenceBudg
    notice:'本窗口仅含实际检索和工具返回的完整记录；优先纳入成功计算及其指定原文，失败记录和其他场景不因此失效。calculationEvidence列出窗口中仍缺少的计算依据；同一来源的其他片段不能代替指定原文。未纳入片段、未读取页面及未返回字段均不能声称已复核。目录编号不等于事实依据；缺失的关键依据应补查或在报告中保留限制。'},
  };
 }
+
+// Writer input is assembled independently from the research conversation. The
+// check is descriptive rather than permissive: incomplete evidence is exposed
+// to the Writer so it can remove the affected claim or retain it as a gap.
+export function writerContextIssues(context,{tools=[]}={}){
+ const issues=[];
+ for(const sourceId of context.window.citedSourcesWithoutExcerpt??[])issues.push({type:'citation-without-excerpt',sourceId});
+ for(const calculation of context.window.calculationEvidence??[]){
+  for(const sourceId of calculation.sourceIdsWithoutExcerpt??[])issues.push({type:'calculation-source-without-excerpt',toolName:calculation.toolName,toolCallId:calculation.toolCallId,sourceId});
+  for(const block of calculation.missingBlocks??[])issues.push({type:'calculation-block-missing',toolName:calculation.toolName,toolCallId:calculation.toolCallId,...block});
+ }
+ const included=new Set(context.tools.map(item=>item.toolCallId));
+ for(const item of tools.filter(item=>item.toolName?.startsWith('calculate_')&&!item.result?.error&&!included.has(item.toolCallId)))issues.push({type:'calculation-result-omitted',toolName:item.toolName,toolCallId:item.toolCallId});
+ return issues;
+}
+
+export function buildWriterContext({evidence=[],tools=[],draft='',evidenceBudget=40000,toolBudget=40000,maxEvidenceBudget=80000,maxToolBudget=80000}={}){
+ let context=buildResearchContext({evidence,tools,draft,evidenceBudget,toolBudget});
+ let issues=writerContextIssues(context,{tools});
+ if(issues.length&&(evidenceBudget<maxEvidenceBudget||toolBudget<maxToolBudget)){
+  context=buildResearchContext({evidence,tools,draft,evidenceBudget:Math.max(evidenceBudget,maxEvidenceBudget),toolBudget:Math.max(toolBudget,maxToolBudget)});
+  issues=writerContextIssues(context,{tools});
+ }
+ return {...context,integrity:{version:1,status:issues.length?'limited':'complete',issues,
+  instruction:issues.length?'不得使用缺少原文或完整计算记录的结论；删除无法支持的引用，或将其明确保留为待核实缺口。':'引用来源与已纳入计算记录的依据完整。'}};
+}

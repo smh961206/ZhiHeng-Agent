@@ -119,10 +119,12 @@ export function effectiveTaskCost(tasks){
 
 export function publicModelCostSummary(summary){
  const amount=v=>typeof v==='number'&&Number.isFinite(v)&&v>=0?v:null;
- const groups=rows=>(rows??[]).map(r=>({purpose:purposes.includes(r.purpose)?r.purpose:null,calls:tokens(r.summary.calls),unknownBillingCalls:tokens(r.summary.unknownBillingCalls),billing:r.summary.billing.map(b=>({currency:b.currency,knownEstimatedCost:amount(b.knownEstimatedCost)}))}));
+ const usage=value=>Object.fromEntries(['inputTokens','outputTokens','totalTokens','cachedInputTokens'].map(key=>[key,{knownTotal:tokens(value?.[key]?.knownTotal),unknownCalls:tokens(value?.[key]?.unknownCalls)}]));
+ const groups=rows=>(rows??[]).map(r=>({purpose:purposes.includes(r.purpose)?r.purpose:null,calls:tokens(r.summary.calls),usage:usage(r.summary.usage),unknownBillingCalls:tokens(r.summary.unknownBillingCalls),billing:r.summary.billing.map(b=>({currency:b.currency,knownEstimatedCost:amount(b.knownEstimatedCost)}))}));
  return {version:1,calls:tokens(summary.calls),unknownBillingCalls:tokens(summary.unknownBillingCalls),
   billing:summary.billing.map(b=>({currency:b.currency,knownEstimatedCost:amount(b.knownEstimatedCost)})),
   complete:summary.costCoverage?.complete===true,unpricedAttempts:tokens(summary.costCoverage?.unpricedAttempts),unknownAttemptCalls:tokens(summary.costCoverage?.unknownAttemptCalls),
+  usage:usage(summary.usage),
   byPurpose:groups(summary.byPurpose),byModel:(summary.byProfile??[]).map(r=>({profile:['legacy-analysis','legacy-router','legacy-vision','main','pro','main-challenger','vision-challenger'].includes(r.profile)||/^configured-[a-z][a-z0-9-]{0,51}$/.test(r.profile)?r.profile:null,calls:tokens(r.summary.calls),billing:r.summary.billing.map(b=>({currency:b.currency,knownEstimatedCost:amount(b.knownEstimatedCost)}))})),
   cache:{inputTokens:summary.usage.inputTokens.knownTotal,cachedInputTokens:summary.usage.cachedInputTokens.knownTotal,unknownCalls:summary.usage.cachedInputTokens.unknownCalls},
   notice:'费用为已记录模型调用的估算，未包含未知账单或外部数据费用；缓存命中不代表证据质量。'};

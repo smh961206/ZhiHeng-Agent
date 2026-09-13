@@ -17,7 +17,10 @@ import {materialUploadResponse} from './fixtures/material-upload-response.mjs';
 const baseURL = new URL(process.env.UI_BASE_URL || 'http://127.0.0.1:5173').origin;
 assert.ok(['127.0.0.1', 'localhost', '[::1]'].includes(new URL(baseURL).hostname), 'UI_BASE_URL must be loopback');
 const artifacts = new URL('../artifacts/'+(process.env.UI_ARTIFACT_SUBDIR?process.env.UI_ARTIFACT_SUBDIR+'/':''), import.meta.url);
-const timeout = 10_000;
+// The full suite exercises hundreds of fresh browser contexts against a live
+// Vite server. Allow a little headroom for occasional compile/GC pauses while
+// keeping genuine hangs bounded and visible.
+const timeout = 15_000;
 const longToken = `fixture-${'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.repeat(5)}`;
 const security = {market: 'CN', symbol: '600519', name: '贵州茅台'};
 const sources = [
@@ -1609,7 +1612,7 @@ for (const width of [320, 390, 768, 1440]) test(`responsive-${width}`, {jobs: hi
   await workbench(page);
   assert.equal(await page.locator('label[for="question"]').getAttribute('data-slot'), 'label');
   assert.equal(await page.locator('label[for="research-path"]').getAttribute('data-slot'), 'label');
-  assert.equal(await page.locator('.platform-version').getAttribute('data-slot'), 'badge');
+  assert.equal(await page.locator('.platform-version').count(), 0);
   assert.ok(await page.locator('.materials-format-chips [data-slot="badge"]').count() >= 3);
   await noOverflow(page, `empty workbench ${width}`);
   await manualInput(page);
@@ -1666,7 +1669,7 @@ for (const width of [320, 390, 768, 1440]) test(`responsive-${width}`, {jobs: hi
 
 for(const width of [320,1440]) test(`homepage-onboarding-${width}`,{viewport:{width,height:1000}},async({page,requests})=>{
  await page.goto('/');
- await page.getByRole('heading',{name:/让每一次研究/,level:1}).waitFor();
+ await page.getByRole('heading',{name:/把分散资料/,level:1}).waitFor();
  assert.equal(await page.locator('.brand').first().getAttribute('data-slot'),'button');
  assert.equal(new URL(page.url()).pathname,'/');
  const navigation=page.getByRole('navigation',{name:'主导航'});
@@ -1676,10 +1679,16 @@ for(const width of [320,1440]) test(`homepage-onboarding-${width}`,{viewport:{wi
  await count(navigation.getByRole('group'),0);
  assert.deepEqual(await navigation.getByRole('link').evaluateAll(links=>links.map(link=>link.getAttribute('href'))),['/','/workbench','/history','/handbook']);
  await count(page.locator('.research-home .fw-heading'),0);
+ const valueCard=page.locator('.fw-value-card');
+ assert.equal(await valueCard.getAttribute('data-slot'),'card');
+ assert.equal(await valueCard.locator('[data-slot="card-content"]').count(),1);
+ await count(valueCard.locator('.research-method-steps li'),4);
+ assert.equal(await valueCard.locator('.fw-method-link').getAttribute('href'),'/handbook?tab=method');
  if(width<1024){await page.keyboard.press('Escape');await page.getByRole('dialog',{name:'研究导航'}).waitFor({state:'hidden'});}
  await noOverflow(page,'homepage '+width);
  await screenshot(page,'homepage-hero-'+width);
- await page.getByRole('link',{name:'了解研究流程',exact:true}).click();
+ await valueCard.screenshot({path:fileURLToPath(new URL(`ui-homepage-value-card-${width}.png`,artifacts)),animations:'disabled'});
+ await page.goto('/handbook?tab=guide');
  await page.waitForURL('**/handbook?tab=guide');
  await page.locator('.research-usage').waitFor();await page.getByRole('navigation',{name:'面包屑导航'}).getByRole('link',{name:'首页',exact:true}).click();
  await page.getByRole('navigation',{name:'首页内容导航',exact:true}).getByRole('link',{name:'服务方案',exact:true}).click();
@@ -1707,7 +1716,7 @@ for(const width of [320,1440]) test(`homepage-onboarding-${width}`,{viewport:{wi
  await page.goto('/framework?from=legacy#fw-plans');
  await eventually(()=>Promise.resolve(new URL(page.url()).pathname==='/'),'Legacy framework URL must redirect home');
  assert.equal(new URL(page.url()).hash,'#fw-plans');assert.equal(new URL(page.url()).search,'?from=legacy');
- await page.getByRole('heading',{name:/让每一次研究/,level:1}).waitFor();
+ await page.getByRole('heading',{name:/把分散资料/,level:1}).waitFor();
  assert.equal(requests('POST','/api/jobs').length,0);
 });
 
@@ -1715,7 +1724,7 @@ for(const [width,reducedMotion] of [[320,'no-preference'],[1440,'no-preference']
  await page.goto('/');
  const navigation=page.getByRole('navigation',{name:'首页内容导航',exact:true});
  const scroller=page.locator('.page-scroll');
- const links=[['fw-guide','如何使用'],['fw-paths','研究场景'],['fw-plans','服务方案'],['fw-flow','研究流程'],['fw-faq','常见问题']];
+ const links=[['fw-guide','平台价值'],['fw-paths','适用场景'],['fw-plans','服务方案'],['fw-flow','如何工作'],['fw-faq','常见问题']];
  const current=id=>eventually(async()=>await navigation.locator('a[aria-current="location"]').count()===1&&await navigation.locator('a[aria-current="location"]').getAttribute('href')==='#'+id,'Scroll position must select '+id);
  const arrived=async id=>{
   await current(id);
@@ -1754,7 +1763,7 @@ for(const [width,reducedMotion] of [[320,'no-preference'],[1440,'no-preference']
 
 for(const width of [320,768,1440]) test(`framework-${width}`,{viewport:{width,height:1000}},async({page,requests})=>{
  await page.goto('/framework');
- await page.getByRole('heading',{name:/让每一次研究/,level:1}).waitFor();
+ await page.getByRole('heading',{name:/把分散资料/,level:1}).waitFor();
  await count(page.locator('.page-content footer'),0);
  await noOverflow(page,'framework hero '+width);
  await screenshot(page,'framework-hero-'+width);
@@ -1796,7 +1805,7 @@ for(const width of [320,768,1440]) test(`framework-${width}`,{viewport:{width,he
 for(const width of [320,1440])test(`framework-autoplay-${width}`,{viewport:{width,height:1000},reducedMotion:'no-preference'},async({page,requests})=>{
  await page.clock.install();
  await page.goto('/framework');
- await page.getByRole('heading',{name:/让每一次研究/,level:1}).waitFor();
+ await page.getByRole('heading',{name:/把分散资料/,level:1}).waitFor();
  const scroller=page.locator('.page-scroll');
  const groups=[
   {id:'fw-paths',label:'研究场景',ids:Object.keys(modes),initial:0},
@@ -2666,7 +2675,7 @@ for(const width of [320,1440]){
  const job=makeJob(972);job.visualAudit={included:[{id:'S1',pages:[2,3]}],omitted:[{id:'M1',reason:'原页缺失'}],notice:'仅指定原页提供给模型'};
  job.input.sources[0].visualReading={status:'read',pages:[2,3],notice:'模型已读取第 2、3 页原图；其余页面仅按程序提取情况提供。'};
  test(`visual-audit-detail-${width}`,{jobs:[job],viewport:{width,height:1000}},async({page})=>{
-  await detail(page,job);await openProcess(page);await textIncludes(page.getByRole('dialog',{name:'研究过程',exact:true}),'视觉模型已复读 1 份资料原页，1 份未纳入');
+  await detail(page,job);await openProcess(page);await textIncludes(page.getByRole('dialog',{name:'研究过程',exact:true}),'已补读 1 份资料原页，1 份未纳入');
   const reading=page.locator('.rd-document-reading');await reading.locator('summary').focus();await page.keyboard.press('Enter');
   await textIncludes(reading.getByRole('region',{name:'已复读原页'}),'第 2、3 页');await textIncludes(reading.getByRole('region',{name:'未纳入原页复核'}),'原页缺失');
   await noOverflow(page,'expanded reading coverage '+width);await screenshot(page,'reading-coverage-'+width,'.rd-document-reading');
@@ -2754,16 +2763,21 @@ for(const width of [320,1440])test(`handbook-current-features-${width}`,{viewpor
  await guideEntry.scrollIntoViewIfNeeded();await noOverflow(page,'home guide entry '+width);
  await page.screenshot({path:fileURLToPath(new URL(`ui-home-guide-entry-${width}.png`,artifacts)),animations:'disabled'});
  await guideEntry.focus();await page.keyboard.press('Enter');await page.waitForURL('**/handbook?tab=guide');
- const chapters=page.getByRole('tablist',{name:'研究手册章节'});await count(chapters.getByRole('tab'),4);await count(chapters.getByRole('tab',{name:'研究实例',exact:true}),0);assert.equal(await chapters.getByRole('tab',{name:'使用指南',exact:true}).getAttribute('aria-selected'),'true');
+ const chapters=page.getByRole('tablist',{name:'研究手册章节'});await count(chapters.getByRole('tab'),4);assert.deepEqual(await chapters.getByRole('tab').allTextContents(),['使用指南','研究方法','研究规范','术语速查']);assert.equal(await chapters.getAttribute('data-variant'),'line');assert.equal(await chapters.getByRole('tab',{name:'使用指南',exact:true}).getAttribute('aria-selected'),'true');
+ assert.equal(new Set(await chapters.getByRole('tab').evaluateAll(nodes=>nodes.map(node=>Math.round(node.getBoundingClientRect().top)))).size,1);
+ if(width===320)assert.equal(await chapters.evaluate(node=>node.scrollWidth<=node.clientWidth+1),true,'All four handbook tabs should remain visible at 320px');
+ await chapters.screenshot({path:fileURLToPath(new URL(`ui-handbook-section-nav-${width}.png`,artifacts)),animations:'disabled'});
  const topics=page.locator('.usage-topic');await count(topics,6);
- assert.equal(await topics.nth(0).getByRole('button').getAttribute('aria-expanded'),'true');await textIncludes(topics.nth(0),'研究类型和报告深度有什么区别');await topics.nth(1).getByRole('button').click();await textIncludes(topics.nth(1),'最多 6 份');
+ await textIncludes(page.locator('.research-usage'),'按任务阶段查阅');await textIncludes(page.locator('.research-usage'),'完成一项研究');
+ assert.equal(await topics.nth(0).getByRole('button').getAttribute('aria-expanded'),'true');await textIncludes(topics.nth(0),'研究路径和报告深度有什么区别');await topics.nth(1).getByRole('button').click();await textIncludes(topics.nth(1),'最多 6 份');
  await noOverflow(page,'handbook upload '+width);await screenshot(page,'handbook-upload-'+width,'.research-handbook');
- await topics.nth(5).getByRole('button').focus();await page.keyboard.press('Enter');await textIncludes(topics.nth(5),'无需重新取数或调用模型');
+ await topics.nth(5).getByRole('button').focus();await page.keyboard.press('Enter');await textIncludes(topics.nth(5),'无需重新获取和分析资料');
  await noOverflow(page,'handbook recovery '+width);await screenshot(page,'handbook-recovery-'+width,'.usage-topic:last-child');
- await page.reload();await page.getByRole('heading',{name:'使用指南',exact:true}).waitFor();
- await chapters.getByRole('tab',{name:'术语速查',exact:true}).click();await page.waitForURL('**/handbook?tab=glossary');await page.goBack();await page.waitForURL('**/handbook?tab=guide');
- await chapters.getByRole('tab',{name:'研究纪律',exact:true}).click();await page.waitForURL('**/handbook?tab=discipline');await textIncludes(page.locator('#fw-data-sources'),'用户补充资料');
- await page.getByRole('heading',{name:'33 条禁止事项',exact:true}).waitFor();
+ await page.reload();await page.getByRole('heading',{name:'完成一项研究',exact:true}).waitFor();
+ await chapters.getByRole('tab',{name:'术语速查',exact:true}).click();await page.waitForURL('**/handbook?tab=glossary');await textIncludes(page.locator('#fw-glossary'),'统一概念与计算口径');await page.goBack();await page.waitForURL('**/handbook?tab=guide');
+ await chapters.getByRole('tab',{name:'研究规范',exact:true}).click();await page.waitForURL('**/handbook?tab=discipline');await textIncludes(page.locator('#fw-data-sources'),'用户补充资料');
+ await count(page.locator('#fw-principles > .fw-section-heading'),0);
+ await page.getByRole('heading',{name:'研究中不能做什么',exact:true}).waitFor();
  const execution=page.locator('section[aria-labelledby="execution-discipline-title"]');
  await count(execution.locator('li'),6);await textIncludes(execution,'未来约 5 个交易日');
  await noOverflow(page,'execution discipline '+width);await screenshot(page,'execution-discipline-'+width,'section[aria-labelledby="execution-discipline-title"]');
@@ -2850,7 +2864,7 @@ for(const width of [320,1440]){
   await groups.getByRole('tab',{name:/估值指标/}).click();
   await page.getByRole('button',{name:'收益率锚',exact:true}).click();await textIncludes(page.locator('#fw-glossary'),'不等于内在价值');
   await noOverflow(page,`V4.3 glossary ${width}`);await screenshot(page,`framework-v43-${width}`);
-  await page.getByRole('tab',{name:'研究纪律',exact:true}).click();await textIncludes(page.locator('#execution-discipline-title'),'组合执行与交易复盘');
+  await page.getByRole('tab',{name:'研究规范',exact:true}).click();await textIncludes(page.locator('#execution-discipline-title'),'组合执行与交易复盘');
   assert.equal(requests('POST','/api/jobs').length,0);
  });
 }
@@ -2861,11 +2875,13 @@ for(const width of [320,1440]){
  current.result.decision.valuation={status:'limited',methods:['DCF','正常化盈利估值'],explanation:'关键参数仍待核实，保留估值限制。'};
  test(`platform-current-${width}`,{jobs:[current],viewport:{width,height:1000}},async({page,requests})=>{
   await page.goto(baseURL+'/');
-  await count(page.getByRole('list',{name:'研究判断顺序'}).getByRole('listitem'),4);
+  await textIncludes(page.locator('.fw-hero'),'把分散资料');
+  assert.equal(await page.locator('.fw-release-note,.fw-hero-note,.fw-quality-link').count(),0);
   await screenshot(page,`platform-current-home-${width}`);
-  await page.getByRole('link',{name:'了解当前研究方法'}).click();
-  await textIncludes(page.locator('.research-method'),'证据优先的研究方法');
-  await count(page.getByRole('heading',{name:'研究方法',level:2,exact:true}),1);
+  await page.goto('/handbook?tab=method');
+  await textIncludes(page.locator('.research-method'),'统一判断框架');
+  await count(page.getByRole('heading',{name:'从问题、证据到研究结论',level:2,exact:true}),1);
+  await count(page.locator('.research-method > .fw-section:first-of-type > .fw-section-heading'),0);
   const methodSteps=page.getByRole('button',{name:'查看研究判断的四个步骤',exact:true});
   assert.equal(await methodSteps.getAttribute('aria-expanded'),'false');
   await methodSteps.focus();await page.keyboard.press('Enter');
@@ -2895,7 +2911,7 @@ for(const width of [320,1440]){
   await page.locator('.path-picker').scrollIntoViewIfNeeded();await screenshot(page,`platform-current-workbench-${width}`);
   await page.getByRole('combobox',{name:'研究路径',exact:true}).click();await page.getByRole('option',{name:'财报更新',exact:true}).click();
   await textIncludes(page.getByLabel('当前路径交付'),'本期基线');
-  await detail(page,current);await textIncludes(page.getByLabel('报告版本'),'V'+frameworkVersion);
+  await detail(page,current);await textIncludes(page.getByLabel('报告依据'),'本报告保留研究时点与当时依据');
   await textIncludes(page.getByLabel('估值适用性'),'估值：存在限制');
   await page.getByRole('button',{name:'核对估值依据',exact:true}).click();
   const boundary=page.getByLabel('估值与使用边界详情');await textIncludes(boundary,'关键参数仍待核实');

@@ -27,8 +27,9 @@
 .research-detail .rd-event-meta .rd-call-failed { background: #fff0e7; color: #97522f; }
 .research-detail .rd-event-meta .rd-call-pending { background: #edf3fa; color: #456586; }
 .research-detail .rd-event-meta .rd-call-unrecorded { background: #f6f2e9; color: #806932; }
-.research-detail .rd-event-data > button { width: 100%; justify-content: space-between; border-radius: 6px; padding: 7px 8px; margin-left: -8px; }
-.research-detail .rd-event-data > [data-slot=collapsible-content] { padding: 10px; background: #f7f9f7; border: 1px solid #e4ebe5; border-radius: 8px; font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.research-detail .rd-event-data > button { width: 100%; justify-content: space-between; border-radius: 6px; padding: 7px 8px; }
+.research-detail .rd-event-data { margin-block: 10px 6px; }
+.research-detail .rd-event-data > [data-slot=collapsible-content] { margin-top: 6px; padding: 10px; background: #f7f9f7; border: 1px solid #e4ebe5; border-radius: 8px; font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
 .research-detail .rd-event-data pre { background: #fff; border: 1px solid #e6ece7; font-size: 12px; line-height: 1.7; }
 .research-detail .rd-events > button { width: 100%; margin-top: 14px; min-height: 38px; }
 @media (min-width: 1280px) { .research-detail:not(.rd-reading) .rd-layout { grid-template-columns: minmax(0, 1fr) 300px; } }

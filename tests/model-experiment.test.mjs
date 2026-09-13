@@ -15,6 +15,8 @@ import {prepareResearchRetry} from '../server/research-retry.mjs';
 import {escalateAtCheckpoint} from '../server/model-escalation.mjs';
 import {publicJob} from '../server/job-stream.mjs';
 import {runAgent} from '../server/agent.mjs';
+import {createResearchPlan} from '../shared/research-framework.mjs';
+import {bindKnowledge} from '../server/knowledge.mjs';
 
 const env={...championTestEnv(),MODEL_ROUTING_MODE:'legacy',FEATURE_VISION_ROUTING:'false',LLM_MODEL:'deepseek-flash',LLM_BASE_URL:'https://legacy.invalid',LLM_ROUTER_MODEL:'deepseek-flash',LLM_VISION_MODEL:'deepseek-flash',LLM_VISION_BASE_URL:'https://legacy.invalid',LLM_VISION_API_KEY:'test-key',LLM_PRO_MODEL:'deepseek-flash',LLM_PRO_BASE_URL:'https://pro.invalid'};
 let originalEnv,originalFetch,registryRoot;
@@ -32,7 +34,7 @@ function makeJob(group='candidate',policy=championTestPolicy(env)){
  let job,selection;
  for(let i=0;i<1000;i++){job=jobInput('experiment-'+i);selection=assignModelExperiment(job,policy);if(selection.group===group)break;}
  assert.equal(selection.group,group);
- Object.assign(job,{status:'failed',input:{question:'synthetic',mode:job.mode,securities:[],sources:[{id:'S1',text:'actual saved evidence'}]},events:[],marketData:{asOf:'2025-01-01'},modelState:createChampionJobModelState(env,selection)});
+ Object.assign(job,{status:'failed',input:{question:'synthetic',mode:job.mode,securities:[],sources:[{id:'S1',text:'actual saved evidence'}]},events:[],marketData:{asOf:'2025-01-01'},modelState:createChampionJobModelState(env,selection),plan:createResearchPlan({mode:job.mode,question:'synthetic'})});bindKnowledge(job.plan);
  job.checkpoint={version:1,scope:resumeScope(job),phase:'research',pendingRound:true,draft:'',modelState:structuredClone(job.modelState),
   messages:[{role:'assistant',content:null,reasoning_content:'PRIVATE-CHAMPION',tool_calls:[{id:'done',type:'function',function:{name:'read_rules',arguments:'{}'}},{id:'pending',type:'function',function:{name:'read_rules',arguments:'{}'}}]},{role:'tool',tool_call_id:'done',content:'saved'}],
   toolRecords:[{toolCallId:'done',toolName:'read_rules',result:{text:'saved'}}],evidence:[{sourceId:'S1',text:'saved'}]};

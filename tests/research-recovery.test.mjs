@@ -46,12 +46,33 @@ test('recovery explains the actual continuation phase and retained progress with
 });
 
 test('known rule changes distinguish a fresh research run from a checkpoint continuation',()=>{
- for(const reason of ['framework_changed','rules_changed']){
+ for(const reason of ['framework_changed','execution_changed','rules_changed']){
   const state=researchRecovery({status:'failed',resume:{available:false,reason,fromVersion:'4.2',toVersion:'4.3'}});
-  assert.equal(state.restart.title,'按当前规则重新研究');assert.equal(state.continuation,null);
-  assert.match(state.text,/重新采集、分析和复核/);assert.match(state.notice,/规则/);
+  assert.equal(state.restart.title,reason==='rules_changed'?'按当前规则重新研究':'按当前流程重新研究');assert.equal(state.continuation,null);
+  assert.match(state.text,/重新采集、分析和复核/);assert.match(state.notice,reason==='rules_changed'?/规则/:/执行流程/);
  }
  assert.equal(researchRecovery({status:'failed',resume:{available:false}}).restart.title,'本次需要重新研究');
+});
+
+test('incompatible tasks require new research while saved delivery and compatible continuation keep their own actions',()=>{
+ for(const reason of ['rules_changed','execution_changed','framework_changed','model_configuration_changed']){
+  for(const status of ['failed','cancelled']){
+   const job={status,resume:{available:false,reason}},original=structuredClone(job);
+   const state=researchRecovery(job);
+   assert.equal(state.retryKind,null);assert.equal(state.requiresNewResearch,true);
+   assert.match(state.notice,/工作台，确认后/);assert.match(state.notice,/本记录/);
+   assert.deepEqual(job,original);
+   const saving=researchRecovery({...job,delivery:{status:'failed',recoverable:true,targetStatus:status}});
+   assert.equal(saving.retryKind,'save');assert.match(saving.notice,/不调用模型/);
+   assert.notEqual(saving.requiresNewResearch,true);
+   const compatible=researchRecovery({...job,resume:{available:true,phase:'review',reason}});
+   assert.equal(compatible.retryKind,'research');assert.match(compatible.notice,/从最近保存的复核进度继续/);
+  }
+ }
+ for(const resume of [undefined,{available:false},{available:false,reason:'no_checkpoint'}]){
+  assert.equal(researchRecovery({status:'failed',resume}).retryKind,'research');
+ }
+ assert.equal(researchRecovery({status:'failed',resume:{available:false,reason:'model_configuration_changed'}}).restart.title,'按当前配置重新研究');
 });
 
 test('supplement and subsequent review cannot be described as an unaudited first draft', () => {

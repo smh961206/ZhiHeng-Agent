@@ -103,14 +103,14 @@
     {
       "file": "server/agent.mjs",
       "sha256": "297e24f0123ea88b10e87c4e69371173717666636d9225cd74ac09f479ecff8b",
-      "currentSha256": "4d329f708723927d53702629afe0c5d4fea78a0545d03b599b8f6113e65a5cdd",
-      "currentReview": "M1.1 stage-context optimization changed path tool selection, rule projection and Writer context checks; Vision request limits, page selection, evidence guards and trust boundaries remain enforced."
+      "currentSha256": "d54feb82b7349fe1a935ea8b3c5e29e1d6061999b43513b0d64e4cd33e15dc8d",
+      "currentReview": "V5.3 ADR-017 adds execution compatibility validation before dispatch and new plan/route/result metadata, retaining exact legacy K-pinned payloads. Vision requests, limits, page selection, evidence guards and trust boundaries are unchanged; model migration and Vision inventory regression pass."
     },
     {
       "file": "server/index.mjs",
       "sha256": "a04904c1497155ef54cfd1b159a027f07c504fb1be0137f70c6a0c14c7b548cb",
-      "currentSha256": "cf13c77811d55fd9904ef8939d03cf337df3851133fadabc7608ec6a66a221dd",
-      "currentReview": "M1.0 budget-configuration cleanup changed cost exposure only; Vision request limits, evidence guards and trust boundaries remain enforced."
+      "currentSha256": "17f13d842aa424335eeabbe44552dd7221b5e4b158dbee31a957b1a304947afc",
+      "currentReview": "V5.3 K-Series cutover removed the framework-derived Knowledge version from the config response; Vision request limits, evidence guards and trust boundaries remain enforced."
     },
     {
       "file": "scripts/vision-input-diagnostics.mjs",

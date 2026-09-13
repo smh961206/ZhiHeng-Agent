@@ -1,6 +1,8 @@
 import {createServer} from 'vite';
 import assert from 'node:assert/strict';
-const vite=await createServer({server:{middlewareMode:true},appType:'custom'});
+// A single SSR pass does not need file watching or hot reload. Avoid scanning
+// archived artifacts and creating thousands of Windows filesystem watchers.
+const vite=await createServer({server:{middlewareMode:true,watch:null},appType:'custom'});
 try{
  const {renderRoute}=await vite.ssrLoadModule('/tests/routes.fixture.jsx');
  for(const [url,path,page,expected] of [['/','/','rules','把分散资料'],['/workbench','/workbench','work','你想研究什么'],['/history?q=abc&status=failed','/history','history','value="abc"'],['/research/test-id?tab=sources','/research/:jobId','work','正在加载研究记录'],['/missing','*','missing','页面不存在']]){

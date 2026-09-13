@@ -1,5 +1,3 @@
-import {frameworkVersion} from './research-framework.mjs';
-
 export const knowledgeBenefits=[
  {title:'研究按问题展开',description:'简明、标准与完整展开各有侧重，研究范围会随问题调整。'},
  {title:'同一任务，依据不变',description:'研究开始后保留当时的资料与依据，继续研究不会被后续更新改写。'},
@@ -13,15 +11,15 @@ export const depthGuidance={
 export function knowledgeAvailability(config){
  if(!config||config.connectionState==='loading')return {kind:'loading',title:'正在核对研究服务',description:'核对完成后显示当前可用规则。',blocking:true};
  if(config.connectionState==='error')return {kind:'offline',title:'暂未确认服务状态',description:'输入已保留，请重新检查连接后开始。',blocking:true};
- if(config.knowledgeVersion&&config.knowledgeVersion!==frameworkVersion)return {kind:'incompatible',title:'页面与服务版本不一致',description:'请刷新页面以使用匹配的研究设置；当前输入会保留。',blocking:true};
+ if(config.knowledgeVersion&&config.knowledgeStatus?.snapshot?.version&&config.knowledgeVersion!==config.knowledgeStatus.snapshot.version)return {kind:'incompatible',title:'Knowledge 版本状态不一致',description:'请刷新页面以使用已激活的研究规则；当前输入会保留。',blocking:true};
  if(config.configured===false)return {kind:'unconfigured',title:'研究服务尚未就绪',description:'研究服务尚未配置，请完成模型连接后再开始。',blocking:true};
  if(config.knowledgeStatus?.updatePending)return {kind:'pending',title:'继续使用已校验规则',description:'新的修订尚未通过校验，本次仍可使用最近一份有效规则。',blocking:false};
- return {kind:'ready',title:config.knowledgeVersion?'当前可用规则 · V'+config.knowledgeVersion:'研究服务已连接',description:'创建时确认并固定研究依据，后续更新不会改变本次任务。',blocking:false};
+ return {kind:'ready',title:config.knowledgeVersion?'当前可用规则 · '+config.knowledgeVersion:'研究服务已连接',description:'创建时确认并固定研究依据，后续更新不会改变本次任务。',blocking:false};
 }
 export function ruleUsage(job={}){
  const framework=job.result?.framework;
  const snapshot=framework?.snapshot??job.plan?.knowledgeSnapshot;
- const version=framework?.version??job.plan?.version??snapshot?.version;
+ const version=framework?.knowledgeVersion??framework?.snapshot?.version??job.plan?.knowledgeVersion??snapshot?.version??framework?.version??job.plan?.version;
  const usage=framework?.usage??job.knowledgeUsage;
  const recorded=Array.isArray(usage?.records)&&(!snapshot||usage.snapshotId===snapshot.id);
  const events=(job.events??[]).flatMap(event=>event.type==='knowledge_read'&&event.ruleRead?[event.ruleRead]:[]);

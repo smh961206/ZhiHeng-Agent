@@ -16,7 +16,7 @@ export async function registerPlatformV49Scenarios({test,makeJob,detail,openProc
   assert.equal(statusRequested,true);assert.equal(await trigger.isDisabled(),true);
   release();await page.getByRole('dialog',{name:'平台说明',exact:true}).waitFor();
   await page.keyboard.press('Escape');await trigger.evaluate(el=>el.focus());
-  await page.goto('/history?q=retain&status=failed');await page.getByRole('searchbox',{name:'搜索研究问题、模式或标的',exact:true}).waitFor();
+  await page.goto('/history?q=retain&status=failed');await page.getByRole('searchbox',{name:'搜索研究问题、路径或标的',exact:true}).waitFor();
   assert.equal(historyRequested,true);assert.equal(new URL(page.url()).searchParams.get('q'),'retain');
   assert.equal(requests('POST','/api/jobs').length,0);
  });
@@ -27,7 +27,7 @@ export async function registerPlatformV49Scenarios({test,makeJob,detail,openProc
   else {await page.getByRole('button',{name:'平台运行说明',exact:true}).click();await page.getByRole('alert').filter({hasText:'说明暂时无法加载'}).waitFor();}
   await page.unroute(pattern);
   await page.getByRole('button',{name:name==='history'?'刷新重试':'平台运行说明',exact:true}).click();
-  if(name==='history'){await page.getByRole('searchbox',{name:'搜索研究问题、模式或标的',exact:true}).waitFor();assert.equal(new URL(page.url()).searchParams.get('q'),'keep');}
+  if(name==='history'){await page.getByRole('searchbox',{name:'搜索研究问题、路径或标的',exact:true}).waitFor();assert.equal(new URL(page.url()).searchParams.get('q'),'keep');}
   else {await page.locator('.fw-hero').waitFor();await page.getByRole('button',{name:'平台运行说明',exact:true}).click();await page.getByRole('dialog',{name:'平台说明',exact:true}).waitFor();}
   assert.equal(requests('POST','/api/jobs').length,0);
  });
@@ -89,7 +89,7 @@ export async function registerPlatformV49Scenarios({test,makeJob,detail,openProc
   if(state!=='missing')job.visualAudit={delivery:state==='rejected'?'rejected':'delivered',included:[{id:'S1',pages:[1,3]}],omitted:[{id:'S2',reason:'合成：原页模糊，未完成复读'}]};
   test('platform-v49-saved-reading-'+state,{jobs:[job],viewport:{width:320,height:1000}},async({page,requests})=>{
    await detail(page,job);await textIncludes(page.getByLabel('报告依据',{exact:true}),'本报告保留研究时点与当时依据');
-   await openProcess(page);const reading=page.locator('.rd-document-reading');await reading.locator('summary').click();
+   await openProcess(page);const reading=page.locator('.rd-document-reading');await reading.locator('.rd-process-disclosure-trigger').click();
    await textIncludes(reading,'读取完成不代表数据已经核实');assert.equal(await reading.getByLabel('资料核对顺序').locator('li').count(),3);
    if(state==='missing')await textIncludes(reading,'本次未保存原页复读范围');
    else {await textIncludes(reading,'第 1、3 页');await textIncludes(reading,'合成：原页模糊，未完成复读');}

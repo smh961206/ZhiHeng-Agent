@@ -1,5 +1,7 @@
 # V5.3 — Detailed Engineering Implementation Plan
 
+Post-acceptance cutover: ADR-016 records the user's decision to make K1.0.0 the sole active Knowledge version. References below to legacy comparison describe the implementation-stage dry run; references to legacy runtime compatibility are superseded. V4.x remains read-only history and cannot start or resume current execution.
+
 ## 使用规则
 
 本文件是 V5.3 的主要工程实施规格。Codex 必须按子版本顺序执行；每个子版本完成后应保持仓库可运行并运行相关旧测试+新增测试。除非用户明确要求继续，否则可以在任一已验收子版本停止。
@@ -104,7 +106,7 @@
 
 ### V5.3.8 — K-Series & Pinning
 
-**目标/改造：** 启用 K1.0.0；新 Job 固定 knowledgeVersion/fingerprint；旧 Job 继续 legacy snapshot。
+**目标/改造：** 启用 K1.0.0；新 Job 固定 knowledgeVersion/fingerprint；旧 Job 保留历史记录但基于 K1.0.0 重新开始。
 
 **必须测试：** 版本解析；新/旧 checkpoint；运行中升级 K 版本。
 

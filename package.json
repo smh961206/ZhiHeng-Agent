@@ -11,9 +11,13 @@
     "build": "node scripts/backup-knowledge.mjs && vite build",
     "start": "node --env-file-if-exists=.env server/index.mjs",
     "knowledge:backup": "node scripts/backup-knowledge.mjs",
+    "knowledge:activate": "node scripts/activate-knowledge.mjs",
     "knowledge:index": "node scripts/index-knowledge.mjs",
+    "knowledge:seed-governance": "node scripts/seed-knowledge-governance.mjs && node scripts/index-knowledge.mjs",
+    "knowledge:lint": "node scripts/knowledge-lint.mjs",
+    "manifest:update": "node scripts/update-manifest.mjs",
     "test": "node --test tests/*.test.mjs",
-    "test:release": "node --test tests/harness.test.mjs tests/model-call-inventory.test.mjs tests/vision-call-inventory.test.mjs tests/benchmark-*.test.mjs tests/model-challenger.test.mjs tests/model-task-class.test.mjs tests/model-champion.test.mjs tests/model-experiment.test.mjs tests/model-champion-rollout.test.mjs tests/model-drift.test.mjs tests/model-pricing.test.mjs tests/model-usage.test.mjs tests/model-cost.test.mjs tests/model-cache.test.mjs tests/model-cost-policy.test.mjs tests/research-budget.test.mjs tests/cost-benchmark.test.mjs tests/model-context-baseline.test.mjs tests/model-flagship.test.mjs tests/flagship-*.test.mjs tests/judge-*.test.mjs tests/model-config.test.mjs tests/model-pipeline.test.mjs",
+    "test:release": "node --test tests/harness.test.mjs tests/model-call-inventory.test.mjs tests/vision-call-inventory.test.mjs tests/benchmark-*.test.mjs tests/model-challenger.test.mjs tests/model-task-class.test.mjs tests/model-champion.test.mjs tests/model-experiment.test.mjs tests/model-champion-rollout.test.mjs tests/model-drift.test.mjs tests/model-pricing.test.mjs tests/model-usage.test.mjs tests/model-cost.test.mjs tests/model-cache.test.mjs tests/model-cost-policy.test.mjs tests/research-budget.test.mjs tests/cost-benchmark.test.mjs tests/model-context-baseline.test.mjs tests/model-flagship.test.mjs tests/flagship-*.test.mjs tests/judge-*.test.mjs tests/model-config.test.mjs tests/model-pipeline.test.mjs tests/knowledge-engineering.test.mjs",
     "test:mongodb": "node --env-file-if-exists=.env --test tests/storage.integration.mjs tests/schema.integration.mjs tests/jobs-delete.integration.mjs tests/jobs-retry.integration.mjs tests/jobs-delivery.integration.mjs tests/jobs-create.integration.mjs tests/model-cost.integration.mjs tests/flagship-state.integration.mjs",
     "db:up": "docker compose up -d --wait",
     "db:stop": "docker compose stop mongodb",
@@ -28,7 +32,8 @@
     "benchmark:cost": "node scripts/cost-benchmark.mjs",
     "benchmark:context": "node scripts/model-context-baseline.mjs",
     "test:judge": "node --test tests/model-flagship.test.mjs tests/flagship-*.test.mjs tests/judge-*.test.mjs",
-    "benchmark:judge": "node scripts/judge-benchmark.mjs"
+    "benchmark:judge": "node scripts/judge-benchmark.mjs",
+    "benchmark:knowledge": "node scripts/knowledge-benchmark.mjs"
   },
   "dependencies": {
     "@napi-rs/canvas": "1.0.8",

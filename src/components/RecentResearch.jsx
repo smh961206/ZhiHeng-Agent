@@ -23,14 +23,18 @@ function readableDate(date, now) {
   return date.toLocaleDateString('zh-CN', {year: date.getFullYear() === now.getFullYear() ? undefined : 'numeric', month: '2-digit', day: '2-digit'});
 }
 
-/** onNavigate runs after an ordinary Link navigation, including the "全部" link. */
-export default function RecentResearch({jobs = [], currentId, onNavigate}) {
-  const recent = (Array.isArray(jobs) ? jobs : []).filter(job => job?.id != null).slice().sort((a, b) => {
+export function recentResearch(jobs = [], limit = 4) {
+  return (Array.isArray(jobs) ? jobs : []).filter(job => job?.id != null).slice().sort((a, b) => {
     const first = timestamp(a), second = timestamp(b);
     if (!Number.isFinite(first)) return Number.isFinite(second) ? 1 : 0;
     if (!Number.isFinite(second)) return -1;
     return second - first;
-  }).slice(0, 4);
+  }).slice(0, limit);
+}
+
+/** onNavigate runs after an ordinary Link navigation, including the "全部" link. */
+export default function RecentResearch({jobs = [], currentId, onNavigate}) {
+  const recent = recentResearch(jobs);
   const list=useRef(null);
   const recentIds=recent.map(job=>job.id).join(',');
   useEffect(()=>{

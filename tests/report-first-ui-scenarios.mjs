@@ -75,6 +75,7 @@ export function registerReportFirstScenarios({test,makeJob,detail,textIncludes,c
    const intro=await page.locator('.rd-report-intro').boundingBox();assert.ok(intro.y+intro.height<=body.y);
    await count(page.locator('.rd-decision'),1);await count(page.locator('.rd-aftercare'),0);
    await textIncludes(page.locator('.rd-decision-disclosure'),'判断依据与验证条件');
+   const disclosurePadding=await page.locator('.rd-decision-disclosure').evaluate(node=>{const style=getComputedStyle(node);return [parseFloat(style.paddingLeft),parseFloat(style.paddingRight)];});assert.ok(disclosurePadding.every(value=>value>=8),'判断依据入口应保留左右内边距');
    await textIncludes(page.locator('.rd-disclosure-count'),'1 项待核实');
    await textIncludes(page.locator('.rd-disclosure-state'),'查看');
    await count(page.getByRole('button',{name:'打开报告目录',exact:true}),width<1024?0:1);
@@ -90,7 +91,7 @@ export function registerReportFirstScenarios({test,makeJob,detail,textIncludes,c
    await page.keyboard.press('Escape');await drawer.waitFor({state:'hidden'});
    assert.equal(await trigger.evaluate(element=>element===document.activeElement),true);
    await page.getByRole('button',{name:/查看阅读提示/}).click();const warningDialog=page.getByRole('dialog',{name:'阅读提示',exact:true});await warningDialog.getByRole('tab',{name:/数据说明/}).click();await textIncludes(warningDialog,'部分资料尚待核对');await page.keyboard.press('Escape');await warningDialog.waitFor({state:'hidden'});
-   await trigger.click();await drawer.locator('.rd-document-reading>summary').click();
+   await trigger.click();await drawer.locator('.rd-document-reading > .rd-process-disclosure-trigger').click();
    await drawer.locator('.rd-document-footer').getByRole('button',{name:'查看证据来源'}).click();
    await drawer.waitFor({state:'hidden'});await page.waitForURL('**?tab=sources');
    await page.waitForFunction(()=>document.activeElement?.getAttribute('role')==='tab'&&document.activeElement.textContent.includes('证据来源'));

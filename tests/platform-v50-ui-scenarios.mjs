@@ -71,7 +71,7 @@ export function registerPlatformV50Scenarios({test,makeJob,detail,openProcess,te
    assert.doesNotMatch(await guide.innerText(),/打开“研究过程”，按调用编号/);
    await detail(page,job);await openProcess(page);
    const process=page.getByRole('dialog',{name:'研究过程',exact:true});
-   await process.locator('.rd-advanced-records > summary').click();await process.locator('.rd-model-assignment summary').click();await textIncludes(process,'saved-analysis');
+   const records=process.locator('.rd-service-records');await records.locator(':scope > .rd-process-disclosure-trigger').click();await textIncludes(records,'saved-analysis');assert.equal(await records.locator('details').count(),0);
    await page.keyboard.press('Escape');
    await page.getByRole('region',{name:'本次查证记录',exact:true}).getByRole('button',{name:'查看实际输入与返回',exact:true}).click();
    const trace=page.getByRole('complementary',{name:'研究执行轨迹'});
@@ -103,7 +103,7 @@ export function registerPlatformV50Scenarios({test,makeJob,detail,openProcess,te
   const job=makeJob(5001+['historical','missing-model','long-model'].indexOf(state));job.plan.version='4.3';
   job.modelRouting={analysisModel:state==='historical'?'saved-analysis':state==='long-model'?'historical-analysis-'.repeat(12):null,visionModel:'saved-vision'};
   test('platform-v50-saved-config-'+state,{jobs:[job],viewport:{width:320,height:1000}},async({page,requests})=>{
-   await detail(page,job);await openProcess(page);await page.locator('.rd-advanced-records > summary').click();const models=page.locator('.rd-model-assignment');await models.locator('summary').click();
+   await detail(page,job);await openProcess(page);const records=page.locator('.rd-service-records');await records.locator(':scope > .rd-process-disclosure-trigger').click();const models=records.locator('.rd-model-assignment');
    assert.deepEqual(await models.locator('.rd-model-records dd').allTextContents(),[job.modelRouting.analysisModel||'未记录','saved-vision']);
    await textIncludes(models,'历史任务只显示当时保存的内容');
    await textIncludes(models,'有记录不表示实际执行');

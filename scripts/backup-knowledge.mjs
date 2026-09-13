@@ -2,6 +2,7 @@ import {readFileSync,writeFileSync,mkdirSync,mkdtempSync,renameSync,rmSync,exist
 import {createHash} from 'node:crypto';
 import {resolve,join,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {createSnapshotManager} from '../server/knowledge-snapshots.mjs';
 
 const projectRoot=fileURLToPath(new URL('../',import.meta.url));
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -15,10 +16,11 @@ function sourceNames(sourceDir){
     return module.path.slice('knowledge/'.length);
   });
   if(new Set(modules).size!==modules.length)throw new Error('模块目录包含重复文件');
-  if(catalog.schemaVersion===2&&catalog.entry!=='knowledge/ENTRY.md')throw new Error('非法知识入口路径');
-  return [...(catalog.schemaVersion===2?['ENTRY.md']:names),'modules.json',...modules];
+  if([2,3].includes(catalog.schemaVersion)&&catalog.entry!=='knowledge/ENTRY.md')throw new Error('非法知识入口路径');
+  return [...([2,3].includes(catalog.schemaVersion)?['ENTRY.md']:names),'modules.json',...modules];
 }
 const versionOf=bytes=>bytes.toString('utf8').match(/^\s+version:\s*"([^"]+)"/m)?.[1]??'unknown';
+const knowledgeVersionOf=bytes=>bytes.toString('utf8').match(/^\s+knowledge_version:\s*"([^"]+)"/m)?.[1]??'unknown';
 const baseVersion=version=>version.replace(/-core$/,'');
 
 export function backupKnowledge(root=projectRoot){
@@ -33,18 +35,29 @@ export function backupKnowledge(root=projectRoot){
   if(JSON.stringify(sourceNames(sourceDir))!==JSON.stringify(selectedNames))throw new Error('模块目录正在更新，稍后重试备份');
   for(const file of originals)if(!readFileSync(join(sourceDir,file.name)).equals(file.bytes))throw new Error('知识文件正在更新，稍后重试备份');
   const id=hash(JSON.stringify(originals.map(({name,sha256})=>({name,sha256}))));
-  const entryNames=selectedNames.includes('ENTRY.md')?['ENTRY.md']:names;
-  const versions=originals.filter(file=>entryNames.includes(file.name)).map(file=>baseVersion(file.version));
-  const version=versions.every(v=>v===versions[0])?versions[0]:'mixed';
   const catalogFile=originals.find(file=>file.name==='modules.json');
+  const entryNames=selectedNames.includes('ENTRY.md')?['ENTRY.md']:names;
+  const catalog=catalogFile?JSON.parse(catalogFile.bytes.toString('utf8')):null;
+  const versions=originals.filter(file=>entryNames.includes(file.name)).map(file=>baseVersion(file.version));
+  const version=catalog?.schemaVersion===3?catalog.knowledgeVersion:(versions.every(v=>v===versions[0])?versions[0]:'mixed');
+  if(catalog?.schemaVersion===3){
+    if(!/^K\d+\.\d+\.\d+$/.test(version??'')||Object.hasOwn(catalog,'version'))throw new Error('Knowledge 目录必须只使用 K-Series 版本');
+    const entry=originals.find(file=>file.name==='ENTRY.md');
+    if(!entry||knowledgeVersionOf(entry.bytes)!==version)throw new Error('Knowledge 入口与目录版本不一致');
+    for(const file of originals)file.version=version;
+  }
   if(catalogFile){
-    const catalog=JSON.parse(catalogFile.bytes.toString('utf8'));
-    if(version!=='mixed'&&catalog.version!==version)throw new Error('模块目录与执行入口版本不一致');
+    if(catalog.schemaVersion!==3&&version!=='mixed'&&catalog.version!==version)throw new Error('模块目录与执行入口版本不一致');
     for(const module of catalog.modules){
       const file=originals.find(file=>file.name===module.path.slice('knowledge/'.length));
       if(file.sha256!==module.sha256)throw new Error(`${module.path} 与目录校验不一致，请先更新模块索引`);
     }
-    for(const file of originals)if(!entryNames.includes(file.name))file.version=catalog.version;
+    for(const file of originals)if(!entryNames.includes(file.name))file.version=version;
+  }
+  const pointerPath=join(sourceDir,'current.json');
+  if(catalog?.schemaVersion===3&&existsSync(pointerPath)){
+    const pointer=JSON.parse(readFileSync(pointerPath,'utf8'));
+    if(pointer.knowledgeVersion===version&&pointer.snapshotId!==id)throw new Error(`${version} 已激活且不可原地修改；请发布新的 K-Series 版本`);
   }
   const safeVersion=version.replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,48)||'unknown';
   const parent=join(sourceDir,'versions','auto',safeVersion),directory=join(parent,id);
@@ -91,6 +104,25 @@ export function backupKnowledge(root=projectRoot){
     // This path is created exclusively by mkdtempSync under the archive parent.
     if(existsSync(temporary))rmSync(temporary,{recursive:true});
   }
+}
+
+const kParts=value=>String(value).match(/^K(\d+)\.(\d+)\.(\d+)$/)?.slice(1).map(Number);
+const compareK=(left,right)=>{const a=kParts(left),b=kParts(right);if(!a||!b)throw new Error('Knowledge 版本必须使用 Kx.y.z');for(let i=0;i<3;i++)if(a[i]!==b[i])return a[i]-b[i];return 0;};
+
+export function activateKnowledge(root=projectRoot,{allowRollback=false}={}){
+  const snapshot=backupKnowledge(root),sourceDir=join(root,'knowledge'),pointerPath=join(sourceDir,'current.json');
+  const manifest=JSON.parse(readFileSync(join(snapshot.directory,'manifest.json'),'utf8'));
+  createSnapshotManager({root}).open({version:manifest.version,id:manifest.id});
+  const next={schemaVersion:1,knowledgeVersion:manifest.version,fingerprint:manifest.id,snapshotId:manifest.id,status:'active'};
+  if(existsSync(pointerPath)){
+    const current=JSON.parse(readFileSync(pointerPath,'utf8'));
+    if(current.knowledgeVersion===next.knowledgeVersion&&current.snapshotId!==next.snapshotId)throw new Error(`${next.knowledgeVersion} 已对应另一个正式指纹`);
+    if(!allowRollback&&compareK(next.knowledgeVersion,current.knowledgeVersion)<0)throw new Error('Knowledge 版本倒退必须使用显式 rollback 流程');
+    if(JSON.stringify(current)===JSON.stringify(next))return {...snapshot,activated:false,pointer:current};
+  }
+  const temporary=join(sourceDir,`.current-${process.pid}-${Date.now()}.json`);
+  try{writeFileSync(temporary,JSON.stringify(next,null,2)+'\n',{flag:'wx'});renameSync(temporary,pointerPath);}finally{if(existsSync(temporary))rmSync(temporary);}
+  return {...snapshot,activated:true,pointer:next};
 }
 
 export function watchKnowledge(root=projectRoot,{delay=750,onBackup=()=>{},onError=()=>{}}={}){

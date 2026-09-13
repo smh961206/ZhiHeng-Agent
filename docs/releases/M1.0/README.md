@@ -1,6 +1,6 @@
 # M1.0 — 按研究环节配置模型
 
-M1.0 是 V5.2 之后的独立模型轨道更新，不改变核心版本 `docs/releases/CURRENT`，也不占用既定的 V5.3 Knowledge Engineering 版本。
+M1.0 记录 V5.2 之后按研究环节配置模型的工程里程碑。当时使用独立编号以保留既定的 V5.3 Knowledge Engineering 安排。当前模型能力随平台发布，M1.x 不作为第三条发布版本线；实际兼容性仍由保存的模型配置、modelState 和上下文编号保证，见 [ADR-017](../../adr/ADR-017-platform-execution-compatibility.md)。
 
 ## 目标
 

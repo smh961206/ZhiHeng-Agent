@@ -12,7 +12,7 @@ export function registerPlatformV48Scenarios({test,makeJob,detail,detailActions,
    const trigger=page.getByRole('button',{name:'平台运行说明',exact:true});
    await trigger.click();
    const panel=page.getByRole('dialog',{name:'平台说明',exact:true});
-   await textIncludes(panel,'研究服务已就绪');await textIncludes(panel,'可以开始新的研究');
+   await textIncludes(panel,'研究服务已就绪');await textIncludes(panel,'创建时确认并固定研究依据');
    await textIncludes(panel,'按问题研究');
    await textIncludes(panel,'先核对依据');
    assert.doesNotMatch(await panel.innerText(),/自动升级|已连接|已通过质量验收|Champion|Challenger|A\/B/);
@@ -20,23 +20,24 @@ export function registerPlatformV48Scenarios({test,makeJob,detail,detailActions,
    await page.keyboard.press('Escape');await panel.waitFor({state:'hidden'});
    assert.equal(await trigger.evaluate(el=>el===document.activeElement),true);
    await page.route('**/api/config',route=>route.fulfill({status:503,json:{error:'fixture unavailable'}}));
-   await trigger.click();await page.getByRole('button',{name:'重新检查服务',exact:true}).click();
-   await textIncludes(panel,'状态待确认');assert.doesNotMatch(await panel.locator('.platform-connection').innerText(),/研究服务已就绪/);
-   await page.unroute('**/api/config');await page.getByRole('button',{name:'重新检查服务',exact:true}).click();await textIncludes(panel,'研究服务已就绪');
+   await trigger.click();await page.getByRole('button',{name:'重新检查服务',exact:true}).evaluate(node=>node.click());
+   await textIncludes(panel,'暂未确认服务状态');assert.doesNotMatch(await panel.locator('.platform-connection').innerText(),/研究服务已就绪/);
+   await page.unroute('**/api/config');await page.getByRole('button',{name:'重新检查服务',exact:true}).evaluate(node=>node.click());await textIncludes(panel,'研究服务已就绪');
    assert.equal(requests('POST','/api/jobs').length,0);
   });
   const job=makeJob(5480+width);job.modelRouting={analysisModel:'saved-analysis-only',visionModel:'saved-vision-only'};
   test('platform-v48-saved-model-'+width,{jobs:[job],viewport:{width,height:1000}},async({page})=>{
    await detail(page,job);await openProcess(page);
-   const advanced=page.locator('.rd-advanced-records');await advanced.locator(':scope > summary').click();const models=advanced.locator('.rd-model-assignment');await models.locator('summary').click();
+   const records=page.locator('.rd-service-records');await records.locator(':scope > .rd-process-disclosure-trigger').click();const models=records.locator('.rd-model-assignment');
    await textIncludes(models,'saved-analysis-only');await textIncludes(models,'saved-vision-only');
    await textIncludes(models,'有记录不表示实际执行');assert.doesNotMatch(await models.innerText(),/交给 Pro|Pro 结合/);
+   assert.equal(await records.getAttribute('data-state'),'open');assert.equal(await records.locator('details').count(),0,'Service records should keep only the first-level disclosure');
    await noOverflow(page,'saved models '+width);await screenshot(page,'platform-v48-models-'+width);
   });
  }
  test('platform-v48-unconfigured',{configOverrides:{configured:false}},async({page,requests})=>{
   await page.goto('/workbench');await page.getByRole('button',{name:'平台运行说明',exact:true}).click();
-  await textIncludes(page.locator('.platform-connection'),'研究服务待配置');assert.equal(requests('POST','/api/jobs').length,0);
+  await textIncludes(page.locator('.platform-connection'),'研究服务尚未就绪');assert.equal(requests('POST','/api/jobs').length,0);
  });
  test('platform-v48-pause-rotation',{reducedMotion:'no-preference'},async({page})=>{
   await page.goto('/');

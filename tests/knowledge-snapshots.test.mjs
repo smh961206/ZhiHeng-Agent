@@ -5,8 +5,9 @@ import {tmpdir} from 'node:os';
 import {join,dirname} from 'node:path';
 import {createHash} from 'node:crypto';
 import {createSnapshotManager} from '../server/knowledge-snapshots.mjs';
+import {activateKnowledge} from '../scripts/backup-knowledge.mjs';
 import {createRuleStore,createJobRuleSession,savedKnowledgeMatches,moduleCatalog} from '../server/knowledge.mjs';
-import {createResearchPlan,frameworkVersion} from '../shared/research-framework.mjs';
+import {createResearchPlan} from '../shared/research-framework.mjs';
 import {indexRules} from '../shared/knowledge-index.mjs';
 import {bodyFilter} from '../shared/knowledge-search.mjs';
 import {runAgent} from '../server/agent.mjs';
@@ -19,7 +20,12 @@ function fixture(t){
  for(const path of ['knowledge/ENTRY.md','knowledge/modules.json',...moduleCatalog.modules.map(m=>m.path)]){
   const target=join(root,path);mkdirSync(dirname(target),{recursive:true});copyFileSync(new URL('../'+path,import.meta.url),target);
  }
+ activateKnowledge(root);
  return {root,manager:createSnapshotManager({root})};
+}
+function setKnowledgeVersion(root,version){
+ const file=join(root,'knowledge/modules.json'),catalog=JSON.parse(readFileSync(file,'utf8'));catalog.knowledgeVersion=version;writeFileSync(file,JSON.stringify(catalog,null,2)+'\n');
+ const entry=join(root,'knowledge/ENTRY.md');writeFileSync(entry,readFileSync(entry,'utf8').replace(/knowledge_version: "K\d+\.\d+\.\d+"/,`knowledge_version: "${version}"`));
 }
 function revise(root,path,addition,{index=true}={}){
  const target=join(root,path),text=readFileSync(target,'utf8')+addition;writeFileSync(target,text);
@@ -31,13 +37,15 @@ function revise(root,path,addition,{index=true}={}){
  }
 }
 
-test('new jobs adopt validated revisions; queued, running and restored sessions keep their complete original snapshot',t=>{
+test('new jobs adopt only an explicitly activated K release; pinned sessions keep their complete original snapshot',t=>{
  const {root,manager}=fixture(t),job={plan:createResearchPlan({mode:'A'})};
  const old=createJobRuleSession(job,{manager});
  old.planTaskRules(job.plan);
  const audit='knowledge/modules/rules/16-audit.md',baseline=readFileSync(join(root,audit),'utf8');
  assert.ok(!old.loadedModules().includes('16-audit'));
  revise(root,audit,'\n只用于测试的新审计修订\n');
+ assert.equal(manager.current().ref.id,old.snapshot.id,'Editable files do not change the active version');
+ setKnowledgeVersion(root,'K1.0.1');activateKnowledge(root);
  const nextJob={plan:createResearchPlan({mode:'A'})},next=createJobRuleSession(nextJob,{manager});
  assert.notEqual(next.snapshot.id,old.snapshot.id);
  assert.equal(old.getAuditRules(),baseline,'An audit file first opened after the update still comes from the old generation');
@@ -52,19 +60,20 @@ test('new jobs adopt validated revisions; queued, running and restored sessions 
 test('partial writes, malformed indexes and incompatible versions never replace the last valid snapshot',t=>{
  const {root,manager}=fixture(t),first=manager.current(),path='knowledge/modules/rules/19-glossary.md';
  revise(root,path,'\n未登记的新正文\n',{index:false});
- assert.equal(manager.current().ref.id,first.ref.id);assert.equal(manager.status().updatePending,true);
- // Even an unselected module must validate before a new generation can be used.
- assert.equal(createSnapshotManager({root}).current().ref.id,first.ref.id,'Restart falls back to a complete validated archive');
+ assert.throws(()=>activateKnowledge(root),/目录校验不一致/);assert.equal(manager.current().ref.id,first.ref.id);
+ assert.equal(createSnapshotManager({root}).current().ref.id,first.ref.id,'Restart uses the explicit active pointer');
  revise(root,path,'\n目录完成\n');
- const second=manager.current();assert.notEqual(second.ref.id,first.ref.id);assert.equal(manager.status().updatePending,false);
+ assert.throws(()=>activateKnowledge(root),/不可原地修改/);
+ setKnowledgeVersion(root,'K1.0.1');activateKnowledge(root);const second=manager.current();assert.notEqual(second.ref.id,first.ref.id);assert.equal(manager.status().updatePending,false);
  const file=join(root,'knowledge/modules.json'),valid=readFileSync(file,'utf8'),catalog=JSON.parse(valid);
  catalog.modules[0].sections[0].line=999;writeFileSync(file,JSON.stringify(catalog));
- assert.equal(manager.current().ref.id,second.ref.id);assert.match(manager.status().error,/章节索引不一致/);
- writeFileSync(file,'{"unfinished":');assert.equal(manager.current().ref.id,second.ref.id);
- writeFileSync(file,valid.replace('"version": "'+frameworkVersion+'"','"version": "99.9"'));
- assert.equal(manager.current().ref.id,second.ref.id);
- assert.throws(()=>manager.open({version:frameworkVersion,id:'../outside'}),/标识无效/);
- const pinned=join(root,'knowledge/versions/auto',frameworkVersion,first.ref.id,'modules/rules/16-audit.md');
+ assert.throws(()=>activateKnowledge(root),/不可原地修改/);assert.equal(manager.current().ref.id,second.ref.id);
+ writeFileSync(file,'{"unfinished":');assert.throws(()=>activateKnowledge(root));assert.equal(manager.current().ref.id,second.ref.id);
+ writeFileSync(file,valid.replace('"knowledgeVersion": "K1.0.1"','"knowledgeVersion": "4.7"'));
+ assert.throws(()=>activateKnowledge(root),/K-Series/);assert.equal(manager.current().ref.id,second.ref.id);
+ assert.throws(()=>manager.open({version:'4.7',id:'a'.repeat(64)}),/V4.x/);
+ assert.throws(()=>manager.open({version:'K1.0.1',id:'../outside'}),/标识无效/);
+ const pinned=join(root,'knowledge/versions/auto','K1.0.0',first.ref.id,'modules/rules/16-audit.md');
  writeFileSync(pinned,'corrupt');assert.throws(()=>manager.open(first.ref),/校验失败/);
 });
 
@@ -101,7 +110,7 @@ test('agent keeps one generation through live update, tool lookup, checkpoints a
   if(calls===1){
    revise(root,'knowledge/modules/rules/16-audit.md','\n只属于新任务的审计标记\n');
    revise(root,'knowledge/modules/rules/07-valuation.md','\n只属于新任务的估值标记\n');
-   assert.notEqual(manager.current().ref.id,job.plan.knowledgeSnapshot.id);
+   assert.equal(manager.current().ref.id,job.plan.knowledgeSnapshot.id);
    return Response.json({choices:[{message:{role:'assistant',tool_calls:[{id:'rules',type:'function',function:{name:'read_rules',arguments:JSON.stringify({query:'7.3 DCF 计算协议'})}}]}}]});
   }
   if(calls===2){

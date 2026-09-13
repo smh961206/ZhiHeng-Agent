@@ -1,5 +1,11 @@
 # Current Implementation Map
 
+## V5.3 platform frontend experience
+
+Full offline regression follow-up: the existing detail header uses tighter vertical spacing to preserve first-viewport report visibility with shared platform headings. Test helpers follow current guide/search semantics and wait for popover/focus lifecycle state. No API, persistence, model or recovery boundary changes. See the [full regression report](../releases/V5.3/full-regression-report.md).
+
+The existing React owners now align daily navigation, page hierarchy and recovery/help copy across home, workbench, history, detail and handbook. Home reuses `RecentResearch` ordering and saved delivery labels for its latest-record link. `ResearchUsageGuide` searches its existing local content and retains normal disclosure state when search clears. `ResearchHistory` removes individual URL filters without discarding other filters or sort order and restores keyboard focus. `ResearchWorkbench` collapses optional execution explanations and opens creation help in a separate tab to preserve editing. `platform.css` owns shared heading and unavailable-page presentation; domain styles retain report layout and status meanings. These changes add no API, persistence, model dispatch or release line. See the [platform experience report](../releases/V5.3/platform-experience-report.md).
+
 ## M1.1 token-efficient stage contexts
 
 New schema-v2/modelState-v4 research tasks pin optional `contextVersion=1`, use path-scoped tool definitions and load detailed shareholder rules only when the selected path or question requires them. Dependent valuation tools are exposed only after their prerequisite calculation receipts exist. Researcher history is compacted at safe completed-tool boundaries using Quick, Standard and Deep profiles; pending tool calls are never compacted. Writer receives a separately rebuilt evidence/calculation packet with an additive integrity receipt and must remove or mark unsupported material as missing. Historical modelState v1–v3 tasks and pre-M1.1 v4 tasks without this pin retain their previous tool set, system rules, request wire and recovery behavior.
@@ -100,13 +106,13 @@ V4.8.8–.11 review: Agent attaches refreshed Vision material after restoring/re
 
 Owners: `scripts/model-comparison.mjs`, `scripts/model-comparison-worker.mjs`; tests: `tests/model-comparison.test.mjs`, `tests/fixtures/model-comparison-offline.json`. The CLI runs the existing Agent/Gateway/review path twice on identical frozen text material, with existing initial policy recommendations and private compatible checkpoints. It adds no provider endpoint, app API or production policy activation. Each HTTP attempt reserves an operator-estimated amount before dispatch, under a durable request-count limit; unknown actual cost remains null. Isolated processes use local artifacts, no MongoDB, no fresh acquisition/web sources. Missing original pages stay missing. Offline results cannot export acceptance; real results require a separate artifact-bound human review and the unchanged >=50-case rollout validator. Visual assets, dynamic collection and automatic semantic grading are outside this executor's scope. See [runbook](../releases/V4.8/model-comparison-runbook.md).
 
-Runtime: React 19 / Vite 6, Node >=22.13, MongoDB / GridFS. `shared/research-framework.mjs` declares framework 4.7 and contract version 7. The Harness CURRENT pointer is separate from runtime/Knowledge versions. V4.8.4 completes Gateway migration for router and Vision as well as the synthetic diagnostic.
+Runtime: React 19 / Vite 6, Node >=22.13, MongoDB / GridFS. `shared/research-framework.mjs` declares internal execution compatibility 1 and contract 7; execution and model capabilities ship with the platform. M1.x denotes engineering milestones, not an independent runtime release. `research-resume.mjs` validates K identity before execution compatibility and preserves exact pre-rename scope for compatible K-pinned framework-4.7 tasks. `knowledge/current.json` activates K1.0.0 and `server/knowledge-snapshots.mjs` accepts only K-Series snapshots. Platform V and Knowledge K are the two active release lines. See [ADR-017](../adr/ADR-017-platform-execution-compatibility.md). V4.8.4 completes Gateway migration for router and Vision as well as the synthetic diagnostic.
 
 V4.8.1 added Catalog; V4.8.2 added Gateway; V4.8.3 integrated text research; V4.8.4 integrates the remaining callers. H0 and V4.8.0 inventories remain historical baselines, not current endpoint ownership.
 
 ## Status and evidence
 
-CURRENT describes an implemented behavior; PARTIAL describes an existing predecessor of an incomplete target contract; FUTURE is a design reservation. DEPRECATED requires an approved migration: H0 newly deprecates nothing. Archived Knowledge and legacy readers remain compatibility assets.
+CURRENT describes an implemented behavior; PARTIAL describes an existing predecessor of an incomplete target contract; FUTURE is a design reservation. DEPRECATED requires an approved migration. Archived V4.x Knowledge remains a byte-identical audit asset; the active runtime has no V4.x reader or resume path.
 
 The complete tracked code/test/active-Knowledge file inventory, hashes and lexical import/export index is [repository-inventory.json](../releases/H0/repository-inventory.json). It includes remaining frontend, shared, provider, worker and diagnostic files beyond the major owners below. This is an inventory, not a proof of every semantic property. [Audit findings](../releases/H0/audit-findings.md) records gaps and overlaps.
 
@@ -190,7 +196,7 @@ FUTURE: V5.7 Research State/IR builds on jobs, context and public receipts; it m
 
 Owners: `server/job-checkpoints.mjs`, `server/research-resume.mjs`, `server/research-retry.mjs`, `server/calculation-recovery.mjs`, `shared/research-recovery.mjs`, `shared/calculation-progress.mjs`.
 
-Private version-1 checkpoints retain messages, evidence, tool results, review and web/followup state. Compatible resume reuses saved sources/marketData and runs only pending calls. Legacy recovery may reconstruct context from saved tool receipts. Invalid checkpoints or incompatible framework/Knowledge can reject resume: retry then reacquires data under the same job ID and discloses a restart reason. Thus not every retry preserves cutoff, and not every historical job is resumable. Preserving initially collected market data does not establish a universal publishedAt filter for later followup.
+Private version-1 checkpoints retain messages, evidence, tool results, review and web/followup state. Compatible resume reuses saved sources/marketData and runs only pending calls. Legacy recovery may reconstruct context from saved tool receipts. Current retry rejects unsafe restarts of model-pinned tasks. When public resume metadata reports Knowledge, execution or model-configuration incompatibility, the detail page offers input reuse through the workbench; a new job starts only after submission and the old record remains unchanged. The existing no-checkpoint legacy retry branch remains separate. Preserving initially collected market data does not establish a universal publishedAt filter for later followup.
 
 Tests: `tests/research-resume.test.mjs`, `tests/research-retry.test.mjs`, `tests/research-recovery.test.mjs`, `tests/review-recovery.test.mjs`, `tests/input-checkpoints.test.mjs`, `tests/research-resume.integration.mjs`, `tests/jobs-retry.integration.mjs`.
 
@@ -198,15 +204,17 @@ FUTURE: V5.11 complete replay/version pinning; V4.8 model-state compatibility. H
 
 ## Knowledge, excerpts and snapshots — CURRENT
 
-Owners: `server/knowledge.mjs`, `server/knowledge-excerpt.mjs`, `server/knowledge-snapshots.mjs`, `shared/knowledge-index.mjs`, `shared/knowledge-search.mjs`, `shared/knowledge-loading.mjs`, `shared/research-knowledge.mjs`.
+Owners: `server/knowledge.mjs`, `server/knowledge-excerpt.mjs`, `server/knowledge-snapshots.mjs`, `shared/knowledge-engineering.mjs`, `shared/knowledge-index.mjs`, `shared/knowledge-search.mjs`, `shared/knowledge-loading.mjs`, `shared/research-knowledge.mjs`.
 
-Active source: `knowledge/ENTRY.md`, `knowledge/modules.json` (schema 2), `knowledge/modules/rules/`. `scripts/backup-knowledge.mjs` and `scripts/index-knowledge.mjs` preserve/check it. Historical publishing/splitting/deduplication scripts are maintenance history; `knowledge/versions/` remains preserved. Do not recreate CORE/FULL dual runtime content.
+Active source: `knowledge/ENTRY.md`, `knowledge/modules.json` (schema 3, K1.0.0), `knowledge/modules/rules/`. The catalog additively owns 26 high-impact Rule IDs, ordered constitution, ontology, regression IDs, enforcement metadata, temporal validity and impact maps. `scripts/backup-knowledge.mjs`, `scripts/index-knowledge.mjs`, `scripts/knowledge-lint.mjs` and `scripts/seed-knowledge-governance.mjs` preserve/check it. Historical publishing/splitting/deduplication scripts are maintenance history; `knowledge/versions/` remains preserved. Do not recreate CORE/FULL dual runtime content.
 
-New jobs pin complete validated snapshots; valid same-version revisions apply to new jobs while queued/running/restored sessions keep original snapshots. Invalid updates retain the last valid snapshot and disclose pending validation. Delivered rule sections have hash/line/truncation provenance. Saved excerpt API checks receipts and rejects arbitrary paths. Startup compatibility exports coexist with job-pinned sessions.
+New jobs pin complete validated snapshots plus K version/fingerprint; valid revisions apply to new jobs while queued/running/restored sessions keep original snapshots. Invalid updates or critical lint errors retain the last valid snapshot and disclose pending validation. Delivered rule sections have hash/line/truncation provenance. Saved excerpt API checks receipts and rejects arbitrary paths. Resolver/compiler support deterministic minimal packs and dry-run legacy comparison without changing the production prompt. KCP/debt, runtime basis validation and impact/decay analysis are deterministic domain functions.
 
-Tests: `tests/knowledge-modules.test.mjs`, `tests/knowledge-snapshots.test.mjs`, `tests/knowledge-backup.test.mjs`, `tests/research-knowledge.test.mjs`, `tests/knowledge-api.integration.mjs`.
+Tests: `tests/knowledge-engineering.test.mjs`, `tests/knowledge-modules.test.mjs`, `tests/knowledge-snapshots.test.mjs`, `tests/knowledge-backup.test.mjs`, `tests/research-knowledge.test.mjs`, `tests/knowledge-api.integration.mjs`. Release benchmark: `scripts/knowledge-benchmark.mjs`.
 
-PARTIAL: indexed module/section predecessors of KnowledgeRule. FUTURE V5.3: stable Rule IDs, ontology, K-Series governance and broader regression. Existing indexing, lazy loading and snapshot pinning must not be described as absent.
+CURRENT V5.3: structured Rule IDs, ontology, K-Series governance, lint/regression, proposal gate, runtime promotion metadata and impact/decay are implemented over the existing indexed modules and immutable snapshots. Physical layer directories, persistence for proposal/debt workflows, broad runtime promotion and automatic learning remain future work.
+
+V5.3 frontend alignment: `ResearchKnowledge` displays the saved Knowledge version and distinguishes historical or unrecorded identity. Historical V4.x reports and read receipts remain visible; unsupported excerpt reads have no action. `ResearchMethod` explains platform/Knowledge releases and continuation versus new research versus save retry. Existing components, drawer layout and design tokens remain the owners. See the [frontend version sync report](../releases/V5.3/frontend-version-sync-report.md).
 
 ## Evidence search, page read, followup and web — CURRENT
 

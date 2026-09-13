@@ -78,7 +78,7 @@
 .research-detail .rd-decision-digest .rd-decision-summary{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:15px;line-height:1.85;font-weight:400;color:#405747;margin:10px 0 8px}
 .research-detail .rd-decision-digest .rd-decision-actions{gap:4px 12px}
 .research-detail .rd-decision-digest .rd-decision-actions button{font-size:13px;font-weight:400;min-height:34px;padding-block:4px}
-.research-detail .rd-decision-digest .rd-decision-actions .rd-decision-disclosure{padding:4px 0}
+.research-detail .rd-decision-digest .rd-decision-actions .rd-decision-disclosure{padding:4px 10px}
 .research-detail .rd-decision-digest .rd-disclosure-count,.research-detail .rd-decision-digest .rd-disclosure-state{font-size:12px}
 .research-detail .rd-decision-digest .rd-decision-disclosure[data-state=open] .rd-disclosure-state svg{transform:none}
 .research-detail .rd-report-intro:has(.rd-decision-digest){margin-bottom:16px;padding-bottom:0;border-bottom:0}

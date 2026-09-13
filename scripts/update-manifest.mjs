@@ -1,0 +1,13 @@
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=fileURLToPath(new URL('../',import.meta.url)),manifestPath=resolve(root,'MANIFEST.json');
+const baseline=JSON.parse(execFileSync('git',['show','HEAD:MANIFEST.json'],{cwd:root,encoding:'utf8'}));
+const untracked=execFileSync('git',['ls-files','--others','--exclude-standard','-z'],{cwd:root,encoding:'utf8'}).split('\0').filter(Boolean);
+const stagedAdded=execFileSync('git',['diff','--cached','--name-only','--diff-filter=A','-z'],{cwd:root,encoding:'utf8'}).split('\0').filter(Boolean);
+const paths=[...new Set([...baseline.files.map(file=>file.path),...stagedAdded,...untracked])].filter(path=>path!=='MANIFEST.json').sort();
+const files=paths.map(path=>{const bytes=readFileSync(resolve(root,path));return {path:path.replaceAll('\\','/'),bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')};});
+writeFileSync(manifestPath,JSON.stringify({...baseline,fileCount:files.length,files},null,2)+'\n');
+console.log(`MANIFEST.json refreshed: ${files.length} files`);

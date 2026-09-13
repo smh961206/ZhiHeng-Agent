@@ -1,4 +1,6 @@
-import {KnowledgeHighlights,KnowledgeStatus} from './ResearchKnowledge';
+import {recentResearch} from './RecentResearch';
+import {deliveryProgress} from '../../shared/research-delivery.mjs';
+import {KnowledgeHighlights} from './ResearchKnowledge';
 import ResearchCapabilities from './ResearchCapabilities';
 import {ResearchMethodSteps} from './ResearchMethod';
 
@@ -50,7 +52,9 @@ const questions=[
  ['知衡会直接替我做投资决定吗？','不会。知衡帮助你整理证据、识别风险和形成有条件的研究判断；最终投资决定仍由你结合自身目标、持仓和风险承受能力作出。'],
  ['如何选择和开通研究服务？','先体验一项研究，确认报告方式适合自己，再在“服务方案”查看价格、研究额度、服务周期和开通入口。正式方案将在开放时公布。'],
 ];
-export default function ResearchFramework({onStart,config,checking,onRefresh}){
+export default function ResearchFramework({onStart,jobs=[],jobsLoading=false,jobsError}){
+ const latest=recentResearch(jobs,1)[0];
+ const latestStatus=latest&&(deliveryProgress(latest)?.label||{queued:'等待中',running:'研究中',completed:'已完成',failed:'失败',cancelled:'已取消'}[latest.status]||'状态未知');
  const sectionNavigation=useSectionNavigation(sectionIds);
  const sceneRotation=useTabAutoplay(sceneIds),stepRotation=useTabAutoplay(stepIds);
  const scene=sceneRotation.value,step=stepRotation.value;
@@ -61,7 +65,14 @@ export default function ResearchFramework({onStart,config,checking,onRefresh}){
    <div className="fw-hero-copy"><h1 id="fw-hero-title">把分散资料，<br/>变成可复核的投资研究。</h1><p>知衡帮助你查找和核对公司资料，梳理经营、财务、估值与风险，形成有依据、有边界、可以持续更新的研究判断。</p><div className="fw-hero-actions"><Button size="lg" onClick={()=>onStart()}>体验一次研究<ArrowRight size={17}/></Button><Button variant="outline" size="lg" asChild><a href="#fw-plans">查看服务方案<ArrowUpRight size={16}/></a></Button></div></div>
    <Card className="fw-question-card fw-value-card"><CardContent><div className="fw-preview-label"><FileText size={18}/>一份研究，分清判断与执行</div><ResearchMethodSteps compact/><Link className="fw-method-link" to="/handbook?tab=method">了解当前研究方法<ArrowRight size={15}/></Link></CardContent></Card>
   </section>
-  <KnowledgeStatus config={config} checking={checking} onRefresh={onRefresh}/>
+  <section className="home-workspace" aria-label="研究快捷入口">
+   <div className="home-workspace-heading"><span>我的研究</span><p>开始新问题，或回到已有记录继续核对。</p></div>
+   <div className="home-workspace-links">
+    <Button variant="outline" onClick={()=>onStart()}><span><strong>新建研究</strong><small>确认问题与范围后开始</small></span><ArrowRight size={18} aria-hidden="true"/></Button>
+    <Link to={latest?'/research/'+encodeURIComponent(latest.id):'/history'}><span><strong>{latest?'打开最近研究':jobsLoading?'正在读取研究记录':jobsError?'研究记录暂未更新':'查看研究记录'}</strong><small>{latest?latest.question||latest.input?.question||'未命名研究':jobsError?'到研究记录页重新加载':'报告、证据和进度集中查看'}</small>{latest&&<em>{latestStatus}{jobsError?' · 当前为上次获取的记录':''}</em>}</span><ArrowRight size={18} aria-hidden="true"/></Link>
+    <Link to="/handbook?tab=guide"><span><strong>查找操作说明</strong><small>搜索上传、报告与恢复问题</small></span><ArrowRight size={18} aria-hidden="true"/></Link>
+   </div>
+  </section>
   <KnowledgeHighlights/>
   <nav ref={sectionNavigation.navRef} className="fw-section-nav" aria-label="首页内容导航">{sections.map(([id,label])=><Button asChild variant="ghost" size="sm" key={id}><a href={'#'+id} aria-current={sectionNavigation.activeId===id?'location':undefined}>{label}</a></Button>)}</nav>
   <section id="fw-guide" className="fw-section fw-quickstart" aria-labelledby="fw-guide-title"><div className="fw-section-heading"><span>01 / 平台价值</span><h2 id="fw-guide-title">少花时间整理资料，把精力留给判断。</h2><p>从提出问题到阅读结论，知衡把重复的资料整理与核对过程组织成一项可回看的研究。</p></div>

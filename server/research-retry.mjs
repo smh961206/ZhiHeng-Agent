@@ -31,7 +31,7 @@ export async function prepareResearchRetry(job,loadJob,now=new Date().toISOStrin
  input.depth=plan.depth;input.historyYears=plan.historyYears;
  const retryCount=(job.retryCount??0)+1;
  const recovery=resumeSummary(job);
- const restartReason=recovery.reason==='framework_changed'?`研究规则从 V${recovery.fromVersion} 更新为 V${recovery.toVersion}`:recovery.reason==='rules_changed'?'研究规则内容已更新':'未找到可用续跑进度';
+ const restartReason=['execution_changed','framework_changed'].includes(recovery.reason)?'执行流程已更新，需要重新开始研究':recovery.reason==='rules_changed'?`Knowledge 从 ${recovery.fromVersion??'旧版本'} 切换为 ${recovery.toVersion??'当前 K-Series'}`:'未找到可用续跑进度';
  return {id:job.id,createdAt:job.createdAt,...(job.submission?{submission:structuredClone(job.submission)}:{}),input,mode,plan,status:'queued',retryCount,lastRetriedAt:now,
   events:[{time:now,type:'progress',message:`第${retryCount}次重试，因${restartReason}，本轮重新采集、分析与复核。`,restartReason:recovery.reason||'no_checkpoint'}]};
 }

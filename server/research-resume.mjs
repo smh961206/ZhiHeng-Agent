@@ -1,16 +1,18 @@
-import {savedKnowledgeMatches} from './knowledge.mjs';
-import {frameworkVersion} from '../shared/research-framework.mjs';
+import {currentKnowledge,savedKnowledgeMatches} from './knowledge.mjs';
+import {executionCompatibilityVersion,contractVersion,compatibleExecution} from '../shared/research-framework.mjs';
 import {assertJobModelState} from './model-state.mjs';
 import {validateResearchBudgetState} from './research-budget.mjs';
 import {validateFlagshipState} from './model-flagship.mjs';
 // Internal model conversations are persisted only in the private job payload.
-export const resumeScope=job=>JSON.stringify({frameworkVersion,mode:job.mode,question:job.input?.question,securities:job.input?.securities,depth:job.input?.depth,historyYears:job.input?.historyYears,...(job.plan?.knowledgeSnapshot?{knowledgeSnapshot:job.plan.knowledgeSnapshot}:{})});
+export const resumeScope=job=>JSON.stringify({
+ ...(job.plan&&Object.hasOwn(job.plan,'executionCompatibilityVersion')?{executionCompatibilityVersion,contractVersion}:{frameworkVersion:'4.7'}),
+ mode:job.mode,question:job.input?.question,securities:job.input?.securities,depth:job.input?.depth,historyYears:job.input?.historyYears,...(job.plan?.knowledgeSnapshot?{knowledgeSnapshot:job.plan.knowledgeSnapshot}:{}),...(job.plan?.knowledgeVersion?{knowledgeVersion:job.plan.knowledgeVersion,knowledgeFingerprint:job.plan.knowledgeFingerprint}:{})});
 const changedRules=job=>!savedKnowledgeMatches(job.plan);
-const changedFramework=job=>Boolean(job.plan?.version&&job.plan.version!==frameworkVersion);
+const changedExecution=job=>!compatibleExecution(job.plan);
 const validCheckpoint=job=>!changedRules(job)&&job.checkpoint?.version===1&&job.checkpoint.scope===resumeScope(job)
  &&['research','review'].includes(job.checkpoint.phase)&&Array.isArray(job.checkpoint.toolRecords)&&Array.isArray(job.checkpoint.evidence)
  &&(job.checkpoint.phase!=='review'||typeof job.checkpoint.draft==='string'&&Boolean(job.checkpoint.draft.trim()));
-const hasLegacyProgress=job=>!changedFramework(job)&&!changedRules(job)&&!job.checkpoint&&job.workflow?.stages?.some(s=>s.id==='evidence'&&s.status==='completed')&&job.input?.sources?.length;
+const hasLegacyProgress=job=>!changedExecution(job)&&!changedRules(job)&&!job.checkpoint&&job.workflow?.stages?.some(s=>s.id==='evidence'&&s.status==='completed')&&job.input?.sources?.length;
 function legacyRecords(job){
  const calls=new Map(),records=new Map();
  for(const event of job.events??[]){
@@ -23,7 +25,7 @@ export function researchResume(job){
  assertJobModelState(job);
  if(Object.hasOwn(job,'budgetState'))validateResearchBudgetState(job.budgetState);
  if(Object.hasOwn(job,'flagshipState'))validateFlagshipState(job.flagshipState);
- if(changedFramework(job)||changedRules(job))return null;
+ if(changedRules(job)||changedExecution(job))return null;
  const checkpoint=job.checkpoint;
  if(validCheckpoint(job))return structuredClone(checkpoint);
  if(checkpoint)return null;
@@ -37,8 +39,8 @@ export function researchResume(job){
 export function resumeSummary(job){
  if(job.status==='completed')return {available:false};
  try{assertJobModelState(job);}catch{return {available:false,reason:'model_configuration_changed'};}
- if(changedFramework(job))return {available:false,reason:'framework_changed',fromVersion:job.plan.version,toVersion:frameworkVersion};
- if(changedRules(job))return {available:false,reason:'rules_changed',toVersion:frameworkVersion};
+ if(changedRules(job)){const current=currentKnowledge();return {available:false,reason:'rules_changed',fromVersion:job.plan?.knowledgeVersion??'V4.x/未固定',toVersion:current.knowledgeVersion};}
+ if(changedExecution(job))return {available:false,reason:'execution_changed'};
  const valid=validCheckpoint(job);
  if(!valid&&!hasLegacyProgress(job))return {available:false};
  const records=valid?job.checkpoint.toolRecords:legacyRecords(job);

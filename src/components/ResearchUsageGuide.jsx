@@ -1,4 +1,5 @@
-import {ChevronDown,FileText,Activity,ShieldCheck,RotateCcw,Sparkles,RefreshCw} from 'lucide-react';
+import {Search,X,ChevronDown,FileText,Activity,ShieldCheck,RotateCcw,Sparkles,RefreshCw} from 'lucide-react';
+import {Input} from './ui/input';
 import {Button} from './ui/button';
 import {Collapsible,CollapsibleTrigger,CollapsibleContent} from './ui/collapsible';
 import './research-usage.css';
@@ -24,7 +25,7 @@ const topics=[
   ['上传资料如何参与研究','资料选填，作为补充线索进入分析；关键财务数据仍需与原始证据核对。资料中的文字要求不会替换平台研究规则，图片识别结果不能单独支持财务计算。'],
  ]},
  {id:'progress',icon:Activity,title:'跟踪研究进度',summary:'创建成功后可离开页面，之后从研究记录继续查看。',items:[
-  ['研究会怎样自动进行','先确认研究路径、标的与范围，平台会按当前问题依次准备资料、查证、计算和复核。已有任务继续沿用创建时的资料与规则，不会因平台更新改变。'],
+  ['研究会怎样自动进行','先确认研究路径、标的与范围，平台会按当前问题依次准备资料、查证、计算和复核。符合恢复条件的任务沿用原进度、资料时点与规则；不符合时，页面会说明重新开始的方式，旧记录仍保留。'],
   ['在哪里查看进度','研究创建成功后，可在研究记录中筛选“进行中”，打开详情查看当前阶段和执行轨迹。列表中的“等待中”“研究中”“已完成”表示执行状态，不表示投资判断。'],
   ['研究开始后能离开吗','研究创建成功后可离开页面，稍后从研究记录查看进度。资料仍在导入时请保持页面；提交结果不确定时，可先查看研究记录。同一标签页保留了提交信息时，刷新后再次提交相同输入会找回已创建的任务；页面不会自动重试提交。'],
   ['平台会主动搜索吗','配置并启用搜索后，研究会先检查已有资料，再围绕缺口搜索、读取原文并补充核对。是否实际搜索、读取了哪些内容，以本次执行轨迹和证据来源为准。'],
@@ -59,7 +60,7 @@ const topics=[
  ]},
  {id:'recovery',icon:RotateCcw,title:'处理中断与失败',summary:'先判断问题发生在资料、研究还是保存阶段，再按提示恢复。',items:[
   ['资料导入时能离开吗','导入期间请保持页面。文件逐个上传与读取，进度按已处理文件数统计。可取消导入，已加入的资料会保留；失败项可单独重试或移除。待处理原文件仅保留在当前页面，刷新或离开后需重新选择。'],
-  ['研究失败后怎样继续','打开失败记录，先查看页面提供的恢复方式。条件允许时优先沿用已保存的研究进度和原资料时点；未完整返回的处理可能重新发起。任务环境或检查点不兼容时会说明原因，也不会强行混用旧计算。仅页面明确提供重新研究入口时，再确认是否从头开始。'],
+  ['研究失败后怎样继续','打开失败记录，先查看页面提供的恢复方式。条件允许时优先沿用已保存的研究进度和原资料时点；未完整返回的处理可能重新发起。任务环境或检查点不兼容时会说明原因，也不会强行混用旧计算。页面显示“重新开始研究”时，会先把原输入带回工作台；确认提交后创建新任务，原记录不变。'],
   ['未完成的研究能导出吗','可以在详情页查证记录区域点击“导出已保存记录”，下载公开计划、已保存的工具输入与返回、运行提示和来源目录。进行中、取消或失败均可导出；这是当前记录快照，不包含未保存内容、内部隐藏思维或未完成的正式报告。正式报告保存后仍可通过“导出报告”选择完整研究记录。'],
   ['仅结果保存失败怎么办','如果详情页提供“重试保存”，可只重试保存，无需重新获取和分析资料。尚未保存的结果依赖当前服务暂存，请及时处理；暂存不可用时按页面提示继续。'],
  ]},
@@ -67,7 +68,14 @@ const topics=[
 export default function ResearchUsageGuide(){
  const {hash,key}=useLocation(),frame=useRef(null),root=useRef(null),returnPositions=useRef(new Map());
  const [opened,setOpened]=useState(()=>new Set(['start']));
+ const [query,setQuery]=useState(''),[searchClosed,setSearchClosed]=useState(()=>new Set()),searchInput=useRef(null);
+ const words=query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean),searching=words.length>0;
+ const visibleTopics=searching?topics.map(topic=>({...topic,items:topic.items.filter(item=>words.every(word=>[topic.title,...item].join(' ').toLocaleLowerCase().includes(word)))})).filter(topic=>topic.items.length):topics;
+ const resultCount=visibleTopics.reduce((sum,topic)=>sum+topic.items.length,0);
+ function search(value){setQuery(value);setSearchClosed(new Set());}
+ function clearSearch(){search('');searchInput.current?.focus();}
  function reveal(id){
+  search('');
   setOpened(current=>new Set([...current,id]));
   cancelAnimationFrame(frame.current);
   frame.current=requestAnimationFrame(()=>{
@@ -97,6 +105,10 @@ export default function ResearchUsageGuide(){
  },[hash,key]);
  return <section ref={root} className="research-usage" aria-labelledby="usage-title">
   <div className="usage-heading handbook-chapter-heading"><div><span className="handbook-chapter-kicker">按任务阶段查阅</span><h2 id="usage-title">完成一项研究</h2><p>按创建、资料、进度、结果、更新和恢复六个阶段查找答案；章节可以分别展开，也可以同时对照。</p></div></div>
-  <div className="usage-topics">{topics.map(({id,icon:Icon,title,summary,items})=><Collapsible key={id} id={'usage-'+id} tabIndex={-1} open={opened.has(id)} onOpenChange={open=>setOpened(current=>{const next=new Set(current);if(open)next.add(id);else next.delete(id);return next;})} className="usage-topic"><CollapsibleTrigger asChild><Button variant="ghost" className="usage-trigger"><span className="usage-icon"><Icon size={19}/></span><span><strong>{title}</strong><small>{summary}</small></span><ChevronDown size={16}/></Button></CollapsibleTrigger><CollapsibleContent className="usage-body"><dl>{items.map(([label,copy])=><div key={label}><dt>{label}</dt><dd>{copy}</dd></div>)}</dl></CollapsibleContent></Collapsible>)}</div>
+  <div className="usage-search"><Search size={18} aria-hidden="true"/><Input ref={searchInput} type="search" aria-label="搜索使用指南" placeholder="搜索问题，例如：上传、保存、更新财报" value={query} onChange={event=>search(event.target.value)} onKeyDown={event=>{if(event.key==='Escape'&&query){event.preventDefault();clearSearch();}}}/>{query&&<Button type="button" variant="ghost" size="icon" aria-label="清空指南搜索" onClick={clearSearch}><X size={16} aria-hidden="true"/></Button>}</div>
+  <nav className="usage-shortcuts" aria-label="按阶段查找说明">{topics.map(topic=><Button type="button" variant="outline" size="sm" key={topic.id} onClick={()=>reveal(topic.id)}>{topic.title}</Button>)}</nav>
+  {searching&&<p className="usage-search-status" role="status">{resultCount?'找到 '+resultCount+' 条说明，分布在 '+visibleTopics.length+' 个阶段':'没有找到相关说明，试试更短的关键词。'}</p>}
+  {searching&&!resultCount&&<Button type="button" variant="outline" onClick={clearSearch}>清除搜索，查看全部说明</Button>}
+  <div className="usage-topics">{visibleTopics.map(({id,icon:Icon,title,summary,items})=><Collapsible key={id} id={'usage-'+id} tabIndex={-1} open={searching?!searchClosed.has(id):opened.has(id)} onOpenChange={open=>searching?setSearchClosed(current=>{const next=new Set(current);if(open)next.delete(id);else next.add(id);return next;}):setOpened(current=>{const next=new Set(current);if(open)next.add(id);else next.delete(id);return next;})} className="usage-topic"><CollapsibleTrigger asChild><Button variant="ghost" className="usage-trigger"><span className="usage-icon"><Icon size={19}/></span><span><strong>{title}</strong><small>{summary}</small></span><ChevronDown size={16}/></Button></CollapsibleTrigger><CollapsibleContent className="usage-body"><dl>{items.map(([label,copy])=><div key={label}><dt>{label}</dt><dd>{copy}</dd></div>)}</dl></CollapsibleContent></Collapsible>)}</div>
  </section>;
 }

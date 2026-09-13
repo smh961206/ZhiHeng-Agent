@@ -8,6 +8,7 @@ V5.2 independently validates known publication times and actual block identities
 - INV-RES-004 [ENFORCED]: resume preserves the original research/market cutoff.
 - INV-RES-005 [TARGET V5.7]: canonical Research State, not report text, owns structured research truth.
 - INV-RES-006 [TARGET]: a research job pins its behaviorally relevant versions/snapshots.
+- INV-RES-007 [ENFORCED]: execution compatibility and output contract counters validate before continuation; K-pinned legacy 4.7 plans retain their exact saved scope. Unknown/mixed counters cannot downgrade to legacy, and checkpoints cannot silently cross formats. Tests: research-resume, model-migration, research-contract. This scoped guarantee does not claim complete historical code replay.
 
 ## H0 enforcement evidence and limits
 

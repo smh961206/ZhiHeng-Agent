@@ -1,6 +1,5 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {frameworkVersion} from '../shared/research-framework.mjs';
 import {knowledgeAvailability,ruleUsage,mergeRuleRead} from '../shared/research-knowledge.mjs';
 import {createJobRuleSession} from '../server/knowledge.mjs';
 import {knowledgeExcerpt} from '../server/knowledge-excerpt.mjs';
@@ -9,17 +8,18 @@ import {exportResearchMarkdown} from '../shared/research-export.mjs';
 import {researchPreparation} from '../shared/research-preparation.mjs';
 
 test('service state distinguishes pending revisions from unavailable or incompatible service',()=>{
- for(const config of [null,{connectionState:'error'},{knowledgeVersion:'0.0'},{configured:false,knowledgeVersion:frameworkVersion}])assert.equal(knowledgeAvailability(config).blocking,true);
- const pending={configured:true,knowledgeVersion:frameworkVersion,knowledgeStatus:{updatePending:true}};
+ const version='K1.0.0';
+ for(const config of [null,{connectionState:'error'},{knowledgeVersion:'K0.0.0',knowledgeStatus:{snapshot:{version}}},{configured:false,knowledgeVersion:version}])assert.equal(knowledgeAvailability(config).blocking,true);
+ const pending={configured:true,knowledgeVersion:version,knowledgeStatus:{snapshot:{version},updatePending:true}};
  assert.equal(knowledgeAvailability(pending).kind,'pending');assert.equal(knowledgeAvailability(pending).blocking,false);
  const input={mode:'B',question:'合成研究',securities:[{market:'CN',symbol:'600519'}]};
  assert.equal(researchPreparation(input,{}, {config:pending}).ready,true);
  assert.equal(researchPreparation(input,{}, {config:{...pending,connectionState:'error'}}).ready,false);
- assert.equal(researchPreparation(input,{}, {config:{...pending,knowledgeVersion:'0.0'}}).ready,false);
+ assert.equal(researchPreparation(input,{}, {config:{...pending,knowledgeVersion:'K0.0.0'}}).ready,false);
 });
 
 test('live reads merge only into their own snapshot; counts never come from the full catalog',()=>{
- const job={plan:{knowledgeSnapshot:{id:'original',version:frameworkVersion},knowledge:[{id:'unread'}]},events:[]};
+ const job={plan:{knowledgeSnapshot:{id:'original',version:'K1.0.0'},knowledgeVersion:'K1.0.0',knowledge:[{id:'unread'}]},events:[]};
  assert.equal(ruleUsage(job).recorded,false);assert.equal(ruleUsage(job).moduleCount,0);
  const event={type:'knowledge_read',ruleRead:{key:'a',snapshotId:'original',kind:'context',moduleId:'07-valuation',path:'rules.md',heading:'DCF',reason:'规则补读'}};
  const next=mergeRuleRead(job,event);assert.equal(ruleUsage(next).moduleCount,1);
@@ -27,6 +27,15 @@ test('live reads merge only into their own snapshot; counts never come from the 
  assert.equal(job.knowledgeUsage,undefined);
  const result={framework:{snapshot:{id:'original'},usage:{snapshotId:'original',records:[]}}};
  assert.equal(ruleUsage({...next,result}).records.length,0,'Saved final usage takes precedence over later events');
+});
+
+test('rule display uses saved Knowledge identity and never substitutes an execution counter',()=>{
+ const job={plan:{knowledgeVersion:'K1.1.0',executionCompatibilityVersion:1},result:{framework:{snapshot:{id:'saved',version:'K1.0.0'}}}};
+ const original=structuredClone(job);
+ assert.equal(ruleUsage(job).version,'K1.0.0');assert.deepEqual(job,original);
+ assert.equal(ruleUsage({plan:{executionCompatibilityVersion:1,contractVersion:7}}).version,undefined);
+ assert.equal(ruleUsage({plan:{version:'4.7'}}).version,'4.7');
+ assert.equal(ruleUsage({...job,result:{framework:{snapshot:{id:'legacy',version:'4.7'}}}}).version,'4.7');
 });
 
 test('excerpt endpoint reconstructs only recorded content and refuses guessed paths, changes and missing archives',()=>{

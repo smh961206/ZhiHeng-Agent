@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {createResearchPlan,modes,portfolioFields,portfolioReadiness,frameworkVersion} from '../shared/research-framework.mjs';
+import {createResearchPlan,modes,portfolioFields,portfolioReadiness} from '../shared/research-framework.mjs';
 import {knowledgeManifest,searchRules,indexRules,planRuleContext} from '../server/knowledge.mjs';
 import {validateInput,route} from '../server/router.mjs';
 import {validateReview} from '../server/research-output.mjs';
@@ -16,9 +16,19 @@ const base={question:'合成测试研究',mode:'B',depth:'Standard',securities:[
 const sources=[{id:'S1',title:'合成证据',text:'合成财务数据，仅测试',type:'financial-report'}];
 const validate=(review,input=base)=>validateReview(review,{input,plan:createResearchPlan(input),sources});
 
+test('historical comparison preserves saved execution metadata without relabelling old plans',async()=>{
+ for(const plan of [createResearchPlan(base),{version:'4.7',contractVersion:7},undefined]){
+  const prior={id:'saved',status:'completed',input:{securities:[security]},plan,result:{report:'历史结论[S1]',decision:{summary:'历史假设'}}};
+  const before=structuredClone(prior),next=await attachResearchBaseline({...base,baselineJobId:'saved'},'C',async()=>prior);
+  if(plan?.executionCompatibilityVersion){assert.equal(next.baseline.executionCompatibilityVersion,1);assert.equal(next.baseline.contractVersion,7);assert.equal(Object.hasOwn(next.baseline,'frameworkVersion'),false);}
+  else {assert.equal(next.baseline.frameworkVersion,plan?.version??null);assert.equal(Object.hasOwn(next.baseline,'executionCompatibilityVersion'),false);}
+  assert.deepEqual(prior,before);assert.equal(next.baseline.report,'历史结论[历史:S1]');
+ }
+});
+
 test('单一规则库版本与校验摘要可追溯，章节检索保留完整上下文',()=>{
  for(const source of knowledgeManifest){
-  assert.equal(source.version.replace(/-core$/,''),frameworkVersion);
+  assert.equal(source.version,'K1.0.0');
   assert.equal(source.sha256,createHash('sha256').update(readFileSync(new URL('../'+source.path,import.meta.url))).digest('hex'));
  }
  const indexed=indexRules('# 1. Main\nintro\n## Child\nbody\n```text\n# fake\n```\n# 2. Next\nend','test');

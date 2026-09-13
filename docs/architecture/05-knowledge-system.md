@@ -24,7 +24,7 @@ It does not mean:
 - current price targets;
 - current thesis conclusions.
 
-## Target governance lifecycle — FUTURE
+## Governance lifecycle — CURRENT in V5.3
 
 Production/benchmark issue
 → Root-cause classification
@@ -36,6 +36,8 @@ Production/benchmark issue
 → Human approval
 → New K snapshot
 
+V5.3 stores 26 high-impact Rule IDs, an ordered constitution, canonical ontology, regression IDs and K1.0.0 governance in the existing module catalog. `knowledge/current.json` explicitly activates one immutable K-Series snapshot, and tasks pin its concrete K version and governance fingerprint. The research framework version no longer controls Knowledge; active loading rejects V4.x snapshots. Resolver/compiler output is deterministic and remains a dry-run comparison surface while the existing module-loading algorithm reads only the activated K snapshot. Critical lint failures block publication.
+
 ## Long-term trend
 
 Natural-language rule
@@ -46,4 +48,4 @@ Knowledge should not grow forever as prompt text.
 
 ## H0 calibration
 
-CURRENT: ENTRY/modules.json/modules/rules, indexed sections, lazy rule loading, validated complete job snapshots, same-version update handling and exact usage/excerpt provenance. FUTURE: target directory layering, ontology, canonical Rule IDs/K-Series and full proposal/regression/governance lifecycle. Existing snapshot pinning must be reused.
+CURRENT: ENTRY/modules.json/modules/rules, indexed sections, lazy rule loading, validated complete job snapshots, exact usage/excerpt provenance, canonical Rule IDs, constitution/ontology, resolver/compiler, lint/regression, K-Series pinning, KCP/debt validation, runtime-binding metadata, and impact/decay analysis. Physical directory separation and broad promotion of prose rules into engines remain future work.

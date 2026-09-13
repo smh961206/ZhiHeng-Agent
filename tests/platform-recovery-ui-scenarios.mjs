@@ -1,4 +1,4 @@
-import {refreshRules} from './fixtures/platform-status-ui.mjs';
+import {refreshRules,platformStatus} from './fixtures/platform-status-ui.mjs';
 import assert from 'node:assert/strict';
 
 export function registerPlatformRecoveryScenarios({test,makeJob,detail,workbench,textIncludes}){
@@ -39,15 +39,15 @@ export function registerPlatformRecoveryScenarios({test,makeJob,detail,workbench
  });
 
  test('platform-service-blocks-path-requests',{},async({page,requests})=>{
-  await page.route('**/api/config',route=>route.fulfill({json:{configured:true,knowledgeVersion:'0.0'}}));
+  await page.route('**/api/config',route=>route.fulfill({json:{configured:true,knowledgeVersion:'K0.0.0',knowledgeStatus:{snapshot:{id:'a'.repeat(64),version:'K1.0.0'}}}}));
   await workbench(page);await page.locator('#question').fill('分析贵州茅台的现金流质量');
-  await textIncludes(page.getByRole('region',{name:'研究规则状态'}),'页面与服务版本不一致');
+  let panel=await platformStatus(page);await textIncludes(panel,'Knowledge 版本状态不一致');await page.keyboard.press('Escape');
   await page.waitForTimeout(1000);assert.equal(requests('POST','/api/research/path').length,0);
   await page.unroute('**/api/config');await refreshRules(page);
   await page.waitForResponse(response=>new URL(response.url()).pathname==='/api/research/path');
-  assert.equal(requests('POST','/api/research/path').length,1);
+  assert.equal(requests('POST','/api/research/path').length,1);await page.keyboard.press('Escape');
   await page.route('**/api/config',route=>route.fulfill({status:503,json:{error:'合成连接中断'}}));
-  await refreshRules(page);await textIncludes(page.getByRole('region',{name:'研究规则状态'}),'暂未确认服务状态');
+  await refreshRules(page);panel=await platformStatus(page);await textIncludes(panel,'暂未确认服务状态');await page.keyboard.press('Escape');
   await page.locator('#question').fill('比较贵州茅台与苹果');await page.waitForTimeout(1000);
   assert.equal(requests('POST','/api/research/path').length,1);assert.equal(requests('POST','/api/jobs').length,0);
  });

@@ -14,13 +14,17 @@ export function researchContinuation(job = {}) {
 
 export function researchRestart(job={}){
  if(job.resume?.available!==false||!['failed','cancelled'].includes(job.status))return null;
- const changed=['framework_changed','rules_changed'].includes(job.resume.reason);
- return {title:changed?'按当前规则重新研究':'本次需要重新研究',reason:job.resume.reason||'no_checkpoint',text:changed?'原问题与补充资料可继续使用，本轮将重新采集、分析和复核。':'未找到可用的续跑进度，可沿用原输入重新采集并研究。'};
+ const executionChanged=['execution_changed','framework_changed'].includes(job.resume.reason);
+ const modelChanged=job.resume.reason==='model_configuration_changed';
+ const changed=executionChanged||modelChanged||job.resume.reason==='rules_changed';
+ return {title:executionChanged?'按当前流程重新研究':modelChanged?'按当前配置重新研究':changed?'按当前规则重新研究':'本次需要重新研究',reason:job.resume.reason||'no_checkpoint',text:changed?'原问题与补充资料可继续使用，本轮将重新采集、分析和复核。':'未找到可用的续跑进度，可沿用原输入重新采集并研究。'};
 }
 
 export function retryNotice(job = {}) {
-  if(job.resume?.reason==='rules_changed')return '本任务采用的研究规则内容已更新。重试将沿用原输入，按当前规则重新研究，避免混用更新前的计算与模型对话。';
-  if(job.resume?.reason==='framework_changed')return `研究规则已从 V${job.resume.fromVersion} 更新为 V${job.resume.toVersion}。重试将沿用原输入，按新版本重新研究；旧版本的计算与模型对话不作为续跑进度。`;
+  const reason=job.resume?.available===false?job.resume.reason:null;
+  if(reason==='rules_changed')return '本任务的研究规则暂不满足继续执行的条件。可将原输入带回工作台，确认后按当前规则重新研究；本记录仍保留，旧计算与模型对话不会混入新任务。';
+  if(['execution_changed','framework_changed'].includes(reason))return '执行流程已更新，需要重新开始研究。可将原输入带回工作台，确认后重新采集、分析和复核；本记录仍保留，旧计算与模型对话不作为续跑进度。';
+  if(reason==='model_configuration_changed')return '本任务固定的模型配置暂不满足继续执行的条件。可将原输入带回工作台，确认后按当前配置新建研究；本记录与已有执行依据仍保留。';
   const continuation = researchContinuation(job);
   if (continuation) return job.resume.origin === 'history'
     ? `将利用已保存的资料和工具结果继续${continuation.phase}。这条旧任务未保存完整的执行现场，恢复时可能补充核对；行情沿用原采集时点。`
@@ -49,8 +53,9 @@ export function researchRecovery(job = {}) {
     text: '当前记录未提供可恢复的暂存内容。请刷新详情确认最新保存状态；若仍无正式报告，可复用输入发起新的研究。',
     notice: '重新研究会重新采集和复核，不能找回原来的未保存结果。', error: job.error || '',
   };
+  const requiresNewResearch=job.resume?.available===false&&['rules_changed','execution_changed','framework_changed','model_configuration_changed'].includes(job.resume.reason);
   if (['failed', 'cancelled'].includes(job.status)) return {
-    kind: job.status, retryKind: 'research',
+    kind: job.status, retryKind: requiresNewResearch?null:'research',requiresNewResearch,
     title: job.status === 'failed' ? '本次研究未完成' : '研究已取消',
     text: researchRestart(job)?.text || (researchContinuation(job) ? `点击“重试研究”可从${researchContinuation(job).phase}阶段继续，已完成的进度会保留。` : job.status === 'failed' ? '输入与执行记录已保留。先查看失败原因，再决定直接重试还是修改研究输入。' : '输入与执行记录已保留。取消后的任务不会自动继续，可在准备好后重新研究。'),
     restart:researchRestart(job),continuation: researchContinuation(job), notice: retryNotice(job), error: job.error || '',

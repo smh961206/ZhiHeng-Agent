@@ -2,6 +2,8 @@
 
 每个子版本至少满足其对应验收；大版本完成还需通过 release-level Benchmark 和全量回归。
 
+Status: ACCEPTED by deterministic repository tests and the pinned V53-KNOWLEDGE-1 benchmark. Detailed evidence is recorded in `completion-report.md` and `validation-results.json`.
+
 ### V53-01 — V5.3.0 Knowledge 现状盘点
 
 - **Then:** 所有现有知识文件均被映射；运行行为变化=0。
@@ -52,8 +54,8 @@
 
 ### V53-09 — V5.3.8 K-Series & Pinning
 
-- **Then:** 任务全程固定 K 版本；历史 snapshot 可精确读取。
-- **Evidence:** 版本解析；新/旧 checkpoint；运行中升级 K 版本。
+- **Then:** 任务全程固定 K 版本；未固定 K-Series 的旧任务必须重新开始。
+- **Evidence:** 活动指针解析；K checkpoint 精确恢复；V4.x 引用拒绝；运行中不切换 K 版本。
 - **And:** 不得通过弱化 Evidence / Validation / PIT / Provenance 来满足。
 
 ### V53-10 — V5.3.9 Knowledge Change Proposal

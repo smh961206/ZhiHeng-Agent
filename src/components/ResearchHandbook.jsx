@@ -1,4 +1,3 @@
-import {KnowledgeStatus} from './ResearchKnowledge';
 import ResearchMethod from './ResearchMethod';
 import {useSearchParams,useLocation} from 'react-router';
 import {useEffect} from 'react';
@@ -10,7 +9,7 @@ import './research-framework.css';
 import ResearchUsageGuide from './ResearchUsageGuide';
 
 
-export default function ResearchHandbook({config,checking,onRefresh,onStart}){
+export default function ResearchHandbook({onStart}){
  const [searchParams,setSearchParams]=useSearchParams();
  const validTab=value=>['method','discipline','glossary'].includes(value)?value:'guide';
  const tab=validTab(searchParams.get('tab'));
@@ -33,8 +32,7 @@ export default function ResearchHandbook({config,checking,onRefresh,onStart}){
   setSearchParams(next);
  }
  return <section className="research-framework research-handbook" aria-labelledby="handbook-title">
-  <header className="handbook-heading"><div><h1 id="handbook-title">研究手册</h1><p>需要完成具体操作时查看使用指南，需要理解判断依据时查阅研究方法、研究规范和术语解释。</p></div><Button onClick={()=>onStart()}>前往研究工作台<ArrowRight size={16}/></Button></header>
-  <KnowledgeStatus config={config} checking={checking} onRefresh={onRefresh}/>
+  <header className="handbook-heading"><div><h1 id="handbook-title">研究手册</h1><p>查找操作答案，理解研究方法，核对术语与使用边界。</p></div><Button onClick={()=>onStart()}>前往研究工作台<ArrowRight size={16}/></Button></header>
   <Tabs value={tab} onValueChange={selectTab} className="handbook-tabs"><TabsList variant="line" className="handbook-section-nav" aria-label="研究手册章节"><TabsTrigger value="guide">使用指南</TabsTrigger><TabsTrigger value="method">研究方法</TabsTrigger><TabsTrigger value="discipline">研究规范</TabsTrigger><TabsTrigger value="glossary">术语速查</TabsTrigger></TabsList>
    <TabsContent value="guide"><ResearchUsageGuide/></TabsContent><TabsContent value="method"><ResearchMethod/></TabsContent><TabsContent value="discipline"><ResearchDiscipline/></TabsContent><TabsContent value="glossary"><ResearchGlossary/></TabsContent>
   </Tabs>

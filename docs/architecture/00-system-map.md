@@ -113,7 +113,7 @@ Each target layer must be introduced incrementally. A FUTURE object must not be 
 
 ## H0 calibration
 
-The current framework/Knowledge baseline is 4.7, distinct from Harness CURRENT. Acquisition is bounded and may be partial. Compatible resume preserves saved initial market data; rejected checkpoints restart acquisition. Full historical publishedAt enforcement/replay is not implemented. See [implementation map](current-implementation-map.md) for exact owners and limitations.
+Research execution ships with the platform; new plans pin internal execution compatibility 1 and contract 7. Active Knowledge is independently pinned at K1.0.0 through `knowledge/current.json`. K-pinned pre-rename framework-4.7 plans retain exact saved scope compatibility, while V4.x Knowledge is read-only history and cannot start or resume current execution. Acquisition is bounded and may be partial. Compatible resume preserves saved initial market data; rejected checkpoints cannot silently reacquire for model-pinned tasks. Full historical publishedAt enforcement/replay is not implemented. See [implementation map](current-implementation-map.md) and [ADR-017](../adr/ADR-017-platform-execution-compatibility.md).
 
 ## V4.8.7 telemetry integration
 

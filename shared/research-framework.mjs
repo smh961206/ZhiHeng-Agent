@@ -9,8 +9,20 @@ import {comparisonCopy} from './company-comparison.mjs';
 import {createPublicResearchApproach} from './research-approach.mjs';
 import {executionIntent,executionPlan,executionBoundary} from './execution-discipline.mjs';
 
-export const frameworkVersion='4.7';
+// Internal compatibility counters ship with the platform, not independent releases.
+export const executionCompatibilityVersion=1;
 export const contractVersion=7;
+export function compatibleExecution(plan){
+ if(!plan||plan.contractVersion!==contractVersion)return false;
+ if(Object.hasOwn(plan,'executionCompatibilityVersion'))return plan.executionCompatibilityVersion===executionCompatibilityVersion&&!Object.hasOwn(plan,'version');
+ // Exact read compatibility for K-pinned plans written before the field rename.
+ return executionCompatibilityVersion===1&&contractVersion===7&&plan.version==='4.7';
+}
+export function executionMetadata(plan){
+ return Object.hasOwn(plan,'executionCompatibilityVersion')
+  ?{executionCompatibilityVersion:plan.executionCompatibilityVersion,contractVersion:plan.contractVersion}
+  :{version:plan.version,contractVersion:plan.contractVersion};
+}
 export const knowledgeSources=[
  {id:'entry',path:'knowledge/ENTRY.md',role:'研究执行入口'},
 ];
@@ -89,7 +101,7 @@ export function createResearchPlan(input={},mode=resolveMode(input)){
  const secondaryModules=[];
  if(['B','C','D'].includes(mode)&&/分红|股息|股东回报/.test(input.question||''))secondaryModules.push('股东回报必要模块');
  if(mode!=='E'&&portfolio.complete)secondaryModules.push('组合约束');
- const plan={version:frameworkVersion,contractVersion,mode,name:profile.name,goal:profile.goal,modules:[...profile.modules],secondaryModules,
+ const plan={executionCompatibilityVersion,contractVersion,mode,name:profile.name,goal:profile.goal,modules:[...profile.modules],secondaryModules,
  depth,historyYears:mode==='F'?8:mode==='A'?5:input.historyYears??5,securities:input.securities??[],stages:researchStages,
  ...(mode==='A'?{researchApproach:{objective:quickScreenCopy.objective+'，结论限定为淘汰、观察池或深度研究。',
   scope:{period:quickScreenCopy.period,comparison:quickScreenCopy.periodDetail},

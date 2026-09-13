@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createResearchPlan,frameworkVersion,resolveMode,researchActions} from '../shared/research-framework.mjs';
+import {createResearchPlan,executionCompatibilityVersion,resolveMode,researchActions} from '../shared/research-framework.mjs';
 import {knowledgeManifest,getAuditRules,chapterRules,planTaskRules,planRuleContext,searchRules} from '../server/knowledge.mjs';
 import {reviewContract,validateReview} from '../server/research-output.mjs';
 import {reviewJsonSchema} from '../server/review-format.mjs';
@@ -14,8 +14,8 @@ const plan=createResearchPlan(input);
 const validate=value=>validateReview(value,{input,plan,sources:input.sources});
 
 test('V4.2 documents, handbook prohibitions and execution chapter retrieval stay aligned',()=>{
- assert.equal(frameworkVersion,'4.7');
- assert.ok(knowledgeManifest.every(item=>item.version.replace(/-core$/,'')===frameworkVersion));
+ assert.equal(executionCompatibilityVersion,1);
+ assert.ok(knowledgeManifest.every(item=>item.version==='K1.0.0'));
  assert.ok(knowledgeManifest.every(item=>item.updatedAt==='2026-09-08'));
  const full=chapterRules(17)+'\n'+chapterRules(18);
  const chapter=full.split('# 17. 禁止事项')[1].split('# 18.')[0];

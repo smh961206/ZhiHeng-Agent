@@ -4,6 +4,8 @@
 
 CURRENT selects authorized work, not implemented capability status. A newly activated release remains unimplemented until its own acceptance evidence exists. DETAILED_INDEX and linked normalized subreleases determine execution order; historical overview groupings do not override them.
 
+Validation defaults to tests directly related to the files and behavior changed in the current task. Do not automatically run full UI regression, release gates, full benchmark suites, complete Docker deployment/rollback validation, or real-model acceptance. Run any of those only when the user explicitly requests it.
+
 Read `docs/releases/CURRENT`.
 
 If CURRENT is `H0`, execute H0 only.
@@ -27,7 +29,7 @@ If CURRENT is a core version, read its `DETAILED_INDEX.md` and execute only the 
 6. Correct stale file assumptions using actual repo state.
 7. Run a relevant baseline test subset.
 8. Implement.
-9. Run old + new tests.
-10. Run benchmark gate where specified.
+9. Run the directly relevant old + new tests.
+10. Run a benchmark gate only when the user explicitly requests it.
 11. Report.
 12. Stop or continue only if authorized.

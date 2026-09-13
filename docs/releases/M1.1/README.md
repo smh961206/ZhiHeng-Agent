@@ -2,6 +2,8 @@
 
 状态：M1.1.0–M1.1.3 已实施
 
+M1.1 is a model engineering milestone delivered with the platform, not an independent runtime release line. Actual model/context pins remain authoritative; see [ADR-017](../../adr/ADR-017-platform-execution-compatibility.md).
+
 M1.1 phase 1 keeps the V5.2 research, evidence, calculation, audit and recovery contracts while reducing repeated model input for new schema-v2/modelState-v4 tasks.
 
 Implemented:

@@ -113,6 +113,8 @@ Do not destructively rewrite historical research records.
 
 ## 8. Testing
 
+By default, run only tests directly related to the current change. Full UI regression, release gates, full benchmark suites, complete Docker deployment/rollback validation, and real-model acceptance require an explicit user request.
+
 Never make tests pass by:
 - deleting tests
 - skipping validation
@@ -163,4 +165,4 @@ Do not report only “done”.
 
 ## H0 calibration notes
 
-Use `CODEX_EXECUTION_PROTOCOL.md` and `docs/releases/H0/DETAILED_INDEX.md` for H0 order. The Model Gateway rule is an accepted target boundary: current direct call sites are mapped, not migrated in H0. Runtime framework/Knowledge version 4.7 is distinct from the Harness release pointer. See `docs/releases/H0/audit-findings.md` for current enforcement gaps; permanent rules above are unchanged.
+Use `CODEX_EXECUTION_PROTOCOL.md` and `docs/releases/H0/DETAILED_INDEX.md` for H0 order. The Model Gateway rule is an accepted target boundary: current direct call sites are mapped, not migrated in H0. The H0 framework/Knowledge 4.7 label is historical. Current release lines are platform V and Knowledge K; execution/model capabilities ship with the platform and use internal compatibility counters (ADR-017). See `docs/releases/H0/audit-findings.md` for H0 enforcement gaps; permanent rules above are unchanged.

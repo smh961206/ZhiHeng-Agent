@@ -13,6 +13,23 @@ for(const expected of baseline.cases)test('V4.8.3 preserves pinned legacy wire, 
  assert.deepEqual(await migrationScenario(runAgent,expected.mode),expected);
 });
 const env={LLM_API_KEY:'synthetic-key',LLM_BASE_URL:'https://model.invalid'};
+for(const mode of ['A','B','C','D','E','F'])test('current execution metadata reaches route, checkpoint and delivered result for mode '+mode,async()=>{
+ let checkpoints=0,routes=0;
+ const currentAgent=async(job,emit,signal,options)=>{
+  const result=await runAgent(job,(type,message,details)=>{
+   if(type==='route'){routes++;assert.equal(details.executionCompatibilityVersion,1);assert.equal(Object.hasOwn(details,'frameworkVersion'),false);}
+   emit(type,message,details);
+  },signal,{...options,onCheckpoint:async()=>{
+   checkpoints++;const scope=JSON.parse(job.checkpoint.scope);
+   assert.equal(scope.executionCompatibilityVersion,1);assert.equal(scope.contractVersion,7);assert.equal(Object.hasOwn(scope,'frameworkVersion'),false);
+   await options.onCheckpoint();
+  }});
+  assert.equal(job.plan.executionCompatibilityVersion,1);assert.equal(Object.hasOwn(job.plan,'version'),false);
+  assert.equal(result.framework.executionCompatibilityVersion,1);assert.equal(result.framework.contractVersion,7);assert.equal(Object.hasOwn(result.framework,'version'),false);
+  assert.equal(result.framework.snapshot.version,'K1.0.0');return result;
+ };
+ const actual=await migrationScenario(currentAgent,mode,{executionFormat:'current'});assert.equal(actual.requests,3);assert.equal(routes,1);assert.ok(checkpoints>0);
+});
 const request={purpose:'research',messages:[{role:'user',content:'synthetic'}]};
 const json=(content='answer',finish)=>Response.json({choices:[{message:{role:'assistant',content},...(finish!==undefined?{finish_reason:finish}:{})}]});
 const reject=(promise,category)=>assert.rejects(promise,e=>e.category===category);

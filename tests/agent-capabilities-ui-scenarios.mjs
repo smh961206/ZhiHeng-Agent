@@ -18,7 +18,7 @@ export function registerAgentCapabilityScenarios({test,makeJob,detail,detailActi
    await noOverflow(page,'deep matrix '+width);await screenshot(page,'deep-return-grid-'+width,'.research-analysis-receipts');
    await panel.getByRole('button',{name:'查看实际输入与返回',exact:true}).click();await textIncludes(page.getByRole('complementary',{name:'研究执行轨迹'}),'复算分红事件与支付率');
    await page.goto('/workbench');await page.locator('#question').fill('A股贵州茅台深度投资研究');const overview=page.locator('.deep-execution-overview');await overview.locator('summary').click();await textIncludes(overview,'逐笔复算股东回报');await noOverflow(page,'deep workbench '+width);
-   await overview.getByRole('link').click();await page.getByRole('button',{name:/阅读与核对结果/}).click();await textIncludes(page.locator('.research-usage'),'最多5×5格');await noOverflow(page,'deep handbook '+width);
+   await overview.getByRole('link').click();await page.locator('.usage-topics').getByRole('button',{name:/阅读与核对结果/}).click();await textIncludes(page.locator('.research-usage'),'最多5×5格');await noOverflow(page,'deep handbook '+width);
    await page.goto('/');const capabilities=page.getByRole('region',{name:'研究执行能力'});await textIncludes(capabilities,'复算分红与估值情景');await noOverflow(page,'deep home '+width);await screenshot(page,'deep-return-home-'+width,'.agent-capabilities');
   });
  }
@@ -43,7 +43,7 @@ export function registerAgentCapabilityScenarios({test,makeJob,detail,detailActi
    await checks.getByRole('button',{name:'查看实际输入与返回',exact:true}).click();const trace=page.getByRole('complementary',{name:'研究执行轨迹'});
    await trace.getByRole('combobox',{name:'事件筛选'}).click();await page.getByRole('option',{name:'异常与提示',exact:true}).click();await count(trace.locator('.rd-event'),1);
    await page.goto('/workbench');await page.locator('#question').fill('A股比亚迪值不值得研究');await textIncludes(page.locator('.composer-intro'),'核对五年与近期季度');await noOverflow(page,'screen workbench '+width);
-   await page.goto('/handbook?tab=guide');await page.getByRole('button',{name:/阅读与核对结果/}).click();await textIncludes(page.locator('.research-usage'),'找到候选不代表问题已经解决');await noOverflow(page,'screen guide '+width);
+   await page.goto('/handbook?tab=guide');await page.locator('.usage-topics').getByRole('button',{name:/阅读与核对结果/}).click();await textIncludes(page.locator('.research-usage'),'找到候选不代表问题已经解决');await noOverflow(page,'screen guide '+width);
   });
  }
  for(const width of [320,1440]){
@@ -83,15 +83,15 @@ export function registerAgentCapabilityScenarios({test,makeJob,detail,detailActi
    const [download]=await Promise.all([page.waitForEvent('download'),checks.getByRole('button',{name:'导出已保存记录',exact:true}).click()]);
    assert.match(download.suggestedFilename(),/execution\.md$/);const md=await readFile(await download.path(),'utf8');assert.match(md,/SAVED_RD_INPUT/);assert.match(md,/合成公告读取失败/);assert.match(md,/不是正式研究报告/);assert.doesNotMatch(md,/合成研究报告/);
    await checks.getByRole('button',{name:'查看实际输入与返回',exact:true}).click();
-   const trace=page.getByRole('complementary',{name:'研究执行轨迹'});await trace.getByRole('combobox',{name:'事件筛选'}).click();await page.getByRole('option',{name:'异常与提示',exact:true}).click();await count(trace.locator('.rd-event'),1);await trace.getByRole('button',{name:'查看调用详情',exact:true}).click();await textIncludes(trace,'合成公告读取失败');
+   const trace=page.getByRole('complementary',{name:'研究执行轨迹'});await trace.getByRole('combobox',{name:'事件筛选'}).click();await page.getByRole('option',{name:'异常与提示',exact:true}).click();await count(trace.locator('.rd-event'),1);const detailToggle=trace.getByRole('button',{name:'查看调用详情',exact:true});await detailToggle.click();await textIncludes(trace,'合成公告读取失败');const detailData=trace.locator('.rd-event-data'),detailSpacing=await detailData.evaluate(node=>{const style=getComputedStyle(node);return [parseFloat(style.marginTop),parseFloat(style.marginBottom)];});assert.ok(detailSpacing.every(value=>value>=6),'调用详情应保留上下间隔');const [toggleBox,contentBox]=await Promise.all([detailToggle.boundingBox(),detailData.locator('[data-slot="collapsible-content"]').boundingBox()]);assert.ok(Math.abs(toggleBox.x-contentBox.x)<=1&&Math.abs(toggleBox.width-contentBox.width)<=1,'调用详情按钮和内容应左右对齐');
    assert.equal(requests('POST','/api/jobs').length,0);
   });
   test('byd-capability-workbench-guide-'+width,{viewport:{width,height:1000}},async({page,requests})=>{
    await page.goto('/workbench');await page.locator('#question').fill('比亚迪A股深度投资研究');
    await count(page.locator('.workbench-delivery-note'),0);await noOverflow(page,'BYD workbench '+width);await screenshot(page,'byd-workbench-'+width);
    await page.goto('/handbook?tab=guide');
-   await page.getByRole('button',{name:/跟踪研究进度/}).click();await textIncludes(page.locator('.research-usage'),'平台会按当前问题依次准备资料、查证、计算和复核');
-   await page.getByRole('button',{name:/阅读与核对结果/}).click();await textIncludes(page.locator('.research-usage'),'不取平均掩盖冲突');await noOverflow(page,'BYD guide '+width);assert.equal(requests('POST','/api/jobs').length,0);
+   await page.locator('.usage-topics').getByRole('button',{name:/跟踪研究进度/}).click();await textIncludes(page.locator('.research-usage'),'平台会按当前问题依次准备资料、查证、计算和复核');
+   await page.locator('.usage-topics').getByRole('button',{name:/阅读与核对结果/}).click();await textIncludes(page.locator('.research-usage'),'不取平均掩盖冲突');await noOverflow(page,'BYD guide '+width);assert.equal(requests('POST','/api/jobs').length,0);
   });
  }
  const streaming=makeJob(5922,'running',{mode:'A'});

@@ -193,7 +193,9 @@ test('V4.7 release matches the current runtime and preserves every V4.6 business
  for(const file of manifest.files){
   const bytes=readFileSync(new URL('../'+base+file.path,import.meta.url));
   assert.equal(bytes.length,file.bytes);assert.equal(hash(bytes),file.sha256);
-  if(file.path!=='README.md')assert.deepEqual(bytes,readFileSync(new URL('../knowledge/'+file.path,import.meta.url)));
+  if(file.path.startsWith('modules/rules/'))assert.deepEqual(bytes,readFileSync(new URL('../knowledge/'+file.path,import.meta.url)));
   if(file.path.startsWith('modules/rules/'))assert.deepEqual(bytes,readFileSync(new URL('../knowledge/versions/v4.6.0/'+file.path,import.meta.url)));
  }
+ const historical=JSON.parse(read(base+'modules.json'));
+ assert.deepEqual(historical.modules.map(module=>({id:module.id,path:module.path,sha256:module.sha256})),moduleCatalog.modules.map(module=>({id:module.id,path:module.path,sha256:module.sha256})));
 });

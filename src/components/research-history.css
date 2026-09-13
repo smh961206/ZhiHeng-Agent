@@ -181,6 +181,9 @@
 .recent-research .rr-outcome { color:#4d7155; font-size:11px; }
 
 /* Follow-up entries use the existing status filters and preserve chronological order. */
+.history-page.research-history button.rh-query{height:auto;min-height:32px;padding:4px 9px;white-space:normal;text-align:left;line-height:1.6;max-width:100%;overflow-wrap:anywhere;border:1px solid var(--border);border-radius:8px}
+.history-page.research-history button.rh-query>svg{flex-shrink:0}
+@media(max-width:639px){.history-page.research-history button.rh-query{min-height:44px}}
 .history-page.research-history .rh-follow-ups{display:flex;align-items:center;flex-wrap:wrap;gap:10px 18px;padding:12px 16px;margin-bottom:18px;border:1px solid #dce7df;border-radius:12px;background:#f5f9f5}
 .history-page.research-history .rh-follow-ups>strong{font-size:13px;font-weight:600}
 .history-page.research-history .rh-follow-ups button{height:auto;min-height:40px;gap:8px;font-size:13px;color:#365e4a;white-space:normal}

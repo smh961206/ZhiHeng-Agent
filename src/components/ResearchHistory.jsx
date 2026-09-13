@@ -53,7 +53,7 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
   const [refreshed, setRefreshed] = useState(false);
   const refreshInFlight = useRef(false);
   const resultsHeading = useRef(null);
-  const searchInput = useRef(null);
+  const searchInput = useRef(null), statusFilters = useRef(null), modeFilter = useRef(null);
   const records = Array.isArray(jobs) ? jobs.filter(job => job?.id != null) : [];
   const query = params.get('q') || '';
   const status = groups.some(([key]) => key === params.get('status')) ? params.get('status') : 'all';
@@ -127,7 +127,7 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
 
   return <section className="history-page research-history" aria-label="研究记录">
     <header className="rh-heading">
-      <div><h1>研究记录</h1><p>先看研究判断与状态，再进入详情核对证据、过程和实际用量；平台更新不改写历史报告。</p></div>
+      <div><h1>研究记录</h1><p>查找已有研究，跟进执行进度，回看当时的判断与证据。</p></div>
       <Button type="button" onClick={() => onStart?.()} className="rh-create"><Plus size={17} aria-hidden="true"/>新建研究</Button>
     </header>
 
@@ -141,14 +141,14 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
       <div className="rh-toolbar">
         <div className="rh-search">
           <Search size={18} aria-hidden="true"/>
-          <Input ref={searchInput} type="search" aria-label="搜索研究问题、模式或标的" placeholder="搜索问题、研究模式或标的" value={query} onChange={event => update({q: event.target.value, page: null})}
+          <Input ref={searchInput} type="search" aria-label="搜索研究问题、路径或标的" placeholder="搜索问题、研究路径或标的" value={query} onChange={event => update({q: event.target.value, page: null})}
             onKeyDown={event=>{if(event.key==='Escape'&&query){event.preventDefault();update({q:null,page:null});}}}/>
           {query && <Button type="button" variant="ghost" size="icon-lg" aria-label="清空搜索" onClick={() => {update({q: null, page: null}); searchInput.current?.focus();}}><X size={16} aria-hidden="true"/></Button>}
         </div>
         <div className="rh-tools">
           <Select value={mode} onValueChange={value => update({mode: value === 'all' ? null : value, page: null})}>
-            <SelectTrigger aria-label="按研究模式筛选" className="rh-mode-filter" data-active={mode !== 'all'}><SelectValue/></SelectTrigger>
-            <SelectContent><SelectItem value="all">全部研究模式</SelectItem>{Object.entries(modeLabels).map(([id, label]) => <SelectItem value={id} key={id}>{label}</SelectItem>)}</SelectContent>
+            <SelectTrigger ref={modeFilter} aria-label="按研究路径筛选" className="rh-mode-filter" data-active={mode !== 'all'}><SelectValue/></SelectTrigger>
+            <SelectContent><SelectItem value="all">全部研究路径</SelectItem>{Object.entries(modeLabels).map(([id, label]) => <SelectItem value={id} key={id}>{label}</SelectItem>)}</SelectContent>
           </Select>
           <Select value={order} onValueChange={value => update({sort: value === 'newest' ? null : value, page: null})}>
             <SelectTrigger aria-label="研究排序" className="rh-sort"><SelectValue/></SelectTrigger>
@@ -158,7 +158,7 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
         </div>
       </div>
 
-      <ToggleGroup type="single" value={status} onValueChange={value => {if(value)update({status: value === 'all' ? null : value, page: null});}} size="sm" className="rh-filters" aria-label="按研究状态筛选">
+      <ToggleGroup ref={statusFilters} type="single" value={status} onValueChange={value => {if(value)update({status: value === 'all' ? null : value, page: null});}} size="sm" className="rh-filters" aria-label="按研究状态筛选">
         {groups.map(([key, label]) => <ToggleGroupItem value={key} key={key}>{label}<Badge variant={status === key ? 'default' : 'secondary'} className="rh-filter-count">{unavailable ? '—' : counts[key]}</Badge></ToggleGroupItem>)}
       </ToggleGroup>
 
@@ -173,9 +173,9 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
           {busy ? <><LoaderCircle size={14} className="rh-spin" aria-hidden="true"/>{records.length ? '正在更新，当前显示上次获取的记录…' : '正在加载研究记录…'}</> : !records.length && error ? '记录暂不可用' : <>
             {refreshed && !error && <span className="rh-refreshed"><CheckCheck size={14} aria-hidden="true"/>已刷新</span>}
             <span>{hasFilters ? <>找到 <strong>{filtered.length}</strong> 项匹配研究 / 共 {records.length} 项</> : <>共 <strong>{records.length}</strong> 项研究</>}</span>
-            {status !== 'all' && <span className="rh-query">{groups.find(([key]) => key === status)[1]}</span>}
-            {mode !== 'all' && <span className="rh-query">{modeLabels[mode]}</span>}
-            {query.trim() && <span className="rh-query">搜索“{query.trim()}”</span>}
+            {status !== 'all' && <Button type="button" variant="secondary" size="sm" className="rh-query" aria-label="移除状态筛选" onClick={()=>{update({status:null,page:null});statusFilters.current?.querySelector('button')?.focus();}}>{groups.find(([key]) => key === status)[1]}<X size={12} aria-hidden="true"/></Button>}
+            {mode !== 'all' && <Button type="button" variant="secondary" size="sm" className="rh-query" aria-label="移除路径筛选" onClick={()=>{update({mode:null,page:null});modeFilter.current?.focus();}}>{modeLabels[mode]}<X size={12} aria-hidden="true"/></Button>}
+            {query.trim() && <Button type="button" variant="secondary" size="sm" className="rh-query" aria-label="移除关键词筛选" onClick={()=>{update({q:null,page:null});searchInput.current?.focus();}}>搜索“{query.trim()}”<X size={12} aria-hidden="true"/></Button>}
           </>}
         </p>
         {hasFilters && <Button type="button" variant="ghost" size="sm" className="rh-clear" onClick={clear}><X size={13} aria-hidden="true"/>清除筛选</Button>}
@@ -186,7 +186,7 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
           {visible.map(job => {
             const created = dateOf(job.createdAt);
             const validDate = Number.isFinite(created.getTime());
-            const sourceCount = job.sourceCount ?? job.input?.sources?.length ?? 0;
+            const sourceCount = job.sourceCount ?? job.input?.sources?.length;
             const securities = securitiesOf(job).map(security => securityDisplayLabel(security, exchanges)).filter(Boolean);
             const recordMode = modeOf(job);
             return <li className="rh-row" key={job.id} data-status={job.status}>
@@ -197,7 +197,7 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
                   <div className="rh-meta"><Badge variant="outline" className="rh-mode" data-mode={recordMode}><Highlight text={modeLabel(job)} terms={terms}/></Badge>{job.status==='completed'&&job.researchOutcome?.action&&<><Badge variant="secondary" className="rh-outcome">研究判断：<Highlight text={job.researchOutcome.action} terms={terms}/></Badge>{job.researchOutcome.confidence&&<span className="rh-confidence">置信度 · <Highlight text={job.researchOutcome.confidence} terms={terms}/></span>}</>}</div>
                 </div>
                 <span className="rh-row-state"><span className="rh-state-label">执行状态</span><Status status={job.status} delivery={job.delivery}/></span>
-                <span className="rh-created"><span>创建时间</span><time className="rh-time" dateTime={validDate ? created.toISOString() : undefined} title={validDate ? dateFormatter.format(created) : undefined}>{validDate ? dateFormatter.format(created) : '时间未记录'}</time><span className="rh-source-total"><FileText size={13} aria-hidden="true"/>{sourceCount} 份资料</span></span>
+                <span className="rh-created"><span>创建时间</span><time className="rh-time" dateTime={validDate ? created.toISOString() : undefined} title={validDate ? dateFormatter.format(created) : undefined}>{validDate ? dateFormatter.format(created) : '时间未记录'}</time><span className="rh-source-total"><FileText size={13} aria-hidden="true"/>{Number.isSafeInteger(sourceCount)&&sourceCount>=0?sourceCount+' 份资料':'资料数未记录'}</span></span>
               </Link>
               {renderDelete && <div className="rh-delete">{renderDelete(job)}</div>}
             </li>;
@@ -205,7 +205,7 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
         </ul> : (records.length > 0 || (!error && !busy)) && <div className="rh-empty">
           <span className="rh-empty-icon">{records.length ? <Search size={29} aria-hidden="true"/> : <History size={29} aria-hidden="true"/>}</span>
           <h2>{records.length ? '没有找到匹配的研究' : '从第一项研究开始积累'}</h2>
-          <p>{records.length ? '试试公司名称、证券代码或研究模式，也可以清除筛选重新查找。' : '研究报告、证据来源与执行过程，都会在这里为你留存。'}</p>
+          <p>{records.length ? '试试公司名称、证券代码或研究路径，也可以清除筛选重新查找。' : '研究报告、证据来源与执行过程，都会在这里为你留存。'}</p>
           <Button type="button" variant={records.length ? 'outline' : 'default'} onClick={records.length ? clear : () => onStart?.()}>{records.length ? '清除筛选' : '开始第一项研究'}<ArrowRight size={16} aria-hidden="true"/></Button>
         </div>}
       </div>

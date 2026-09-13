@@ -1,5 +1,7 @@
 # Research State Contract
 
+V5.3 version clarification: new plans persist execution compatibility 1 and output contract 7, separately from K identity and model pins. Compatible pre-rename K-pinned framework-4.7 plans retain exact checkpoint/message identity. Missing or incompatible execution metadata fails closed, and no historical records are relabelled. This is job metadata, not the future canonical ResearchState. See [ADR-017](../adr/ADR-017-platform-execution-compatibility.md).
+
 V4.9 authorized lifecycle repair: a cancelled job whose terminal save is still awaiting acknowledgement remains owned by its controller. An exact-version retry may wait up to five seconds for that execution's completion promise while holding the mutation lock; duplicates still fail. Only after durable finalization and controller release may capacity, persisted state and retry version be rechecked and one retry start. Timeout or failed delivery cannot bypass save recovery. This coordination is in memory, not a canonical ResearchState schema change.
 Implementation Status: PARTIAL; target V5.7.
 

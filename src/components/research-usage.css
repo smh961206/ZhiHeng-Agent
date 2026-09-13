@@ -4,6 +4,15 @@
 .usage-heading p{margin:6px 0 0;color:#6d7f71;font-size:14px;line-height:1.8}
 .usage-heading>a{flex-shrink:0;min-height:44px;font-size:13px}
 .usage-topics{display:grid;gap:12px}
+.usage-search{position:relative;margin:0 0 14px}
+.usage-search>svg{position:absolute;left:14px;top:15px;color:var(--muted-foreground);pointer-events:none}
+.usage-search input{height:48px;padding-inline:42px 46px;background:var(--card);font-size:14px}
+.usage-search input::-webkit-search-cancel-button{-webkit-appearance:none}
+.usage-search>button{position:absolute;right:3px;top:3px;min-width:42px;min-height:42px}
+.usage-shortcuts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.usage-shortcuts button{height:auto;min-height:40px;padding:8px 12px;white-space:normal}
+.usage-search-status{margin:0 0 16px;font-size:14px;color:var(--muted-foreground)}
+@media(max-width:639px){.usage-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.usage-shortcuts button{min-height:44px}.usage-search input{font-size:16px}}
 .usage-topic{scroll-margin-top:88px}
 .usage-topic:focus-visible{outline:2px solid #39705c;outline-offset:3px}
 .usage-topic{border:1px solid #dce6dc;border-radius:12px;background:#fff;overflow:hidden}

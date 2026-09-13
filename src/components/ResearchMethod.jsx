@@ -32,9 +32,9 @@ export default function ResearchMethod(){
   </section>
   <section id="method-loading" tabIndex={-1} className="fw-section" aria-labelledby="method-loading-title">
    <div className="fw-section-heading"><h3 id="method-loading-title">每项研究保留当时的资料与规则</h3><p>研究范围随问题确定，实际使用的依据随任务保存，方便以后按当时的信息重新核对判断。</p></div>
-   <details className="method-version-note"><summary>为什么历史报告不会随平台更新改变</summary><p>每项研究都会保留创建时使用的资料、规则与判断。之后的平台更新只用于新的研究，不会改写已经完成的报告；这样才能按当时的信息重新核对原判断。</p></details>
+   <details className="method-version-note"><summary>为什么历史报告不会随平台更新改变</summary><p>平台版本记录产品功能的更新，Knowledge 版本记录研究规则的更新。每项研究保留当时的资料、规则与判断，历史报告不会自动换用当前规则。</p><p>中断后，符合继续执行条件的任务沿用原进度与资料时点；不符合时，可将原输入带回工作台，确认后创建新的研究，旧记录仍保留。</p></details>
    <KnowledgeHighlights/>
-   <div className="method-detail-copy"><h4>深度研究怎样选择展开程度</h4><dl>{Object.entries(depthGuidance).map(([depth,copy])=><div key={depth}><dt><strong>{{Quick:'简明研究',Standard:'标准研究',Deep:'完整展开'}[depth]}</strong></dt><dd>{copy}</dd></div>)}</dl><p>其他专项始终保留必要的核对步骤。只有明确提出需要图示时，报告才会加入相应图表。</p><p>平台更新用于之后的新研究；进行中的任务仍沿用开始时的资料与依据，历史报告不会改写。</p><p>在详情页打开“研究过程”，再展开“本次研究依据”，即可查看实际使用的内容。旧记录没有保存的部分会显示“未记录”。</p></div>
+   <div className="method-detail-copy"><h4>深度研究怎样选择展开程度</h4><dl>{Object.entries(depthGuidance).map(([depth,copy])=><div key={depth}><dt><strong>{{Quick:'简明研究',Standard:'标准研究',Deep:'完整展开'}[depth]}</strong></dt><dd>{copy}</dd></div>)}</dl><p>其他专项始终保留必要的核对步骤。只有明确提出需要图示时，报告才会加入相应图表。</p><p>继续研究沿用原资料时点；重新开始会重新采集和核对；重试保存只处理暂存结果，不重新研究。</p><p>在详情页打开“研究过程”，再展开“本次研究依据”，即可查看当时的规则版本与实际使用记录。旧记录没有保存的部分会显示“未记录”。</p></div>
   </section>
   <section className="fw-section" aria-labelledby="method-evidence-title">
    <div className="fw-section-heading"><h3 id="method-evidence-title">估值与证据怎样配合</h3><p>先判断估值方法是否适用，再检查参数和证据质量；资料越有限，结论就越需要保留条件。</p></div>

@@ -1,4 +1,15 @@
 /* Shared platform presentation. Domain layouts and status semantics keep their owners. */
+:root{--platform-ink:#183e35;--platform-muted:#596e63;--platform-title:clamp(24px,2.3vw,30px);--platform-panel-radius:14px}
+.app-shell .page-content :is(.workbench-heading,.rh-heading,.handbook-heading) h1{font-size:var(--platform-title);font-weight:650;line-height:1.45;letter-spacing:-.5px;color:var(--platform-ink)}
+.app-shell .page-content :is(.workbench-heading,.rh-heading,.handbook-heading) p{font-size:14px;line-height:1.8;color:var(--platform-muted);margin-top:8px}
+.app-shell .research-detail{--rd-ink:var(--platform-ink);--rd-muted:var(--platform-muted)}
+.app-shell .research-detail .rd-title-row h1{font-size:var(--platform-title);line-height:1.5;letter-spacing:-.5px}
+.app-shell .page-content>.empty-state{display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:12px;min-height:320px;margin-top:24px;padding:32px 24px;border:1px solid var(--border);border-radius:var(--platform-panel-radius);background:var(--card);text-align:center}
+.app-shell .page-content>.empty-state>:is(h1,h2,p){flex-basis:100%;margin:0}.app-shell .page-content>.empty-state>svg{flex-basis:100%;margin-bottom:6px}
+.app-shell .page-content>.empty-state>:is(h1,h2){font-size:20px;font-weight:600;line-height:1.5;color:var(--platform-ink)}
+.app-shell .page-content>.empty-state>:is(button,a){min-height:44px}
+.app-shell .page-content :is(.home-workspace a,.usage-shortcuts button,.rh-query):focus-visible{outline:2px solid var(--ring);outline-offset:3px}
+@media(max-width:639px){.app-shell .page-content :is(input,textarea),.app-shell .page-content .research-workbench :is(input,textarea){font-size:16px}.app-shell .page-content>.empty-state{padding:24px 16px}}
 :root{--background:#f5f7f5;--border:#dce5df;--ring:#39705c;--radius:0.75rem}
 .app-shell .topbar{background:#ffffffed;border-bottom:1px solid var(--border);gap:12px}
 .topbar>div:first-child{min-width:0}
@@ -6,7 +17,7 @@
 .platform-status-trigger{flex-shrink:0;gap:8px;color:#35564a;min-height:36px}
 .platform-status-dot{width:7px;height:7px;border-radius:50%;background:#86918a;flex-shrink:0}
 .platform-status-dot.is-configured{background:#3b7b60}
-.platform-status-dot.is-unconfigured,.platform-status-dot.is-unknown{background:#a07630}
+.platform-status-dot.is-unconfigured,.platform-status-dot.is-unknown,.platform-status-dot.is-pending{background:#a07630}
 .platform-status-dot.is-incompatible{background:#b24b35}
 .platform-status-panel{width:min(380px,calc(100vw - 24px));padding:22px;border-radius:16px;max-height:calc(100dvh - 90px);overflow-y:auto;color:#29453a}
 .platform-panel-heading{display:flex;align-items:flex-start;gap:12px}

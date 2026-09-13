@@ -28,7 +28,7 @@ import {comparisonRules} from '../shared/company-comparison.mjs';
 import {compareCompanies,comparisonToolProperties} from './company-comparison.mjs';
 import {summarizeCalculations} from '../shared/calculation-progress.mjs';
 import {normalizedEarnings} from './normalized-earnings.mjs';
-import {createResearchPlan} from '../shared/research-framework.mjs';
+import {createResearchPlan,compatibleExecution,executionMetadata} from '../shared/research-framework.mjs';
 import {updateStage} from './research-workflow.mjs';
 import {reportPreview} from '../shared/report-preview.mjs';
 import {createJobRuleSession} from './knowledge.mjs';
@@ -148,6 +148,7 @@ export async function completion(messages, tools, signal, onDelta,{purpose='rese
 }
 import {withResearchBudget,accountResearchRound,researchResourceId,reuseBudgetRetrieval,retrievalSnapshot,researchBudgetActive} from './research-budget.mjs';
 export async function runAgent(job,emit,signal,options={}){
+ if(job.plan&&!compatibleExecution(job.plan))throw Object.assign(new Error('执行流程已更新，需要重新开始研究'),{code:'execution_state_incompatible'});
  assertFlagshipRecovery(job);
  return withResearchBudget(job,()=>withJobModelState(job,()=>runAgentWithModelState(job,emit,signal,options)),{persist:options.onModelCheckpoint});
 }
@@ -171,7 +172,7 @@ async function runAgentWithModelState(job,emit,signal,{webSession=createWebResea
   const stage=(id,status)=>updateStage(job,id,status,emit);
   if(job.workflow?.stages?.find(s=>s.id==='task')?.status!=='completed')stage('task','completed');
   if(!resumed)stage('evidence','running');
-  emit('route',`已选择 ${modes[mode].name} · ${job.plan.depth}`,{frameworkVersion:job.plan.version,knowledge:knowledgeManifest});
+  emit('route',`已选择 ${modes[mode].name} · ${job.plan.depth}`,{...(Object.hasOwn(job.plan,'executionCompatibilityVersion')?{executionCompatibilityVersion:job.plan.executionCompatibilityVersion}:{frameworkVersion:job.plan.version}),knowledge:knowledgeManifest});
   emit('evidence',resumed?`恢复已保留的 ${input.sources.length} 条资料，沿用原采集时点。`:'准备自动获取行情和官方财报');
   if(input.securities?.length&&!resumed){
     const collected=await collectData(input.securities,{years:job.plan.historyYears,mode,signal,emit});
@@ -512,7 +513,7 @@ async function runAgentWithModelState(job,emit,signal,{webSession=createWebResea
   if(!final)throw new Error((lastKind==='format'?'审计输出格式处理失败，报告未发布：':'审计未通过，报告未发布：')+lastError);
   if(flagshipPending){final.validation.initialEvidenceWindow=structuredClone(auditContext.window);final.validation.evidenceWindows=structuredClone(evidenceWindows);final.evidenceFollowup=structuredClone(followup.state);if(job.visualAudit)final.validation.visualAudit=structuredClone(job.visualAudit);}
   stage('review','completed');
-  return {...final,framework:{version:job.plan.version,contractVersion:job.plan.contractVersion,knowledge:structuredClone(knowledgeManifest),snapshot:structuredClone(rules.snapshot),usage:structuredClone(job.knowledgeUsage)},
+  return {...final,framework:{...executionMetadata(job.plan),knowledge:structuredClone(knowledgeManifest),snapshot:structuredClone(rules.snapshot),usage:structuredClone(job.knowledgeUsage)},
     warnings:[...(job.marketData?.warnings??[]),...web.state.warnings,...pendingWebGaps(web.state).map(gap=>`网页补充 [${gap.id}] ${gap.description}：${webGapLabel(gap.status)}；${[...gap.failures,...gap.limitations].join('；')}`),...(!web.state.configured?['主动网页搜索尚未配置或已关闭；仅使用已有成功读取资料，缺口不能凭模型记忆补齐']:[]),'行情为来源最新可得快照，可能延迟；官方财报按任务范围采集，覆盖和解析限制见证据目录；模型复核不等于人工审计',
       ...(mode==='C'&&!input.baseline&&!input.previousResearch?.trim()?['未提供旧研究，本次仅建立财报基线，不能验证前后变化']:[]),
       ...(!input.sources.length?['数据不足：未获得来源，以下仅为待验证研究框架']:[])]};

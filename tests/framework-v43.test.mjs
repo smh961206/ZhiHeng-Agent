@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {toolsForMode,runAgent} from '../server/agent.mjs';
-import {frameworkVersion,createResearchPlan} from '../shared/research-framework.mjs';
-import {indexRules,moduleCatalog} from '../server/knowledge.mjs';
+import {executionCompatibilityVersion,createResearchPlan} from '../shared/research-framework.mjs';
+import {bindKnowledge,indexRules,moduleCatalog} from '../server/knowledge.mjs';
 import {researchResume,resumeScope,resumeSummary} from '../server/research-resume.mjs';
 import {retryNotice} from '../shared/research-recovery.mjs';
 import {validateReview} from '../server/research-output.mjs';
@@ -13,7 +13,7 @@ import * as calculations from '../server/calculations.mjs';
 
 const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8').replaceAll('\r\n','\n');
 test('V4.3 retires the V4.1 enhancement while retaining base chapters and later execution safeguards',()=>{
- assert.equal(frameworkVersion,'4.7');
+ assert.equal(executionCompatibilityVersion,1);
  for(const kind of ['FULL']){
   const current=moduleCatalog.modules.map(m=>read(m.path)).join('\n\n'),base=read(`knowledge/versions/v4.0/V4.0_${kind}_SKILL.md`),previous=read(`knowledge/versions/v4.2.0/V4.2.0_${kind}_SKILL.md`);
   const operational=current.split(/# \d+\. V4\.2→V4\.3 更新摘要/)[0];
@@ -42,8 +42,8 @@ test('historical source backups stay byte-identical during V4.3 generation',()=>
 test('old framework checkpoints cannot restore retired tools into new research; current checkpoints still resume',()=>{
  const job={status:'failed',mode:'B',input:{question:'合成研究',sources:[{id:'S1'}]},plan:{version:'4.2'},workflow:{stages:[{id:'evidence',status:'completed'}]}};
  assert.equal(researchResume(job),null);
- assert.equal(resumeSummary(job).reason,'framework_changed');assert.match(retryNotice({...job,resume:resumeSummary(job)}),/按新版本重新研究/);
- job.plan.version=frameworkVersion;job.checkpoint={version:1,scope:resumeScope(job),phase:'research',toolRecords:[],evidence:[]};
+ assert.equal(resumeSummary(job).reason,'rules_changed');assert.match(retryNotice({...job,resume:resumeSummary(job)}),/重新研究/);
+ job.plan=createResearchPlan({mode:'B',question:'合成研究'});bindKnowledge(job.plan);job.checkpoint={version:1,scope:resumeScope(job),phase:'research',toolRecords:[],evidence:[]};
  assert.ok(researchResume(job));assert.equal(resumeSummary(job).available,true);
 });
 

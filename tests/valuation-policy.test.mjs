@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {valuationFamily,valuationIssues} from '../shared/valuation-policy.mjs';
-import {createResearchPlan,frameworkVersion} from '../shared/research-framework.mjs';
+import {createResearchPlan} from '../shared/research-framework.mjs';
 import {validateReview,reviewContract} from '../server/research-output.mjs';
-import {knowledgeManifest} from '../server/knowledge.mjs';
+import {bindKnowledge,knowledgeManifest} from '../server/knowledge.mjs';
 import {researchResume,resumeScope,resumeSummary} from '../server/research-resume.mjs';
 import {retryNotice} from '../shared/research-recovery.mjs';
 import {prepareResearchRetry} from '../server/research-retry.mjs';
@@ -31,14 +31,15 @@ test('every path shares the execution policy and final review rejects invalid mo
  assert.equal(validateReview(review,{input,plan,sources}).validation.checks.find(item=>item.id==='valuation').passed,true);
 });
 
-test('same-version rule edits invalidate private checkpoints without changing historical completed reports',()=>{
- const job={status:'failed',mode:'B',input:{question:'合成研究'},plan:{version:frameworkVersion,knowledge:structuredClone(knowledgeManifest)}};
+test('changed Knowledge identity invalidates private checkpoints without changing historical completed reports',()=>{
+ const job={status:'failed',mode:'B',input:{question:'合成研究'},plan:createResearchPlan({mode:'B',question:'合成研究'})};bindKnowledge(job.plan);
  job.checkpoint={version:1,scope:resumeScope(job),phase:'research',toolRecords:[],evidence:[]};
  assert.ok(researchResume(job));
  job.plan.knowledge.reverse();assert.ok(researchResume(job),'manifest order is immaterial');
  job.plan.knowledge[0].sha256='updated-content';
  assert.equal(researchResume(job),null);assert.equal(resumeSummary(job).reason,'rules_changed');
- assert.match(retryNotice({...job,resume:resumeSummary(job)}),/规则内容已更新/);
+ const notice=retryNotice({...job,resume:resumeSummary(job)});
+ assert.match(notice,/研究规则/);assert.match(notice,/工作台，确认后/);assert.match(notice,/旧计算与模型对话不会混入新任务/);
  job.status='completed';const before=structuredClone(job);assert.deepEqual(resumeSummary(job),{available:false});assert.deepEqual(job,before);
 });
 
@@ -50,6 +51,6 @@ test('retry rebuilds a changed-rule task from its input instead of carrying old 
  const before=structuredClone(job),next=await prepareResearchRetry(job,async()=>null);
  assert.deepEqual(job,before);assert.equal(next.status,'queued');assert.equal(next.checkpoint,undefined);
  assert.deepEqual(next.input.sources,[]);assert.deepEqual(next.plan.knowledge,knowledgeManifest);
- assert.equal(next.events[0].restartReason,'rules_changed');assert.match(next.events[0].message,/规则内容已更新/);
+ assert.equal(next.events[0].restartReason,'rules_changed');assert.match(next.events[0].message,/Knowledge.*K1\.0\.0/);
  assert.equal(next.plan.valuationPolicy.guidance,createResearchPlan(input).valuationPolicy.guidance);
 });

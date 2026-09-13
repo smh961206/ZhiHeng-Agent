@@ -18,7 +18,7 @@ import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
   Activity, ArrowLeft, ArrowUp, ArrowUpRight, BookOpen, Check, ChevronDown, CircleAlert,
-  Clock3, Download, FileText, Globe, List, LoaderCircle, RotateCcw,
+  Clock3, Download, FileText, Globe, List, LoaderCircle, ReceiptText, RotateCcw,
   Search, ShieldCheck, SlidersHorizontal, Square, X,
 } from 'lucide-react';
 import {Button} from './ui/button';
@@ -181,7 +181,7 @@ function ReportPanel({job, exchanges, prefix, preview, onRetry, retrying, retryE
           ? ['研究已取消', '可沿用本次输入重新运行当前研究，执行进度、资料和报告将在本页更新。', Square]
           : ['暂无可用报告', '这条研究记录未包含正式报告正文，可查看审计、来源与执行轨迹，或载入输入重新研究。', FileText];
   const actions=onRetry?<div className="rd-retry-actions"><RetryButton onRetry={onRetry} retrying={retrying} notice={retryNotice(job)}/>{onReuse&&!retryError&&<Button type="button" variant="ghost" onClick={onReuse} disabled={retrying} title="回到工作台调整输入，确认提交后创建新的研究">修改研究输入</Button>}</div>
-    :onReuse?<Button type="button" variant="outline" onClick={onReuse}><RotateCcw size={15}/>复用研究输入</Button>:null;
+    :onReuse?<div className="rd-retry-actions"><Button type="button" variant="outline" onClick={onReuse} disabled={retrying} title="将原输入带回工作台，确认提交后创建新的研究"><RotateCcw size={15}/>{recovery?.requiresNewResearch?'重新开始研究':'复用研究输入'}</Button></div>:null;
   return <EmptyState failed={failed||recovery?.kind==='cancelled'} title={recovery?.continuation?.title||recovery?.restart?.title||state[0]} icon={recovery?.continuation?RotateCcw:state[2]} active={job.status === 'running'} descriptionClassName={recovery?.continuation?'rd-resume-retained':undefined} actions={!active?<>{actions}{guide}</>:null}>{recovery?.continuation?.retained||recovery?.text||state[1]}</EmptyState>;
 }
 
@@ -466,7 +466,7 @@ function ResearchActions({job,reading,setReading,active,hasReport,cancelling,onC
   function perform(action){onNavigate?.();action?.();}
   return <Card className="rd-action-panel" role="group" aria-label="研究操作"><CardContent>
     <Toggle variant="outline" className="rd-reading-toggle" pressed={reading} onPressedChange={()=>perform(()=>setReading(value=>!value))}><BookOpen size={17}/>{reading?'退出阅读模式':'阅读模式'}</Toggle>
-    {!active&&(onRetry?<RetryButton onRetry={()=>perform(onRetry)} retrying={retrying} saveOnly={saveOnly} notice={retryNotice(job)}/>:onReuse&&<Button variant="outline" onClick={()=>perform(onReuse)} disabled={retrying} title="将输入载入工作台，确认提交后才会开始新的研究"><RotateCcw size={17}/>复用研究输入</Button>)}
+    {!active&&(onRetry?<RetryButton onRetry={()=>perform(onRetry)} retrying={retrying} saveOnly={saveOnly} notice={retryNotice(job)}/>:onReuse&&<Button variant="outline" onClick={()=>perform(onReuse)} disabled={retrying} title="将输入载入工作台，确认提交后才会开始新的研究"><RotateCcw size={17}/>{researchRecovery(job)?.requiresNewResearch?'重新开始研究':'复用研究输入'}</Button>)}
     <Popover open={exportOpen} onOpenChange={setExportOpen}>
       <PopoverTrigger asChild><Button className="rd-export" disabled={!hasReport||!onDownload||retrying||exporting} aria-busy={Boolean(exporting)} title={hasReport?'选择下载内容':saveOnly||saving||saveUnavailable?'结果保存成功后可导出':'正式报告生成后可导出'}>{exporting?<LoaderCircle size={17} className="rd-spin"/>:<Download size={17}/>}{exporting?'准备导出…':'导出报告'}</Button></PopoverTrigger>
       <PopoverContent align="end" collisionPadding={12} className="rd-export-popover" aria-label="下载选项" aria-describedby={exportDescription}>
@@ -700,7 +700,7 @@ function DetailView({job, currentConfig, tab, onTabChange, streamConnection, onR
             <ResearchProgress job={job} expanded/>
             <ResearchRuleUsage key={job.retryCount??0} job={job} currentConfig={currentConfig}/>
             <DocumentReadingSummary job={job} onSources={showProcessSources}/>
-            {(job.modelRouting||job.id)&&<details className="rd-advanced-records"><summary><span><strong>服务与用量记录</strong><small>仅用于排查服务状态或了解费用</small></span><span>按需查看</span><ChevronDown size={16} aria-hidden="true"/></summary><div><ResearchModelSummary job={job}/><ResearchCostSummary key={job.id} job={job}/></div></details>}
+            {(job.modelRouting||job.id)&&<Collapsible className="rd-service-records rd-process-disclosure" aria-labelledby={prefix+'-service-records'}><CollapsibleTrigger asChild><Button type="button" variant="ghost" className="rd-service-records-heading rd-process-disclosure-trigger"><span className="rd-document-icon"><ReceiptText size={18}/></span><span className="rd-document-heading"><strong id={prefix+'-service-records'}>服务与用量记录</strong><span>用于排查服务状态和了解实际用量</span></span><span className="rd-document-label">按需查看</span><ChevronDown size={16} className="rd-document-chevron" aria-hidden="true"/></Button></CollapsibleTrigger><CollapsibleContent className="rd-service-records-body rd-process-disclosure-content"><ResearchModelSummary job={job}/><ResearchCostSummary key={job.id} job={job}/></CollapsibleContent></Collapsible>}
           </div></SheetContent></Sheet>
         </div>
         {streamConnection&&<p className="rd-connection" role="status"><Activity size={15} aria-hidden="true"/>{streamConnection}</p>}

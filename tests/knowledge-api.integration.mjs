@@ -7,7 +7,7 @@ import {once} from 'node:events';
 import {createServer} from 'node:net';
 import {setTimeout as pause} from 'node:timers/promises';
 import {createStorage} from '../server/storage.mjs';
-import {createResearchPlan,frameworkVersion} from '../shared/research-framework.mjs';
+import {createResearchPlan} from '../shared/research-framework.mjs';
 import {createJobRuleSession} from '../server/knowledge.mjs';
 
 test('rule excerpt API reads saved job provenance through real storage and never accepts arbitrary file paths',{timeout:20000},async()=>{
@@ -22,7 +22,7 @@ test('rule excerpt API reads saved job provenance through real storage and never
  const base='http://127.0.0.1:'+port;
  try{
   let ready=false;for(let n=0;n<100;n++){try{if((await fetch(base+'/api/health')).ok){ready=true;break;}}catch{}await pause(30);}assert.ok(ready,output);
-  const config=await (await fetch(base+'/api/config')).json();assert.equal(config.knowledgeVersion,frameworkVersion);assert.equal(config.knowledgeSnapshot.id,job.plan.knowledgeSnapshot.id);
+  const config=await (await fetch(base+'/api/config')).json();assert.equal(config.knowledgeVersion,'K1.0.0');assert.equal(config.knowledgeSnapshot.id,job.plan.knowledgeSnapshot.id);
   const url=base+'/api/jobs/'+job.id+'/rules?record=';
   const response=await fetch(url+receipt.key);assert.equal(response.status,200);const excerpt=await response.json();
   assert.equal(excerpt.content,result.sections[0].content);assert.equal(excerpt.snapshot.id,job.plan.knowledgeSnapshot.id);

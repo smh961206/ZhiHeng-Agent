@@ -1,13 +1,15 @@
 # Knowledge Invariants
 
 - INV-KNW-001 [ENFORCED principle]: Knowledge describes how to research, not current company opinions.
-- INV-KNW-002 [ENFORCED for current job snapshots; TARGET V5.3 for full release governance]: every production Knowledge release is pinned/versioned.
-- INV-KNW-003 [TARGET V5.3]: material Knowledge changes require root-cause justification and regression tests.
+- INV-KNW-002 [ENFORCED]: every production Knowledge release is pinned/versioned.
+- INV-KNW-003 [ENFORCED]: material Knowledge changes require root-cause justification and regression tests.
 - INV-KNW-004 [TARGET]: hard deterministic rules should migrate to runtime validators/engines where practical.
 - INV-KNW-005 [TARGET]: Knowledge cannot self-modify in production without offline tests and human approval.
+- INV-KNW-006 [ENFORCED]: active Knowledge uses only K-Series identity; one published K version has one immutable snapshot fingerprint.
+- INV-KNW-007 [ENFORCED]: a task without a valid K-Series pin cannot resume old execution state and must restart on the active K release.
 
 ## H0 enforcement evidence and limits
 
-Current evidence: knowledge-snapshots/knowledge pin complete validated snapshots per job; knowledge-excerpt checks saved receipt/hash identity. Tests: knowledge-snapshots, knowledge-backup, research-knowledge, knowledge-api integration. Existing snapshot pinning satisfies the current job-scoped part of KNW-002; full K-Series release governance is still V5.3. Existing offline maintenance tools are not an autonomous learning pipeline.
+Current evidence: `knowledge/current.json` selects one verified K-Series snapshot; knowledge-snapshots rejects V4.x and knowledge pinning binds K version/fingerprint per new job. Same-version byte changes are rejected after activation. Knowledge excerpt checks saved receipt/hash identity. Schema-v3 governance assigns Rule IDs, regression ownership, temporal scope and impact. The linter blocks invalid K snapshots and KCP validation rejects non-Knowledge root causes. Tests: knowledge-engineering, knowledge-snapshots, knowledge-backup, research-resume, research-knowledge and knowledge-api integration.
 
 See [fitness baseline](../development/architecture-fitness.md). No ENFORCED obligation is weakened; unproven coverage is recorded separately.

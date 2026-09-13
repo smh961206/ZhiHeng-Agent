@@ -25,6 +25,7 @@ export function registerWorkflowScenarios({test,workbench,manualInput,enabled,te
   assert.equal(await page.locator('.workbench-securities').evaluate(element=>element===document.activeElement),true);
   await code.fill('600519');await enabled(submit,true);await textIncludes(preparation,'1 个标的');
   const shortcut=page.locator('.composer-submit .composer-shortcut');await count(shortcut,1);
+  assert.doesNotMatch(await shortcut.innerText(),/开始研究/,'快捷键旁不应重复主按钮文案');
   if(width>=640){const [shortcutBox,submitBox,readinessBox]=await Promise.all([shortcut.boundingBox(),submit.boundingBox(),page.locator('.composer-readiness').boundingBox()]);assert.ok(shortcutBox.x>=readinessBox.x+readinessBox.width&&shortcutBox.x<submitBox.x&&shortcutBox.y<submitBox.y+submitBox.height&&shortcutBox.y+shortcutBox.height>submitBox.y,'快捷键提示应位于右侧主按钮左边并垂直对齐');}
   const deliveryTrigger=preparation.getByRole('button',{name:/^查看交付范围/});
   const delivery=page.getByRole('dialog',{name:/交付范围$/});

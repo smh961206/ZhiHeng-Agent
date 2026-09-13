@@ -20,15 +20,17 @@ export function registerPlatformM10Scenarios({test,makeJob,detail,openProcess,te
   test(`platform-m10-saved-stages-and-cost-${width}`,{jobs:[job],viewport:{width,height:1100}},async({page,requests})=>{
    await page.route('**/api/jobs/*/cost',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({version:1,calls:8,unknownBillingCalls:0,complete:true,billing:[{currency:'USD',knownEstimatedCost:0.08}],usage:{inputTokens:{knownTotal:8000,unknownCalls:0},outputTokens:{knownTotal:1600,unknownCalls:0},totalTokens:{knownTotal:9600,unknownCalls:0},cachedInputTokens:{knownTotal:800,unknownCalls:0}},byPurpose:Object.keys(stageModels).map(purpose=>({purpose:purpose==='evidenceVerifier'?'evidence-verifier':purpose==='criticalReviewer'?'critical-review':purpose,calls:1,usage:{inputTokens:{knownTotal:1000,unknownCalls:0},outputTokens:{knownTotal:200,unknownCalls:0},totalTokens:{knownTotal:1200,unknownCalls:0},cachedInputTokens:{knownTotal:100,unknownCalls:0}},billing:[{currency:'USD',knownEstimatedCost:0.01}],unknownBillingCalls:0})),cache:{cachedInputTokens:800,unknownCalls:0},notice:'合成费用记录，不是供应商账单。'})}));
    await detail(page,job);await openProcess(page);
-   const advanced=page.locator('.rd-advanced-records');await advanced.locator(':scope > summary').click();const models=page.locator('.rd-model-assignment');await models.locator('summary').click();
+   const disclosures=page.locator('.rd-process-body > .rd-process-disclosure');assert.equal(await disclosures.count(),3);for(let index=0;index<3;index++){const trigger=disclosures.nth(index).locator(':scope > .rd-process-disclosure-trigger');assert.equal(await trigger.getAttribute('aria-expanded'),'false');await trigger.click();assert.equal(await trigger.getAttribute('aria-expanded'),'true');assert.equal(await disclosures.nth(index).locator(':scope > .rd-process-disclosure-content').count(),1);}const records=page.locator('.rd-service-records');const models=records.locator('.rd-model-assignment');
    const saved=models.getByRole('definition');assert.equal(await saved.count(),8);
    for(const label of stageLabels)await textIncludes(models,label);
    for(const model of Object.values(stageModels).filter(Boolean))await textIncludes(models,model);
    assert.equal((await models.getByText('未启用',{exact:true}).all()).length,2);
-   const cost=page.locator('.rd-cost-summary');await cost.locator('summary').click();
+   const cost=records.locator('.rd-cost-summary');
+   await cost.getByRole('button',{name:'读取用量记录',exact:true}).click();
    for(const label of stageLabels)await textIncludes(cost,label);
    await textIncludes(cost,'服务调用与用量');await textIncludes(cost,'输入用量');await textIncludes(cost,'8,000');await textIncludes(cost,'输出 200');
    assert.doesNotMatch(await cost.innerText(),/其他调用|未识别环节|研究预算/);
+   assert.equal(await records.locator('details').count(),0,'Service and usage records should be directly readable after the first-level disclosure');
    await noOverflow(page,'M1.0 saved stages and cost '+width);await screenshot(page,`m10-saved-stages-${width}`,'.rd-process-sheet');
    assert.equal(requests('POST','/api/jobs').length,0);
   });

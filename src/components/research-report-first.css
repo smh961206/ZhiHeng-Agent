@@ -59,7 +59,7 @@
 .research-detail.rd-process-sheet .rd-meta dt{font-size:11px;color:#708176;margin-bottom:5px}
 .research-detail.rd-process-sheet .rd-meta dd{font-size:13px;overflow-wrap:anywhere}
 .research-detail.rd-process-sheet :is(.rd-document-reading,.rd-cost-summary){display:block}
-.research-detail.rd-process-sheet .rd-process-body>:is(.rd-meta,.research-progress,.rd-web-status,:is(.rd-document-reading,.rd-cost-summary),.rd-deep-process){flex-shrink:0;margin-block:0}
+.research-detail.rd-process-sheet .rd-process-body>:is(.rd-meta,.research-progress,.rd-web-status,.rd-process-disclosure,.rd-deep-process){flex-shrink:0;margin-block:0}
 .research-detail .rd-process-trigger:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
 .research-detail .rd-web-source-note{font-size:13px;line-height:1.8;color:#63756a;margin:0 0 18px}
 .research-detail .rd-sources .rd-source{border-color:#e3e9e5}

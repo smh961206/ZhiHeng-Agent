@@ -1,0 +1,18 @@
+{
+  "release": "V5.3",
+  "knowledgeVersion": "K1.0.0",
+  "validatedAt": "2026-09-13T22:43:00+08:00",
+  "liveModelCalls": 0,
+  "checks": {
+    "knowledgeLint": {"passed": true, "rules": 26, "ontology": 15, "regressions": 14, "criticalErrors": 0},
+    "knowledgeBenchmark": {"passed": true, "modes": "6/6", "ontology": "9/9", "missedTrigger": 0, "falseTrigger": 0, "criticalErrors": 0},
+    "targetedKnowledge": {"passed": true, "cases": 46},
+    "unit": {"passed": true, "cases": 958},
+    "release": {"passed": true, "cases": 179},
+    "mongodbAndRecovery": {"passed": true, "cases": 11},
+    "routes": {"passed": true, "cases": 5},
+    "ui": {"passed": true, "coveredCases": 338, "latestCompletedFullRun": "337/338", "finalTargetedRerun": "2/2", "note": "The remaining full-run failure was a test-harness popover closing race; after waiting for the panel to close, both affected viewports passed. Per user preference, the full suite was not run again."},
+    "productionBuild": {"passed": true, "entryBytes": 482220, "entryGzipBytes": 159680},
+    "deployment": {"passed": true, "scope": "isolated Linux deploy, upgrade, persistent data, backup, rollback, health, stopped backup, build failure, migration failure", "hostNote": "Git Bash used a test-process-only flock shim because the Windows host does not provide flock; deploy.sh was unchanged"}
+  }
+}

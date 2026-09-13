@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import {mkdir, readFile, writeFile} from 'node:fs/promises';
 import {setTimeout as delay} from 'node:timers/promises';
 import {fileURLToPath, pathToFileURL} from 'node:url';
-import {createResearchPlan, frameworkVersion, modes, researchStages, resolveMode, portfolioFields} from '../shared/research-framework.mjs';
+import {createResearchPlan, modes, researchStages, resolveMode, portfolioFields} from '../shared/research-framework.mjs';
 import {reviewFixture} from './fixtures/research-review.mjs';
 import {validateReview} from '../server/research-output.mjs';
 import {prepareResearchRetry} from '../server/research-retry.mjs';
@@ -108,7 +108,8 @@ async function enabled(locator, expected = true) {
   await eventually(async () => await locator.isEnabled() === expected, `Expected enabled=${expected}: ${locator}`);
 }
 async function textIncludes(locator, expected) {
-  await eventually(async () => (await locator.innerText()).includes(expected), `Missing text ${JSON.stringify(expected)}: ${locator}`);
+  let actual='';
+  await eventually(async () => {actual=await locator.innerText();return actual.includes(expected);}, () => `Missing text ${JSON.stringify(expected)} in ${JSON.stringify(actual)}: ${locator}`);
 }
 async function shadcnButtons(locator, slot = 'button') {
   assert.ok(await locator.count() > 0, `Expected shadcn Buttons: ${locator}`);
@@ -381,7 +382,7 @@ async function fixtureContext(browser, {jobs = [], viewport = {width: 1440, heig
       }
       if (method === 'GET' && path === '/api/config') return await json({configured: true, model: 'fixture-only', modes,
         modelSelection:{mode:'pipeline',analysisModel:'fixture-researcher',visionModel:'fixture-vision',stageModels:{input:'fixture-input',vision:'fixture-vision',researcher:'fixture-researcher',writer:'fixture-writer',evidenceVerifier:'fixture-verifier',auditor:'fixture-auditor',criticalReviewer:null,judge:null},candidatesEnabled:false,stageRouting:true,optionalReviewEnabled:false,judgeEnabled:false},
-        knowledgeVersion: frameworkVersion, researchStages, markets: ['CN', 'HK', 'US'], dataProvider: 'UI合成数据',...configOverrides});
+        knowledgeVersion: 'K1.0.0', researchStages, markets: ['CN', 'HK', 'US'], dataProvider: 'UI合成数据',...configOverrides});
       if (method === 'GET' && path === '/api/materials/capabilities') return await json({enabled:false});
       if (method === 'POST' && path === '/api/securities/resolve') return await json({
         securities: resolvedSecurities??(/苹果|AAPL/i.test(body.question) ? [{market: 'US', symbol: 'AAPL', name: '苹果'}]
@@ -928,7 +929,7 @@ for(const width of [320,1440])test(`history-exchange-prefixes-${width}`,{jobs:ex
  assert.match(await codes.filter({hasText:'UNKNOWN'}).getAttribute('title'),/待核实/);
  assert.equal(requests('POST','/api/securities/exchanges').length,1);
  await noOverflow(page,`history exchange prefixes ${width}`);await screenshot(page,`history-exchange-prefixes-${width}`);
- await page.getByRole('searchbox',{name:'搜索研究问题、模式或标的'}).fill('NYSE:BRK-B');await count(page.locator('.rh-row'),1);
+ await page.getByRole('searchbox',{name:'搜索研究问题、路径或标的'}).fill('NYSE:BRK-B');await count(page.locator('.rh-row'),1);
  await count(page.locator('.rh-securities mark'),1);
 });
 
@@ -974,7 +975,7 @@ for(const width of [320,1440])test(`history-mode-filter-${width}`,{jobs:historyM
  await noOverflow(page,'recent mode labels '+width);
  await screenshot(page,'recent-mode-labels-'+width);
  if(width<1024){await page.keyboard.press('Escape');await sidebar.waitFor({state:'hidden'});}
- await choose(page,'按研究模式筛选',modes.B.name);
+ await choose(page,'按研究路径筛选',modes.B.name);
  await queryIs(page,{mode:'B',page:null,sort:'oldest'});
  await textIncludes(page.locator('.rh-page-number'),'1 / 2');
  await count(rows,8);
@@ -983,32 +984,32 @@ for(const width of [320,1440])test(`history-mode-filter-${width}`,{jobs:historyM
  await page.getByRole('button',{name:'下一页研究记录'}).click();await count(rows,2);
  await status.getByRole('radio',{name:/^已完成/}).click();
  await queryIs(page,{mode:'B',status:'completed',page:null});await count(rows,8);
- const search=page.getByRole('searchbox',{name:'搜索研究问题、模式或标的'});
+ const search=page.getByRole('searchbox',{name:'搜索研究问题、路径或标的'});
  await search.fill('补充');await count(rows,7);
  await textIncludes(status.getByRole('radio',{name:/^全部/}).locator('.rh-filter-count'),'7');
  await textIncludes(page.locator('.rh-results-note'),modes.B.name);
- await choose(page,'按研究模式筛选',modes.A.name);
+ await choose(page,'按研究路径筛选',modes.A.name);
  await count(rows,0);await page.getByRole('heading',{name:'没有找到匹配的研究',exact:true}).waitFor();
  await page.locator('.rh-results-heading').getByRole('button',{name:'清除筛选',exact:true}).click();
  await queryIs(page,{mode:null,status:null,q:null,page:null,sort:'oldest'});await count(rows,8);
  for(const [mode,expected] of [['A',3],['B',8],['C',4],['D',3],['E',3],['F',3]]){
-  await choose(page,'按研究模式筛选',modes[mode].name);await queryIs(page,{mode});await count(rows,expected);
+  await choose(page,'按研究路径筛选',modes[mode].name);await queryIs(page,{mode});await count(rows,expected);
   await eventually(async()=> (await badges.evaluateAll(items=>items.map(item=>item.getAttribute('data-mode')))).every(value=>value===mode),`Rows should match selected mode ${mode}`);
   assert.deepEqual(await badges.allTextContents(),Array(expected).fill(modes[mode].name));
  }
- await choose(page,'按研究模式筛选','自动匹配');await count(rows,1);await textIncludes(badges,'自动匹配');
- await choose(page,'按研究模式筛选','未记录');await count(rows,1);await textIncludes(badges,'未记录');
- await choose(page,'按研究模式筛选',modes.C.name);await queryIs(page,{mode:'C'});await page.reload();
- await count(rows,4);await textIncludes(page.getByRole('combobox',{name:'按研究模式筛选'}),modes.C.name);
+ await choose(page,'按研究路径筛选','自动匹配');await count(rows,1);await textIncludes(badges,'自动匹配');
+ await choose(page,'按研究路径筛选','未记录');await count(rows,1);await textIncludes(badges,'未记录');
+ await choose(page,'按研究路径筛选',modes.C.name);await queryIs(page,{mode:'C'});await page.reload();
+ await count(rows,4);await textIncludes(page.getByRole('combobox',{name:'按研究路径筛选'}),modes.C.name);
  await textIncludes(page.locator('.rh-results-note'),'4 项匹配研究');
  await noOverflow(page,'mode-filtered history '+width);await screenshot(page,'history-mode-filter-'+width);
- await choose(page,'按研究模式筛选','全部研究模式');await count(rows,8);await queryIs(page,{mode:null});
+ await choose(page,'按研究路径筛选','全部研究路径');await count(rows,8);await queryIs(page,{mode:null});
  await screenshot(page,'history-mode-labels-'+width);
- await page.getByRole('combobox',{name:'按研究模式筛选'}).click();await noOverflow(page,'mode choices '+width);
+ await page.getByRole('combobox',{name:'按研究路径筛选'}).click();await noOverflow(page,'mode choices '+width);
  await page.screenshot({path:fileURLToPath(new URL(`ui-history-mode-options-${width}.png`,artifacts)),animations:'disabled'});
  await page.keyboard.press('Escape');
  await page.goto('/history?mode=invalid&status=failed');await count(rows,6);
- await textIncludes(page.getByRole('combobox',{name:'按研究模式筛选'}),'全部研究模式');
+ await textIncludes(page.getByRole('combobox',{name:'按研究路径筛选'}),'全部研究路径');
 });
 
 for(const width of [320,1440])test(`history-follow-up-entries-${width}`,{jobs:historyFixtures(),viewport:{width,height:1000}},async({page,requests})=>{
@@ -1055,7 +1056,7 @@ test('history-search-sort-pagination', {jobs: historyFixtures()}, async ({page, 
   await choose(page, '研究排序', '最早创建优先');
   await queryIs(page, {sort: 'oldest', page: null});
   await eventually(async () => await links.first().getAttribute('href') === `/research/${ordered[0].id}`, 'Oldest job must sort first after the list commits');
-  const search = page.getByRole('searchbox', {name: '搜索研究问题、模式或标的'});
+  const search = page.getByRole('searchbox', {name: '搜索研究问题、路径或标的'});
   await search.fill('aapl');
   await queryIs(page, {q: 'aapl'});
   await textIncludes(page.locator('.rh-results-note'), '18 项匹配研究');
@@ -1512,10 +1513,15 @@ for(const {width,job,entry} of [{width:320,job:failedUpdate,entry:'empty'},{widt
   assert.equal(page.url(),previousURL,'Retry must retain the URL, including the selected tab');
   assert.equal(db.size,2,'Retry must not add a history record');
   assert.equal(db.get(job.id).id,oldJob.id);assert.equal(db.get(job.id).createdAt,oldJob.createdAt);
-  assert.equal(db.get(job.id).retryCount,1);assert.equal(db.get(job.id).error,undefined);assert.deepEqual(db.get(job.id).input.sources,oldJob.input.sources);assert.equal(db.get(job.id).resume.available,true);
+  assert.equal(db.get(job.id).retryCount,1);assert.equal(db.get(job.id).error,undefined);assert.deepEqual(db.get(job.id).input.sources,[]);
+  assert.equal(db.get(job.id).resume,undefined);assert.equal(db.get(job.id).events.at(-1).restartReason,'rules_changed');
   assert.equal(db.get(job.id).mode,oldJob.mode);
-  assert.deepEqual(db.get(job.id).input.securities,oldJob.input.securities);
-  for(const key of ['question','depth','historyYears','portfolio','previousResearch','baselineJobId','portfolioContext'])assert.deepEqual(db.get(job.id).input[key]??null,oldJob.input[key]??null);
+  assert.deepEqual(db.get(job.id).input.securities,oldJob.input.securities.map(({market,symbol})=>({market,symbol})));
+  for(const key of ['question','depth','historyYears'])assert.deepEqual(db.get(job.id).input[key],oldJob.input[key]);
+  assert.equal(db.get(job.id).input.portfolio,oldJob.input.portfolio??'');
+  assert.equal(db.get(job.id).input.previousResearch,oldJob.input.previousResearch??'');
+  assert.equal(db.get(job.id).input.baselineJobId,oldJob.input.baselineJobId??null);
+  assert.deepEqual(db.get(job.id).input.portfolioContext,oldJob.input.portfolioContext??{});
   await page.getByRole('tab',{name:'研究报告',exact:true}).click();
   await page.getByRole('heading',{name:'合成实时草稿',exact:true}).waitFor();
   await eventually(()=>requests('GET',`/api/jobs/${job.id}/stream`).length===1,'Retry must reconnect the same record progress stream');
@@ -2676,7 +2682,7 @@ for(const width of [320,1440]){
  job.input.sources[0].visualReading={status:'read',pages:[2,3],notice:'模型已读取第 2、3 页原图；其余页面仅按程序提取情况提供。'};
  test(`visual-audit-detail-${width}`,{jobs:[job],viewport:{width,height:1000}},async({page})=>{
   await detail(page,job);await openProcess(page);await textIncludes(page.getByRole('dialog',{name:'研究过程',exact:true}),'已补读 1 份资料原页，1 份未纳入');
-  const reading=page.locator('.rd-document-reading');await reading.locator('summary').focus();await page.keyboard.press('Enter');
+  const reading=page.locator('.rd-document-reading');await reading.locator('.rd-process-disclosure-trigger').focus();await page.keyboard.press('Enter');
   await textIncludes(reading.getByRole('region',{name:'已复读原页'}),'第 2、3 页');await textIncludes(reading.getByRole('region',{name:'未纳入原页复核'}),'原页缺失');
   await noOverflow(page,'expanded reading coverage '+width);await screenshot(page,'reading-coverage-'+width,'.rd-document-reading');
   await reading.getByRole('button',{name:'查看证据来源',exact:true}).click();await page.locator('.rd-source-trigger').first().click();
@@ -2732,7 +2738,7 @@ test('reference-visual-edit-binding',{},async({page,requests})=>{
 {
  const job=makeJob(973);job.modelRouting={analysisModel:'deepseek-flash',visionModel:'deepseek-flash'};job.visualAudit={delivery:'rejected',included:[],omitted:[],notice:'原页复核请求超时，已有文字仍保留。'};
  test('visual-audit-rejected-copy',{jobs:[job],viewport:{width:320,height:1000}},async({page})=>{
-  await detail(page,job);await openProcess(page);const panel=page.locator('.rd-document-reading');await textIncludes(panel.locator('summary'),'本次原页复核未完成');await panel.locator('summary').click();
+  await detail(page,job);await openProcess(page);const panel=page.locator('.rd-document-reading');await textIncludes(panel.locator('.rd-process-disclosure-trigger'),'本次原页复核未完成');await panel.locator('.rd-process-disclosure-trigger').click();
   await textIncludes(panel,'原页复核请求超时');await textIncludes(panel,'读取完成不代表数据已经核实');await noOverflow(page,'rejected reading');
  });
 }
@@ -2961,13 +2967,37 @@ for(const width of [320,1440]){
   assert.equal(requests('POST','/api/jobs').length,0);
  });
  const changed=makeJob(3402,'failed',{question:'旧规则任务（合成）'});changed.plan.version='4.2';changed.resume={available:false,reason:'framework_changed',fromVersion:'4.2',toVersion:'4.3'};
- test(`recovery-rule-change-${width}`,{jobs:[changed],viewport:{width,height:1000}},async({page,requests})=>{
-  await detail(page,changed);await page.getByRole('heading',{name:'按当前规则重新研究',exact:true}).waitFor();
-  await textIncludes(page.locator('.rd-empty'),'重新采集、分析和复核');await textIncludes(page.getByLabel('恢复说明'),'V4.2 更新为 V4.3');
-  await enabled(page.locator('.rd-empty').getByRole('button',{name:'重试研究',exact:true}));
+ test(`recovery-rule-change-${width}`,{jobs:[changed],viewport:{width,height:1000}},async({page,requests,db})=>{
+  await detail(page,changed);await page.getByRole('heading',{name:'按当前流程重新研究',exact:true}).waitFor();
+  await textIncludes(page.locator('.rd-empty'),'重新采集、分析和复核');await textIncludes(page.getByLabel('恢复说明'),'执行流程已更新，需要重新开始研究');
+  await count(page.getByRole('button',{name:'重试研究',exact:true}),0);
+  await enabled(page.locator('.rd-empty').getByRole('button',{name:'重新开始研究',exact:true}));
   await noOverflow(page,'restart explanation '+width);await screenshot(page,`recovery-rule-change-${width}`);
+  const original=structuredClone(db.get(changed.id));
+  await page.locator('.rd-empty').getByRole('button',{name:'重新开始研究',exact:true}).click();
+  await page.locator('.research-workbench').waitFor();assert.equal(await page.locator('#question').inputValue(),changed.input.question);
   assert.equal(requests('POST',`/api/jobs/${changed.id}/retry`).length,0);
+  assert.equal(requests('POST','/api/jobs').length,0);assert.deepEqual(db.get(changed.id),original);
  });
+}
+
+for(const [index,reason,title] of [[1,'rules_changed','按当前规则重新研究'],[2,'execution_changed','按当前流程重新研究'],[3,'model_configuration_changed','按当前配置重新研究']]){
+ for(const width of [320,1440]){
+  const job=makeJob(3500+index,'cancelled',{question:'保留输入与历史记录（合成）',depth:'Deep',historyYears:8});
+  job.resume={available:false,reason};
+  test(`recovery-new-research-${reason}-${width}`,{jobs:[job],viewport:{width,height:1000}},async({page,requests,db})=>{
+   await detail(page,job);await page.getByRole('heading',{name:title,exact:true}).waitFor();
+   const original=structuredClone(db.get(job.id));
+   await page.getByRole('tab',{name:/^证据来源/}).click();
+   const actions=await detailActions(page);await count(actions.getByRole('button',{name:'重试研究',exact:true}),0);
+   await actions.getByRole('button',{name:'重新开始研究',exact:true}).click();
+   await page.locator('.research-workbench').waitFor();assert.equal(await page.locator('#question').inputValue(),job.input.question);
+   await textIncludes(page.getByRole('combobox',{name:'报告深度',exact:true}),'完整展开');
+   await noOverflow(page,'restart workbench '+width);
+   assert.equal(requests('POST',`/api/jobs/${job.id}/retry`).length,0);assert.equal(requests('POST','/api/jobs').length,0);
+   assert.equal(db.size,1);assert.deepEqual(db.get(job.id),original);
+  });
+ }
 }
 
 for(const width of [320,768,1024,1440]){
@@ -3132,6 +3162,9 @@ registerPlatformV48Scenarios({test,makeJob,detail,detailActions,openProcess,text
 
 const {registerPlatformCleanupScenarios}=await import('./platform-cleanup-ui-scenarios.mjs');
 registerPlatformCleanupScenarios({test,makeJob,detail,workbench,textIncludes,noOverflow,screenshot});
+
+const {registerPlatformExperienceScenarios}=await import('./platform-experience-ui-scenarios.mjs');
+registerPlatformExperienceScenarios({test,makeJob,workbench,choose,textIncludes,count,noOverflow,screenshot});
 
 const {registerPlatformV49Scenarios}=await import('./platform-v49-ui-scenarios.mjs');
 await registerPlatformV49Scenarios({test,makeJob,detail,openProcess,textIncludes,noOverflow,screenshot});

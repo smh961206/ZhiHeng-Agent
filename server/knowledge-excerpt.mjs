@@ -10,7 +10,7 @@ export function knowledgeExcerpt(job,key,{manager}={}){
  const usage=ruleUsage(job),record=usage.records.find(row=>row.key===key);
  if(!record||!usage.snapshot||record.snapshotId!==usage.snapshot.id)throw fail(404,'此任务未保存对应规则的读取记录');
  let snapshot;
- try{snapshot=(manager??createSnapshotManager({version:usage.snapshot.version})).open(usage.snapshot);}catch{throw fail(409,'原规则快照暂不可读取，已保留读取记录，请检查归档后重试');}
+ try{snapshot=(manager??createSnapshotManager()).open(usage.snapshot);}catch{throw fail(409,'原规则快照暂不可读取，已保留读取记录，请检查归档后重试');}
  const module=snapshot.catalog.modules.find(m=>m.path===record.path);
  if(!module||module.sha256!==record.sha256)throw fail(409,'读取记录与原规则快照不一致');
  const text=snapshot.read(record.path);

@@ -1,5 +1,6 @@
 import {ChevronDown,FileText,ScanLine} from 'lucide-react';
 import {Button} from './ui/button';
+import {Collapsible,CollapsibleTrigger,CollapsibleContent} from './ui/collapsible';
 
 export default function DocumentReadingSummary({job,onSources}){
  const audit=job.visualAudit;
@@ -8,9 +9,9 @@ export default function DocumentReadingSummary({job,onSources}){
  const rejected=audit?.delivery==='rejected',partial=rejected||omitted.length>0;
  const materials=[...(job.input?.sources??[]),...(job.sources??[]),...(job.input?.referenceMaterials??[])];
  const name=id=>materials.find(item=>item.id===id)?.title;
- return <details className={`rd-document-reading${partial?' has-gaps':''}`}>
-  <summary><span className="rd-document-icon"><ScanLine size={18}/></span><span className="rd-document-heading"><strong>资料读取与原页复核</strong><span>{!audit?'文字与图像按需读取，再结合证据研究':rejected?'本次原页复核未完成，请查看原因':`已补读 ${included.length} 份资料原页，${omitted.length} 份未纳入`}</span></span><span className="rd-document-label">{partial?'有待核对':audit?'查看范围':'处理说明'}</span><ChevronDown size={16} className="rd-document-chevron"/></summary>
-  <div className="rd-document-body">
+ return <Collapsible className={`rd-document-reading rd-process-disclosure${partial?' has-gaps':''}`}>
+  <CollapsibleTrigger asChild><Button type="button" variant="ghost" className="rd-process-disclosure-trigger"><span className="rd-document-icon"><ScanLine size={18}/></span><span className="rd-document-heading"><strong>资料读取与原页复核</strong><span>{!audit?'文字与图像按需读取，再结合证据研究':rejected?'本次原页复核未完成，请查看原因':`已补读 ${included.length} 份资料原页，${omitted.length} 份未纳入`}</span></span><span className="rd-document-label">{partial?'有待核对':audit?'查看范围':'处理说明'}</span><ChevronDown size={16} className="rd-document-chevron"/></Button></CollapsibleTrigger>
+  <CollapsibleContent className="rd-document-body rd-process-disclosure-content">
    <p>先看本次实际读取范围，再回到证据核对。读取完成不代表数据已经核实。</p>
    <ol className="rd-reading-steps" aria-label="资料核对顺序"><li><span>01</span><strong>看读取范围</strong><small>核对实际页码与未纳入原因</small></li><li><span>02</span><strong>对照关键数字</strong><small>检查期间、单位、正负号与列归属</small></li><li><span>03</span><strong>回查来源</strong><small>识别文字仍需原始证据支持</small></li></ol>
    {audit&&<><div className="rd-document-coverage">
@@ -19,6 +20,6 @@ export default function DocumentReadingSummary({job,onSources}){
    </div>{rejected&&<p className="rd-document-warning">{audit.notice||'原页复核结果未能交付，请结合已有文字和原始资料继续核对。'}</p>}</>}
    {!audit&&<p className="rd-model-history-note">本次未保存原页复读范围，不能据此推定已经核对或没有缺口。</p>}
    <div className="rd-document-footer"><span>关键数字仍需核对期间、单位和原始出处。</span><Button type="button" variant="outline" size="sm" onClick={onSources}>查看证据来源</Button></div>
-  </div>
- </details>;
+  </CollapsibleContent>
+ </Collapsible>;
 }

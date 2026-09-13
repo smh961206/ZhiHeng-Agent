@@ -1,16 +1,20 @@
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {reviewFixture} from './research-review.mjs';
+import {createResearchPlan} from '../../shared/research-framework.mjs';
 
 // Same frozen synthetic inputs are exercised against the saved V4.8.2 owner
 // and the migrated owner. Hashes cover full payloads, not selected text fields.
-export async function migrationScenario(runAgent,mode){
+export async function migrationScenario(runAgent,mode,{executionFormat='legacy-4.7'}={}){
  const originalFetch=globalThis.fetch,OriginalDate=globalThis.Date;
  const envKeys=['LLM_API_KEY','LLM_BASE_URL','LLM_MODEL','LLM_REVIEW_FORMAT','LLM_VISION_INPUT'];
  const previous=Object.fromEntries(envKeys.map(k=>[k,process.env[k]]));
  Object.assign(process.env,{LLM_API_KEY:'golden-synthetic-key',LLM_BASE_URL:'https://model.invalid',LLM_MODEL:'deepseek-fixture',LLM_REVIEW_FORMAT:'auto',LLM_VISION_INPUT:'off'});
  globalThis.Date=class extends OriginalDate{constructor(...args){super(...(args.length?args:['2026-09-10T00:00:00.000Z']));}static now(){return OriginalDate.parse('2026-09-10T00:00:00.000Z');}};
  const job={id:'gateway-golden-'+mode,mode,input:{mode,question:'合成资料测试，不构成投资研究',depth:'Standard',sources:[{id:'S1',title:'合成证据',text:'合成资料只验证模型迁移，缺少完整财务资料，所有缺口须保留。'}]}};
+ // Historical golden payloads must keep their original execution identity.
+ if(executionFormat==='legacy-4.7'){const {executionCompatibilityVersion,...plan}=createResearchPlan(job.input,mode);job.plan={version:'4.7',...plan};}
+ else assert.equal(executionFormat,'current');
  const requests=[],events=[],checkpoints=[];
  globalThis.fetch=async(url,options)=>{
   assert.equal(String(url),'https://model.invalid/chat/completions');

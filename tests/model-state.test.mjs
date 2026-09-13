@@ -7,9 +7,11 @@ import {researchResume,resumeScope,resumeSummary} from '../server/research-resum
 import {prepareResearchRetry} from '../server/research-retry.mjs';
 import {runAgent} from '../server/agent.mjs';
 import {publicJob} from '../server/job-stream.mjs';
+import {createResearchPlan} from '../shared/research-framework.mjs';
+import {bindKnowledge} from '../server/knowledge.mjs';
 
 const make=()=>{
- const job={id:'pin-test',status:'failed',mode:'B',input:{question:'synthetic',sources:[],securities:[]},events:[],marketData:{asOf:'2025-12-31'},modelState:createJobModelState()};
+ const job={id:'pin-test',status:'failed',mode:'B',input:{question:'synthetic',sources:[],securities:[]},events:[],marketData:{asOf:'2025-12-31'},modelState:createJobModelState(),plan:createResearchPlan({mode:'B',question:'synthetic'})};bindKnowledge(job.plan);
  job.checkpoint={version:1,scope:resumeScope(job),phase:'research',messages:[],toolRecords:[],evidence:[],modelState:structuredClone(job.modelState)};return job;
 };
 test('renaming configured models leaves historical pins intact and requires a new job',()=>{

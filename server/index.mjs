@@ -1,4 +1,4 @@
-import {createResearchPlan,frameworkVersion,researchStages} from '../shared/research-framework.mjs';
+import {createResearchPlan,researchStages} from '../shared/research-framework.mjs';
 import {bindKnowledge,currentKnowledge} from './knowledge.mjs';
 import {knowledgeExcerpt} from './knowledge-excerpt.mjs';
 import {attachResearchBaseline} from './research-baseline.mjs';
@@ -95,7 +95,7 @@ const server=http.createServer(async(req,res)=>{
     const result=await readDocument(Buffer.concat(chunks),{name,signal:control.signal,upload:true});return send(res,200,result);
    }finally{clearTimeout(timeout);activeVisualImports--;}
   }
-  if(url.pathname==='/api/config')return send(res,200,{...modelConfigurationStatus(),modelSelection:publicModelSelection(),modes,knowledgeVersion:frameworkVersion,...currentKnowledge(),researchStages,dataProvider:'行情与股本：长桥优先，多源备用；官方财报与公告：巨潮、港交所、SEC正文/XBRL；三市场结构化财务：Tushare；历史估值与股东回报：Tushare及长桥基本面；原文归档与缺口核验；网页补充：先查资料、按缺口定位原始正文',dataProviders:providerStatus(),webSearch:webSearchStatus(),markets:['CN','HK','US'],secUserAgentConfigured:!!process.env.SEC_USER_AGENT});
+  if(url.pathname==='/api/config')return send(res,200,{...modelConfigurationStatus(),modelSelection:publicModelSelection(),modes,...currentKnowledge(),researchStages,dataProvider:'行情与股本：长桥优先，多源备用；官方财报与公告：巨潮、港交所、SEC正文/XBRL；三市场结构化财务：Tushare；历史估值与股东回报：Tushare及长桥基本面；原文归档与缺口核验；网页补充：先查资料、按缺口定位原始正文',dataProviders:providerStatus(),webSearch:webSearchStatus(),markets:['CN','HK','US'],secUserAgentConfigured:!!process.env.SEC_USER_AGENT});
   if(url.pathname==='/api/research/path'&&req.method==='POST'){
    const {question}=await body(req),control=new AbortController();res.on('close',()=>{if(!res.writableEnded)control.abort();});
    return send(res,200,await researchPathResolver.recommend(question,{signal:control.signal}));

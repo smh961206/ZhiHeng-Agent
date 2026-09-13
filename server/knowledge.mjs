@@ -3,7 +3,9 @@ import {modes} from '../shared/research-framework.mjs';
 import {mayContain} from '../shared/knowledge-search.mjs';
 import {snapshotManager} from './knowledge-snapshots.mjs';
 import {depthSections} from '../shared/knowledge-loading.mjs';
+import {compileKnowledgeContext,createKnowledgePin,knowledgeImpact,knowledgeInventory,resolveKnowledgePack,validateKnowledgeGovernance} from '../shared/knowledge-engineering.mjs';
 export {indexRules} from '../shared/knowledge-index.mjs';
+export {assertPublishableKnowledge,compileKnowledgeContext,createKnowledgePin,knowledgeImpact,knowledgeInventory,resolveKnowledgePack,resolveOntology,transitionKnowledgeDebt,validateKnowledgeChangeProposal,validateKnowledgeGovernance,validateRuntimeKnowledge} from '../shared/knowledge-engineering.mjs';
 
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const initialSnapshot=snapshotManager.current();
@@ -110,7 +112,14 @@ export function bindKnowledge(plan,manager=snapshotManager){
  if(!plan.knowledgeSnapshot)plan.knowledgeUpdatePending=manager.status().updatePending;
  plan.knowledgeSnapshot=structuredClone(snapshot.ref);
  plan.knowledge=structuredClone(snapshot.manifest);
+ const pin=createKnowledgePin(snapshot);plan.knowledgeVersion=pin.knowledgeVersion;plan.knowledgeFingerprint=pin.knowledgeFingerprint;
  return snapshot;
+}
+
+export function planKnowledgePack(plan,input={},manager=snapshotManager){
+ const snapshot=plan.knowledgeSnapshot?manager.open(plan.knowledgeSnapshot):manager.current();
+ const compiled=compileKnowledgeContext(snapshot,{mode:plan.mode,...input});
+ return {...compiled,inventory:knowledgeInventory(snapshot.catalog),lint:validateKnowledgeGovernance(snapshot.catalog),impact:knowledgeImpact(snapshot.catalog,compiled.ruleIds)};
 }
 
 export function createJobRuleSession(job,{manager=snapshotManager,onRead=()=>{}}={}){
@@ -122,14 +131,13 @@ export function createJobRuleSession(job,{manager=snapshotManager,onRead=()=>{}}
 
 export function currentKnowledge(){
  const snapshot=snapshotManager.current();
- return {knowledge:structuredClone(snapshot.manifest),knowledgeSnapshot:structuredClone(snapshot.ref),knowledgeStatus:snapshotManager.status()};
+ return {knowledgeVersion:snapshot.knowledgeVersion,knowledgeFingerprint:snapshot.knowledgeFingerprint,knowledge:structuredClone(snapshot.manifest),knowledgeSnapshot:structuredClone(snapshot.ref),knowledgeStatus:snapshotManager.status()};
 }
 
 export function savedKnowledgeMatches(plan,manager=snapshotManager){
- if(!plan?.knowledgeSnapshot&&!Array.isArray(plan?.knowledge))return true;
+ if(!plan?.knowledgeSnapshot||!plan?.knowledgeVersion||!plan?.knowledgeFingerprint||!Array.isArray(plan?.knowledge))return false;
  try{
-  const snapshot=plan?.knowledgeSnapshot?manager.open(plan.knowledgeSnapshot):manager.current();
-  if(!Array.isArray(plan?.knowledge))return !plan?.knowledgeSnapshot;
-  return snapshot.manifest.length===plan.knowledge.length&&snapshot.manifest.every(current=>plan.knowledge.find(saved=>saved.id===current.id)?.sha256===current.sha256);
+  const snapshot=manager.open(plan.knowledgeSnapshot);
+  return snapshot.knowledgeVersion===plan.knowledgeVersion&&snapshot.knowledgeFingerprint===plan.knowledgeFingerprint&&snapshot.manifest.length===plan.knowledge.length&&snapshot.manifest.every(current=>plan.knowledge.find(saved=>saved.id===current.id)?.sha256===current.sha256);
  }catch{return false;}
 }

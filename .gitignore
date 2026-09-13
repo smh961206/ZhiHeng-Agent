@@ -17,3 +17,5 @@ artifacts/
 
 config/models.*.json
 !config/models.example.json
+config/pricing.local.json
+config/pricing.production.json

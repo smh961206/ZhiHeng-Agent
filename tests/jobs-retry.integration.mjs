@@ -7,6 +7,7 @@ import {spawn} from 'node:child_process';
 import {once} from 'node:events';
 import {createServer} from 'node:net';
 import {setTimeout as pause} from 'node:timers/promises';
+import {pipelineApiEnv} from './fixtures/pipeline-api-env.mjs';
 
 test('MongoDB retry replaces one existing record atomically and cannot restore a deleted job',async()=>{
  const uri=process.env.MONGODB_URI||'mongodb://127.0.0.1:27017',database='zhiheng_retry_test_'+randomUUID().replaceAll('-','');
@@ -38,7 +39,7 @@ test('retry API keeps ID and count, rejects duplicate requests, streams and pers
  const reservation=createServer();reservation.listen(0,'127.0.0.1');await once(reservation,'listening');
  const port=reservation.address().port;await new Promise(resolve=>reservation.close(resolve));
  const storage=await createStorage({uri,database});
- const child=spawn(process.execPath,['--import','./tests/fixtures/retry-api-runtime.mjs','server/index.mjs'],{cwd:new URL('../',import.meta.url),env:{...process.env,HOST:'127.0.0.1',PORT:String(port),MONGODB_URI:uri,MONGODB_DATABASE:database,LLM_API_KEY:'fixture-only',LLM_MODEL:'fixture-only',RETRY_TEST_ACK_HANDSHAKE:'true'},stdio:['ignore','pipe','pipe','ipc']});
+ const child=spawn(process.execPath,['--import','./tests/fixtures/retry-api-runtime.mjs','server/index.mjs'],{cwd:new URL('../',import.meta.url),env:pipelineApiEnv({HOST:'127.0.0.1',PORT:String(port),MONGODB_URI:uri,MONGODB_DATABASE:database,RETRY_TEST_ACK_HANDSHAKE:'true'}),stdio:['ignore','pipe','pipe','ipc']});
  let output='';child.stdout.on('data',buffer=>{output+=buffer;});child.stderr.on('data',buffer=>{output+=buffer;});
  const base='http://127.0.0.1:'+port;
  const post=body=>({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});

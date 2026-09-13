@@ -50,6 +50,23 @@ export function normalizeUsage(raw){
  if(totalTokens!==null&&inputTokens!==null&&outputTokens!==null&&totalTokens!==inputTokens+outputTokens)totalTokens=null;
  return {inputTokens,outputTokens,totalTokens,cachedInputTokens};
 }
+// Details are additive: retain the four-field usage facade for old consumers.
+// Reasoning tokens are a subset of completion tokens, never charged twice.
+export function normalizeUsageDetails(raw){
+ const usage=normalizeUsage(raw);
+ let reasoningTokens=count(raw?.completion_tokens_details?.reasoning_tokens);
+ if(usage.outputTokens!==null&&reasoningTokens>usage.outputTokens)reasoningTokens=null;
+ return normalizeUsageProvenance({...usage,reasoningTokens});
+}
+export function normalizeUsageProvenance(values={},sources={}){
+ const usage=Object.fromEntries(['inputTokens','outputTokens','totalTokens','cachedInputTokens','reasoningTokens'].map(k=>[k,count(values?.[k])]));
+ if(usage.inputTokens!==null&&usage.cachedInputTokens>usage.inputTokens)usage.cachedInputTokens=null;
+ if(usage.outputTokens!==null&&usage.reasoningTokens>usage.outputTokens)usage.reasoningTokens=null;
+ if(usage.inputTokens!==null&&usage.outputTokens!==null&&usage.totalTokens!==null&&usage.totalTokens!==usage.inputTokens+usage.outputTokens)usage.totalTokens=null;
+ const tokenSources=Object.fromEntries(Object.entries(usage).map(([k,v])=>[k,v===null||Object.hasOwn(sources??{},k)&&!['provider','estimated'].includes(sources?.[k])?'unknown':sources?.[k]==='estimated'?'estimated':'provider']));
+ for(const k of Object.keys(usage))if(tokenSources[k]==='unknown')usage[k]=null;
+ return {schemaVersion:1,usage,tokenSources};
+}
 export function estimateBilling(usage,pricing){
  if(!pricing||usage.inputTokens===null||usage.outputTokens===null||pricing.input===null||pricing.output===null)return null;
  const {inputTokens,outputTokens,cachedInputTokens:cached}=usage;

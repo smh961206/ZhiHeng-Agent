@@ -14,6 +14,7 @@ try{
   const body=JSON.parse(options.body);calls++;
   if(first)return Response.json({choices:[{message:{role:'assistant',content:null,reasoning_content:'private-resume-reasoning',tool_calls:[{id:'saved-call',type:'function',function:{name:'read_rules',arguments:JSON.stringify({query:'现金流'})}}]}}]});
   if(calls===1){assert.equal(body.messages.filter(m=>m.role==='tool').length,1);assert.equal(body.messages.find(m=>m.tool_calls).reasoning_content,'private-resume-reasoning');return Response.json({choices:[{message:{role:'assistant',content:'恢复草稿[S1]'}}]});}
+  if(calls===2&&job.modelState?.version===4)return Response.json({choices:[{message:{role:'assistant',content:'整理后的恢复草稿[S1]'}}]});
   return Response.json({choices:[{message:{role:'assistant',content:JSON.stringify(reviewFixture(job.input))}}]});
  };
  job.status='running';
@@ -22,5 +23,5 @@ try{
   collectData:async()=>{assert.ok(first,'Restart must not collect again');return {sources:[{id:'S1',title:'合成资料',text:'仅供续跑验证的原文。'}],coverage:[{security:'CN:600519',read:1}],warnings:[]};},
   onCheckpoint:async()=>{await storage.saveJob(job);if(first&&job.checkpoint.toolRecords.length===1)process.exit(73);},
  });
- assert.equal(calls,2);job.result=result;job.status='completed';delete job.checkpoint;await storage.saveJob(job);
+ assert.equal(calls,job.modelState?.version===4?3:2);job.result=result;job.status='completed';delete job.checkpoint;await storage.saveJob(job);
 }finally{await storage.close();}

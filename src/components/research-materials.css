@@ -23,9 +23,8 @@
 .research-materials .materials-format-help p{font-size:11px;line-height:1.8;margin:5px 0 0;color:#75856e}
 .materials-queue-heading{gap:8px;flex-wrap:wrap;padding-block:4px}
 .materials-queue-heading>div{display:flex;align-items:center;gap:3px}
-.materials-import-progress{display:block;width:100%;height:4px;appearance:none;border:0;border-radius:8px;overflow:hidden;background:#e8eee6;margin:2px 0 9px}
-.materials-import-progress::-webkit-progress-bar{background:#e8eee6}
-.materials-import-progress::-webkit-progress-value{background:#70977a;border-radius:8px}
+.materials-import-progress{display:block;width:100%;height:4px;border:0;border-radius:8px;overflow:hidden;background:#e8eee6;margin:2px 0 9px}
+.materials-import-progress [data-slot=progress-indicator]{background:#70977a;border-radius:8px}
 .materials-import-results strong em{display:inline-block;font-size:10px;color:#8c9685;font-style:normal;font-weight:400;margin-left:8px;white-space:nowrap}
 .materials-feedback{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 8px;margin-top:10px;min-width:0}
 .materials-feedback:has(.materials-live-status:empty):not(:has(button)){margin:0}

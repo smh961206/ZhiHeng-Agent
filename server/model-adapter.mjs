@@ -4,7 +4,7 @@ import {fetchModel,isModelNetworkError} from './model-request.mjs';
 import {createModelDeadline,modelTimeouts} from './model-deadline.mjs';
 import {readCompletion} from './model-stream.mjs';
 import {unsupportedReviewFormat} from './review-format.mjs';
-import {ModelGatewayError,normalizeUsage} from './model-gateway-result.mjs';
+import {ModelGatewayError,normalizeUsage,normalizeUsageDetails} from './model-gateway-result.mjs';
 
 const fail=category=>{throw new ModelGatewayError(category);};
 function modelConnection(profile,env){
@@ -44,7 +44,7 @@ export async function completeLegacyChat(request,profile,{env,fetchImpl,now,wait
  const body={model:profile.model,messages:request.messages,stream:request.stream,
   ...(request.tools?{tools:request.tools,tool_choice:'auto'}:{}),...(request.responseFormat?{response_format:request.responseFormat}:{}),
   ...(request.maxOutputTokens!==undefined?{max_tokens:request.maxOutputTokens}:{})};
- if(profile.schemaVersion===4){
+ if(profile.schemaVersion===4||profile.schemaVersion===5){
   const thinking=profile.adapterOptions.thinking;
   if(request.reasoningEffort!==undefined&&(thinking!=='enabled'||profile.capabilities.reasoningControl!==true||!['low','high','max'].includes(request.reasoningEffort)))fail('unsupported_capability');
   if(thinking!=='omit')body.thinking={type:thinking};
@@ -60,18 +60,18 @@ export async function completeLegacyChat(request,profile,{env,fetchImpl,now,wait
    if(request.reasoningEffort!=='off'||!/^deepseek-/i.test(profile.model))fail('unsupported_capability');
    body.thinking={type:'disabled'};
   }
- }else if(request.purpose==='router'&&/^deepseek-/i.test(profile.model)||request.purpose==='vision'&&profile.model==='deepseek-flash')body.thinking={type:'disabled'};
+ }else if(['router','input'].includes(request.purpose)&&/^deepseek-/i.test(profile.model)||request.purpose==='vision'&&profile.model==='deepseek-flash')body.thinking={type:'disabled'};
  let serialized;try{serialized=JSON.stringify(body);}catch{fail('invalid_request');}
  if(Buffer.byteLength(serialized)>16*1024*1024)fail('invalid_request');
- const timeouts=request.purpose==='router'?{idleMs:8000,totalMs:8000}:request.purpose==='vision'?{idleMs:60000,totalMs:60000}:modelTimeouts(env);
+ const timeouts=['router','input'].includes(request.purpose)?{idleMs:8000,totalMs:8000}:request.purpose==='vision'?{idleMs:60000,totalMs:60000}:modelTimeouts(env);
  const deadline=createModelDeadline({signal:request.signal,...timeouts,setTimer,clearTimer});
- const started=now();let firstTokenAt=null,usage=normalizeUsage(null),finishReason=null,stage='network',receivedResponse;
+ const started=now();let firstTokenAt=null,usage=normalizeUsage(null),usageDetails=normalizeUsageDetails(null),finishReason=null,stage='network',receivedResponse;
  // A callback can synchronously cancel while multiple frames share one buffer.
  const notify=(callback,value)=>{checkAbort(deadline.signal);callback(value);checkAbort(deadline.signal);};
  const activity=()=>{firstTokenAt??=now();deadline.activity();notify(request.onActivity);};
  try{
   checkAbort(request.signal);
-  const fetchRequest=request.purpose==='router'||request.purpose==='vision'?(fetchImpl??globalThis.fetch):(url,options)=>fetchModel(url,options,{fetchImpl,wait,onRetry:request.onRetry});
+  const fetchRequest=['router','input','vision','critical-review','judge'].includes(request.purpose)?(fetchImpl??globalThis.fetch):(url,options)=>fetchModel(url,options,{fetchImpl,wait,onRetry:request.onRetry});
   const pending=Promise.resolve().then(()=>{checkAbort(deadline.signal);return fetchRequest(url,{method:'POST',redirect:'error',signal:deadline.signal,headers:{'Content-Type':'application/json',Authorization:`Bearer ${key}`},body:serialized});});
   // A late response from a non-cooperative injected fetch must still be closed.
   pending.then(response=>{receivedResponse=response;if(deadline.signal.aborted)cancel(response);},()=>{});
@@ -84,11 +84,11 @@ export async function completeLegacyChat(request,profile,{env,fetchImpl,now,wait
    throw new ModelGatewayError(category,status);
   }
   const result=await readCompletion(boundedResponse(response,deadline.signal,request.purpose==='vision'?512000:8_000_000),text=>notify(request.onDelta,text),{
-   strict:true,allowMissingJsonFinish,allowMissingJsonRole,onActivity:activity,onHeartbeat:()=>{deadline.activity();notify(request.onHeartbeat);},onUsage:raw=>{usage=normalizeUsage(raw);},onFinish:reason=>{finishReason=reason??null;},
+   strict:true,allowMissingJsonFinish,allowMissingJsonRole,onActivity:activity,onHeartbeat:()=>{deadline.activity();notify(request.onHeartbeat);},onUsage:raw=>{usage=normalizeUsage(raw);usageDetails=normalizeUsageDetails(raw);},onFinish:reason=>{finishReason=reason??null;},
   });
   checkAbort(deadline.signal);
   if(request.purpose==='vision'&&(finishReason!=='stop'||result.tool_calls||result.content.length>18000))fail('malformed_response');
-  return {message:result,usage,finishReason,performance:{latencyMs:Math.max(0,now()-started),ttftMs:firstTokenAt===null?null:Math.max(0,firstTokenAt-started)}};
+  return {message:result,usage,usageDetails,finishReason,performance:{latencyMs:Math.max(0,now()-started),ttftMs:firstTokenAt===null?null:Math.max(0,firstTokenAt-started)}};
  }catch(error){
   checkAbort(deadline.signal);
   if(error instanceof ModelGatewayError)throw error;

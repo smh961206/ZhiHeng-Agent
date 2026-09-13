@@ -1,6 +1,16 @@
 # Model System
 
-## V4.9 current boundary
+## M1.0 current boundary
+
+The current configuration path defines each connection once and assigns it to Input, Vision, Researcher, Writer, Evidence Verifier, Auditor and the optional Critical Reviewer/Judge pools. Catalog compiles schema v2 into internal profiles; Gateway and the existing adapter remain the only dispatch and transport owners. New jobs pin modelState v4. Historical schema-v1 configuration and modelState v1-v3 continue through their original identities.
+
+V5.1 price, cost and cache accounting and V5.2 independent critical review/Judge remain active capabilities. Configurable research budgets, paid batch trials, acceptance files, MAIN/PRO/Challenger credentials, Champion registry/version/invalidation and A/B flags are not part of the schema-v2 path. Historical budget state remains readable for task recovery; it cannot enforce saved limits. The legacy implementation below is retained for old configuration and task recovery; it is not the normal user-facing setup.
+
+## Historical implementation records
+
+The remaining sections retain the boundaries recorded while V4.8–V5.2 were implemented. Their MAIN/PRO, Challenger, Champion, A/B, acceptance and rollout instructions are historical and do not define the current schema-v2 operating path.
+
+## V4.9 historical boundary
 
 V4.9.1–.8 implement canonical image requests/results, explicit Vision challenger configuration, 48 frozen originals, deterministic grading, a two-attempt independent fallback and a closed Vision promotion gate. Existing Gateway/adapter/connection and modelState remain owners. Vision admission is separate from text rollout to avoid cyclic state construction. New admitted jobs pin actual Vision identity; saved legacy and historical no-state jobs retain legacy, candidate pins pause after rollback. Real candidate quality remains unaccepted and FEATURE_VISION_ROUTING defaults false. See [V4.9 report](../releases/V4.9/V4_9-completion-report.md).
 

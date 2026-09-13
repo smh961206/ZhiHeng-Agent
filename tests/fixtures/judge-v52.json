@@ -1,0 +1,1220 @@
+{
+  "version": 1,
+  "evidenceKind": "simulation",
+  "cases": [
+    {
+      "id": "accept-l1",
+      "expected": "accept_l1",
+      "input": {
+        "cutoff": "2026-09-02T00:00:00Z",
+        "sources": [
+          {
+            "id": "S1",
+            "text": "Synthetic evidence 1",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b1",
+                "text": "Synthetic evidence 1"
+              }
+            ]
+          },
+          {
+            "id": "S2",
+            "text": "Synthetic evidence 2",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b2",
+                "text": "Synthetic evidence 2"
+              }
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "S1",
+            "blockId": "b1",
+            "text": "Synthetic evidence 1"
+          },
+          {
+            "id": "S2",
+            "blockId": "b2",
+            "text": "Synthetic evidence 2"
+          }
+        ],
+        "l1": {
+          "id": "l1",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l1 for accept-l1",
+          "position": "support",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        },
+        "l2": {
+          "id": "l2",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l2 for accept-l1",
+          "position": "oppose",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        }
+      }
+    },
+    {
+      "id": "accept-l2",
+      "expected": "accept_l2",
+      "input": {
+        "cutoff": "2026-09-02T00:00:00Z",
+        "sources": [
+          {
+            "id": "S1",
+            "text": "Synthetic evidence 1",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b1",
+                "text": "Synthetic evidence 1"
+              }
+            ]
+          },
+          {
+            "id": "S2",
+            "text": "Synthetic evidence 2",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b2",
+                "text": "Synthetic evidence 2"
+              }
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "S1",
+            "blockId": "b1",
+            "text": "Synthetic evidence 1"
+          },
+          {
+            "id": "S2",
+            "blockId": "b2",
+            "text": "Synthetic evidence 2"
+          }
+        ],
+        "l1": {
+          "id": "l1",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l1 for accept-l2",
+          "position": "support",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        },
+        "l2": {
+          "id": "l2",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l2 for accept-l2",
+          "position": "oppose",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        }
+      }
+    },
+    {
+      "id": "unresolved",
+      "expected": "insufficient_to_decide",
+      "input": {
+        "cutoff": "2026-09-02T00:00:00Z",
+        "sources": [
+          {
+            "id": "S1",
+            "text": "Synthetic evidence 1",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b1",
+                "text": "Synthetic evidence 1"
+              }
+            ]
+          },
+          {
+            "id": "S2",
+            "text": "Synthetic evidence 2",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b2",
+                "text": "Synthetic evidence 2"
+              }
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "S1",
+            "blockId": "b1",
+            "text": "Synthetic evidence 1"
+          },
+          {
+            "id": "S2",
+            "blockId": "b2",
+            "text": "Synthetic evidence 2"
+          }
+        ],
+        "l1": {
+          "id": "l1",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l1 for unresolved",
+          "position": "support",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        },
+        "l2": {
+          "id": "l2",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l2 for unresolved",
+          "position": "oppose",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        }
+      }
+    },
+    {
+      "id": "future",
+      "expected": "no_dispatch",
+      "input": {
+        "cutoff": "2026-09-02T00:00:00Z",
+        "sources": [
+          {
+            "id": "S1",
+            "text": "Synthetic evidence 1",
+            "publishedAt": "2026-09-03T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b1",
+                "text": "Synthetic evidence 1"
+              }
+            ]
+          },
+          {
+            "id": "S2",
+            "text": "Synthetic evidence 2",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b2",
+                "text": "Synthetic evidence 2"
+              }
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "S1",
+            "blockId": "b1",
+            "text": "Synthetic evidence 1"
+          },
+          {
+            "id": "S2",
+            "blockId": "b2",
+            "text": "Synthetic evidence 2"
+          }
+        ],
+        "l1": {
+          "id": "l1",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l1 for future",
+          "position": "support",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        },
+        "l2": {
+          "id": "l2",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l2 for future",
+          "position": "oppose",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        }
+      }
+    },
+    {
+      "id": "unknown-date",
+      "expected": "no_dispatch",
+      "input": {
+        "cutoff": "2026-09-02T00:00:00Z",
+        "sources": [
+          {
+            "id": "S1",
+            "text": "Synthetic evidence 1",
+            "publishedAt": null,
+            "documentBlocks": [
+              {
+                "id": "b1",
+                "text": "Synthetic evidence 1"
+              }
+            ]
+          },
+          {
+            "id": "S2",
+            "text": "Synthetic evidence 2",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b2",
+                "text": "Synthetic evidence 2"
+              }
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "S1",
+            "blockId": "b1",
+            "text": "Synthetic evidence 1"
+          },
+          {
+            "id": "S2",
+            "blockId": "b2",
+            "text": "Synthetic evidence 2"
+          }
+        ],
+        "l1": {
+          "id": "l1",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l1 for unknown-date",
+          "position": "support",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        },
+        "l2": {
+          "id": "l2",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l2 for unknown-date",
+          "position": "oppose",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        }
+      }
+    },
+    {
+      "id": "missing-counter",
+      "expected": "no_dispatch",
+      "input": {
+        "cutoff": "2026-09-02T00:00:00Z",
+        "sources": [
+          {
+            "id": "S1",
+            "text": "Synthetic evidence 1",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b1",
+                "text": "Synthetic evidence 1"
+              }
+            ]
+          },
+          {
+            "id": "S2",
+            "text": "Synthetic evidence 2",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b2",
+                "text": "Synthetic evidence 2"
+              }
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "S1",
+            "blockId": "b1",
+            "text": "Synthetic evidence 1"
+          }
+        ],
+        "l1": {
+          "id": "l1",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l1 for missing-counter",
+          "position": "support",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        },
+        "l2": {
+          "id": "l2",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l2 for missing-counter",
+          "position": "oppose",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        }
+      }
+    },
+    {
+      "id": "basis",
+      "expected": "no_dispatch",
+      "input": {
+        "cutoff": "2026-09-02T00:00:00Z",
+        "sources": [
+          {
+            "id": "S1",
+            "text": "Synthetic evidence 1",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b1",
+                "text": "Synthetic evidence 1"
+              }
+            ]
+          },
+          {
+            "id": "S2",
+            "text": "Synthetic evidence 2",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b2",
+                "text": "Synthetic evidence 2"
+              }
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "S1",
+            "blockId": "b1",
+            "text": "Synthetic evidence 1"
+          },
+          {
+            "id": "S2",
+            "blockId": "b2",
+            "text": "Synthetic evidence 2"
+          }
+        ],
+        "l1": {
+          "id": "l1",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l1 for basis",
+          "position": "support",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        },
+        "l2": {
+          "id": "l2",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l2 for basis",
+          "position": "oppose",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "USD",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        }
+      }
+    },
+    {
+      "id": "same-position",
+      "expected": "no_dispatch",
+      "input": {
+        "cutoff": "2026-09-02T00:00:00Z",
+        "sources": [
+          {
+            "id": "S1",
+            "text": "Synthetic evidence 1",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b1",
+                "text": "Synthetic evidence 1"
+              }
+            ]
+          },
+          {
+            "id": "S2",
+            "text": "Synthetic evidence 2",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b2",
+                "text": "Synthetic evidence 2"
+              }
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "S1",
+            "blockId": "b1",
+            "text": "Synthetic evidence 1"
+          },
+          {
+            "id": "S2",
+            "blockId": "b2",
+            "text": "Synthetic evidence 2"
+          }
+        ],
+        "l1": {
+          "id": "l1",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l1 for same-position",
+          "position": "support",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        },
+        "l2": {
+          "id": "l2",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l2 for same-position",
+          "position": "support",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        }
+      }
+    },
+    {
+      "id": "unfinished",
+      "expected": "no_dispatch",
+      "input": {
+        "cutoff": "2026-09-02T00:00:00Z",
+        "sources": [
+          {
+            "id": "S1",
+            "text": "Synthetic evidence 1",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b1",
+                "text": "Synthetic evidence 1"
+              }
+            ]
+          },
+          {
+            "id": "S2",
+            "text": "Synthetic evidence 2",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b2",
+                "text": "Synthetic evidence 2"
+              }
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "S1",
+            "blockId": "b1",
+            "text": "Synthetic evidence 1"
+          },
+          {
+            "id": "S2",
+            "blockId": "b2",
+            "text": "Synthetic evidence 2"
+          }
+        ],
+        "l1": {
+          "id": "l1",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l1 for unfinished",
+          "position": "support",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        },
+        "l2": {
+          "id": "l2",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": false,
+          "statement": "Completed l2 for unfinished",
+          "position": "oppose",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        }
+      }
+    },
+    {
+      "id": "override",
+      "expected": "no_dispatch",
+      "input": {
+        "cutoff": "2026-09-02T00:00:00Z",
+        "sources": [
+          {
+            "id": "S1",
+            "text": "Synthetic evidence 1",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b1",
+                "text": "Synthetic evidence 1"
+              }
+            ]
+          },
+          {
+            "id": "S2",
+            "text": "Synthetic evidence 2",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b2",
+                "text": "Synthetic evidence 2"
+              }
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "S1",
+            "blockId": "b1",
+            "text": "Synthetic evidence 1"
+          },
+          {
+            "id": "S2",
+            "blockId": "b2",
+            "text": "Synthetic evidence 2"
+          }
+        ],
+        "l1": {
+          "id": "l1",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l1 for override",
+          "position": "support",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        },
+        "l2": {
+          "id": "l2",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l2 for override",
+          "position": "oppose",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        },
+        "humanOverride": {
+          "chosen": "l2"
+        }
+      }
+    },
+    {
+      "id": "forged-block",
+      "expected": "no_dispatch",
+      "input": {
+        "cutoff": "2026-09-02T00:00:00Z",
+        "sources": [
+          {
+            "id": "S1",
+            "text": "Synthetic evidence 1",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b1",
+                "text": "Synthetic evidence 1"
+              }
+            ]
+          },
+          {
+            "id": "S2",
+            "text": "Synthetic evidence 2",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b2",
+                "text": "Synthetic evidence 2"
+              }
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "S1",
+            "blockId": "fake",
+            "text": "Synthetic evidence 1"
+          },
+          {
+            "id": "S2",
+            "blockId": "b2",
+            "text": "Synthetic evidence 2"
+          }
+        ],
+        "l1": {
+          "id": "l1",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l1 for forged-block",
+          "position": "support",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        },
+        "l2": {
+          "id": "l2",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l2 for forged-block",
+          "position": "oppose",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        }
+      }
+    },
+    {
+      "id": "duplicate-block",
+      "expected": "no_dispatch",
+      "input": {
+        "cutoff": "2026-09-02T00:00:00Z",
+        "sources": [
+          {
+            "id": "S1",
+            "text": "Synthetic evidence 1",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b1",
+                "text": "Synthetic evidence 1"
+              },
+              {
+                "id": "b1",
+                "text": "Synthetic evidence 1"
+              }
+            ]
+          },
+          {
+            "id": "S2",
+            "text": "Synthetic evidence 2",
+            "publishedAt": "2026-09-01T00:00:00Z",
+            "documentBlocks": [
+              {
+                "id": "b2",
+                "text": "Synthetic evidence 2"
+              }
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "S1",
+            "blockId": "b1",
+            "text": "Synthetic evidence 1"
+          },
+          {
+            "id": "S2",
+            "blockId": "b2",
+            "text": "Synthetic evidence 2"
+          }
+        ],
+        "l1": {
+          "id": "l1",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l1 for duplicate-block",
+          "position": "support",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        },
+        "l2": {
+          "id": "l2",
+          "subject": "synthetic-core",
+          "kind": "claim",
+          "completed": true,
+          "statement": "Completed l2 for duplicate-block",
+          "position": "oppose",
+          "basis": {
+            "entity": "synthetic",
+            "period": "FY2025",
+            "currency": "CNY",
+            "shareBasis": "ordinary",
+            "accountingScope": "consolidated",
+            "valuationBasis": "not_applicable"
+          },
+          "evidenceRefs": [
+            {
+              "sourceId": "S1",
+              "blockId": "b1"
+            }
+          ],
+          "counterEvidenceRefs": [
+            {
+              "sourceId": "S2",
+              "blockId": "b2"
+            }
+          ],
+          "toolCallIds": []
+        }
+      }
+    }
+  ]
+}

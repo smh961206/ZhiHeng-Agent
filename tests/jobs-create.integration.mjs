@@ -8,6 +8,7 @@ import http from 'node:http';
 import {createServer} from 'node:net';
 import {setTimeout as pause} from 'node:timers/promises';
 import {createStorage} from '../server/storage.mjs';
+import {pipelineApiEnv} from './fixtures/pipeline-api-env.mjs';
 test('creation API deduplicates requests, preserves UTF-8 chunks, and never restores deleted submissions',{timeout:20000},async t=>{
  const started=Date.now();let phase='database setup';
  t.after(()=>t.diagnostic(`creation API phase=${phase}; elapsedMs=${Date.now()-started}`));
@@ -15,7 +16,7 @@ test('creation API deduplicates requests, preserves UTF-8 chunks, and never rest
  const uri=process.env.MONGODB_URI||'mongodb://127.0.0.1:27017',database='zhiheng_create_test_'+randomUUID().replaceAll('-','');
  const reservation=createServer();reservation.listen(0,'127.0.0.1');await once(reservation,'listening');const port=reservation.address().port;await new Promise(resolve=>reservation.close(resolve));
  const storage=await createStorage({uri,database});
- const child=spawn(process.execPath,['--import','./tests/fixtures/retry-api-runtime.mjs','server/index.mjs'],{cwd:new URL('../',import.meta.url),env:{...process.env,HOST:'127.0.0.1',PORT:String(port),MONGODB_URI:uri,MONGODB_DATABASE:database,LLM_API_KEY:'fixture-only',LLM_MODEL:'fixture-only'},stdio:['ignore','pipe','pipe']});
+ const child=spawn(process.execPath,['--import','./tests/fixtures/retry-api-runtime.mjs','server/index.mjs'],{cwd:new URL('../',import.meta.url),env:pipelineApiEnv({HOST:'127.0.0.1',PORT:String(port),MONGODB_URI:uri,MONGODB_DATABASE:database}),stdio:['ignore','pipe','pipe']});
  let output='';child.stdout.on('data',value=>{output+=value;});child.stderr.on('data',value=>{output+=value;});
  const base='http://127.0.0.1:'+port,key=randomUUID(),input={mode:'B',question:'中文分块传输，保留补充资料',securities:[{market:'CN',symbol:'600519'}]},post=body=>({method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':key},body:JSON.stringify(body)});
  try{

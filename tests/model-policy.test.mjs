@@ -159,7 +159,7 @@ test('shadow policy dependency boundary cannot feed candidate decisions into tra
   if(!['server/model-gateway.mjs','server/model-policy.mjs','server/model-rollout.mjs','scripts/model-comparison-worker.mjs'].includes(path))assert.doesNotMatch(read(path),/model-policy\.mjs|evaluateModelPolicy\s*\(|observeModelPolicy\s*\(/,path);
  }
  const gateway=read('server/model-gateway.mjs');
- assert.match(gateway,/observeModelPolicy\(\{purpose:request\.purpose,profile,reasoningEffort:request\.reasoningEffort,signals\},onRoutingDecision\);/);
+ assert.match(gateway,/observeModelPolicy\(\{purpose:observedPurpose,profile,reasoningEffort:request\.reasoningEffort,signals\},onRoutingDecision\);/);
  assert.doesNotMatch(gateway,/\.candidate|\bslot\b/);
  assert.doesNotMatch(read('server/model-policy.mjs'),/\b(?:fetch|process|Date|setTimeout)\b|model-adapter|createModelGateway/);
  assert.match(read('server/model-rollout.mjs'),/if\(modelRolloutStatus\(env\)\.active==='policy'\)/,'execution recommendations require the accepted rollout gate');

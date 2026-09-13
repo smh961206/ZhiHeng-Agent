@@ -32,7 +32,7 @@ export function summarizeRun(run,results){
  const profiles=run.profiles.map(p=>({profile:p.id,samples:results.filter(r=>r.profile.id===p.id)}));
  return {version:1,runId:run.id,binding:run.binding,evidenceKind:run.evidenceKind,complete:results.length===run.units.length,
   qualityAccepted:false,profiles:profiles.map(({profile,samples})=>({profile,cases:new Set(samples.map(r=>r.caseId)).size,attempts:samples.length,passed:samples.filter(r=>r.grade.passed).length,
-   criticalErrors:samples.reduce((n,r)=>n+r.grade.criticalErrors,0),usage:summarizeModelCalls(samples.flatMap(r=>r.calls)),
+   criticalErrors:samples.reduce((n,r)=>n+r.grade.criticalErrors,0),usage:summarizeModelCalls(samples.flatMap(r=>r.calls.map(c=>({...c,id:c.id?objectHash([r.unitId,c.id]):null})))),
    dimensions:Object.fromEntries(['facts','citations','tools','validation','contract','delivery','vision'].map(d=>[d,{assessed:samples.filter(r=>r.grade.dimensions[d]!==null).length,passed:samples.filter(r=>r.grade.dimensions[d]===true).length}]))}))};
 }
 export function readBenchmarkRun(directory,{suiteDirectory,codeHash=benchmarkCodeHash()}={}){

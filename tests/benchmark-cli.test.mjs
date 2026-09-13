@@ -5,9 +5,9 @@ import path from 'node:path';
 import os from 'node:os';
 import {parseBenchmarkArgs,benchmarkCLI} from '../scripts/benchmark.mjs';
 
-test('V5.0 benchmark CLI preserves explicit valid offline and paid execution choices',()=>{
+test('M1.0 benchmark CLI preserves explicit offline choices without paid execution',()=>{
  assert.deepEqual(parseBenchmarkArgs(['--out','result with spaces','--kind','vision','--repeats','2','--resume']),{'--out':'result with spaces','--kind':'vision','--repeats':'2','--resume':true});
- assert.equal(parseBenchmarkArgs(['--out','result','--live','--allow-paid','--limits','budget.json'])['--live'],true);
+ assert.throws(()=>parseBenchmarkArgs(['--out','result','--live','--allow-paid','--limits','budget.json']),/Unknown/);
 });
 
 test('V5.0 benchmark CLI rejects ambiguous options before writing or dispatching',async t=>{

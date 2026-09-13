@@ -1,5 +1,7 @@
 # Research Invariants
 
+V5.2 independently validates known publication times and actual block identities against the original job cutoff for exceptional review/Judge packets. Missing/ambiguous/omitted/counter evidence cannot be silently removed to gain eligibility. Judge outcomes remain advisory, and the original final review contract is required. Private reservations survive storage/restart; uncertain entry pauses. These scoped tests do not establish global canonical Research State or complete historical replay.
+
 - INV-RES-001 [ENFORCED]: formal delivery must pass the current review/validation path.
 - INV-RES-002 [ENFORCED]: missing material data is disclosed, not fabricated.
 - INV-RES-003 [ENFORCED]: material counter-evidence must not be silently discarded.

@@ -1,16 +1,19 @@
 import {modelRouting,publicModelRouting} from './model-routing.mjs';
 import {createHash} from 'node:crypto';
-import {createLegacyModelCatalog,createVisionModelCatalog} from './model-catalog.mjs';
+import {createLegacyModelCatalog,createVisionModelCatalog,createPipelineModelCatalog,pipelineStageProfiles} from './model-catalog.mjs';
+import {modelConfig} from './model-config.mjs';
 import {createModelGateway} from './model-gateway.mjs';
 import {legacyVisionError,ModelGatewayError} from './model-gateway-result.mjs';
 import {modelStatePin,hasJobModelScope} from './model-state.mjs';
 import {visionRoutingStatus} from './vision-policy.mjs';
 import {resolveModelConnection} from './model-connection.mjs';
+import {withResearchResource} from './research-budget.mjs';
 export {legacyVisionImageInput} from './model-catalog.mjs';
 export function visionStatus(env=process.env){
  const pin=modelStatePin('vision',env);
- const selected=pin?.id??(!hasJobModelScope()&&visionRoutingStatus(env).active==='candidate'?'vision-challenger':'legacy-vision');
- const profile=(selected==='vision-challenger'?createVisionModelCatalog(env):createLegacyModelCatalog(env)).profiles.find(p=>p.id===selected);
+ const pipeline=modelConfig(env)?.schemaVersion===2;
+ const selected=pin?.id??(pipeline?pipelineStageProfiles('vision',env)[0]:!hasJobModelScope()&&visionRoutingStatus(env).active==='candidate'?'vision-challenger':'legacy-vision');
+ const profile=(pipeline?createPipelineModelCatalog(env):selected==='vision-challenger'?createVisionModelCatalog(env):createLegacyModelCatalog(env)).profiles.find(p=>p.id===selected);
  const model=profile.model;
  const enabled=!!(selected==='legacy-vision'?modelRouting(env).visionKey:resolveModelConnection(profile,env).key)&&profile.capabilities.imageInput===true;
  return {enabled,model,...publicModelRouting(env),visionModel:model,documentPipeline:true,transport:'image_url',pdfDirect:false,pdfMode:'selective-page-images',
@@ -45,7 +48,7 @@ export async function readVisionResult(images,{signal,prompt,fetcher=fetch,env=p
  const attempts=[];
  const complete=async selected=>{
   if(selected!==undefined)request.routingContext={profileId:selected};
-  try{const result=await gateway.complete(request);attempts.push({profile:result.profile,status:'succeeded'});return result;}
+  try{const result=await withResearchResource('visionPage',extraction.pages.length,async()=>await gateway.complete(request),{id:'vision:'+createHash('sha256').update(JSON.stringify({selected:selected??null,images:extraction.images,prompt})).digest('hex'),purpose:request.purpose});attempts.push({profile:result.profile,status:'succeeded'});return result;}
   catch(error){attempts.push({profile:selected??'legacy-vision',status:'failed',category:error.category??'configuration'});throw error;}
  };
  let response;
@@ -62,7 +65,8 @@ export async function readVisionResult(images,{signal,prompt,fetcher=fetch,env=p
 export async function readVisionImages(images,options={}){
  if(!visionStatus(options.env??process.env).enabled)throw new Error('当前模型未启用视觉输入');
  try{
-  const env={...(options.env??process.env)},pin=modelStatePin('vision',env);
+  const env={...(options.env??process.env)},pin=modelStatePin('vision',env),pipeline=modelConfig(env)?.schemaVersion===2;
+  if(pipeline){const profileId=pin?.id??pipelineStageProfiles('vision',env)[0];return (await readVisionResult(images,{...options,env,catalog:createPipelineModelCatalog(env),profileId})).text;}
   const active=visionRoutingStatus(env).active==='candidate';
   const routing=pin?.id==='vision-challenger'||!hasJobModelScope()&&active?{catalog:createVisionModelCatalog(env),profileId:'vision-challenger',...(!pin?{fallbackProfileId:'legacy-vision',qualityApproved:true}:{})}:{};
   return (await readVisionResult(images,{...options,env,...routing})).text;

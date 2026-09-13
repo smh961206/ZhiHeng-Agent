@@ -26,12 +26,16 @@ import {Badge} from './ui/badge';
 import {Alert,AlertTitle,AlertDescription} from './ui/alert';
 import {Card,CardContent,CardHeader,CardTitle} from './ui/card';
 import {Input} from './ui/input';
+import {Label} from './ui/label';
 import {Collapsible,CollapsibleTrigger,CollapsibleContent} from './ui/collapsible';
 import {Select,SelectTrigger,SelectValue,SelectContent,SelectItem} from './ui/select';
+import {RadioGroup,RadioGroupItem} from './ui/radio-group';
+import {Toggle} from './ui/toggle';
 import {Sheet,SheetTrigger,SheetContent,SheetHeader,SheetTitle,SheetDescription} from './ui/sheet';
 import {Popover,PopoverTrigger,PopoverContent} from './ui/popover';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from './ui/tabs';
 import DocumentReadingSummary from './DocumentReadingSummary';
+import ResearchCostSummary from './ResearchCostSummary';
 import ResearchProgress from './ResearchProgress';
 import {researchProgress} from '../../shared/research-progress.mjs';
 import ResearchDecision from './ResearchDecision';
@@ -329,7 +333,7 @@ function SourcesPanel({sources, status, referenceMaterials=[],job,sourceTarget,a
       <p className="rd-muted">作为待核实研究线索保存，财务事实仍需对应原始证据。</p>
       {referenceMaterials.map((item,index)=><Collapsible key={index} className="rd-source"><CollapsibleTrigger asChild><Button variant="ghost" className="rd-source-trigger"><FileText size={16}/><span className="rd-source-heading"><strong>[{item.id}] {item.title}</strong><small>用户提供 · 待核实</small></span><ChevronDown size={16}/></Button></CollapsibleTrigger><CollapsibleContent className="rd-source-body"><pre tabIndex={0}>{item.text}</pre>{item.url&&<SourceLink url={item.url}>用户附带链接</SourceLink>}</CollapsibleContent></Collapsible>)}
     </section>}
-    <label className="rd-field-label" htmlFor={inputId}>检索证据</label>
+    <Label className="rd-field-label" htmlFor={inputId}>检索证据</Label>
     <div className="rd-source-search"><Search size={17} aria-hidden="true"/>
       <Input ref={input} id={inputId} type="search" value={query} aria-label="搜索证据来源" aria-describedby={`${inputId}-count`}
         placeholder="搜索标题、提供方、编号或 URL" onChange={event => setQuery(event.target.value)}
@@ -402,7 +406,7 @@ function Trace({events, status, hidden,reveal=0,revealFilter='issues'}) {
       <CollapsibleContent className="rd-trace-body">
         <div className="rd-trace-toolbar"><span>最新在前</span><Button variant="ghost" size="sm" className="rd-trace-detail-toggle" aria-label={detailed?'收起详细筛选':'查看详细执行记录'} aria-controls={detailsId} aria-expanded={detailed} onClick={()=>{setDetailed(value=>!value);setFilter('all');setQuery('');setLimit(20);}}><SlidersHorizontal size={14}/>{detailed?'收起筛选':'筛选与详情'}</Button></div>
         <div id={detailsId} hidden={!detailed} className="rd-trace-controls">{detailed&&<><div className="rd-trace-search"><Search size={15} aria-hidden="true"/><Input ref={searchInput} aria-label="搜索执行记录" placeholder="搜索执行记录" value={query} onChange={event=>{setQuery(event.target.value);setLimit(20);}}/>{query&&<Button variant="ghost" size="icon" aria-label="清除执行记录搜索" onClick={()=>{setQuery('');setLimit(20);searchInput.current?.focus();}}><X size={14}/></Button>}</div>
-        <div className="rd-trace-filter"><label className="sr-only" htmlFor={filterId}>事件筛选</label><Select value={filter} onValueChange={value=>{setFilter(value);setLimit(20);}}><SelectTrigger id={filterId} aria-label="事件筛选"><SelectValue/></SelectTrigger><SelectContent>
+        <div className="rd-trace-filter"><Label className="sr-only" htmlFor={filterId}>事件筛选</Label><Select value={filter} onValueChange={value=>{setFilter(value);setLimit(20);}}><SelectTrigger id={filterId} aria-label="事件筛选"><SelectValue/></SelectTrigger><SelectContent>
           <SelectItem value="all">全部事件</SelectItem><SelectItem value="tools">工具调用</SelectItem><SelectItem value="issues">异常与提示</SelectItem><SelectItem value="missing">未保存返回</SelectItem>
         </SelectContent></Select></div></>}</div>
         <p className="rd-trace-count" role="status">{filtered.length} 条记录{filtered.length>limit?` · 已显示 ${limit} 条`:''}{(query||filter!=='all')&&<Button variant="ghost" size="sm" onClick={()=>{setFilter('all');setQuery('');setLimit(20);searchInput.current?.focus();}}>重置</Button>}</p>
@@ -461,16 +465,16 @@ function ResearchActions({job,reading,setReading,active,hasReport,cancelling,onC
   const [exportScope,setExportScope]=useState('full'),[exportOpen,setExportOpen]=useState(false),exportDescription=useId();
   function perform(action){onNavigate?.();action?.();}
   return <Card className="rd-action-panel" role="group" aria-label="研究操作"><CardContent>
-    <Button variant="outline" className="rd-reading-toggle" aria-pressed={reading} onClick={()=>perform(()=>setReading(value=>!value))}><BookOpen size={17}/>{reading?'退出阅读模式':'阅读模式'}</Button>
+    <Toggle variant="outline" className="rd-reading-toggle" pressed={reading} onPressedChange={()=>perform(()=>setReading(value=>!value))}><BookOpen size={17}/>{reading?'退出阅读模式':'阅读模式'}</Toggle>
     {!active&&(onRetry?<RetryButton onRetry={()=>perform(onRetry)} retrying={retrying} saveOnly={saveOnly} notice={retryNotice(job)}/>:onReuse&&<Button variant="outline" onClick={()=>perform(onReuse)} disabled={retrying} title="将输入载入工作台，确认提交后才会开始新的研究"><RotateCcw size={17}/>复用研究输入</Button>)}
     <Popover open={exportOpen} onOpenChange={setExportOpen}>
       <PopoverTrigger asChild><Button className="rd-export" disabled={!hasReport||!onDownload||retrying||exporting} aria-busy={Boolean(exporting)} title={hasReport?'选择下载内容':saveOnly||saving||saveUnavailable?'结果保存成功后可导出':'正式报告生成后可导出'}>{exporting?<LoaderCircle size={17} className="rd-spin"/>:<Download size={17}/>}{exporting?'准备导出…':'导出报告'}</Button></PopoverTrigger>
       <PopoverContent align="end" collisionPadding={12} className="rd-export-popover" aria-label="下载选项" aria-describedby={exportDescription}>
         <h3>下载选项</h3><p id={exportDescription}>选择需要保留的内容，下载为 Markdown 文件。</p>
-        <fieldset><legend className="sr-only">下载内容</legend>{[
+        <fieldset><legend className="sr-only">下载内容</legend><RadioGroup className="rd-export-options" value={exportScope} onValueChange={setExportScope}>{[
           ['full','完整研究记录','包含报告、审计、来源、公开计划、工具调用及规则依据。'],
           ['report','报告、审计与来源','适合阅读与分享，省略公开计划和工具参数。'],
-        ].map(([value,label,description])=><label className="rd-export-option" key={value}><input type="radio" name={exportDescription} value={value} checked={exportScope===value} onChange={()=>setExportScope(value)}/><span><strong>{label}</strong><small>{description}</small></span></label>)}</fieldset>
+        ].map(([value,label,description])=><Label className="rd-export-option" key={value}><RadioGroupItem value={value}/><span><strong>{label}</strong><small>{description}</small></span></Label>)}</RadioGroup></fieldset>
         <Button className="rd-export-confirm" disabled={!hasReport||!onDownload||retrying||exporting} aria-busy={Boolean(exporting)} onClick={async()=>{setExportOpen(false);await onDownload?.({includeResearchProcess:exportScope==='full'});onNavigate?.();}}><Download size={16}/>开始下载</Button>
       </PopoverContent>
     </Popover>
@@ -696,6 +700,7 @@ function DetailView({job, currentConfig, tab, onTabChange, streamConnection, onR
             <ResearchRuleUsage key={job.retryCount??0} job={job} currentConfig={currentConfig}/>
             <ResearchProgress job={job} expanded/>
             <DocumentReadingSummary job={job} onSources={showProcessSources}/>
+            <ResearchCostSummary key={job.id} job={job}/>
           </div></SheetContent></Sheet>
         </div>
         {streamConnection&&<p className="rd-connection" role="status"><Activity size={15} aria-hidden="true"/>{streamConnection}</p>}

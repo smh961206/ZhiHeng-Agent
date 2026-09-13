@@ -1,6 +1,8 @@
 import {researchAnalysisReceipts} from '../../shared/research-analysis-receipts.mjs';
 import {useId,useState} from 'react';
 import {Button} from './ui/button';
+import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} from './ui/select';
+import {Label} from './ui/label';
 import './research-analysis-receipts.css';
 const format=(v,digits=2)=>Number.isFinite(v)?v.toLocaleString('zh-CN',{maximumFractionDigits:digits,minimumFractionDigits:digits}):'未确认';
 const percent=v=>Number.isFinite(v)?format(v*100)+'%':'未确认';
@@ -16,9 +18,10 @@ function Dividends({result}){
 function PayoutScenarios({result}){
  return <><p>假设支付率 {percent(result.payout)} · 规划期限：{result.policyThrough||'未记录'}</p><p>期后假设：{result.continuationAssumption||'未记录'}</p><ul className="analysis-scenario-list">{list(result.scenarios).slice(0,5).map(s=><li key={s.toolCallId}><strong>{s.label}</strong><span>每股分红 {list(s.dps).map(v=>format(v)).join(' — ')}；盈利依据 <code>{s.toolCallId}</code></span></li>)}</ul></>;
 }
+const receiptOptionLabel=(call,index)=>`${index+1}. ${call.label} · ${call.toolCallId||'编号未记录'}${call.status==='failed'?' · 失败':!call.hasReturn?' · 返回未齐':''}`;
 export default function ResearchAnalysisReceipts({job,onTrace}){
  const calls=researchAnalysisReceipts(job),[selection,setSelection]=useState(''),id=useId();
  const current=calls.find(c=>c.key===selection)||calls.at(-1),result=current?.result;
  if(!['B','F'].includes(job.mode||job.plan?.mode)&&!calls.length)return null;
- return <section className="research-analysis-receipts" aria-label="分红与敏感性核对"><header><div><h3>分红与敏感性核对</h3><p>读取实际计算返回，保留不同轮次与未解决的问题。</p></div>{onTrace&&<Button variant="outline" size="sm" onClick={()=>onTrace('tools')}>查看实际输入与返回</Button>}</header>{!calls.length?<p className="analysis-empty">本次尚无分红事件或敏感性专用工具记录；不根据报告文字补造计算结果。旧报告可继续查看原有模型与执行轨迹。</p>:<><label htmlFor={id}>选择计算记录</label><select id={id} value={current.key} onChange={e=>setSelection(e.target.value)}>{calls.map((c,i)=><option key={c.key} value={c.key}>{i+1}. {c.label} · {c.toolCallId||'编号未记录'}{c.status==='failed'?' · 失败':!c.hasReturn?' · 返回未齐':''}</option>)}</select><div className="analysis-receipt-body" aria-live="polite">{!current.hasReturn?<p>返回尚未保存；进行中或中断的调用不显示推测值。</p>:result?.error?<p className="analysis-result-warning">本次调用失败：{result.error}</p>:<>{result?.status==='incomplete'&&<p className="analysis-result-warning">返回中仍有缺值、冲突或不可用组合，请结合原文核对。</p>}{current.toolName==='calculate_shareholder_return'?<Dividends result={result||{}}/>:current.toolName==='calculate_dcf_sensitivity'?<Grid result={result||{}}/>:<PayoutScenarios result={result||{}}/>}<p className="analysis-result-notice">{result?.notice||'返回不代表事实已核实。'}</p></>}</div></>}</section>;
+ return <section className="research-analysis-receipts" aria-label="分红与敏感性核对"><header><div><h3>分红与敏感性核对</h3><p>读取实际计算返回，保留不同轮次与未解决的问题。</p></div>{onTrace&&<Button variant="outline" size="sm" onClick={()=>onTrace('tools')}>查看实际输入与返回</Button>}</header>{!calls.length?<p className="analysis-empty">本次尚无分红事件或敏感性专用工具记录；不根据报告文字补造计算结果。旧报告可继续查看原有模型与执行轨迹。</p>:<><Label htmlFor={id}>选择计算记录</Label><Select value={current.key} onValueChange={setSelection}><SelectTrigger id={id} aria-label="选择计算记录" className="analysis-receipt-select"><SelectValue/></SelectTrigger><SelectContent className="analysis-receipt-menu">{calls.map((call,index)=>{const label=receiptOptionLabel(call,index);return <SelectItem key={call.key} value={call.key} textValue={label}>{label}</SelectItem>;})}</SelectContent></Select><div className="analysis-receipt-body" aria-live="polite">{!current.hasReturn?<p>返回尚未保存；进行中或中断的调用不显示推测值。</p>:result?.error?<p className="analysis-result-warning">本次调用失败：{result.error}</p>:<>{result?.status==='incomplete'&&<p className="analysis-result-warning">返回中仍有缺值、冲突或不可用组合，请结合原文核对。</p>}{current.toolName==='calculate_shareholder_return'?<Dividends result={result||{}}/>:current.toolName==='calculate_dcf_sensitivity'?<Grid result={result||{}}/>:<PayoutScenarios result={result||{}}/>}<p className="analysis-result-notice">{result?.notice||'返回不代表事实已核实。'}</p></>}</div></>}</section>;
 }

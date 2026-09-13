@@ -20,7 +20,7 @@ export async function prepareResearchRetry(job,loadJob,now=new Date().toISOStrin
   return next;
  }
  // A new pinned job with unusable progress cannot silently become a fresh run.
- if(Object.hasOwn(job,'modelState'))throw modelStateError();
+ if(Object.hasOwn(job,'modelState')||Object.hasOwn(job,'budgetState')||Object.hasOwn(job,'flagshipState'))throw modelStateError();
  // Rebuild execution data from saved inputs, without feeding old evidence back into a new run.
  let input=validateInput({...original,mode:job.mode||original.mode,sources:[]});
  const mode=route(input);

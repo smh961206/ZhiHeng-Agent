@@ -249,7 +249,8 @@ function positionsUnchanged(before, after, label) {
 }
 async function actionLayout(panel, vertical = true) {
   const names = ['阅读模式', '复用研究输入', '导出报告'];
-  await shadcnButtons(panel.getByRole('button').filter({hasNotText:'导出报告'}));
+  await shadcnButtons(panel.getByRole('button',{name:'复用研究输入',exact:true}));
+  assert.equal(await panel.locator('.rd-reading-toggle').getAttribute('data-slot'),'toggle');
   await shadcnButtons(panel.getByRole('button',{name:'导出报告',exact:true}),'popover-trigger');
   const boxes = [];
   for (const name of names) {
@@ -376,6 +377,7 @@ async function fixtureContext(browser, {jobs = [], viewport = {width: 1440, heig
         return await json({error: 'UI测试：模拟加载失败，请重试'}, 503);
       }
       if (method === 'GET' && path === '/api/config') return await json({configured: true, model: 'fixture-only', modes,
+        modelSelection:{mode:'pipeline',analysisModel:'fixture-researcher',visionModel:'fixture-vision',stageModels:{input:'fixture-input',vision:'fixture-vision',researcher:'fixture-researcher',writer:'fixture-writer',evidenceVerifier:'fixture-verifier',auditor:'fixture-auditor',criticalReviewer:null,judge:null},candidatesEnabled:false,stageRouting:true,optionalReviewEnabled:false,judgeEnabled:false},
         knowledgeVersion: frameworkVersion, researchStages, markets: ['CN', 'HK', 'US'], dataProvider: 'UI合成数据',...configOverrides});
       if (method === 'GET' && path === '/api/materials/capabilities') return await json({enabled:false});
       if (method === 'POST' && path === '/api/securities/resolve') return await json({
@@ -942,7 +944,7 @@ function historyModeFixtures(){
 for(const width of [320,1440])test(`history-mode-filter-${width}`,{jobs:historyModeFixtures(),viewport:{width,height:1000}},async({page})=>{
  await page.goto('/history?sort=oldest&page=2');
  const rows=page.locator('.rh-row'),badges=page.locator('.rh-mode');
- const status=page.getByRole('group',{name:'按研究状态筛选',exact:true});
+ const status=page.getByRole('radiogroup',{name:'按研究状态筛选',exact:true});
  await count(rows,8);
  await count(rows.locator('.rh-mode-row'),0);
  await count(rows.getByText('研究模式',{exact:true}),0);
@@ -974,13 +976,13 @@ for(const width of [320,1440])test(`history-mode-filter-${width}`,{jobs:historyM
  await textIncludes(page.locator('.rh-page-number'),'1 / 2');
  await count(rows,8);
  assert.ok((await badges.evaluateAll(items=>items.map(item=>item.getAttribute('data-mode')))).every(mode=>mode==='B'));
- await textIncludes(status.getByRole('button',{name:/^全部/}).locator('.rh-filter-count'),'10');
+ await textIncludes(status.getByRole('radio',{name:/^全部/}).locator('.rh-filter-count'),'10');
  await page.getByRole('button',{name:'下一页研究记录'}).click();await count(rows,2);
- await status.getByRole('button',{name:/^已完成/}).click();
+ await status.getByRole('radio',{name:/^已完成/}).click();
  await queryIs(page,{mode:'B',status:'completed',page:null});await count(rows,8);
  const search=page.getByRole('searchbox',{name:'搜索研究问题、模式或标的'});
  await search.fill('补充');await count(rows,7);
- await textIncludes(status.getByRole('button',{name:/^全部/}).locator('.rh-filter-count'),'7');
+ await textIncludes(status.getByRole('radio',{name:/^全部/}).locator('.rh-filter-count'),'7');
  await textIncludes(page.locator('.rh-results-note'),modes.B.name);
  await choose(page,'按研究模式筛选',modes.A.name);
  await count(rows,0);await page.getByRole('heading',{name:'没有找到匹配的研究',exact:true}).waitFor();
@@ -1029,11 +1031,12 @@ test('history-search-sort-pagination', {jobs: historyFixtures()}, async ({page, 
   await count(rows, 8);
   await count(page.locator('.research-history').getByText('研究档案', {exact: true}), 0);
   await count(page.locator('.rh-overview, .rh-summary'), 0);
-  const filters = page.getByRole('group', {name: '按研究状态筛选', exact: true});
+  const filters = page.getByRole('radiogroup', {name: '按研究状态筛选', exact: true});
   await count(filters, 1);
-  await count(filters.getByRole('button'), 5);
+  await count(filters.getByRole('radio'), 5);
+  assert.equal(await filters.getAttribute('data-slot'),'toggle-group');
+  assert.equal(await filters.locator('[data-slot=toggle-group-item]').count(),5);
   await count(page.getByRole('group', {name: '研究统计概览，点击按状态筛选', exact: true}), 0);
-  await shadcnButtons(filters.getByRole('button'));
   await textIncludes(page.locator('.rh-results-note'), '共 18 项研究');
   await eventually(async () => await links.first().getAttribute('href') === `/research/${ordered.at(-1).id}`, 'Newest job must sort first');
   await enabled(page.getByRole('button', {name: '上一页研究记录'}), false);
@@ -1056,8 +1059,8 @@ test('history-search-sort-pagination', {jobs: historyFixtures()}, async ({page, 
   await search.fill('现金流');
   await textIncludes(page.locator('.rh-results-note'), '9 项匹配研究');
   await count(page.locator('.rh-title mark'), 8);
-  await textIncludes(filters.getByRole('button', {name: /^全部/}).locator('.rh-filter-count'), '9');
-  await page.getByRole('group', {name: '按研究状态筛选'}).getByRole('button', {name: /^进行中/}).click();
+  await textIncludes(filters.getByRole('radio', {name: /^全部/}).locator('.rh-filter-count'), '9');
+  await page.getByRole('radiogroup', {name: '按研究状态筛选'}).getByRole('radio', {name: /^进行中/}).click();
   const active = ordered.filter(job => ['queued', 'running'].includes(job.status) && job.input.question.includes('现金流'));
   await count(rows, active.length);
   for (const row of await rows.all()) {
@@ -1069,7 +1072,7 @@ test('history-search-sort-pagination', {jobs: historyFixtures()}, async ({page, 
   await page.reload();
   await count(rows, active.length);
   assert.equal(await search.inputValue(), '现金流');
-  assert.equal(await page.getByRole('group', {name: '按研究状态筛选'}).getByRole('button', {name: /^进行中/}).getAttribute('aria-pressed'), 'true');
+  assert.equal(await page.getByRole('radiogroup', {name: '按研究状态筛选'}).getByRole('radio', {name: /^进行中/}).getAttribute('aria-checked'), 'true');
   await search.fill('ui-no-such-research');
   await page.getByRole('heading', {name: '没有找到匹配的研究', exact: true}).waitFor();
   await count(rows, 0);
@@ -1604,6 +1607,10 @@ test('history-load-failure-retry', {jobs: historyFixtures(), failures: {'GET /ap
 
 for (const width of [320, 390, 768, 1440]) test(`responsive-${width}`, {jobs: historyFixtures(), viewport: {width, height: width === 1440 ? 1100 : 844}}, async ({page}) => {
   await workbench(page);
+  assert.equal(await page.locator('label[for="question"]').getAttribute('data-slot'), 'label');
+  assert.equal(await page.locator('label[for="research-path"]').getAttribute('data-slot'), 'label');
+  assert.equal(await page.locator('.platform-version').getAttribute('data-slot'), 'badge');
+  assert.ok(await page.locator('.materials-format-chips [data-slot="badge"]').count() >= 3);
   await noOverflow(page, `empty workbench ${width}`);
   await manualInput(page);
   await page.getByRole('button', {name: '添加标的', exact: true}).click();
@@ -1644,7 +1651,8 @@ for (const width of [320, 390, 768, 1440]) test(`responsive-${width}`, {jobs: hi
   await noOverflow(page, `detail report ${width}`);
   await screenshot(page, `detail-${width}`, '.rd-tab-list');
   const actions = await detailActions(page);
-  await shadcnButtons(actions.getByRole('button').filter({hasNotText:'导出报告'}));
+  await shadcnButtons(actions.getByRole('button',{name:'复用研究输入',exact:true}));
+  assert.equal(await actions.locator('.rd-reading-toggle').getAttribute('data-slot'),'toggle');
   await shadcnButtons(actions.getByRole('button',{name:'导出报告',exact:true}),'popover-trigger');
   await actions.getByRole('button', {name: '阅读模式', exact: true}).click();
   await dismissDetailSheet(page);
@@ -1659,6 +1667,7 @@ for (const width of [320, 390, 768, 1440]) test(`responsive-${width}`, {jobs: hi
 for(const width of [320,1440]) test(`homepage-onboarding-${width}`,{viewport:{width,height:1000}},async({page,requests})=>{
  await page.goto('/');
  await page.getByRole('heading',{name:/让每一次研究/,level:1}).waitFor();
+ assert.equal(await page.locator('.brand').first().getAttribute('data-slot'),'button');
  assert.equal(new URL(page.url()).pathname,'/');
  const navigation=page.getByRole('navigation',{name:'主导航'});
  if(width<1024)await page.getByRole('button',{name:'打开导航菜单',exact:true}).click();
@@ -2041,6 +2050,8 @@ for(const width of [320,390,1440])test(`material-warnings-${width}`,{jobs:[],vie
  job.result.warnings=[...reportTitles.flatMap((title,index)=>[`${title}：${index%2+1} 页使用 OCR，识别内容待原件核对，不能单独作为计算依据`,`${title}：PDF 仍有待核对页：1、${170+index}`]),'合成公告按预算选取，尚不代表所有分红、回购或注销事件已齐全。','合成财务数据尚需核对币种、单位与财务口径。','行情可能延迟；模型复核不等于人工审计'];
  db.set(job.id,job);await detail(page,job);
  const trigger=page.locator('.rd-warning-strip'),warnings=page.getByRole('dialog',{name:'阅读提示',exact:true}),details=warnings.getByRole('region',{name:'财报解析提示'});
+ assert.equal(await trigger.getAttribute('data-slot'),'sheet-trigger');
+ assert.equal(await trigger.evaluate(node=>node.tagName),'BUTTON');
  await count(warnings,0);assert.ok((await trigger.boundingBox()).height<=44,'Notice occupies only one compact line');
  await screenshot(page,'material-warnings-compact-'+width);
  await trigger.focus();await page.keyboard.press('Enter');await warnings.waitFor({state:'visible'});
@@ -2064,6 +2075,7 @@ for(const width of [320,390,1440])test(`material-warnings-${width}`,{jobs:[],vie
  await page.getByRole('tab',{name:/证据来源/}).click();await page.getByRole('searchbox',{name:'搜索证据来源'}).fill('不存在的来源');
  await page.getByRole('tab',{name:'研究报告',exact:true}).click();await trigger.click();
  const shortcut=details.getByRole('button',{name:'查看证据 S3：中国平安2025年年度报告',exact:true});
+ assert.equal(await shortcut.getAttribute('data-slot'),'button');
  await shortcut.focus();await page.keyboard.press('Enter');await queryIs(page,{tab:'sources'});await warnings.waitFor({state:'hidden'});
  const target=page.locator('.rd-source-list .rd-source').filter({has:page.locator('.rd-source-id',{hasText:'[S3]'})});
  await target.getByRole('region',{name:'S3 正文预览'}).waitFor({state:'visible'});
@@ -2083,6 +2095,7 @@ for(const width of [320,1440])test(`calculation-partial-${width}`,{jobs:[],viewp
  db.set(mixedJob.id,mixedJob);
  await detail(page,mixedJob);
  await textIncludes(page.locator('.rd-overview'),'深度研究报告已生成，计算部分完成');await openProcess(page);
+ assert.equal(await page.locator('.research-progress .rp-badge').getAttribute('data-slot'),'badge');
  await textIncludes(page.locator('.research-progress .stage-partial'),'估值与敏感性计算');
  await textIncludes(page.locator('.research-progress .stage-partial'),'部分完成');
  await page.locator('.calculation-issues summary').click();
@@ -2353,7 +2366,7 @@ test('reference-import-errors-and-cancel',{},async({page})=>{
  await area.getByRole('tab',{name:/粘贴文字/}).click();await area.getByRole('textbox',{name:'补充资料正文'}).fill('字'.repeat(20001));await enabled(area.getByRole('button',{name:'加入资料',exact:true}),false);await enabled(start,false);await area.getByRole('button',{name:'清空文字'}).click();await enabled(start);
  await area.getByRole('tab',{name:'导入文件',exact:true}).click();
  const gate=deferred();await page.route('**/api/materials/read',async route=>{await gate.promise;await route.fulfill({json:{text:'不应加入的取消文件'}}).catch(()=>{});});
- try{await input.setInputFiles({name:'slow.txt',mimeType:'text/plain',buffer:Buffer.from('不应加入的取消文件')});await enabled(start,false);await area.getByRole('button',{name:'取消导入'}).click();await textIncludes(area.locator('.materials-import-results'),'导入已取消');await enabled(start);await count(area.locator('.materials-saved li'),1);}finally{gate.resolve();}
+ try{await input.setInputFiles({name:'slow.txt',mimeType:'text/plain',buffer:Buffer.from('不应加入的取消文件')});await enabled(start,false);const progress=area.getByRole('progressbar',{name:'文件处理进度'});await progress.waitFor();assert.equal(await progress.getAttribute('data-slot'),'progress');assert.equal(await progress.locator('[data-slot=progress-indicator]').count(),1);await area.getByRole('button',{name:'取消导入'}).click();await textIncludes(area.locator('.materials-import-results'),'导入已取消');await enabled(start);await count(area.locator('.materials-saved li'),1);}finally{gate.resolve();}
 });
 
 for(const width of [320,1440])test(`reference-edit-undo-${width}`,{viewport:{width,height:1100}},async({page,requests})=>{
@@ -2368,6 +2381,8 @@ for(const width of [320,1440])test(`reference-edit-undo-${width}`,{viewport:{wid
  const original=area.locator('details.material-preview').filter({hasText:'原始笔记.txt'});
  await original.locator('summary').click();await original.getByRole('button',{name:'编辑资料',exact:true}).click();
  const editor=area.getByRole('group',{name:'编辑资料：原始笔记.txt',exact:true});
+ assert.equal(await editor.locator('label[for$="-title"]').getAttribute('data-slot'),'label');
+ assert.equal(await editor.locator('label[for$="-text"]').getAttribute('data-slot'),'label');
  await enabled(start,false);await enabled(area.getByRole('button',{name:'选择文件',exact:true}),false);
  await editor.getByRole('textbox',{name:'资料正文',exact:true}).fill('对照收入假设');await editor.getByRole('button',{name:'保存修改'}).click();await textIncludes(editor.getByRole('alert'),'相同内容已存在');await enabled(start,false);
  await editor.getByRole('textbox',{name:'资料正文',exact:true}).fill('字'.repeat(20001));await enabled(editor.getByRole('button',{name:'保存修改'}),false);await textIncludes(editor,'还需精简 1 字');
@@ -2794,20 +2809,21 @@ for(const width of [320,1440]){
   await textIncludes(page.getByLabel('组合执行结论'),'条件式框架');
   await page.getByRole('button',{name:/查看执行复核/}).click();
   const review=page.getByLabel('执行纪律复核',{exact:true});await review.waitFor();
+  const reviewFilters=review.getByRole('radiogroup',{name:'筛选执行复核',exact:true});assert.equal(await reviewFilters.getAttribute('data-slot'),'toggle-group');assert.equal(await reviewFilters.locator('[data-slot=toggle-group-item]').count(),4);
   await eventually(()=>review.evaluate(element=>element===document.activeElement),'Summary link focuses execution review');
   await count(review.locator('.execution-review-item'),10);
   await textIncludes(review.locator('.execution-review-overview'),'8 项需要关注');
   assert.equal(await review.locator('.execution-review-item').first().getAttribute('data-status'),'limited');
   assert.equal(await review.locator('.execution-review-item').last().getAttribute('data-status'),'not_applicable');
-  await review.getByRole('button',{name:'不适用 1',exact:true}).click();
+  await review.getByRole('radio',{name:'不适用 1',exact:true}).click();
   await count(review.locator('.execution-review-item'),1);
   await textIncludes(review.locator('.execution-review-item'),'仅复盘历史交易');
-  await review.getByRole('button',{name:'全部 10',exact:true}).click();
+  await review.getByRole('radio',{name:'全部 10',exact:true}).click();
   await count(review.locator('.execution-review-item'),10);
   assert.doesNotMatch(await page.locator('.rd-audit-review').innerText(),/执行纪律复核/);
-  await review.getByRole('button',{name:'存在限制 8',exact:true}).click();await count(review.locator('.execution-review-item'),8);
+  await review.getByRole('radio',{name:'存在限制 8',exact:true}).click();await count(review.locator('.execution-review-item'),8);
   await noOverflow(page,'execution review '+width);await screenshot(page,'execution-detail-'+width,'.rd-execution-review');
-  await review.getByRole('button',{name:'已检查 1',exact:true}).click();await count(review.locator('.execution-review-item'),1);
+  await review.getByRole('radio',{name:'已检查 1',exact:true}).click();await count(review.locator('.execution-review-item'),1);
   await review.getByRole('button',{name:'查看执行复核证据 S1',exact:true}).focus();await page.keyboard.press('Enter');
   await eventually(async()=>await page.getByRole('tab',{name:/证据来源/}).getAttribute('aria-selected')==='true','Execution evidence opens sources');
   const source=page.locator('.rd-source').filter({has:page.locator('.rd-source-title',{hasText:executionUiJob.input.sources[0].title})});
@@ -3035,7 +3051,11 @@ for(const width of [320,1440])test('export-options-popup-'+width,{jobs:[makeJob(
  await detail(page,makeJob(5200));const actions=await detailActions(page),trigger=actions.getByRole('button',{name:'导出报告',exact:true});
  assert.equal(await page.getByRole('combobox',{name:'导出内容'}).count(),0);
  await trigger.focus();await page.keyboard.press('Enter');const choices=page.getByRole('dialog',{name:'下载选项',exact:true});await choices.waitFor();
- assert.equal(await choices.getByRole('radio').count(),2);assert.equal(downloads,0);
+ assert.equal(await choices.getByRole('radio').count(),2);
+ assert.equal(await choices.locator('[data-slot=label]').count(),2);
+ assert.equal(await choices.locator('[data-slot=radio-group]').count(),1);
+ assert.equal(await choices.locator('[data-slot=radio-group-item]').count(),2);
+ assert.equal(downloads,0);
  await page.keyboard.press('Escape');await choices.waitFor({state:'hidden'});assert.equal(await trigger.evaluate(node=>node===document.activeElement),true);assert.equal(downloads,0);
  await trigger.click();await choices.getByRole('radio',{name:/^报告、审计与来源/}).check();
  await noOverflow(page,'export popup '+width);await screenshot(page,'export-options-'+width);
@@ -3102,6 +3122,12 @@ await registerPlatformV49Scenarios({test,makeJob,detail,openProcess,textIncludes
 
 const {registerPlatformV50Scenarios}=await import('./platform-v50-ui-scenarios.mjs');
 registerPlatformV50Scenarios({test,makeJob,detail,openProcess,textIncludes,noOverflow,screenshot});
+
+const {registerPlatformV51Scenarios}=await import('./platform-v51-ui-scenarios.mjs');
+registerPlatformV51Scenarios({test,makeJob,detail,openProcess,textIncludes,noOverflow,screenshot});
+
+const {registerPlatformM10Scenarios}=await import('./platform-m10-ui-scenarios.mjs');
+registerPlatformM10Scenarios({test,makeJob,detail,openProcess,textIncludes,noOverflow,screenshot});
 
 await main().catch(error => { console.error(error.stack || error); process.exitCode = 1; });
 

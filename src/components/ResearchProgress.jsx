@@ -1,6 +1,7 @@
 import {Check, LoaderCircle, CircleAlert, Clock3, Minus, Square} from 'lucide-react';
 import {researchProgress} from '../../shared/research-progress.mjs';
 import {Card} from './ui/card';
+import {Badge} from './ui/badge';
 import './research-progress.css';
 
 const calculationNames={calculate_comparison:'多公司可比性核算',calculate_p2:'市赚率计算',calculate_dividend:'股息收益率锚计算',calculate_normalized_earnings:'正常化盈利估值',calculate_screen_metrics:'财务指标计算',calculate_dcf:'现金流折现计算'};
@@ -15,7 +16,7 @@ export default function ResearchProgress({job,expanded=false}) {
     <div className="rp-status" role="status" aria-live="polite" aria-atomic="true">
       <div className="rp-heading">
         <span className="rp-eyebrow">执行与交付</span>
-        <span className="rp-badge"><Icon size={15} aria-hidden="true" className={progress.busy ? 'rp-spin' : undefined}/>{progress.label}</span>
+        <Badge variant="outline" className="rp-badge"><Icon size={15} aria-hidden="true" className={progress.busy ? 'rp-spin' : undefined}/>{progress.label}</Badge>
       </div>
       <p className="rp-current-label">当前环节</p>
       <p className="rp-title">{progress.title}</p>

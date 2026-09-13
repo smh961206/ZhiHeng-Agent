@@ -14,7 +14,7 @@ nano config/models.production.json
 bash deploy.sh up
 ```
 
-在环境文件填写 LLM_API_KEY，在 JSON 文件填写模型、接口和能力。无配置文件时脚本会生成模板并退出，不会猜测密钥。项目不需要在服务器安装 Node.js；镜像构建包含前端编译和生产依赖安装。首次构建需要访问容器镜像与 npm 仓库。
+在环境文件填写模型密钥，在 JSON 文件填写模型、接口和环节分配。缺少 `.env.production` 或 `config/models.production.json` 时，脚本会依次生成对应模板并退出，不会猜测密钥。项目不需要在服务器安装 Node.js；镜像构建包含前端编译和生产依赖安装。首次构建需要访问容器镜像与 npm 仓库。
 
 可选数据源在 `.env.production` 配置 `TUSHARE_TOKEN` 与长桥的 `LONGBRIDGE_APP_KEY`、`LONGBRIDGE_APP_SECRET`、`LONGBRIDGE_ACCESS_TOKEN`。长桥凭证完整时优先为适用标的提供行情与股本，并按权限补充港美股基本面；Tushare 提供三市场结构化财务及A股股东回报、股本和历史估值。官方披露仍由巨潮、港交所和SEC读取，网页正文按已配置的搜索服务与资料缺口补充；具体覆盖取决于任务及账户权限。Compose 已通过 `env_file` 注入这些变量。长桥 SDK 含原生模块，沿用项目的 Debian/glibc 镜像；不要直接改用 Alpine。配置和验证说明见 [README 的可选数据源章节](README.md#可选接入长桥行情基本面与-tushare-财务数据)。修改凭证后需重建应用容器使新环境生效。
 
@@ -71,19 +71,18 @@ bash deploy.sh rollback backups/实际文件名.archive.gz --confirm-data-loss
 
 修改 APP_PORT 后，如浏览器使用非默认端口，请将完整访问 origin 也加入 PUBLIC_ORIGINS，例如 `http://127.0.0.1:8080`。独立 backup 操作仅恢复原先运行中的应用，已停止的应用保持停止；维护阶段健康检查失败也会停止应用。
 
-## 可选模型策略配置
+## 模型、费用与缓存记录配置
 
-生产环境只使用 `.env.production` 保存凭据、运行参数、策略开关和批准路径，使用 `config/models.production.json` 保存模型定义。模板内发布开关关闭、批准路径为空；正式启用仍需匹配的质量验收及容器可读的批准文件，不能把填写模型当成通过验收。
+生产环境使用 `.env.production` 保存凭据和运行参数，使用 `config/models.production.json` 保存模型定义及八个研究环节的分配。模型配置为 schema v2 时，Input、Vision、Researcher、Writer、Evidence Verifier、Auditor 为必填环节；Critical Reviewer 与 Judge 留空数组即关闭。日常部署不使用 MAIN/PRO、Challenger、Champion、A/B、批准文件、preview 或模型 rollback 副本。
 
+完整字段说明和回滚边界见 [配置使用说明与教程](docs/configuration-guide.md)。部署前执行离线检查：
 
-### 生产配置的加载
+```bash
+node --env-file-if-exists=.env.production scripts/model-config.mjs --check config/models.production.json
+```
 
-完整字段说明、生产示例、检查结果解释和回滚步骤见 [配置使用说明与教程](docs/configuration-guide.md)。
+检查只验证结构、引用和凭据是否已配置，不调用外部模型。`deploy.sh` 检测到 `config/models.production.json` 后加载 `compose.models.yaml`，把该文件只读挂载到容器并设置 `MODEL_CONFIG_FILE`。实际环境和生产模型文件不进入镜像或 Git；修改后按正常部署流程重建应用容器。旧 schema v1 只用于已有部署和历史任务恢复。
 
-统一模型文件为可选入口。先执行 `node --env-file-if-exists=.env.production scripts/model-config.mjs --preview --out config/models.production.preview.json`，再用同一环境文件执行 `scripts/model-config.mjs --check config/models.production.preview.json`。不要把本地配置覆盖到生产。
+V5.1 的价格历史是可选独立数据。需要费用估算时，从 `config/pricing.example.json` 建立生产私有副本，在 `.env.production` 填写容器内只读路径，并将价格文件加入部署 Compose 的只读挂载。未配置价格时费用保持未知。统一研究预算、预算阻断和预算压力检索缩减已退出当前配置；固定的网页、文件、并发和超时安全边界继续有效。
 
-完成生产审核后再将预览文件发布为 `config/models.production.json`。`deploy.sh` 检测到这个确切文件时会添加 `compose.models.yaml`，只读挂载至容器并设置 `MODEL_CONFIG_FILE`；预览文件不会触发切换。本次已验证的环境文件移除了重复模型定义；旧入口仍兼容未迁移部署。回退前从受控回滚文件恢复原定义和原选择器，再撤下正式模型文件；历史任务和审批记录不删除。升级与备份时同时保留受控的实际模型配置文件。
-
-`.env.production` 和 `config/models.production.json` 必须存在。旧部署的环境变量入口仍兼容。
-
-Compose 的显式 environment 设置继续优先。实际环境和模型文件均不进入 Git 或镜像；修改后按正常部署流程重建应用容器。
+升级与备份时保留 `.env.production`、`config/models.production.json`、可选价格文件、`.deploy/`、`backups/` 和全部历史任务数据。模型配置回滚只影响新任务；modelState v4 任务必须继续使用保存的模型和连接身份。

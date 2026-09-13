@@ -14,7 +14,7 @@ export default function ReportWarnings({warnings=[],sources=[],onSource}){
  const shown=groups.slice(0,visibleCount),remaining=groups.length-shown.length;
  const overview=[groups.length&&`${groups.length} 组财报核对`,other.length&&`${other.length} 项数据说明`].filter(Boolean).join(' · ');
  return <Sheet open={open} onOpenChange={setOpen}>
-  <SheetTrigger asChild><button type="button" className="rd-warning-strip" aria-label={`查看阅读提示：${overview}`}><CircleAlert size={15} aria-hidden="true"/><span>阅读提示</span><span className="rd-warning-strip-count">{warnings.length}</span><span className="rd-warning-strip-overview">{overview}</span><span className="rd-warning-strip-action">查看<ChevronRight size={14} aria-hidden="true"/></span></button></SheetTrigger>
+  <SheetTrigger asChild><Button type="button" variant="ghost" className="rd-warning-strip" aria-label={`查看阅读提示：${overview}`}><CircleAlert size={15} aria-hidden="true"/><span>阅读提示</span><span className="rd-warning-strip-count">{warnings.length}</span><span className="rd-warning-strip-overview">{overview}</span><span className="rd-warning-strip-action">查看<ChevronRight size={14} aria-hidden="true"/></span></Button></SheetTrigger>
   <SheetContent className="research-detail rd-warning-sheet" onCloseAutoFocus={event=>{if(pendingSource.current!==null){event.preventDefault();const index=pendingSource.current;pendingSource.current=null;onSource?.(index);}}}>
    <SheetHeader><SheetTitle>阅读提示</SheetTitle><SheetDescription>{overview}。提示仅供核对，关闭后继续阅读正文。</SheetDescription></SheetHeader>
    <div className="rd-warning-summary">
@@ -31,7 +31,7 @@ export default function ReportWarnings({warnings=[],sources=[],onSource}){
         {item.kind==='ocr'?<><span className="rd-issue-label">识别方式</span><span className="rd-ocr-label">OCR 识别 · {item.value} 页</span></>:item.kind==='pages'?<><span className="rd-issue-label">待核对页码</span><span className="rd-page-numbers">{item.value}</span></>:item.text}
        </p>)}</div>
       </div>
-      <div className="rd-warning-source-actions">{matches.length?matches.map(({source,index})=><button type="button" key={index} className="rd-warning-source-link" aria-label={`查看证据 ${source.id||index+1}：${group.title}`} onClick={()=>{pendingSource.current=index;setOpen(false);}}>查看原文{source.id&&<span>{source.id}</span>}<ArrowUpRight size={15} aria-hidden="true"/></button>):<span className="rd-warning-source-missing">暂无关联原文</span>}</div>
+      <div className="rd-warning-source-actions">{matches.length?matches.map(({source,index})=><Button type="button" variant="outline" size="sm" key={index} className="rd-warning-source-link" aria-label={`查看证据 ${source.id||index+1}：${group.title}`} onClick={()=>{pendingSource.current=index;setOpen(false);}}>查看原文{source.id&&<span>{source.id}</span>}<ArrowUpRight size={15} aria-hidden="true"/></Button>):<span className="rd-warning-source-missing">暂无关联原文</span>}</div>
      </li>;
     })}</ul>
     {groups.length>4&&<div className="rd-warning-more"><span role="status" aria-live="polite">已显示 {shown.length} / {groups.length} 组报告</span><Button type="button" variant="ghost" disabled={!remaining} onClick={()=>setVisibleCount(count=>count+4)}>{remaining?`显示更多报告（${remaining}）`:'已显示全部'}{remaining>0&&<ChevronDown size={16}/>}</Button></div>}

@@ -1,6 +1,6 @@
 # V5.1 — Cost / Cache / Research Budget
 
-Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
+Implementation Status: CURRENT. All V5.1.0–.14 engineering steps and their offline acceptance are complete. The user authorized this release on 2026-09-12. See the [completion report](completion-report.md), [validation results](validation-results.json), [execution evidence](execution-log.md) and [operations](runbook.md). Real-model quality acceptance from V5.0 remains paused; no measured production savings or candidate promotion is asserted.
 
 ## Goal
 

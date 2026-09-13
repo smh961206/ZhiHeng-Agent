@@ -2,7 +2,7 @@
 
 用户在本任务中明确回复“批准”，确认第九批次验收报告。正式批准于 2026-09-11T10:13:56.255Z 记录，批准人为本任务用户，Codex 仅代为落盘，不冒用姓名或独立签名。
 
-基线 deepseek-flash 与候选 glm-5.3-flash 均 48/48 通过。正式文件 artifacts/vision-acceptance-glm53-fields-20260911-approved.json 保留完整原始 comparison，仅填写批准字段：approvedBy、approvedAt、visualReviewPassed=true、rollbackVerified=true。报告哈希为 8d0bf01699843e4d98664682e6590619ae3eefe917dcb7732acb53585afa0895。
+基线 deepseek-flash 与候选 glm-5.3-flash 均 48/48 通过。历史正式文件现归档为 `archive/vision-acceptance-glm53-fields-20260911-approved.json`，保留完整原始 comparison，仅填写批准字段：approvedBy、approvedAt、visualReviewPassed=true、rollbackVerified=true。报告哈希为 8d0bf01699843e4d98664682e6590619ae3eefe917dcb7732acb53585afa0895。
 
 按当前真实配置重新执行准入检查，结果 accepted=true、reasons=[]。使用正式文件在隔离进程中打开开关，正确选中 candidate；实际配置 FEATURE_VISION_ROUTING=false，仍选中 legacy。正式批准完成，生产启用未执行；未来启用需将该文件配置为 VISION_ACCEPTANCE_FILE，并确保部署代码和配置仍与批准绑定一致。
 

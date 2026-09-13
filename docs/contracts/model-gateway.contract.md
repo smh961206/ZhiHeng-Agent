@@ -1,5 +1,27 @@
 # Model Gateway Contract
 
+## M1.0 stage configuration
+
+Schema-v2 `MODEL_CONFIG_FILE` defines model connections once and assigns them to `input`, `vision`, `researcher`, `writer`, `evidenceVerifier`, `auditor`, `criticalReviewer` and `judge`. The first six stages are required; Critical Reviewer and Judge may be empty. Input and Vision accept one model. Other stages accept one model or an ordered pool. Catalog derives capabilities from stage use and rejects unknown fields, unused models, duplicate pool entries, secret-bearing URLs and legacy model-definition variables mixed with v2.
+
+Business callers pass only a stage purpose. Gateway resolves the pinned profile, checks capabilities and delegates to the existing adapter. New tasks use modelState v4 and pin all stage pools plus connection identities. Existing v1-v3 jobs map new caller names back to their historical `router`, `research`, `review` and `followup` purposes before cache, budget, telemetry and dispatch preparation. No historical task is rebound to current configuration.
+
+Configured Critical Reviewer and Judge profiles do not require comparison or acceptance files. They still require the V5.2 internal call scope, deterministic eligibility, job authorization, isolated public context, one-call recovery receipt and strict output validation. V5.1 pricing, usage and cache accounting applies to every stage. Configurable research-budget enforcement is retired. Hidden reasoning, prompts, source bodies, credentials and endpoint URLs remain excluded from public output and telemetry.
+
+## V5.2 exceptional independent roles
+
+Additive ModelProfile v5 declares FLAGSHIP and exactly critical-review or judge, explicit adapter options/capabilities and per-role allow flags. Default/policy/research challenger catalogs exclude these roles. Optional configuration roles use existing model configuration/connection owners. Gateway requires the internal independent-call scope, matching original job authorization and current artifact-bound live admission; arbitrary explicit profile selection cannot bypass it. The adapter dispatches one non-streaming, tool-free request using system/user messages only and never transports hidden continuation. Existing modelState pins are unchanged.
+
+Existing private job payload may add flagshipState; references, original cutoff, input/profile/connection hashes, validated output and optional cost metrics are durable. Reserve-before-dispatch and exact completed-outcome reuse prevent duplicate independent work; uncertain resume pauses. ModelCall adds critical-review/judge purpose plus optional whitelisted conflict type. Public projections exclude private state. Judge cannot introduce a third fact/thesis; selection remains advisory and existing final validation is mandatory. See [V5.2 schema](../releases/V5.2/schema.md). Both flags default false; live acceptance is paused by the user.
+
+## V5.1 cost/cache additions and historical budget compatibility
+
+Existing ModelProfile versions accept legacy pricing plus effective-dated pricing v1 and timezone-tiered v2. MODEL_PRICING_FILE optionally resolves an exact profile/connection/version at dispatch time; missing/invalid data stays unknown. Gateway exposes additive usageDetails and cost. Reasoning tokens are a subset of output usage; estimates remain distinguished from observed provider counters. Cost receipts retain formula version, exact rate snapshot, effective/known/call times, schedule tier and hash. Unknown prior retry charges are not hidden by pricing the final response. No request is delayed for lower time-tier prices.
+
+ModelCall adds optional transportAttempts, usageDetails, cost and text-only prefix fingerprint. Absence preserves the old normalized shape for frozen benchmark compatibility. No raw prompts, images, source text, secrets or reasoning enter telemetry. New jobs do not create private budgetState. Historical budgetState remains readable and keeps durable reservation/replay protection, but its saved limits cannot stop or reduce current execution. Model pins, financial validation, evidence semantics and the original research cutoff remain intact.
+
+GET /api/jobs/:id/cost exposes a field-whitelisted cost/cache projection. It omits private ledger identities, fingerprints, pricing hashes/configuration, endpoints and credentials. Unknown costs and currencies remain explicit. Cost data cannot alter schema-v2 stage assignment, stop research or change saved task pins. See the current [configuration guide](../configuration-guide.md); V5.1 release documents remain historical records of the retired budget implementation.
+
 ## V5.0 unified configuration input
 
 MODEL_CONFIG_FILE is optional. Without it, all legacy env defaults and role semantics remain. With it, the version-1 connections/profiles/roles document is the explicit source of model definitions; credentials are resolved only by apiKeyEnv and execution/promotion controls remain in the environment. Unknown/duplicate fields, invalid references and conflicting nonempty legacy definitions fail closed with a sanitized configuration error. A startup/first-use file snapshot is retained until process restart. Gateway captures effective values and credential references for each call; custom configuration cannot bypass existing ModelProfile validators or promotion gates.

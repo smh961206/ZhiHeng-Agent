@@ -4,6 +4,7 @@ import {portfolioFields,portfolioReadiness} from '../../shared/research-framewor
 import {Badge} from './ui/badge';
 import {Button} from './ui/button';
 import {Input} from './ui/input';
+import {Label} from './ui/label';
 import {Collapsible,CollapsibleTrigger,CollapsibleContent} from './ui/collapsible';
 
 export default function PortfolioConstraints({mode,execution,context,onChange}){
@@ -17,7 +18,7 @@ export default function PortfolioConstraints({mode,execution,context,onChange}){
  ]:[{ids:portfolioFields.map(field=>field.id)}];
  const body=<div className="portfolio-context-body">
   {groups.map((group,index)=><div key={index} className={group.title?'portfolio-field-group':undefined}>{group.title&&<div className="portfolio-group-heading"><h6>{group.title}</h6><p>{group.note}</p></div>}<div className="portfolio-fields">{group.ids.map(id=>{
-   const field=portfolioFields.find(item=>item.id===id);return <div key={id}><label htmlFor={'portfolio-'+id}>{field.label}</label><Input id={'portfolio-'+id} value={context[id]||''} maxLength={4000} placeholder={field.placeholder} onChange={event=>onChange(current=>({...current,[id]:event.target.value}))}/></div>;
+   const field=portfolioFields.find(item=>item.id===id);return <div key={id}><Label htmlFor={'portfolio-'+id}>{field.label}</Label><Input id={'portfolio-'+id} value={context[id]||''} maxLength={4000} placeholder={field.placeholder} onChange={event=>onChange(current=>({...current,[id]:event.target.value}))}/></div>;
   })}</div></div>)}
   <p className={'context-readiness'+(mode==='E'&&!readiness.complete?' is-limited':'')} role="status">{readiness.complete?<><Check size={15}/>组合信息已齐，研究中仍会核对有效性与适用条件。</>:<><CircleAlert size={15}/>{mode==='E'?'仅能分析已提供的持仓与已知风险。':''}尚缺：{readiness.missing.join('、')}。本次不输出具体仓位。</>}</p>
  </div>;

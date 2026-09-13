@@ -1,5 +1,7 @@
 # V5.2 — Fully Normalized Detailed Index
 
+Engineering completion and cross-version maintenance: [completion report](completion-report.md) and [V5.1/V5.2/M1.0 regression report](../M1.0/regression-optimization-report.md). Offline regression does not assert real model quality or production activation.
+
 Every subrelease below follows `docs/development/NORMALIZED_RELEASE_STANDARD.md`.
 
 Codex must execute them in order unless the user explicitly requests one specific subrelease.

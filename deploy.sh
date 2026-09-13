@@ -9,13 +9,16 @@ command -v docker >/dev/null || { echo '请先安装 Docker Engine 和 Compose v
 docker compose version >/dev/null
 if [[ ! -f .env.production ]]; then
   cp .env.production.example .env.production
-  echo '已生成 .env.production；请复制 config/models.example.json 为 config/models.production.json，填写凭据并校验模型配置后重新运行。'
+  echo '已生成 .env.production；请填写生产凭据后重新运行。'
+  exit 1
+fi
+if [[ ! -f config/models.production.json ]]; then
+  cp config/models.example.json config/models.production.json
+  echo '已生成 config/models.production.json；请配置模型和研究环节并通过离线检查后重新运行。'
   exit 1
 fi
 export APP_IMAGE="$(cat .deploy/current-image 2>/dev/null || echo zhiheng-agent:local)"
-compose_files=(-f compose.production.yaml)
-# Publish this exact file only after the migration preview/check has passed.
-if [[ -f config/models.production.json ]]; then compose_files+=(-f compose.models.yaml); fi
+compose_files=(-f compose.production.yaml -f compose.models.yaml)
 dc() { docker compose --env-file .env.production "${compose_files[@]}" "$@"; }
 maintenance=0
 on_error() {

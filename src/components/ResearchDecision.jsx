@@ -69,7 +69,7 @@ export default function ResearchDecision({job,onUpdate,onDeepen,onExecutionAudit
    {(decision.valuation?.explanation||decision.portfolio?.summary)&&<SummarySection number="04" title="估值与使用边界">
     <div className="rd-summary-boundaries" ref={valuationSection} tabIndex={-1} aria-label="估值与使用边界详情">{decision.valuation?.explanation&&<div><h4>估值边界</h4>{decision.valuation.methods?.length>0&&<p>本次方法：{decision.valuation.methods.join(' · ')}</p>}<p>{decision.valuation.explanation}</p></div>}{decision.portfolio?.summary&&<div><h4>组合与仓位</h4><p className="rd-decision-boundary">{decision.portfolio.summary}</p></div>}</div>
    </SummarySection>}
-   <small className="rd-summary-footnote">模型复核意见与程序结构校验共同保留；不代表事实被独立证实。</small>
+   <small className="rd-summary-footnote">独立审计意见与程序结构校验共同保留；满足条件时还会记录关键复核或证据裁决。它们不代表事实已经得到独立证实。</small>
    </div></div></div>
  </SheetContent></Sheet>;
 }

@@ -1,11 +1,12 @@
 // V4.9 Vision admission only. Separate from text policy to avoid Catalog/state cycles.
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
-import {createVisionModelCatalog,createLegacyModelCatalog} from './model-catalog.mjs';
+import {createVisionModelCatalog,createLegacyModelCatalog,createPipelineModelCatalog,pipelineStageProfiles} from './model-catalog.mjs';
+import {modelConfig} from './model-config.mjs';
 import {modelConnectionIdentity,resolveModelConnection} from './model-connection.mjs';
 import {gradeVisionTable,visionMetrics} from './vision-quality.mjs';
 const hash=value=>createHash('sha256').update(value).digest('hex');
-const owners=['model-config','model-routing','vision-model','vision-policy','model-catalog','model-adapter','model-gateway','model-connection','model-state','model-gateway-result','model-stream','model-deadline','vision-quality','visual-reading','visual-render-worker'];
+const owners=['research-budget','model-pricing','model-cache','model-telemetry','model-config','model-routing','vision-model','vision-policy','model-catalog','model-adapter','model-gateway','model-connection','model-state','model-gateway-result','model-stream','model-deadline','vision-quality','visual-reading','visual-render-worker'];
 const codeFiles=[...owners.map(name=>new URL('./'+name+'.mjs',import.meta.url)),new URL('../scripts/vision-benchmark.mjs',import.meta.url)];
 const stamp=file=>{const s=fs.statSync(file,{bigint:true});if(!s.isFile())throw new Error('Expected file');return [s.dev,s.ino,s.size,s.mtimeNs,s.ctimeNs].join(':');};
 let codeCache,admissionCache;
@@ -55,6 +56,7 @@ export function validateVisionPromotion(comparison,approval,env=process.env){
  return {accepted:reasons.length===0,reasons:[...new Set(reasons)]};
 }
 export function visionRoutingStatus(env=process.env){
+ if(modelConfig(env)?.schemaVersion===2)return {active:'configured',reasons:[]};
  if(env.FEATURE_VISION_ROUTING!=='true'){admissionCache=undefined;return {active:'legacy',reasons:[]};}
  try{
   const file=env.VISION_ACCEPTANCE_FILE;
@@ -69,6 +71,11 @@ export function visionRoutingStatus(env=process.env){
  }catch{admissionCache=undefined;return {active:'legacy',reasons:['acceptance_missing_or_invalid']};}
 }
 export function configuredVisionProfile(env=process.env,requested){
+ if(modelConfig(env)?.schemaVersion===2){
+  const id=requested??pipelineStageProfiles('vision',env)[0],profile=createPipelineModelCatalog(env).profiles.find(p=>p.id===id);
+  if(!profile?.purposes.includes('vision'))throw new Error('Configured Vision model is unavailable');
+  return profile;
+ }
  const id=requested??(visionRoutingStatus(env).active==='candidate'?'vision-challenger':'legacy-vision');
  if(!['legacy-vision','vision-challenger'].includes(id)||id==='vision-challenger'&&visionRoutingStatus(env).active!=='candidate')throw new Error('Vision promotion no longer accepted');
  if(id==='legacy-vision')return createLegacyModelCatalog(env).profiles.find(p=>p.id===id);

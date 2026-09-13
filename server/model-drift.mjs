@@ -4,6 +4,22 @@ import {objectHash} from '../benchmark/fixtures.mjs';
 import {compareSamples,samplesFromRun} from '../benchmark/statistics.mjs';
 import {validateBenchmarkRun} from '../benchmark/runner.mjs';
 import {benchmarkTaskClass,modelTaskClasses} from './model-task-class.mjs';
+import {uniqueModelCalls,summarizeFlagshipCalls} from './model-telemetry.mjs';
+
+// Read-only exceptional-use observation. It never lowers review requirements,
+// imposes a quality-reducing quota, rewrites a policy or selects another model.
+export function evaluateFlagshipUsage({jobIds,calls,telemetryComplete=false,maxJobRate=.05,minJobs=100,costLimits={}}){
+ requireBenchmark(Array.isArray(jobIds)&&jobIds.every(identifier)&&new Set(jobIds).size===jobIds.length&&Array.isArray(calls),'usage cohort identity');
+ requireBenchmark(Number.isFinite(maxJobRate)&&maxJobRate>=0&&maxJobRate<=1&&Number.isSafeInteger(minJobs)&&minJobs>=1,'usage thresholds');
+ requireBenchmark(costLimits&&typeof costLimits==='object'&&!Array.isArray(costLimits)&&Object.entries(costLimits).every(([currency,limit])=>/^[A-Z]{3}$/.test(currency)&&Number.isFinite(limit)&&limit>=0),'currency cost thresholds');
+ const records=uniqueModelCalls(calls);requireBenchmark(records.every(c=>jobIds.includes(c.jobId)),'usage outside cohort');
+ const rare=records.filter(c=>['judge','critical-review'].includes(c.purpose)),rareJobs=new Set(rare.map(c=>c.jobId)).size,jobRate=jobIds.length?rareJobs/jobIds.length:null;
+ const metrics=summarizeFlagshipCalls(records),reasons=[];
+ if(jobIds.length>=minJobs&&jobRate>maxJobRate)reasons.push('exceptional_usage_rate_exceeded');
+ for(const row of metrics.summary.billing)if(Object.hasOwn(costLimits,row.currency)&&row.knownEstimatedCost>costLimits[row.currency])reasons.push('exceptional_cost_exceeded_'+row.currency);
+ const complete=telemetryComplete===true&&jobIds.length>=minJobs&&rare.every(c=>c.status!=='started'&&c.transportAttempts===1&&c.billing!==null);
+ return {version:1,kind:'flagship-usage-observation',status:reasons.length?'alert':complete?'stable':'inconclusive',jobCount:jobIds.length,rareJobs,jobRate,thresholds:{maxJobRate,minJobs,costLimits},reasons,metrics,telemetryComplete:telemetryComplete===true,automaticReplacement:false,hardQuota:false};
+}
 export function evaluateModelDrift({policy,baseline,current,suiteDirectory,observedAt=new Date().toISOString()}){
  policy=jsonData(policy);
  const {hash,...body}=policy,e=policy.evidence;

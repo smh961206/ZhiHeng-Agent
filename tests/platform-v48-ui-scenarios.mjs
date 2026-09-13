@@ -14,8 +14,9 @@ export function registerPlatformV48Scenarios({test,makeJob,detail,detailActions,
    await trigger.click();
    const panel=page.getByRole('dialog',{name:'知衡 · V'+platformVersion,exact:true});
    await textIncludes(panel,'模型已配置');await textIncludes(panel,'实际可用性以本次请求结果为准');
-   await textIncludes(panel,'平台版本不表示已启用自动升级');
-   assert.doesNotMatch(await panel.innerText(),/当前已启用自动升级|已连接|已通过质量验收/);
+   await textIncludes(panel,'模型按环节分工');
+   await textIncludes(panel,'配置模型不代表事实已经核验');
+   assert.doesNotMatch(await panel.innerText(),/自动升级|已连接|已通过质量验收|Champion|Challenger|A\/B/);
    await noOverflow(page,'platform status '+width);await screenshot(page,'platform-v48-status-'+width);
    await page.keyboard.press('Escape');await panel.waitFor({state:'hidden'});
    assert.equal(await trigger.evaluate(el=>el===document.activeElement),true);

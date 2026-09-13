@@ -1,268 +1,144 @@
-# 知衡配置使用说明与教程
+# 平台模型配置使用说明与完整教程
 
-本文适用于当前 V5.0 配置结构。每个环境只使用一份环境文件，同时使用一份独立模型 JSON：
+平台使用一份模型 JSON 定义可用模型，并把模型分配给八个研究环节。模型名称和接口只写一次，API Key 值只保存在当前环境文件中。当前配置不再包含 MAIN/PRO、Challenger、Champion、A/B、付费试跑、验收文件或研究预算限制。
 
-| 环境 | 环境文件 | 模型文件 |
-|---|---|---|
-| 本地开发 | `.env` | `config/models.local.json` |
-| 生产部署 | `.env.production` | `config/models.production.json` |
+## 1. 文件关系
 
-环境文件保存密钥、运行参数、功能开关和数据源凭据；模型 JSON 保存模型名称、接口地址、能力声明和角色关系。模型 JSON 只引用密钥变量名，不保存密钥值。
+| 环境 | 环境文件 | 模型文件 | 可选价格文件 |
+| --- | --- | --- | --- |
+| 本地 | `.env` | `config/models.local.json` | `config/pricing.local.json` |
+| 生产 | `.env.production` | `config/models.production.json` | `config/pricing.production.json` |
+| 公共模板 | `.env.example` / `.env.production.example` | `config/models.example.json` | `config/pricing.example.json` |
 
-## 1. 最快开始
+环境文件保存服务参数和密钥；模型文件保存模型、接口和环节分配；价格文件只用于费用估算。三者职责不能互相替代。
 
-### 1.1 本地首次配置
+## 2. 本地首次配置
 
-PowerShell：
-
-```powershell
-Copy-Item .env.example .env
-Copy-Item config/models.example.json config/models.local.json
-```
-
-macOS／Linux：
-
-```bash
-cp .env.example .env
-cp config/models.example.json config/models.local.json
-```
-
-然后完成两项编辑：
-
-1. 在 `.env` 中填写 `LLM_API_KEY` 等实际凭据。
-2. 在 `config/models.local.json` 中确认模型名称和接口地址与账户一致。
-
-运行静态配置检查：
+在项目根目录执行防覆盖复制：
 
 ```powershell
-pnpm models:check config/models.local.json
+if (-not (Test-Path -LiteralPath '.env')) {
+  Copy-Item -LiteralPath '.env.example' -Destination '.env'
+}
+if (-not (Test-Path -LiteralPath 'config/models.local.json')) {
+  Copy-Item -LiteralPath 'config/models.example.json' -Destination 'config/models.local.json'
+}
 ```
 
-成功结果包含 `"equivalent":true` 和 `"paidCalls":0`。该检查不会向模型服务发起请求，也不证明模型质量、账户余额或接口连通性。
+在 `.env` 确认模型文件并填写 JSON 实际引用的密钥：
 
-启动平台：
-
-```powershell
-pnpm db:up
-pnpm dev
+```dotenv
+MODEL_CONFIG_FILE=./config/models.local.json
+LLM_API_KEY=
+LLM_MAIN_API_KEY=
+MODEL_TELEMETRY_ENABLED=true
+LLM_TIMEOUT_MS=300000
+LLM_MAX_DURATION_MS=1800000
+LLM_REVIEW_FORMAT=auto
 ```
 
-配置文件在进程启动或首次读取后固定。修改 `.env` 或模型 JSON 后，需要重启后端。
+可以新增 `LLM_AUDIT_API_KEY` 等自定义后端变量，只要模型 JSON 的 `apiKeyEnv` 使用完全相同的名称。不要使用 `VITE_` 前缀，也不要把密钥值放进 JSON、文档或前端代码。
 
-### 1.2 生产首次配置
-
-在服务器项目目录执行：
-
-```bash
-cp .env.production.example .env.production
-cp config/models.example.json config/models.production.json
-```
-
-填写生产凭据并修改生产模型 JSON，然后检查：
-
-```bash
-node --env-file=.env.production scripts/model-config.mjs --check config/models.production.json
-```
-
-通过后启动：
-
-```bash
-bash deploy.sh up
-```
-
-`deploy.sh` 检测到 `config/models.production.json` 后，会叠加 `compose.models.yaml`，把文件只读挂载到容器内，并将容器中的 `MODEL_CONFIG_FILE` 设置为 `/app/config/models.production.json`。
-
-## 2. 两类配置分别负责什么
-
-### 2.1 环境文件
-
-环境文件包含以下几组设置：
-
-| 分类 | 主要字段 | 用途 |
-|---|---|---|
-| 模型入口 | `MODEL_CONFIG_FILE` | 指定当前环境的模型 JSON |
-| 模型凭据 | `LLM_API_KEY`、`LLM_VISION_API_KEY`、`LLM_MAIN_API_KEY`、`LLM_PRO_API_KEY`、候选模型密钥 | 由 JSON 中的 `apiKeyEnv` 引用 |
-| 模型运行 | `MODEL_ROUTING_MODE`、`MODEL_TELEMETRY_ENABLED`、`LLM_TIMEOUT_MS`、`LLM_MAX_DURATION_MS`、`LLM_REVIEW_FORMAT` | 控制路由、调用记录和请求限制 |
-| 准入与发布 | `MODEL_POLICY_ACCEPTANCE_FILE`、`VISION_ACCEPTANCE_FILE`、`FEATURE_VISION_ROUTING`、Champion／A/B 设置 | 控制已审核策略的启用，不定义模型本身 |
-| 服务 | `PORT`、`MONGODB_URI`、`MONGODB_DATABASE`，或生产访问参数 | 控制本地服务和数据库连接 |
-| 证券资料 | `SEC_USER_AGENT`、`TUSHARE_TOKEN`、Longbridge 凭据 | 访问相应资料服务 |
-| 网页资料 | `WEB_SEARCH_ENABLED`、Tavily／Brave 密钥、发行人域名和 DNS 设置 | 按资料缺口补充公开网页 |
-
-密钥字段应只写值，不要加到 `VITE_` 前缀变量，不要写入模型 JSON，也不要提交到版本库。
-
-### 2.2 模型 JSON
-
-模型 JSON 有四个顶层字段：
+## 3. 模型 JSON 完整结构
 
 ```json
 {
-  "schemaVersion": 1,
-  "connections": {},
-  "profiles": {},
-  "roles": {}
-}
-```
-
-- `connections`：接口和凭据引用。
-- `profiles`：某个模型及其已确认能力。
-- `roles`：平台职责与模型档案的映射。
-- `schemaVersion`：当前固定为 `1`。
-
-## 3. connections：配置接口与凭据
-
-一个连接示例：
-
-```json
-"analysis-api": {
-  "protocol": "openai-chat-completions",
-  "baseUrl": "https://api.example.com/v1",
-  "apiKeyEnv": "LLM_API_KEY"
-}
-```
-
-| 字段 | 填写规则 |
-|---|---|
-| `protocol` | 当前只支持 `openai-chat-completions` |
-| `baseUrl` | 使用 HTTPS；本机服务可使用 localhost、127.0.0.1 或 ::1 的 HTTP |
-| `apiKeyEnv` | 填环境变量名称，如 `LLM_API_KEY`，不能填真实密钥或 `VITE_` 变量 |
-
-多个 profile 可以共享同一 connection。只有模型接口或凭据来源确实不同，才需要新增 connection。
-
-## 4. profiles：配置模型和能力
-
-一个档案示例：
-
-```json
-"research-model": {
-  "model": "your-model-id",
-  "provider": null,
-  "connectionRef": "analysis-api",
-  "capabilities": {
-    "textInput": true,
-    "imageInput": false,
-    "streaming": true,
-    "toolCalling": true,
-    "jsonObject": null,
-    "jsonSchema": null,
-    "reasoningControl": null
+  "schemaVersion": 2,
+  "models": {
+    "deepseek": {
+      "model": "deepseek-flash",
+      "baseUrl": "https://api.deepseek.com",
+      "apiKeyEnv": "LLM_API_KEY"
+    },
+    "glm": {
+      "model": "glm-5.3-flash",
+      "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
+      "apiKeyEnv": "LLM_MAIN_API_KEY"
+    }
   },
-  "adapterOptions": null
+  "pipeline": {
+    "input": "glm",
+    "vision": "glm",
+    "researcher": ["deepseek", "glm"],
+    "writer": "deepseek",
+    "evidenceVerifier": "deepseek",
+    "auditor": "deepseek",
+    "criticalReviewer": [],
+    "judge": []
+  }
 }
 ```
 
-能力值的含义：
+### `schemaVersion`
 
-| 值 | 含义 |
-|---|---|
-| `true` | 已确认当前模型与接口支持该能力 |
-| `false` | 明确不支持或当前角色禁止使用 |
-| `null` | 尚未确认，平台不得据此假定可用 |
+当前新配置固定为 `2`。schema v1 只用于旧部署和历史任务兼容。
 
-七项能力必须全部出现。缺少资料时保留 `null`，不能根据模型名称推测能力。`imageInput` 只有在模型、接口和实际请求格式均验证通过后才能设为 `true`。
+### `models`
 
-`adapterOptions` 通常为 `null`。候选档案需要显式控制思考参数时，可使用：
+`models` 下的键是平台内部别名，可自行命名。每个模型包含：
+
+| 字段 | 要求 |
+| --- | --- |
+| `model` | 供应商实际模型标识，不能为空 |
+| `baseUrl` | OpenAI Chat Completions 兼容接口根地址；平台追加 `/chat/completions` |
+| `apiKeyEnv` | 保存密钥的后端环境变量名，不是密钥值 |
+
+模型别名必须被至少一个环节使用。多个模型可以共用同一个 `apiKeyEnv`，也可以使用独立密钥。
+
+### `pipeline`
+
+`pipeline` 只引用 `models` 中的别名，不填写供应商名称或 URL。一个字符串表示固定模型；数组表示按顺序保存的模型池。Input 和 Vision 只能配置一个模型。
+
+## 4. 八个研究环节
+
+| JSON 字段 | 页面名称 | 负责内容 | 配置要求 |
+| --- | --- | --- | --- |
+| `input` | Input · 输入理解 | 识别证券、代码、比较意图与研究路径 | 必填，单模型 |
+| `vision` | Vision · 原页读取 | 读取扫描页、图片、图表和原始版面 | 必填，单模型 |
+| `researcher` | 研究 | 搜索、调用工具、组织证据并生成分析草稿 | 必填 |
+| `writer` | 写作 | 使用公开可复核上下文整理报告 | 必填 |
+| `evidenceVerifier` | 证据核验 | 核对缺口、来源和补证结果 | 必填 |
+| `auditor` | 审计 | 检查引用、口径、计算、边界和交付结构 | 必填 |
+| `criticalReviewer` | 关键复核 | 在重复且已验证的结构问题时独立复核 | 可选，`[]` 关闭 |
+| `judge` | Judge · 证据裁决 | 裁决已记录的重大 L1/L2 证据冲突 | 可选，`[]` 关闭 |
+
+多模型数组会完整保存到新任务快照，目前固定使用数组中的第一个模型。平台不会按价格自动改派，也不会因数据缺失升级模型。配置 Critical Reviewer 或 Judge 只表示模型可用，业务代码仍会检查异常资格、独立上下文、调用收据与输出结构。
+
+## 5. 常见分配方式
+
+所有环节共用一个模型：
 
 ```json
-"adapterOptions": {
-  "thinking": "omit"
+"pipeline": {
+  "input": "main",
+  "vision": "main",
+  "researcher": "main",
+  "writer": "main",
+  "evidenceVerifier": "main",
+  "auditor": "main",
+  "criticalReviewer": [],
+  "judge": []
 }
 ```
 
-允许值为 `omit`、`disabled`、`enabled`。只有接口已确认支持时才使用后两项。
-
-## 5. roles：配置平台职责
-
-五个基础角色必须存在：
-
-| 角色 | 职责 |
-|---|---|
-| `defaultResearch` | 固定模式研究、复核与补证判断 |
-| `router` | 研究路径与证券意图识别 |
-| `vision` | 图片、扫描页和 PDF 原页读取 |
-| `policyMain` | 分层策略中的 MAIN 档案 |
-| `policyPro` | 分层策略中的 PRO 档案 |
-
-可选角色：
-
-| 角色 | 职责 |
-|---|---|
-| `visionChallenger` | Vision 候选对照 |
-| `mainChallenger` | MAIN 候选对照 |
-
-角色值是 profile 名称。例如：
+研究与审计分开：
 
 ```json
-"roles": {
-  "defaultResearch": "research-model",
-  "router": "router-model",
-  "vision": "vision-model",
-  "policyMain": "main-model",
-  "policyPro": "pro-model"
+"pipeline": {
+  "input": "fast",
+  "vision": "vision",
+  "researcher": ["research", "backup"],
+  "writer": "writer",
+  "evidenceVerifier": "audit",
+  "auditor": "audit",
+  "criticalReviewer": ["review"],
+  "judge": ["judge"]
 }
 ```
 
-允许多个角色指向同一个 profile。配置中不允许存在没有被角色使用的 profile，也不允许存在没有被 profile 使用的 connection。
+数组顺序属于任务身份。改变顺序只影响新任务，进行中的任务不会静默切换。
 
-## 6. 常用修改场景
-
-### 6.1 更换默认研究模型
-
-1. 找到 `roles.defaultResearch` 指向的 profile。
-2. 修改该 profile 的 `model`。
-3. 如果服务地址或凭据也变化，新增或修改其 `connectionRef` 对应的 connection。
-4. 只声明已确认的能力。
-5. 执行配置检查并重启后端。
-
-如果 router 或 vision 也需要使用新模型，应分别检查它们的能力要求，不要只修改默认研究角色后假定其他角色自动适配。
-
-### 6.2 为 Vision 使用独立接口
-
-先在环境文件中填写独立凭据：
-
-```dotenv
-LLM_VISION_API_KEY=
-```
-
-在 JSON 中新增连接：
-
-```json
-"vision-api": {
-  "protocol": "openai-chat-completions",
-  "baseUrl": "https://vision.example.com/v1",
-  "apiKeyEnv": "LLM_VISION_API_KEY"
-}
-```
-
-然后把 vision profile 的 `connectionRef` 改为 `vision-api`，并在实际图片输入已经验证后设置 `capabilities.imageInput`。新增连接必须被 profile 使用。
-
-### 6.3 共享同一套凭据
-
-如果 MAIN、PRO 或 Vision 与默认研究确实使用同一账户，可让对应 connection 的 `apiKeyEnv` 都指向 `LLM_API_KEY`。共享必须在 JSON 中明确表达，运行时不会根据空密钥自动跨角色借用其他凭据。
-
-### 6.4 关闭图片输入
-
-将 vision profile 的 `capabilities.imageInput` 设为 `false`。原页读取会保留未读取或能力不足的限制，不能把缺失内容冒充已读取证据。
-
-### 6.5 添加候选模型
-
-候选模型需要同时添加 connection、profile 和可选角色映射，并在环境文件提供相应密钥。配置完成只表示候选可被识别；它不会自动通过质量验收，也不会自动切换生产研究。
-
-启用候选前还需要完成真实对照、批准文件、代码与配置绑定检查，以及相应功能开关。数据缺失不能作为升级模型的理由。
-
-## 7. 运行模式与开关
-
-`MODEL_ROUTING_MODE` 常用值：
-
-| 值 | 行为 |
-|---|---|
-| `legacy` | 使用固定默认研究路径；当前示例默认值 |
-| `dry-run` | 观察策略选择，不作为正式切换 |
-| `policy` | 使用已通过准入的 MAIN／PRO 分层策略 |
-| `champion` | 使用已批准的任务优选策略 |
-
-填写 MAIN、PRO 或候选档案不会自动改变运行模式。开启 `FEATURE_VISION_ROUTING`、`MODEL_CHAMPION_ENABLED` 或 `MODEL_AB_ENABLED` 也不能跳过批准文件、策略版本和质量门槛。
-
-## 8. 配置检查与结果解释
+## 6. 配置检查
 
 本地：
 
@@ -273,105 +149,96 @@ pnpm models:check config/models.local.json
 生产：
 
 ```bash
-node --env-file=.env.production scripts/model-config.mjs --check config/models.production.json
+node --env-file-if-exists=.env.production scripts/model-config.mjs --check config/models.production.json
 ```
 
-检查内容包括：
+成功结果包括：
 
-- JSON 结构、字段和值是否合法。
-- role、profile、connection 引用是否完整。
-- 模型档案和连接有效值是否一致。
-- legacy 与 policy 的任务模型身份是否保持一致。
-- 默认研究所需凭据是否存在。
-
-检查不执行以下事项：
-
-- 不调用模型或消耗额度。
-- 不检查账户余额。
-- 不证明模型具备声明的能力。
-- 不批准候选、Policy、Champion 或 A/B 发布。
-
-## 9. 从旧环境变量迁移
-
-仅旧部署仍在环境文件中定义 `LLM_MODEL`、`LLM_BASE_URL` 等字段时使用迁移预览：
-
-```powershell
-pnpm models:preview --out config/models.local.preview.json
-pnpm models:check config/models.local.preview.json
+```json
+{
+  "equivalent": true,
+  "schemaVersion": 2,
+  "models": 2,
+  "stages": 8,
+  "credentialsConfigured": true,
+  "paidCalls": 0
+}
 ```
 
-预览写入不会覆盖已有文件。确认等价后，再将审核通过的内容作为当前环境模型文件，并设置 `MODEL_CONFIG_FILE`。先保存回滚副本，再删除重复的旧模型定义。
+检查只验证 JSON 结构、引用关系和密钥是否已配置，不调用模型、不消耗额度、不检查余额，也不宣称模型质量通过验收。
 
-当前已经使用 `MODEL_CONFIG_FILE` 的环境，`models:preview` 读取的是当前选中的 JSON；它不会重新使用旧默认值生成另一套配置。
+## 7. 配置生效与任务恢复
 
-## 10. 常见错误
+修改模型名、接口、密钥变量名、环节分配或数组顺序后重启服务。新任务固定新的模型管线；进行中的任务继续使用创建时保存的模型、连接身份、Knowledge 版本和研究截止日期。
 
-### 配置文件不存在或 JSON 无效
+如果当前配置与旧任务快照不兼容，平台会停止恢复并提示恢复原配置。只轮换同一 `apiKeyEnv` 的密钥值不会改变连接身份。
 
-现象：新研究显示模型未配置，模型任务不派发。
+## 8. 生产部署
 
-处理：确认 `MODEL_CONFIG_FILE` 路径、JSON 语法、文件权限和容器挂载，然后重启进程。显式选择的错误配置不会自动回退到另一模型。
+首次准备：
 
-### 缺少密钥
+```bash
+cp .env.production.example .env.production
+cp config/models.example.json config/models.production.json
+```
 
-现象：相关 connection 无法派发；默认研究凭据缺失时配置状态为不可用。
+编辑两个生产文件后运行：
 
-处理：查看 connection 的 `apiKeyEnv`，在当前环境文件中添加同名变量。不要把密钥写入 JSON。
+```bash
+node --env-file-if-exists=.env.production scripts/model-config.mjs --check config/models.production.json
+bash deploy.sh up
+```
 
-### 存在未使用的 profile 或 connection
+`deploy.sh` 通过 `compose.models.yaml` 将生产模型文件只读挂载到容器。`.env.production`、`models.production.json` 和可选 `pricing.production.json` 都属于私有配置，不提交 Git、不写入镜像。
 
-现象：配置检查失败。
+## 9. 费用与缓存记录
 
-处理：删除未使用项，或用 role 引用 profile、用 profile 引用 connection。配置要求引用闭合，避免保留看似可用但实际不会执行的定义。
+费用估算是可选功能：
 
-### 图片能力配置错误
+```dotenv
+MODEL_TELEMETRY_ENABLED=true
+MODEL_PRICING_FILE=./config/pricing.local.json
+```
 
-现象：Vision 请求被能力检查拒绝，或原页保留未读取限制。
+不配置价格时，平台仍可记录供应商实际返回的 token 与缓存用量，但金额保持未知。价格数据不会选择模型或限制研究。完整字段、身份生成、分时价格和生产挂载方式见[模型费用与缓存记录配置教程](cost-configuration-guide.md)。
 
-处理：核对模型、接口、请求格式和真实验收结果。未经验证时使用 `null` 或 `false`。
+当前配置已经移除：
 
-### 修改后没有生效
+```dotenv
+RESEARCH_BUDGET_FILE=
+FEATURE_RESEARCH_BUDGET=false
+FEATURE_COST_ROUTER=false
+```
 
-原因：配置在启动或首次读取时被固定。
+新任务不会创建统一预算，也不会因为金额、工具轮次、网页请求、Vision 页数或持续时间达到预算而停止。网页、文件、并发、超时和上下文仍受代码中的安全边界约束。
 
-处理：安全结束当前任务后重启后端或应用容器。不要在运行中的研究任务之间热切换配置。
+## 10. 历史兼容
 
-### 生产容器找不到模型文件
+服务继续读取 schema v1 模型文件、modelState v1–v3 和旧任务已经保存的预算账本。历史预算记录只用于恢复、审计和防止不确定请求被重复执行；预算额度不再阻断后续研究，也不会修改历史记录。
 
-处理：确认宿主机存在 `config/models.production.json`，并使用 `deploy.sh`；直接调用 Compose 时同时指定 `compose.production.yaml` 与 `compose.models.yaml`。
+V4.8–V5.2 的 Gateway、多模态、调用元数据、费用、缓存、关键复核和 Judge 业务能力继续保留。日常配置不再要求 MAIN/PRO、Challenger、Champion、A/B、策略注册表、策略版本、失效记录、acceptance 文件、preview 或 rollback 模型副本。
 
-## 11. 备份与回滚
+## 11. 常见错误
 
-每次修改前一起备份环境文件和对应模型 JSON。两者属于同一有效配置，不应只恢复其中一个。
+| 现象 | 处理 |
+| --- | --- |
+| 模型配置文件不存在 | 核对 `MODEL_CONFIG_FILE` 路径和容器挂载 |
+| `credentialsConfigured: false` | 找到模型的 `apiKeyEnv`，在当前环境文件填写同名变量 |
+| 环节引用不存在的别名 | 在 `models` 增加该模型，或修正 `pipeline` 引用 |
+| Input/Vision 使用数组 | 改成单个模型别名 |
+| 修改后仍显示旧模型 | 重启后端；进行中的任务仍使用原快照属于正常行为 |
+| 费用一直未知 | 按费用教程配置匹配当前模型身份的真实价格 |
+| 旧预算变量仍在 | 从私人 `.env` 删除 `RESEARCH_BUDGET_FILE` 与 `FEATURE_RESEARCH_BUDGET` |
 
-本地回滚步骤：
+## 12. 修改与回滚清单
 
-1. 停止后端。
-2. 恢复配套的 `.env` 和 `config/models.local.json`。
-3. 运行 `pnpm models:check config/models.local.json`。
-4. 重新启动。
+修改前一起备份环境文件、模型 JSON 和可选价格文件。修改后依次完成：
 
-生产回滚步骤：
+1. 检查 JSON 中没有真实密钥；
+2. 确认八个环节完整且引用存在；
+3. 运行离线模型配置检查；
+4. 安全结束正在执行的任务后重启服务；
+5. 新建一项测试研究，核对页面显示的各环节模型；
+6. 保留旧配置供历史任务恢复。
 
-1. 在批准的维护窗口停止或升级服务。
-2. 恢复配套的 `.env.production` 和 `config/models.production.json`。
-3. 运行生产配置检查。
-4. 通过 `deploy.sh` 重建应用容器并检查状态。
-
-回滚不得改写历史任务中的模型身份、审批记录、研究截止日期或证据。若要退回旧环境变量入口，应先从受控回滚文件恢复旧定义和原选择器，再撤下正式 JSON。
-
-## 12. 上线前检查清单
-
-- 当前环境只存在一份生效的环境文件。
-- `MODEL_CONFIG_FILE` 指向当前环境的模型 JSON。
-- JSON 没有真实密钥、查询参数或凭据地址。
-- 每个 `apiKeyEnv` 在环境文件中有对应变量。
-- 所有 profile 和 connection 都被引用。
-- 未确认能力使用 `null` 或 `false`。
-- 默认研究、router 和 vision 各自满足实际用途。
-- 候选与发布开关保持关闭，直到真实验收和批准完成。
-- 配置检查通过。
-- 修改后已重启对应进程。
-- 生产环境文件和模型 JSON 已在服务器外备份。
-
-公共起始模板为 [`.env.example`](../.env.example)、[`.env.production.example`](../.env.production.example) 和 [`config/models.example.json`](../config/models.example.json)。旧配置迁移的兼容细节见 [V5.0 模型配置迁移说明](releases/V5.0/model-config-migration-runbook.md)。
+回滚时恢复配套的环境文件与模型 JSON，重新运行配置检查并重启。不要删除或改写历史任务、模型调用、费用、缓存、证据、审计、关键复核或 Judge 记录。

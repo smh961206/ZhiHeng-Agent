@@ -13,8 +13,8 @@ export const scanExtensions=Object.freeze(['.mjs','.js','.jsx']);
 export const gatewayAdapters=Object.freeze([Object.freeze({file:'server/model-adapter.mjs',endpoint:'/chat/completions'})]);
 const migrated=[
  {id:'analysis',file:'server/agent.mjs',owner:'completion',transport:'fetchModel',stream:'stream:true',scope:'production'},
- {id:'path',file:'server/research-path.mjs',owner:'createPathResolver',transport:'fetchImpl',stream:'stream:false',scope:'production',purpose:'router'},
- {id:'security-intent',file:'server/security-intent.mjs',owner:'createSecurityIntentExtractor',transport:'fetchImpl',stream:'stream:false',scope:'production',purpose:'router'},
+ {id:'path',file:'server/research-path.mjs',owner:'createPathResolver',transport:'fetchImpl',stream:'stream:false',scope:'production',purpose:'input'},
+ {id:'security-intent',file:'server/security-intent.mjs',owner:'createSecurityIntentExtractor',transport:'fetchImpl',stream:'stream:false',scope:'production',purpose:'input'},
  {id:'vision',file:'server/vision-model.mjs',owner:'readVisionImages',transport:'fetcher',stream:'stream:false',scope:'production',purpose:'vision'},
  {id:'diagnostic',file:'scripts/dual-model-diagnostics.mjs',owner:"phase='pro'",transport:'fetch',stream:'stream omitted',scope:'diagnostic',purpose:'research'},
 ];
@@ -55,8 +55,8 @@ export function validateGatewayBoundary({read=readSource}={}){
  assert.equal(agent.split("from './model-gateway.mjs'").length-1,1,'migrated Agent must import Gateway once');
  assert.equal([...agent.matchAll(/await gateway\.complete\(/g)].length,1,'migrated Agent must dispatch through Gateway once');
  assert.doesNotMatch(agent,/\b(?:fetch|fetchModel|readCompletion|modelRouting)\s*\(|from\s*['"][^'"]*model-(?:adapter|request|stream)\.mjs['"]|process\.env\.LLM_(?:MODEL|BASE_URL|API_KEY)/,'migrated Agent cannot own provider transport');
- for(const purpose of ['review','followup'])assert.equal(agent.split("purpose:'"+purpose+"'").length-1,1,'migrated purpose must be explicit: '+purpose);
- assert.ok(agent.includes("purpose='research'"),'research must retain its fixed legacy purpose');
+ for(const [purpose,count] of [['writer',2],['auditor',1],['evidence-verifier',1]])assert.equal(agent.split("purpose:'"+purpose+"'").length-1,count,'migrated purpose must be explicit: '+purpose);
+ assert.ok(agent.includes("purpose='researcher'"),'research must use its explicit pipeline purpose');
  for(const entry of migrated.filter(e=>e.id!=='analysis')){
   const source=read(entry.file);
   assert.equal([...source.matchAll(/from ['"][^'"]*model-gateway\.mjs['"]/g)].length,1,'migrated owner must import Gateway once: '+entry.file);
@@ -66,8 +66,12 @@ export function validateGatewayBoundary({read=readSource}={}){
  }
  for(const file of [...walk('server'),...walk('scripts')].filter(p=>p.endsWith('.mjs')&&!['server/model-gateway.mjs','server/model-adapter.mjs','scripts/check-model-call-inventory.mjs'].includes(p))){
   assert.doesNotMatch(read(file),/(?:from\s*|import\s*\()\s*['"][^'"]*model-adapter\.mjs['"]/,'business code must not bypass Gateway: '+file);
-  if(!migrated.some(entry=>entry.file===file))assert.doesNotMatch(read(file),/(?:from\s*|import\s*\()\s*['"][^'"]*model-gateway\.mjs['"]/,'V4.8.4 must not introduce unmapped Gateway callers: '+file);
+  if(!migrated.some(entry=>entry.file===file)&&file!=='server/model-flagship.mjs')assert.doesNotMatch(read(file),/(?:from\s*|import\s*\()\s*['"][^'"]*model-gateway\.mjs['"]/,'V4.8.4 must not introduce unmapped Gateway callers: '+file);
  }
+ const independent=read('server/model-flagship.mjs');
+ assert.equal([...independent.matchAll(/await activeGateway\.complete\(/g)].length,1,'independent review must reuse one Gateway dispatch');
+ for(const anchor of ['flagshipRolloutStatus(purpose,env)','auth.approvalHash!==status.approvalHash','callScope.run(','executeFlagshipSession(','await save();signal?.throwIfAborted();'])assert.ok(independent.includes(anchor),'independent review admission/recovery boundary missing: '+anchor);
+ assert.doesNotMatch(independent,/\b(?:fetch|fetchModel|readCompletion)\s*\(|from\s*['"][^'"]*model-(?:adapter|request|stream)\.mjs['"]|process\.env\.LLM_(?:MODEL|BASE_URL|API_KEY)/,'independent review cannot bypass Gateway');
  return {gatewayAdapters:gatewayAdapters.length,migratedBusinessOwners:4,migratedDiagnostics:1};
 }
 export function validateInventory(inventory,{read=readSource,endpoints=discoverEndpoints(read)}={}){
@@ -129,7 +133,7 @@ export function validateInventory(inventory,{read=readSource,endpoints=discoverE
   }
  }
  for(const t of inventory.transports.filter(t=>t.scope==='production'))assert.deepEqual([...new Set(inventory.callers.filter(c=>c.transport===t.id).map(c=>c.purpose))].sort(),[...t.purposes].sort(),'unmapped transport purpose '+t.id);
- for(const [file,pattern] of [['server/agent.mjs',/\bawait requestCompletion\(/g],['server/visual-reading.mjs',/\bawait read\(/g],['server/agent-page-reader.mjs',/\bawait readVision\(/g]])assert.equal([...read(file).matchAll(pattern)].length,inventory.callers.filter(c=>c.file===file).length,'caller count drift '+file);
+ for(const [file,pattern,additive] of [['server/agent.mjs',/\bawait requestCompletion\(/g,1],['server/visual-reading.mjs',/\bawait read\(/g,0],['server/agent-page-reader.mjs',/\bawait readVision\(/g,0]])assert.equal([...read(file).matchAll(pattern)].length,inventory.callers.filter(c=>c.file===file).length+additive,'caller count drift '+file);
  for(const p of inventory.diagnostics){sourcePath(p);assert.ok(p.startsWith('scripts/'));read(p);}
  validateGatewayBoundary({read});
  return {productionTransports:1,productionCallers:inventory.callers.length,directDiagnostics:0};

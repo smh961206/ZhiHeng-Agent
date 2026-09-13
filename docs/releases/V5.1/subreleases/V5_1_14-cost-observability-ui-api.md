@@ -1,7 +1,7 @@
 # V5.1.14 — Cost observability UI/API
 
 Release: `V5.1`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT. Scoped engineering and offline acceptance are complete; see [execution evidence](../execution-log.md) and [completion report](../completion-report.md). Real-model quality and production savings remain unaccepted; production optimization flags remain disabled.
 
 ## 1. Why
 
@@ -81,13 +81,13 @@ If implementation requires reversing an accepted ADR, stop and create a supersed
 
 ## 13. Schema
 
-No persistent schema change.
+No additional persistent store or destructive schema change; this step derives read views from the additive receipts documented in the release schema. See [release schema](../schema.md) and [migration](../migration.md).
 
 All persistent changes are additive-first. Unknown historical values remain unknown.
 
 ## 14. API
 
-No external API change.
+Additive read-only GET /api/jobs/:id/cost returns a version-1 whitelist summary. Existing API fields remain compatible; private receipts, endpoints, keys, prompts and reasoning are excluded.
 
 Existing callers must remain compatible unless this subrelease explicitly introduces a versioned API boundary.
 

@@ -120,7 +120,7 @@ const server=http.createServer(async(req,res)=>{
   if(url.pathname==='/api/health'&&req.method==='GET'){try{await storage.ping();return send(res,200,{ok:true,storage:'mongodb'});}catch{return send(res,503,{ok:false,storage:'mongodb'});}}
   if(url.pathname==='/api/jobs'&&req.method==='GET'){
    const summaries=new Map((await storage.listJobs()).map(j=>[j.id,j]));
-   for(const {input,result,events,draft,liveReport,marketData,submission,checkpoint,knowledgeUsage,modelState,...j} of jobs.values())summaries.set(j.id,{...j,question:input.question,sourceCount:input.sources.length});
+   for(const {input,result,events,draft,liveReport,marketData,submission,checkpoint,knowledgeUsage,modelState,budgetState,...j} of jobs.values())summaries.set(j.id,{...j,question:input.question,sourceCount:input.sources.length});
    return send(res,200,[...summaries.values()].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)));
   }
   if(url.pathname==='/api/jobs'&&req.method==='POST'){
@@ -128,6 +128,14 @@ const server=http.createServer(async(req,res)=>{
    return send(res,replayed?200:201,publicJob(job));
   }
   const retryMatch=url.pathname.match(/^\/api\/jobs\/([\da-f-]+)\/retry$/);
+  const costMatch=url.pathname.match(/^\/api\/jobs\/([\da-f-]+)\/cost$/);
+  if(costMatch&&req.method==='GET'){
+   try{
+   const job=jobs.get(costMatch[1])??await storage.getJob(costMatch[1]);if(!job)return send(res,404,{error:'任务不存在'});
+   const cost=await storage.modelCostSummary(job.id);
+   return send(res,200,cost);
+   }catch{return send(res,503,{error:'费用记录暂时无法加载，请稍后重试'});}
+  }
   const ruleMatch=url.pathname.match(/^\/api\/jobs\/([\da-f-]+)\/rules$/);
   if(ruleMatch&&req.method==='GET'){
    const id=ruleMatch[1],stored=jobs.get(id)??await storage.getJob(id),job=jobs.get(id)??stored;

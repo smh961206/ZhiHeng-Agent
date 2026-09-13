@@ -1,7 +1,7 @@
 # V5.2.4 — Judge input contract
 
 Release: `V5.2`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT scoped engineering and offline safety verification. Live quality/value and production activation remain paused by the user. See [execution evidence](../execution-log.md) and [acceptance](../acceptance.md).
 
 ## 1. Why
 
@@ -15,7 +15,7 @@ Build normalized evidence/tool/conclusion packet.
 
 Codex must inspect the real checkout before editing:
 
-- `server/model-gateway/`
+- `server/model-gateway.mjs`, `server/model-catalog.mjs`, `server/model-flagship.mjs`, `server/model-judge.mjs`
 - `server/agent-execution.mjs`
 - `server/research-context.mjs`
 - `server/valuation-review.mjs`
@@ -83,7 +83,7 @@ If implementation requires reversing an accepted ADR, stop and create a supersed
 
 ## 13. Schema
 
-No persistent schema change.
+Additive private independent-session/job authorization metadata and optional ModelCall fields; see [release schema](../schema.md) and [migration](../migration.md).
 
 All persistent changes are additive-first. Unknown historical values remain unknown.
 

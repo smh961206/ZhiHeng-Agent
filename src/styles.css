@@ -20,6 +20,9 @@ html{font-family:Inter,"Segoe UI","Microsoft YaHei",system-ui,sans-serif;-webkit
 .brand{color:#123C35;gap:12px;letter-spacing:1px}.brand-symbol{width:42px;height:42px;flex-shrink:0}.brand-wordmark{font-weight:750;line-height:1.15}.brand-en{font-size:13px;color:#123C35;letter-spacing:3px;margin-top:7px}.brand-international{font-size:19px;letter-spacing:1.5px}.side-principle p{color:#123C35;font-weight:600;letter-spacing:1px}.side-principle span{display:block;color:#65736b;font-size:13px;line-height:1.7;max-width:170px}.side-principle>svg{color:#526257}.nav-current{color:#123C35!important}.heading-emblem{transform:none;background:#efeee5;border-color:#e1dac7}.page-heading h1,.page-heading h1>span{color:#123C35}.mode-selected{border-color:#B99A5B;background:#f7f5ec}.mode-selected>div{color:#123C35}.eyebrow-badge>.bg-primary{background:#B99A5B}footer{color:#65736b;flex-wrap:wrap}footer>span:last-child{max-width:100%;line-height:1.6}.start-button{background:#123C35}.start-button:hover{background:#1c5047}
 @media(max-width:639px){footer{font-size:13px;row-gap:7px}footer>span:last-child{flex-basis:100%}.brand{font-size:26px}}
 
+/* shadcn Button keeps the shared brand trigger accessible without changing its lockup. */
+.brand[data-slot=button]{justify-content:flex-start;width:auto;height:auto;white-space:normal}
+
 /* Readability: consistent type sizes and clear secondary text on light surfaces. */
 :root{--muted-foreground:#526257;--secondary-foreground:#345345}
 body{font-size:16px;line-height:1.7}

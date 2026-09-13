@@ -36,8 +36,8 @@ test('live invocation requires explicit paid authorization before creating any o
  try{await assert.rejects(runComparison({plan:{...plan,material:'curated'},directory,limits,offline:false}),/allow-paid/);assert.deepEqual(fs.readdirSync(directory),[]);}
  finally{fs.rmSync(directory,{recursive:true,force:true});}
 });
-test('CLI check and help are read-only; typo options cannot start a paid run',()=>{
- for(const args of [['help'],['run','--pay-now']]){
+test('M1.0 CLI check and help are read-only; paid runs and acceptance export are unavailable',()=>{
+ for(const args of [['help'],['run','--pay-now'],['run','--live','--allow-paid'],['export','--out','unused','--review','unused.json']]){
   const result=spawnSync(process.execPath,['scripts/model-comparison.mjs',...args],{encoding:'utf8'});
   assert.equal(result.status,args[0]==='help'?0:1);
  }

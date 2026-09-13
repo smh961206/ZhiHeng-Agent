@@ -1,11 +1,12 @@
 import {useId,useState} from 'react';
 import {Info} from 'lucide-react';
 import {Button} from './ui/button';
+import {Badge} from './ui/badge';
 import {knowledgeAvailability} from '../../shared/research-knowledge.mjs';
-import {platformVersion} from '../config/platform-release.mjs';
+import {modelTrackVersion,platformVersion} from '../config/platform-release.mjs';
 
 // Only public configuration is shown. Configuration is not a live health check
-// or evidence that the optional MAIN/PRO policy has been enabled.
+// or evidence that any configured stage has completed a real call.
 export default function PlatformStatus({config,checking,onRefresh}){
  const titleId=useId();
  const [Panel,setPanel]=useState(null),[open,setOpen]=useState(false),[loading,setLoading]=useState(false),[loadError,setLoadError]=useState(false);
@@ -20,7 +21,7 @@ export default function PlatformStatus({config,checking,onRefresh}){
  }
  const trigger=<Button variant="ghost" size="sm" className="platform-status-trigger" aria-label="平台与模型说明" aria-busy={loading||undefined} disabled={loading}
   {...(!Panel?{'aria-haspopup':'dialog','aria-expanded':false,'aria-describedby':loadError?titleId:undefined,onClick:showPanel}:{})}>
-  <span className={'platform-status-dot is-'+state} aria-hidden="true"/><span className="platform-status-label">{label}</span><span className="platform-version">V{platformVersion}</span><Info size={14} aria-hidden="true"/>
+  <span className={'platform-status-dot is-'+state} aria-hidden="true"/><span className="platform-status-label">{label}</span><Badge variant="outline" className="platform-version">V{platformVersion}</Badge><span className="sr-only">模型配置 {modelTrackVersion}</span><Info size={14} aria-hidden="true"/>
  </Button>;
  return Panel?<Panel trigger={trigger} open={open} onOpenChange={setOpen} titleId={titleId} state={state} label={label} checking={checking} onRefresh={onRefresh} selection={config?.modelSelection}/>:<>{trigger}{loadError&&<span id={titleId} role="alert">说明暂时无法加载，请点击说明按钮刷新重试。</span>}</>;
 }

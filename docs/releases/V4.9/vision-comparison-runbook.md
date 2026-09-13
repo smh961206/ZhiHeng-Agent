@@ -46,7 +46,9 @@ node --env-file-if-exists=.env scripts/vision-benchmark.mjs --live --allow-paid 
 
 进程被强制终止时可能留下 .lock。先检查锁中的 PID，确认拥有者已停止，再移除该输出对应的单个锁文件；运行中的锁不能删除。去掉旧锁不会绕过结果不明的请求保护。旧版没有 progress 的比较报告仍作为历史证据保留，不能用于新续跑；本次代码更新也会使旧批准绑定失效，须重新验收。
 
-请在包含冻结夹具的完整检出目录运行比较；生产镜像未包含 tests。若使用 .env.production，可把命令中的环境文件改为该文件。正式晋升前，将人工批准 JSON 只读挂载到容器可读路径，VISION_ACCEPTANCE_FILE 填该容器路径。当前 compose.production.yaml 只挂载 visual_attachments，环境模板中的 ./vision_acceptance_file/... 不会自动进入容器；仅设置文件路径不等于完成挂载。部署配置须显式加入只读批准文件挂载，并以运行用户验证可读和准入通过后再启用。默认关闭开关时不依赖该文件。
+> M1.0 说明：本页保留 V4.9 当时的比较与晋升流程，仅用于解释历史记录。当前 schema v2 直接配置 Vision 环节，不再使用 `VISION_ACCEPTANCE_FILE`。原批准工件已移入本目录的 `archive/`，不参与当前启动。
+
+请在包含冻结夹具的完整检出目录运行比较；生产镜像未包含 tests。以下人工批准和只读挂载要求仅适用于恢复 V4.9 历史部署，不是当前生产配置步骤。
 
 ## 审核与批准
 

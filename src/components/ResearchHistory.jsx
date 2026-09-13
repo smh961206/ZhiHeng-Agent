@@ -7,6 +7,7 @@ import {Badge} from './ui/badge';
 import {Card} from './ui/card';
 import {Input} from './ui/input';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from './ui/select';
+import {ToggleGroup, ToggleGroupItem} from './ui/toggle-group';
 import {Skeleton} from './ui/skeleton';
 import {useSecurityExchanges} from '../hooks/use-security-exchanges';
 import {securityDisplayLabel} from '../../shared/security-display.mjs';
@@ -157,9 +158,9 @@ export default function ResearchHistory({jobs = [], onStart, renderDelete, Statu
         </div>
       </div>
 
-      <div className="rh-filters" role="group" aria-label="按研究状态筛选">
-        {groups.map(([key, label]) => <Button type="button" variant={status === key ? 'secondary' : 'ghost'} size="sm" key={key} aria-pressed={status === key} onClick={() => update({status: key === 'all' ? null : key, page: null})}>{label}<Badge variant={status === key ? 'default' : 'secondary'} className="rh-filter-count">{unavailable ? '—' : counts[key]}</Badge></Button>)}
-      </div>
+      <ToggleGroup type="single" value={status} onValueChange={value => {if(value)update({status: value === 'all' ? null : value, page: null});}} size="sm" className="rh-filters" aria-label="按研究状态筛选">
+        {groups.map(([key, label]) => <ToggleGroupItem value={key} key={key}>{label}<Badge variant={status === key ? 'default' : 'secondary'} className="rh-filter-count">{unavailable ? '—' : counts[key]}</Badge></ToggleGroupItem>)}
+      </ToggleGroup>
 
       {error && <div className="rh-error" role="alert">
         <AlertCircle size={19} aria-hidden="true"/>

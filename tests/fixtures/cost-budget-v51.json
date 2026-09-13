@@ -1,0 +1,12 @@
+{
+  "version": "v51-cost-fixture-1",
+  "evidenceKind": "simulation",
+  "cases": [
+    {"id":"lower-known-cost","baselineCost":2,"candidateCost":1,"candidateDelivered":true,"candidateCriticalErrors":0,"candidateCurrency":"USD","candidateAttempts":1,"expectedCostGate":true},
+    {"id":"cheap-failed-delivery","baselineCost":2,"candidateCost":0.1,"candidateDelivered":false,"candidateCriticalErrors":0,"candidateCurrency":"USD","candidateAttempts":1,"expectedCostGate":false},
+    {"id":"cheap-critical-error","baselineCost":2,"candidateCost":0.1,"candidateDelivered":true,"candidateCriticalErrors":1,"candidateCurrency":"USD","candidateAttempts":1,"expectedCostGate":false},
+    {"id":"unknown-bill","baselineCost":2,"candidateCost":null,"candidateDelivered":true,"candidateCriticalErrors":0,"candidateCurrency":"USD","candidateAttempts":1,"expectedCostGate":false},
+    {"id":"unknown-retry-cost","baselineCost":2,"candidateCost":1,"candidateDelivered":true,"candidateCriticalErrors":0,"candidateCurrency":"USD","candidateAttempts":2,"expectedCostGate":false},
+    {"id":"incomparable-currency","baselineCost":2,"candidateCost":1,"candidateDelivered":true,"candidateCriticalErrors":0,"candidateCurrency":"CNY","candidateAttempts":1,"expectedCostGate":false}
+  ]
+}

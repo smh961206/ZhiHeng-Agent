@@ -193,18 +193,14 @@ async function main(){
   requireThat(!Object.hasOwn(options,key),'Duplicate option');
   options[key]=['live','allow-paid','resume','retry-incomplete'].includes(key)?true:args[++i];
  }
- if(command==='help'||!command){console.log('model-comparison: check|run --plan <json> --out <empty-directory> --limits <json> [--live --allow-paid] [--resume --retry-incomplete]; export --out <directory> --review <json>. Default run is offline; no production mode is changed.');return;}
- requireThat(['check','run','export'].includes(command),'Unknown command');
- const allowed=command==='export'?['out','review']:['plan','out','limits','live','allow-paid','resume','retry-incomplete'];
+ if(command==='help'||!command){console.log('model-comparison: check|run --plan <json> --out <empty-directory> --limits <json> [--resume --retry-incomplete]. M1.0 CLI runs offline only and cannot export model acceptance.');return;}
+ requireThat(['check','run'].includes(command),'Unknown command');
+ const allowed=['plan','out','limits','resume','retry-incomplete'];
  requireThat(Object.keys(options).every(k=>allowed.includes(k)),'Unknown option');
- if(command==='export'){
-  const report=exportAcceptance(path.resolve(options.out),readJSON(options.review));
-  fs.writeFileSync(path.join(options.out,'acceptance.json'),JSON.stringify(report,null,2)+'\n',{flag:'wx',mode:0o600});console.log('Acceptance file written; production configuration unchanged.');return;
- }
- const plan=validatePlan(readJSON(options.plan),{live:Boolean(options.live)}),limits=validateLimits(readJSON(options.limits));
- if(command==='check'){console.log(JSON.stringify({valid:true,cases:plan.cases.length,arms:plan.cases.length*2,live:Boolean(options.live),limits,paidCalls:0}));return;}
+ const plan=validatePlan(readJSON(options.plan)),limits=validateLimits(readJSON(options.limits));
+ if(command==='check'){console.log(JSON.stringify({valid:true,cases:plan.cases.length,arms:plan.cases.length*2,live:false,limits,paidCalls:0}));return;}
  requireThat(typeof options.out==='string','Output directory required');
- const summary=await runComparison({plan,limits,directory:options.out,offline:!options.live,allowPaid:options['allow-paid'],resume:options.resume,retryIncomplete:options['retry-incomplete']});
+ const summary=await runComparison({plan,limits,directory:options.out,offline:true,allowPaid:false,resume:options.resume,retryIncomplete:options['retry-incomplete']});
  console.log(JSON.stringify({kind:summary.kind,cases:summary.cases.length,qualityAcceptance:false,attempts:summary.budget.attempts}));
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(error=>{console.error(error instanceof Error?error.message:'Comparison failed');process.exitCode=1;});

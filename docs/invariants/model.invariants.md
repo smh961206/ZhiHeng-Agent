@@ -1,5 +1,25 @@
 # Model Invariants
 
+## M1.0 stage assignment invariants
+
+- A model connection is defined once and referenced by stage; business modules never choose provider or model names.
+- Every model request still passes through the single Model Gateway and provider adapter.
+- New tasks pin the complete stage mapping and connection identities. Configuration edits cannot alter an existing task.
+- Historical modelState v1-v3 jobs retain their original purpose, cache, budget, telemetry and recovery identities.
+- Missing data, low confidence, provider failure or a failed financial check never authorizes a stronger model or an automatic replay.
+- Critical Reviewer and Judge remain exceptional V5.2 roles with deterministic eligibility, independent public context, bounded invocation and validated output.
+- Pricing absence remains unknown. Budget pressure cannot silently select a lower-quality model.
+- Credentials, prompts, source bodies and hidden reasoning are never persisted in model state or ModelCall telemetry.
+- Schema-v2 activation does not require paid trials, acceptance files, Champion/A-B state or user-maintained capability matrices.
+
+## V5.2 scoped enforcement
+
+Flagship roles are excluded from normal catalogs and require explicit capability, live quality/admission, healthy connection and reviewed cost evidence. Missing data, provider failure, unknown publication time and unfinished work never trigger them. Independent packets contain source-backed complete evidence/tool context and completed conclusions, without hidden provider sessions. Saved original model pins/cutoff remain; uncertain independent outcomes pause instead of replaying. Closed Judge output cannot add a third fact or bypass final review. Tests in flagship/judge suites and Mongo restart exercise these boundaries. Offline fixtures cannot certify live quality/value; user keeps live acceptance paused.
+
+## V5.1 local enforcement
+
+Scoped cost tests enforce unknown-is-not-free, provider/estimated usage provenance, no double reasoning charge, exact dated/tier pricing and no cross-currency arithmetic. Cache eligibility requires actual provider observations and text-prefix/connection identity. Existing Champion validation precedes cost ranking and binds budget configuration; no ranking dispatches a model. Private budget accounting reserves before execution, retains uncertain operations, and cannot bypass the existing review or original job pins. Global TARGET invariants below are not relabeled merely by these scoped tests. V5.0 live acceptance remains paused.
+
 ## V5.0 local enforcement
 
 Benchmark outputs cannot introduce model-authored tool/validation receipts, hidden reasoning, invented facts, future citations or missing-as-zero without failing their scoped graders. Exact frozen artifacts and paired independent sample gates precede cost. Simulation cannot admit a champion or produce a live drift invalidation. v3 jobs pin one group/profile/effort; code/configuration/registry changes pause later calls without rewriting cutoff, completed tools or original selection. Tests in benchmark and model-champion/model-experiment/model-drift suites cover these local guards; genuine model quality still requires measured full-pipeline evidence and operator review. Existing global TARGET labels remain unchanged.

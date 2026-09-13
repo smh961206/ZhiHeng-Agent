@@ -7,12 +7,13 @@ import {once} from 'node:events';
 import {createServer} from 'node:net';
 import {setTimeout as pause} from 'node:timers/promises';
 import {createStorage} from '../server/storage.mjs';
+import {pipelineApiEnv} from './fixtures/pipeline-api-env.mjs';
 
 test('delivery API with real storage withholds unsaved results and recovers them without rerunning the model',{timeout:20000},async()=>{
  const uri=process.env.MONGODB_URI||'mongodb://127.0.0.1:27017',database='zhiheng_delivery_test_'+randomUUID().replaceAll('-','');
  const reserve=createServer();reserve.listen(0,'127.0.0.1');await once(reserve,'listening');const port=reserve.address().port;await new Promise(resolve=>reserve.close(resolve));
  const storage=await createStorage({uri,database});
- const child=spawn(process.execPath,['--import','./tests/fixtures/delivery-api-runtime.mjs','server/index.mjs'],{cwd:new URL('../',import.meta.url),env:{...process.env,HOST:'127.0.0.1',PORT:String(port),MONGODB_URI:uri,MONGODB_DATABASE:database,LLM_API_KEY:'fixture-only',LLM_MODEL:'fixture-only'},stdio:['ignore','pipe','pipe']});
+ const child=spawn(process.execPath,['--import','./tests/fixtures/delivery-api-runtime.mjs','server/index.mjs'],{cwd:new URL('../',import.meta.url),env:pipelineApiEnv({HOST:'127.0.0.1',PORT:String(port),MONGODB_URI:uri,MONGODB_DATABASE:database}),stdio:['ignore','pipe','pipe']});
  let output='';child.stdout.on('data',value=>{output+=value;});child.stderr.on('data',value=>{output+=value;});
  const base='http://127.0.0.1:'+port,post=body=>({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
  async function poll(path,condition){for(let i=0;i<120;i++){try{const value=await (await fetch(base+path)).json();if(condition(value))return value;}catch{}await pause(30);}throw new Error('Expected state was not reached: '+output);}

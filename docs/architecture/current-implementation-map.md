@@ -1,5 +1,31 @@
 # Current Implementation Map
 
+## M1.0 stage-oriented model configuration
+
+`server/model-config.mjs` accepts schema v2 with a single model registry and eight stage assignments: Input, Vision, Researcher, Writer, Evidence Verifier, Auditor, Critical Reviewer and Judge. `server/model-catalog.mjs` compiles these assignments into internal ModelProfiles; business code declares only a stage purpose. `server/model-gateway.mjs` remains the sole dispatch boundary and `server/model-adapter.mjs` remains the sole provider transport.
+
+New tasks save modelState v4 with the full stage pools and connection identities. Existing modelState v1-v3 jobs continue using their original purpose identities, cache keys and telemetry purposes. Configuration changes cannot silently rebind an existing task. Critical Reviewer and Judge resolve directly from optional configured pools while retaining V5.2 eligibility, independent context, one-call receipt, recovery and output validation. V5.1 price, usage and cache owners apply to every configured stage. New tasks do not create research budgets; historical budget resource identities remain readable for recovery. Normal activation no longer reads paid comparison or acceptance artifacts; the old policy/champion/experiment modules remain only for historical configuration and state compatibility.
+
+Current user configuration uses `config/models.local.json` or `config/models.production.json`; secrets remain in `.env` or `.env.production`. Preview/rollback model copies and `.env.models` files are retired from the current workflow. See the [configuration guide](../configuration-guide.md) and [M1.0 release record](../releases/M1.0/README.md).
+
+## Historical implementation records
+
+The sections below preserve the architecture state and acceptance boundary recorded by V4.8–V5.2. Where they describe MAIN/PRO, Challenger, Champion, A/B, acceptance files, `.env.models`, preview or `start:legacy`, treat those statements as historical release evidence. They are not instructions for the current schema-v2 workflow.
+
+## V5.2 independent exceptional review
+
+V5.2.0–.10 extends the existing flat Catalog/config/connection/adapter/Gateway and rollout owners. `server/model-flagship.mjs` owns deterministic exceptional eligibility, private durable independent-session receipts and normalized isolated dispatch; `server/model-judge.mjs` owns local completed-conclusion comparisons and closed advisory decisions. Existing `server/research-context.mjs` resolves real source blocks and original-time complete context. These are not a second Gateway, provider transport, canonical Claim subsystem or agent swarm.
+
+Existing Agent performs critical review only after repeated validated structural failures and optionally exposes valuation conflict adjudication for prior completed comparison receipts. Existing final review validators remain mandatory. New job authorizations pin exact role/code/config/approval and original cutoff; existing storage/checkpoint owners retain private receipts. Uncertain operations pause before replay. Existing ModelCall/cost UI and drift owners handle rare-purpose metrics and read-only usage alerts. Existing benchmark graders/statistics own frozen comparison; live quality/value acceptance remains paused by explicit user instruction. Flags default off. See [V5.2 runbook](../releases/V5.2/runbook.md).
+
+## V5.1 cost/cache capability and retired budget compatibility
+
+The user activated V5.1 on 2026-09-12; V5.0 live acceptance remains paused. Existing flat Gateway modules (not the template's nonexistent directory) retain ownership. `server/model-pricing.mjs` validates optional dated Catalog pricing alongside legacy pricing. No price is inferred from model identity. Subsequent steps and validation are recorded in [execution evidence](../releases/V5.1/execution-log.md).
+
+V5.1.0–.14 now have scoped engineering implementations. The pricing owner resolves exact call-time version/history and timezone tiers; existing adapter/result/telemetry owners normalize observed usage, estimate costs and aggregate all attempts/purposes. Existing benchmark runner namespaces case-local receipt IDs only for aggregation, preserving original artifacts; statistics owns quality-gated effective task cost comparisons. `server/model-cache.mjs` owns text-prefix hashes and observed cache eligibility. Existing Champion owner emits read-only cost rankings after its existing capability/quality/health gates, never a new execution route.
+
+`server/research-budget.mjs` now serves historical compatibility only. New task creation does not load a budget file or create `budgetState`; saved historical ledgers remain private, validate before resume and preserve uncertain-request replay protection, but their limits never stop execution or reduce retrieval. Existing per-tool, web, Vision and transport safety limits remain. `src/components/ResearchCostSummary.jsx` displays the whitelist GET /api/jobs/:id/cost cost/cache summary inside the research process panel. It cannot pick a model, stop research or treat unknown fees as zero. [Current configuration](../configuration-guide.md).
+
 ## V5.0 unified model configuration
 
 Existing routing/Catalog/connection/Gateway owners now consume server/model-config.mjs as a configuration-only adapter. It validates and freezes the explicit MODEL_CONFIG_FILE document, resolves credential references and preserves legacy internal IDs. server/index.mjs and model-rollout own safe readiness; model-comparison retains raw env when spawning workers while checking effective credentials. scripts/model-config.mjs provides preview/check and non-overwriting in-project output. compose.models.yaml is an opt-in read-only deployment overlay. No research schema, new provider transport or approval bypass was introduced. See [migration runbook](../releases/V5.0/model-config-migration-runbook.md).

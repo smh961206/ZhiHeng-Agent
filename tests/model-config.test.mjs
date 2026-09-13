@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {previewModelConfig,verifyModelConfig,writeModelConfig,parseConfigArguments} from '../scripts/model-config.mjs';
+import {buildLegacyModelConfig,verifyModelConfig,writeLegacyModelConfig,parseConfigArguments} from '../scripts/model-config.mjs';
 import {modelConfig,modelEnvironment,parseModelConfigJSON} from '../server/model-config.mjs';
 import {modelRouting} from '../server/model-routing.mjs';
 import {modelConfigurationStatus} from '../server/model-rollout.mjs';
@@ -15,11 +15,11 @@ import {championTestEnv,championTestPolicy} from './fixtures/champion.mjs';
 import {createConfiguredJobModelState,assertModelRollout} from '../server/model-rollout.mjs';
 const env={LLM_MODEL:'baseline',LLM_BASE_URL:'https://baseline.invalid',LLM_API_KEY:'secret-base',LLM_MAIN_API_KEY:'secret-main',MODEL_ROUTING_MODE:'legacy',LLM_VISION_INPUT:'images'};
 function fixture(run){const dir=fs.mkdtempSync(path.join(os.tmpdir(),'model-config-'));try{return run(dir);}finally{fs.rmSync(dir,{recursive:true,force:true});}}
-function fileAt(dir,value=previewModelConfig(env)){const file=path.join(dir,'models.json');fs.writeFileSync(file,typeof value==='string'?value:JSON.stringify(value));return file;}
+function fileAt(dir,value=buildLegacyModelConfig(env)){const file=path.join(dir,'models.json');fs.writeFileSync(file,typeof value==='string'?value:JSON.stringify(value));return file;}
 function fileOnly(file,source=env){return {MODEL_CONFIG_FILE:file,LLM_API_KEY:source.LLM_API_KEY,LLM_MAIN_API_KEY:source.LLM_MAIN_API_KEY,MODEL_ROUTING_MODE:source.MODEL_ROUTING_MODE};}
 
-test('Migration preview preserves different roles and all legacy connection and pin semantics',()=>fixture(dir=>{
- const config=previewModelConfig(env),file=fileAt(dir,config);
+test('Legacy migration builder preserves different roles and all legacy connection and pin semantics',()=>fixture(dir=>{
+ const config=buildLegacyModelConfig(env),file=fileAt(dir,config);
  assert.equal(config.connections.pro,undefined,'PRO shares baseline connection only when the same secret reference is inherited');
  assert.notEqual(config.roles.defaultResearch,config.roles.policyMain);
  assert.doesNotMatch(JSON.stringify(config),/secret-base|secret-main/);
@@ -31,14 +31,14 @@ test('Migration preview preserves different roles and all legacy connection and 
 }));
 
 test('Independent key references remain separate even when values currently match',()=>{
- const source={...env,LLM_PRO_API_KEY:env.LLM_API_KEY};const c=previewModelConfig(source);
+ const source={...env,LLM_PRO_API_KEY:env.LLM_API_KEY};const c=buildLegacyModelConfig(source);
  assert.notEqual(c.profiles[c.roles.defaultResearch].connectionRef,c.profiles[c.roles.policyPro].connectionRef);
 });
 
 test('File mode preserves approved v3 selection and keeps rollback closed without rewriting pins',()=>fixture(dir=>{
  const original={...championTestEnv(),MODEL_ROUTING_MODE:'champion',MODEL_CHAMPION_ENABLED:'true',MODEL_AB_ENABLED:'true',MODEL_CHAMPION_REGISTRY_FILE:path.join(dir,'registry.json'),MODEL_CHAMPION_POLICY_VERSION:'test-policy-1'};
  const policy=championTestPolicy(original);fs.writeFileSync(original.MODEL_CHAMPION_REGISTRY_FILE,JSON.stringify({version:1,activePolicyId:policy.id,policies:[policy]}));
- const next={...original,MODEL_CONFIG_FILE:fileAt(dir,previewModelConfig(original))},job={id:'config-pin',mode:'B',createdAt:'2026-09-03T00:00:00Z'};
+ const next={...original,MODEL_CONFIG_FILE:fileAt(dir,buildLegacyModelConfig(original))},job={id:'config-pin',mode:'B',createdAt:'2026-09-03T00:00:00Z'};
  const state=createConfiguredJobModelState(original,{},job);assert.equal(state.version,3);
  assert.deepEqual(createConfiguredJobModelState(next,{},job),state);
  assert.doesNotThrow(()=>assertModelRollout({...job,modelState:state},next));
@@ -56,7 +56,7 @@ test('Explicit bad source is closed, sanitized, and never falls back to legacy',
 test('Duplicate escaped keys, unknown fields and incomplete references are rejected',()=>fixture(dir=>{
  assert.throws(()=>parseModelConfigJSON('{"a":1,"\\u0061":2}'));
  assert.throws(()=>parseModelConfigJSON('{"__proto__":{}}'));
- const c=structuredClone(previewModelConfig(env));c.extra=true;
+ const c=structuredClone(buildLegacyModelConfig(env));c.extra=true;
  assert.throws(()=>modelConfig({...env,MODEL_CONFIG_FILE:fileAt(dir,c)}));
 }));
 
@@ -72,7 +72,7 @@ test('File content stays frozen until restart, while key rotation preserves conn
 }));
 
 test('No cross-role secret inheritance occurs in file mode and missing needed key disables readiness',()=>fixture(dir=>{
- const c=structuredClone(previewModelConfig(env));c.connections['legacy-analysis'].apiKeyEnv='INDEPENDENT_API_KEY';
+ const c=structuredClone(buildLegacyModelConfig(env));c.connections['legacy-analysis'].apiKeyEnv='INDEPENDENT_API_KEY';
  const file=fileAt(dir,c),next={...fileOnly(file),INDEPENDENT_API_KEY:'separate'};
  const effective=modelEnvironment(next);
  assert.equal(modelRouting(effective).analysisKey,'separate');
@@ -81,16 +81,16 @@ test('No cross-role secret inheritance occurs in file mode and missing needed ke
 }));
 
 test('Schema rejects secrets in URLs and undeclared image metadata rather than guessing',()=>fixture(dir=>{
- const c=structuredClone(previewModelConfig(env));c.connections['legacy-analysis'].baseUrl='https://user:secret@provider.invalid';
+ const c=structuredClone(buildLegacyModelConfig(env));c.connections['legacy-analysis'].baseUrl='https://user:secret@provider.invalid';
  assert.throws(()=>modelConfig({...env,MODEL_CONFIG_FILE:fileAt(dir,c)}),e=>!e.message.includes('secret'));
 }));
 
-test('Preview writer refuses overwrite and workspace escape; CLI intent rejects ambiguous flags',()=>fixture(dir=>{
- const c=previewModelConfig(env);writeModelConfig('config/models.json',c,dir);
- assert.throws(()=>writeModelConfig('config/models.json',c,dir));
- assert.throws(()=>writeModelConfig('../outside.json',c,dir));
- for(const args of [[],['--preview','--check','x'],['--out','x'],['--preview','--preview'],['--check'],['--unknown']])assert.throws(()=>parseConfigArguments(args));
- assert.deepEqual(parseConfigArguments(['--preview','--out','config/models.json']),{'--preview':true,'--out':'config/models.json'});
+test('Legacy config writer refuses overwrite and workspace escape; current CLI accepts check only',()=>fixture(dir=>{
+ const c=buildLegacyModelConfig(env);writeLegacyModelConfig('config/models.json',c,dir);
+ assert.throws(()=>writeLegacyModelConfig('config/models.json',c,dir));
+ assert.throws(()=>writeLegacyModelConfig('../outside.json',c,dir));
+ for(const args of [[],['--preview'],['--out','x'],['--preview','--out','x'],['--check'],['--check','--other'],['--unknown']])assert.throws(()=>parseConfigArguments(args));
+ assert.deepEqual(parseConfigArguments(['--check','config/models.json']),{'--check':'config/models.json'});
 }));
 
 test('File-mode Gateway produces identical requests and blocks invalid configuration before transport',async()=>{
@@ -105,10 +105,10 @@ test('File-mode Gateway produces identical requests and blocks invalid configura
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
 
-test('File-only preview and check preserve selected custom definitions',()=>fixture(dir=>{
- const config=previewModelConfig(env),file=fileAt(dir,config),source=fileOnly(file);
- assert.deepEqual(previewModelConfig(source),config);
- const copy=path.join(dir,'copy.json');writeModelConfig(copy,previewModelConfig(source),dir);
+test('File-only legacy builder and check preserve selected custom definitions',()=>fixture(dir=>{
+ const config=buildLegacyModelConfig(env),file=fileAt(dir,config),source=fileOnly(file);
+ assert.deepEqual(buildLegacyModelConfig(source),config);
+ const copy=path.join(dir,'copy.json');writeLegacyModelConfig(copy,buildLegacyModelConfig(source),dir);
  assert.equal(verifyModelConfig(copy,source).equivalent,true);
  const other=structuredClone(config);other.profiles[other.roles.defaultResearch].model='different';
  const changed=path.join(dir,'changed.json');fs.writeFileSync(changed,JSON.stringify(other));

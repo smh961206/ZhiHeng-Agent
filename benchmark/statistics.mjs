@@ -1,5 +1,26 @@
 import {freeze,identifier,jsonData,requireBenchmark} from './case.mjs';
 import {objectHash} from './fixtures.mjs';
+import {effectiveTaskCost} from '../server/model-telemetry.mjs';
+import {gradeJudgeCase} from './graders.mjs';
+import {summarizeModelCalls} from '../server/model-telemetry.mjs';
+export function compareJudgeSamples(fixtures,samples){
+ requireBenchmark(Array.isArray(fixtures)&&fixtures.length>0&&new Set(fixtures.map(c=>c.id)).size===fixtures.length,'unique judge fixtures');
+ requireBenchmark(Array.isArray(samples)&&samples.length===fixtures.length*2&&new Set(samples.map(s=>s.caseId+':'+s.arm)).size===samples.length,'paired judge samples');
+ const rows=fixtures.flatMap(f=>['baseline','candidate'].map(arm=>{
+  const s=samples.find(s=>s.caseId===f.id&&s.arm===arm);requireBenchmark(s&&s.fixtureHash===objectHash(f)&&Array.isArray(s.calls)&&['simulation','live-model','recorded-live'].includes(s.evidenceKind),'judge sample binding');
+  return {caseId:f.id,arm,grade:gradeJudgeCase(f,s.output),cost:summarizeModelCalls(s.calls),evidenceKind:s.evidenceKind};
+ }));
+ const stats=arm=>{const selected=rows.filter(r=>r.arm===arm);return {cases:selected.length,passed:selected.filter(r=>r.grade.passed).length,criticalErrors:selected.reduce((n,r)=>n+r.grade.criticalErrors,0),knownCostByCase:selected.map(r=>({caseId:r.caseId,cost:r.cost.billing,complete:r.cost.costCoverage.complete}))};};
+ const baseline=stats('baseline'),candidate=stats('candidate');
+ return freeze({version:1,kind:'judge-comparison',fixtureHash:objectHash(fixtures),samplesHash:objectHash(samples),baseline,candidate,correctnessLift:(candidate.passed-baseline.passed)/fixtures.length,liveEvidence:samples.every(s=>s.evidenceKind!=='simulation'),qualityAccepted:false,rows});
+}
+export function compareEffectiveTaskCosts({baseline,candidate}){
+ const a=effectiveTaskCost(baseline),b=effectiveTaskCost(candidate);
+ const comparable=a.estimatedCostPerDelivery!==null&&b.estimatedCostPerDelivery!==null&&a.currency===b.currency;
+ const qualityPreserved=b.deliveryPassRate!==null&&a.deliveryPassRate!==null&&b.deliveryPassRate>=a.deliveryPassRate&&candidate.every(t=>t.criticalErrors===0);
+ return freeze({version:1,formulaVersion:a.formulaVersion,baseline:a,candidate:b,comparable,
+  qualityPreserved,engineeringCostGate:comparable&&qualityPreserved,difference:comparable?b.estimatedCostPerDelivery-a.estimatedCostPerDelivery:null,qualityAccepted:false});
+}
 export const statisticalPolicy=freeze({version:'1.0.0',minUniqueCases:50,minRepeats:2,minPassRate:0.95,tolerance:0.10,confidence:0.95});
 export function validateStatisticalPolicy(input=statisticalPolicy){
  const p=jsonData(input);

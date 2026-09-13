@@ -1,6 +1,6 @@
 import {KnowledgeHighlights,KnowledgeStatus} from './ResearchKnowledge';
 import ResearchCapabilities from './ResearchCapabilities';
-import {platformVersion} from '../config/platform-release.mjs';
+import {modelTrackVersion,platformVersion} from '../config/platform-release.mjs';
 
 import {ResearchMethodSteps} from './ResearchMethod';
 import {useEffect,useState} from 'react';
@@ -40,17 +40,17 @@ const flow=[
  {title:'让资料带着来源和时点进入研究',copy:researchDataCopy.collection+' 配置并启用搜索后，按资料缺口定位并读取原文；上传材料作为补充线索。',example:['证据','同一期间的利润、经营现金流与分红'],result:'建立证据目录，标明读取范围与待核实内容'},
  {title:'从经营逻辑，走到财务验证',copy:'解释公司如何赚钱，检视利润能否变成现金，再看必要再投资、偿债、分红与回购。',example:['验证','利润增长是否同时带来现金创造能力？'],result:'区分已证实的事实、解释与待验证假设'},
  {title:'用合适的模型，说明合理价格的条件',copy:'按行业和数据选择工具，记录参数来源与口径，比较情景和敏感性。没有可靠依据时，明确说明无法估值。',example:['估值','区分主估值价值区间与股息收益率锚'],result:'可检查的参数与区间，不强制每项任务做DCF'},
- {title:'交付结论，也交付改变结论的条件',copy:'模型复核后，由程序检查报告结构、引用和判断边界。发现问题会尝试补充或修正，未核实事项保留说明；结果保存失败时可单独重试保存。',example:['跟踪','哪三条经营事实出现时，需要重审原判断？'],result:'对照报告、审计记录、证据来源与执行轨迹'},
+ {title:'交付结论，也交付改变结论的条件',copy:'研究和写作分环节完成，独立审计检查引用、口径与判断边界；只有满足条件时才进入关键复核。程序随后校验交付结构。发现问题会尝试补充或修正，未核实事项保留说明；结果保存失败时可单独重试保存。',example:['跟踪','哪三条经营事实出现时，需要重审原判断？'],result:'对照报告、审计记录、证据来源与执行轨迹'},
 ];
 const questions=[
- ['图片和扫描件需要自己选模型吗？','无需在研究表单里选择模型。先确认研究问题、路径与资料，平台按已启用的配置执行。模型调整先做同题对照，检查事实、计算和引用，再比较速度与成本；完成验收后才可启用。资料不足仍保留缺口，不以更换模型代替取证。'],
+ ['图片和扫描件需要自己选模型吗？','无需在研究表单里选择模型。先确认研究问题、路径与资料，平台按管理员配置的 Vision 环节模型读取；其他研究环节也按各自分工执行。资料不足仍保留缺口，不以更换模型代替取证。'],
  ['第一次使用，应该从哪里开始？','在工作台输入公司与具体问题，核对股票代码和市场后开始研究，稍后可到研究记录中查看结果。'],
  ['可以上传自己的报告、表格或截图吗？','可以。文件直接上传平台处理，也可粘贴文字笔记。最多 6 份，每份文件 10 MB；处理结果可预览与修改，关键数字仍需核对原件。'],
  ['什么时候可以离开页面？','资料导入期间请保持页面；研究创建成功后可离开，稍后从研究记录查看。文件失败可单独重试，仅保存结果失败时无需重新研究。'],
  ['如何选择和开通付费服务？','在首页“服务方案”查看开通说明，正式价格、研究额度、服务周期及购买入口将在开放时公布。'],
  ['为什么不会每次都生成一篇长报告？','报告随问题调整：快速筛选判断是否值得深研，财报更新聚焦变化，公司比较优先统一口径。'],
  ['怎样看待低估值和高股息？','低估值倍数与高股息仅作研究线索，需结合公司质量、现金流和主估值交叉验证，不能直接作为买入依据。'],
- ['模型复核和程序检查意味着什么？','它们帮助检查结论、引用、数值与适用边界，但不能保证事实或预测正确，未核实事项会保留在审计记录中。'],
+ ['独立审计和程序检查意味着什么？','独立审计检查结论、引用、数值与适用边界，必要时才进入关键复核；程序再检查交付结构。它们不能保证事实或预测正确，未核实事项会保留在审计记录中。'],
  ['组合信息不完整还能研究吗？','可以。平台会说明缺口并检视已知风险；只有持仓、权重、资产范围、风险承受能力、行业集中和流动性需求齐备时，才允许进一步形成组合动作。'],
  ['减仓意味着不再看好公司吗？','不一定。组合集中风险与公司研究判断分别评价；减仓、清空或重新买入会核对各自依据。交易复盘按当时可得证据检查研究、估值、目标仓位与执行节奏。'],
  ['如何持续跟踪已有研究？','发起财报更新时选择旧报告或补充上次结论，以新披露核对旧假设；没有对照时先建立本期基线。'],
@@ -66,7 +66,7 @@ export default function ResearchFramework({onStart,config,checking,onRefresh}){
  useEffect(()=>{const query=window.matchMedia('(max-width: 639px)'),change=()=>setNarrow(query.matches);query.addEventListener('change',change);return()=>query.removeEventListener('change',change);},[]);
  return <section ref={sectionNavigation.rootRef} onClick={sectionNavigation.onAnchorClick} className="research-framework research-home" aria-labelledby="fw-hero-title">
   <section className="fw-hero" aria-labelledby="fw-hero-title">
-   <div className="fw-hero-copy"><div className="fw-release-note"><span>V{platformVersion}</span>模型评估 · 质量优先</div><h1 id="fw-hero-title">让每一次研究，<br/>都有依据可循。</h1><p>从公司与问题出发，把报告、表格和截图放到同一项研究中。对照原页、复算关键数字，再形成有条件的判断；读取范围与资料缺口都能回看。</p><div className="fw-hero-actions"><Button size="lg" onClick={()=>onStart()}>开始一项研究<ArrowRight size={17}/></Button><Button variant="outline" size="lg" asChild><Link to="/handbook?tab=guide">了解研究流程<ArrowUpRight size={16}/></Link></Button></div><div className="fw-hero-note"><ShieldCheck size={16}/>先核对证据，再形成判断；缺失资料如实保留</div><Link className="fw-quality-link" to="/handbook?tab=method#method-quality">模型如何评估与使用<ArrowRight size={14} aria-hidden="true"/></Link></div>
+   <div className="fw-hero-copy"><div className="fw-release-note"><span>V{platformVersion}</span><span className="fw-model-track">模型配置 {modelTrackVersion}</span>环节分工 · 证据优先</div><h1 id="fw-hero-title">让每一次研究，<br/>都有依据可循。</h1><p>从公司与问题出发，把报告、表格和截图放到同一项研究中。对照原页、复算关键数字，再形成有条件的判断；读取范围与资料缺口都能回看。</p><div className="fw-hero-actions"><Button size="lg" onClick={()=>onStart()}>开始一项研究<ArrowRight size={17}/></Button><Button variant="outline" size="lg" asChild><Link to="/handbook?tab=guide">了解研究流程<ArrowUpRight size={16}/></Link></Button></div><div className="fw-hero-note"><ShieldCheck size={16}/>先核对证据，再形成判断；缺失资料如实保留</div><Link className="fw-quality-link" to="/handbook?tab=method#method-quality">模型怎样分工与记录<ArrowRight size={14} aria-hidden="true"/></Link></div>
    <Card className="fw-question-card"><CardContent><div className="fw-preview-label"><FileText size={18}/>一份研究，分清判断与执行</div><ResearchMethodSteps compact/><Link className="fw-method-link" to="/handbook?tab=method">了解当前研究方法<ArrowRight size={15}/></Link></CardContent></Card>
   </section>
   <KnowledgeStatus config={config} checking={checking} onRefresh={onRefresh}/>

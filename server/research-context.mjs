@@ -1,4 +1,41 @@
 import {normalizeSourceReferences,sourceReferenceIds} from './research-references.mjs';
+import {evidenceBlocks} from './evidence-search.mjs';
+
+const privateKeys=new Set(['reasoning_content','reasoning','chainOfThought','hiddenReasoning','messages','apiKey','api_key','authorization','prompt','systemPrompt']);
+export function independentContextData(value){
+ if(Array.isArray(value))return value.map(independentContextData);
+ if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value).filter(([key])=>!privateKeys.has(key)).map(([key,item])=>[key,independentContextData(item)]));
+ return value;
+}
+export const independentContextError=()=>Object.assign(new Error('独立复核缺少完整的原时点证据或来源关联；保留原研究进度'),{code:'flagship_context_invalid'});
+export function independentTimestamp(value){
+ return typeof value==='string'&&/^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2}))?$/.test(value)&&Number.isFinite(Date.parse(value))&&new Date(value.slice(0,10)).toISOString().slice(0,10)===value.slice(0,10);
+}
+export function buildIndependentContext({cutoff,sources=[],evidence=[],tools=[],conclusions=[]}={}){
+ const fail=()=>{throw independentContextError();};
+ if(!independentTimestamp(cutoff)||!evidence.length||!conclusions.length)fail();
+ const sourceMap=new Map(sources.map(s=>[s.id,s]));if(sourceMap.size!==sources.length)fail();
+ const entries=evidence.map(e=>{
+  const source=sourceMap.get(e.id);
+  if(!source||!independentTimestamp(source.publishedAt)||Date.parse(source.publishedAt)>Date.parse(cutoff)||typeof e.blockId!=='string'||!e.blockId||typeof e.text!=='string'||!e.text.trim()||source.truncated===true)fail();
+  const blocks=evidenceBlocks(source).filter(b=>b.id===e.blockId),block=blocks[0];
+  if(blocks.length!==1||typeof block.text!=='string'||!e.text.includes(block.text)||block.truncated||block.method==='ocr'||e.referenceAmbiguous||['search-result','search-summary','filing-index','data-check'].includes(source.type))fail();
+  return {id:e.id,blockId:e.blockId,page:block.page??null,text:block.text,publishedAt:source.publishedAt,...(block.context?{context:block.context}:{})};
+ });
+ if(new Set(entries.map(e=>`${e.id}:${e.blockId}`)).size!==entries.length)fail();
+ const records=tools.map(t=>{
+  if(typeof t.toolCallId!=='string'||!t.toolCallId||typeof t.toolName!=='string'||t.result==null||t.result.error)fail();
+  const refs=t.result.basis?.sourceIds??[];
+  if(refs.some(id=>!entries.some(e=>e.id===id)))fail();
+  if((t.result.basis?.evidenceBlocks??[]).some(ref=>!entries.some(e=>e.id===ref.sourceId&&e.blockId===ref.blockId)))fail();
+  return {toolCallId:t.toolCallId,toolName:t.toolName,arguments:independentContextData(t.arguments??{}),result:independentContextData(t.result)};
+ });
+ if(new Set(records.map(t=>t.toolCallId)).size!==records.length)fail();
+ const context=buildResearchContext({evidence:entries,tools:records,evidenceBudget:80000,toolBudget:80000});
+ if(context.window.omittedEvidence.length||context.window.omittedTools.length)fail();
+ const completed=conclusions.map(c=>{if(typeof c!=='string'||!c.trim()||c.length>80000)fail();return c;});
+ return {version:1,cutoff,evidence:context.evidence,tools:context.tools,conclusions:completed};
+}
 
 // Pack complete records, never arbitrary slices of JSON, tables or tool output.
 // This is a model input window, not a claim of complete document verification.

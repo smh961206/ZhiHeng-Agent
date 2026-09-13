@@ -1,5 +1,7 @@
 # V5.1 Acceptance Contract
 
+Behavioral evidence: model-pricing/model-usage/model-cost suites cover COST-001; model-cost-policy and the frozen cost benchmark cover COST-002; model-cache covers COST-003; research-budget (including actual Agent checkpoint continuation), existing research-resume/review tests and model-cost.integration cover BUD-001/BUD-002, persistence and safe projection. Operational limitations and disabled rollout are explicit in [runbook](runbook.md); final suite counts belong in the completion report.
+
 A release is not complete because code compiles. These behaviors must hold.
 
 ### COST-001

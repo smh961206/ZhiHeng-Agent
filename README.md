@@ -37,44 +37,45 @@ pnpm start
 必须在 `.env` 填写 `LLM_API_KEY`，在 JSON 中确认模型和接口。模型需支持Chat Completions工具调用及按协议返回JSON。密钥只在后端读取；问题、组合信息、选用的历史研究快照和相关财报片段会发送给配置的模型服务。未配置模型直接报错。可设置 `SEC_USER_AGENT=应用名 真实联系邮箱` 以符合SEC来源访问要求。
 
 
-### 模型配置分层
+### 按研究环节配置模型
 
 #### 统一模型文件
 
-模型定义集中到 `connections`、`profiles`、`roles` 三层 JSON 配置中；密钥和策略开关保存在当前环境唯一的环境文件（本地 `.env`，生产 `.env.production`），JSON 仅引用密钥变量名。默认研究与 MAIN／PRO 仍保留各自角色。
+模型在 JSON 的 `models` 中定义一次，再由 `pipeline` 分配给 Input、Vision、研究、写作、证据核验、审计、关键复核和 Judge。密钥值保存在当前环境唯一的环境文件中，JSON 只引用密钥变量名。
 
-旧变量环境迁移时，本地运行 `pnpm models:preview --out config/models.local.json` 生成不覆盖已有文件的迁移预览，再运行 `pnpm models:check config/models.local.json` 校验。全部等价后，在 `.env` 添加 `MODEL_CONFIG_FILE=./config/models.local.json`，重启服务。未设置此项时仍使用原环境变量入口；设置后文件错误或新旧定义冲突会停止模型派发，不自动改用另一模型。文件内容在启动／首次读取后固定，修改文件需重启进程。
+本地运行 `pnpm models:check config/models.local.json` 检查当前文件；生产配置使用 `.env.production` 执行相同检查。检查不调用外部模型，也不输出密钥。配置文件错误、引用不存在或必需密钥缺失时停止模型派发，不静默换模型。修改 JSON 后需重启进程。
 
-首次配置、字段解释、常见修改、生产检查与回滚见 [配置使用说明与教程](docs/configuration-guide.md)。参考 [统一配置示例](config/models.example.json) 与 [迁移操作说明](docs/releases/V5.0/model-config-migration-runbook.md)。升级后的示例与实际环境只保留 JSON 模型定义，迁移前的定义单独保留用于回滚；模型定义、能力或连接不同的角色不会自动合并。配置切换不是质量验收，已有策略的代码绑定仍须按原规则检查。
+首次配置、字段解释、环节分工、生产检查与兼容说明见 [配置使用说明与教程](docs/configuration-guide.md)，参考 [统一配置示例](config/models.example.json)。费用和缓存记录另见 [费用与缓存配置教程](docs/cost-configuration-guide.md)。不再维护 `.env.models`、preview、rollback 或研究预算配置副本；历史发布资料和旧任务快照继续保留。
 
 | 环境 | 环境配置 | 模型配置 |
 |---|---|---|
 | 本地 | `.env` | `config/models.local.json` |
 | 生产 | `.env.production` | `config/models.production.json` |
 
-本地 `dev`、`start`、`start:legacy` 及相关命令只加载 `.env`。手动运行 Node 工具时使用 `node --env-file-if-exists=.env 脚本路径`。已有进程环境变量优先；每个键只保留一处。修改环境或模型 JSON 后需重新启动对应进程。生产通过 Compose 注入 `.env.production`，模型 JSON 只读挂载。
+本地 `dev`、`start` 及相关命令只加载 `.env`。手动运行 Node 工具时使用 `node --env-file-if-exists=.env 脚本路径`。修改环境或模型 JSON 后需重新启动对应进程。生产通过 Compose 注入 `.env.production`，模型 JSON 只读挂载。
 
-日常运行使用 [.env.example](.env.example)，Docker 使用 [.env.production.example](.env.production.example)。环境文件填写密钥，JSON 填写接口地址和默认研究模型；视觉模型和路径识别角色可按需配置。日常不需要填写 MAIN、PRO、候选或 A/B。
+日常运行使用 [.env.example](.env.example)，Docker 使用 [.env.production.example](.env.production.example)。环境文件填写密钥，JSON 填写模型、接口地址和环节分配。日常不需要 MAIN/PRO、Challenger、Champion、A/B、策略注册表或验收文件。
 
 | 日常项 | 作用 |
 |---|---|
-| JSON roles.defaultResearch | 固定模式的研究与审计模型 |
-| JSON roles.router | 路径／证券意图识别，可指向共享 profile |
-| JSON roles.vision | 原页与截图读取模型 |
-| MODEL_ROUTING_MODE | 默认 legacy；高级策略另行验收 |
+| JSON pipeline.input | Input，负责路径与证券意图识别 |
+| JSON pipeline.vision | 原页、图片与图表读取 |
+| JSON pipeline.researcher / writer | 研究取证与报告整理 |
+| JSON pipeline.evidenceVerifier / auditor | 定向证据核验与最终审计 |
+| JSON pipeline.criticalReviewer / judge | 可选关键复核与证据裁决，空数组表示关闭 |
 | MODEL_TELEMETRY_ENABLED | 默认 true，保存调用元数据，不改变模型选择 |
 
-高级凭据、策略开关和批准路径已归入 [.env.example](.env.example) 与 [.env.production.example](.env.production.example)；型号、接口、能力和角色统一在 JSON 文件中维护。不要用示例覆盖正在使用的真实配置。生产批准路径须自行填写并挂载，示例不附带批准。
+高级模型也直接加入本地或生产 JSON，再分配到所需环节。不要用示例覆盖正在使用的真实配置。模型配置只决定执行者，不代表事实、引用或计算已通过核验。
 
-原环境变量继续兼容，现有部署不需要重建配置；三个候选／实验开关缺省均关闭，固定模式不会启用 MAIN/PRO 策略。真实验收仍按当前暂停决定执行。开启策略、调整候选、模型或接口可能影响已固定身份的任务续跑，详见 [V5.0 操作说明](docs/releases/V5.0/runbook.md)。
+旧 schema v1 配置以及历史任务的模型状态 v1/v2/v3 继续兼容。新任务使用 schema v2 配置并保存模型状态 v4；模型、接口、环节分配或顺序变化可能影响已有任务续跑，平台会保留进度并要求恢复原配置。
 
-页面“平台与模型说明”展示服务返回的新研究模式与模型；缺少新状态字段时显示未确认，不推断候选启用情况。已保存研究以任务记录为准，配置不是模型健康检查或已经发生的调用。
+页面“平台与模型说明”展示新研究的环节配置；详情页展示本次任务保存的研究、Vision、写作、审计与可选裁决配置。已保存研究以任务记录为准，配置不是模型健康检查或已经发生的调用。
 
 ## 使用与数据源
 
 ### 从输入到交付的操作衔接
 
-研究路径默认在输入停顿 800 毫秒后请求后端 `/api/research/path`，仅发送问题文本。后端使用配置的模型理解主要诉求、否定和引用，并返回六类路径之一与简短理由；在 JSON 的 `roles.router` 指定分类模型档案，通过 connection 显式选择地址和凭据。请求最多等待 8 秒，并发最多 2 个；相同问题的成功判断缓存 10 分钟，失败时按关键词兜底并显示「规则推荐」。该判断不调用研究工具、不创建研究任务。手动选择后停止自动判断，可一键恢复。
+研究路径默认在输入停顿 800 毫秒后请求后端 `/api/research/path`，仅发送问题文本。后端使用 `pipeline.input` 分配的模型理解主要诉求、否定和引用，并返回六类路径之一与简短理由；模型别名对应的 `baseUrl` 与 `apiKeyEnv` 决定接口和凭据。请求最多等待 8 秒，并发最多 2 个；相同问题的成功判断缓存 10 分钟，失败时按关键词兜底并显示「规则推荐」。该判断不调用研究工具、不创建研究任务。手动选择后停止自动判断，可一键恢复。
 
 判断期间不能开始研究；确认后的判断编号随自动模式提交，后端据此校验标的数量并生成实际计划。记录过期或服务重启时会要求重新确认；浏览器收到失效提示后重新识别。网络失败时明确提交规则兜底，保持预览与执行路径一致。
 
@@ -269,7 +270,7 @@ ode scripts/data-smoke.mjs` 做真实三市场抓取测试，将元数据写入 
 
 `POST /api/securities/resolve` 接收 `{question}`，返回证券、歧义候选、未识别项和来源警告。单次最多3个标的。
 
-界面使用 [shadcn/ui](https://ui.shadcn.com/docs/installation/vite)、Radix与Tailwind，桌面侧栏和手机抽屉导航自适应；前端不再提供模型配置模块，模型参数统一在后端环境变量管理。
+界面使用 [shadcn/ui](https://ui.shadcn.com/docs/installation/vite)、Radix与Tailwind，桌面侧栏和手机抽屉导航自适应；前端不再提供模型配置模块，模型与环节分配统一在后端模型 JSON 管理，密钥和运行参数保存在当前环境文件。
 
 
 ## 实时研究报告
@@ -497,6 +498,6 @@ V4.7 平台体验优化：详情与手册在访问时加载，资源失败时提
 
 ### V5.0 模型基准与候选策略
 
-统一基准支持冻结样例、确定性评分、可恢复执行、基线快照、候选模型对照、按任务类别统计、固定到研究任务的 A/B 分组及漂移失效检查。模型调用继续使用原有 Gateway，生产候选开关默认关闭。
+V5.0 留下的统一基准、冻结样例、确定性评分、可恢复执行、基线快照、对照统计和漂移检查继续作为离线回归能力。M1.0 当前运行配置不再使用 A/B 分组、Champion 晋级或验收文件；历史策略状态只为旧任务兼容保留。
 
-运行 `pnpm benchmark -- --kind text --out artifacts/benchmark-text` 或直接执行 `node scripts/benchmark.mjs --kind text --out artifacts/benchmark-text` 可进行无网络的模拟对照；视觉样例使用 `--kind vision`。模拟通过不等于真实研究质量达标。V5.0.0–.13 的工程实现和本地回归已完成，完整验收仍需真实候选模型、冻结的完整研究样例、付费测试预算与人工审阅。详见 [验收报告](docs/releases/V5.0/completion-report.md) 和 [操作说明](docs/releases/V5.0/runbook.md)。
+运行 `pnpm benchmark -- --kind text --out artifacts/benchmark-text` 可进行无网络的模拟回归；视觉样例使用 `--kind vision`。模拟结果用于发现契约和质量回退，不作为模型晋级或生产路由条件。V5.0 的历史实现与当时验收边界见 [验收报告](docs/releases/V5.0/completion-report.md)；当前模型配置见 [M1.0 说明](docs/releases/M1.0/README.md)。

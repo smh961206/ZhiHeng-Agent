@@ -1,5 +1,5 @@
-# Optional overlay for file-based production model definitions.
-# Basic + advanced env files still provide credentials and release controls.
+# Production overlay for the schema-v2 model file.
+# .env.production provides credentials and runtime controls.
 services:
   app:
     environment:

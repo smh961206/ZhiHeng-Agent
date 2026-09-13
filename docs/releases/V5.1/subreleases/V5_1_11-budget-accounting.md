@@ -1,7 +1,7 @@
 # V5.1.11 — Budget accounting
 
 Release: `V5.1`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: CURRENT. Scoped engineering and offline acceptance are complete; see [execution evidence](../execution-log.md) and [completion report](../completion-report.md). Real-model quality and production savings remain unaccepted; production optimization flags remain disabled.
 
 ## 1. Why
 
@@ -79,7 +79,7 @@ If implementation requires reversing an accepted ADR, stop and create a supersed
 
 ## 13. Schema
 
-No persistent schema change.
+Additive version-1 budget limits and private durable budgetState in existing job payloads; absent historical budgets stay absent. See [release schema](../schema.md) and [migration](../migration.md).
 
 All persistent changes are additive-first. Unknown historical values remain unknown.
 

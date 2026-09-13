@@ -1,6 +1,7 @@
 import {AsyncLocalStorage} from 'node:async_hooks';
 import {isDeepStrictEqual} from 'node:util';
-import {createLegacyModelCatalog,createPolicyModelCatalog,createBenchmarkModelCatalog} from './model-catalog.mjs';
+import {createLegacyModelCatalog,createPolicyModelCatalog,createBenchmarkModelCatalog,createPipelineModelCatalog,pipelineStageProfiles} from './model-catalog.mjs';
+import {modelConfig,modelPipelineStages} from './model-config.mjs';
 import {modelConnectionIdentity} from './model-connection.mjs';
 import {modelRoutingMode} from './model-routing.mjs';
 import {configuredVisionProfile} from './vision-policy.mjs';
@@ -42,6 +43,13 @@ export function createChampionJobModelState(env=process.env,selection,visionId){
    profiles,active:{profileId:saved.profileId,reasoningEffort:saved.effort},escalationHistory:[]};
  }catch{throw modelStateError();}
 }
+export function createPipelineJobModelState(env=process.env){
+ const config=modelConfig(env);if(config?.schemaVersion!==2)throw modelStateError();
+ const catalog=createPipelineModelCatalog(env);
+ const profiles=catalog.profiles.map(p=>({id:p.id,model:p.model,connectionIdentity:modelConnectionIdentity(p,env),reasoningEffort:null,purposes:[...p.purposes]}));
+ const stages=Object.fromEntries(Object.keys(modelPipelineStages).map(stage=>[stage,{pool:[...pipelineStageProfiles(stage,env)],active:pipelineStageProfiles(stage,env)[0]??null}]));
+ return {version:4,routingMode:'pipeline',policyVersion:1,configurationVersion:2,profiles,stages,escalationHistory:[]};
+}
 function validChampionState(job,env){
  const state=job.modelState;validateModelExperiment(state.selection,{job});
  return isDeepStrictEqual(state,createChampionJobModelState(env,state.selection,savedVisionId(state)));
@@ -58,20 +66,26 @@ export function assertJobModelState(job,env=process.env){
  const hasJob=Object.hasOwn(job,'modelState'),hasCheckpoint=job.checkpoint&&Object.hasOwn(job.checkpoint,'modelState');
  if(!hasJob&&!hasCheckpoint)return; // Absence only: no fabricated historical pin.
  if(!hasJob||!job.modelState)throw modelStateError();
- let valid;try{valid=job.modelState.version===3?validChampionState(job,env):job.modelState.version===2?validPolicyState(job.modelState,env):isDeepStrictEqual(job.modelState,createJobModelState(env,savedVisionId(job.modelState)));}catch{throw modelStateError();}
+ let valid;try{valid=job.modelState.version===4?isDeepStrictEqual(job.modelState,createPipelineJobModelState(env)):job.modelState.version===3?validChampionState(job,env):job.modelState.version===2?validPolicyState(job.modelState,env):isDeepStrictEqual(job.modelState,createJobModelState(env,savedVisionId(job.modelState)));}catch{throw modelStateError();}
  if(!valid||job.checkpoint&&(!hasCheckpoint||!isDeepStrictEqual(job.checkpoint.modelState,job.modelState)))throw modelStateError();
  if(job.mode==='A'&&job.modelState.version===2&&!isDeepStrictEqual(job.modelState.active,escalationSteps[0]))throw modelStateError();
 }
-export function withJobModelState(job,run){assertJobModelState(job);return scope.run(job,run);}
+export function withJobModelState(job,run,env=process.env){assertJobModelState(job,env);return scope.run(job,run);}
 export function modelStatePin(purpose,env){
  const job=scope.getStore();if(!job)return;
  assertJobModelState(job,env);
  const state=job.modelState;
- if(state?.version===2&&['research','review','followup'].includes(purpose))return {...state.profiles.find(p=>p.id===state.active.profileId),reasoningEffort:state.active.reasoningEffort};
- return state?.profiles.find(p=>p.purposes.includes(purpose));
+ if(state?.version===4){
+  const stage=Object.keys(modelPipelineStages).find(key=>modelPipelineStages[key]===purpose)||({router:'input',research:'researcher',review:'auditor',followup:'evidenceVerifier'}[purpose]);
+  const active=state.stages?.[stage]?.active;return active?state.profiles.find(p=>p.id===active):undefined;
+ }
+ const legacyPurpose={input:'router',researcher:'research',writer:'research',auditor:'review',['evidence-verifier']:'followup'}[purpose]??purpose;
+ if(state?.version===2&&['research','review','followup'].includes(legacyPurpose))return {...state.profiles.find(p=>p.id===state.active.profileId),reasoningEffort:state.active.reasoningEffort};
+ return state?.profiles.find(p=>p.purposes.includes(legacyPurpose));
 }
 export const hasPolicyModelState=()=>scope.getStore()?.modelState?.version===2;
 export const hasChampionModelState=()=>scope.getStore()?.modelState?.version===3;
+export const hasPipelineModelState=()=>scope.getStore()?.modelState?.version===4;
 export const currentModelJob=()=>scope.getStore();
 export const hasJobModelScope=()=>scope.getStore()!==undefined;
 export function noteModelFailure(job,kind){

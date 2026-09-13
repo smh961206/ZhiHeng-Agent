@@ -25,31 +25,32 @@
     {
       "file": "server/vision-model.mjs",
       "sha256": "586222e1a3bcf94c14e8d22ccdcae6925a6ee39757858ecce800f12e30091124",
-      "currentSha256": "9a84c511ea6793624f66726372c8e7df1b01bcfaf8d40320a3c3d7355b2e0035"
+      "currentSha256": "c144888dedb03cfc5974f398e818a4adeb66926fafe1e13422c49722bee29975",
+      "currentReview": "M1.0 reviewed pipeline model configuration compatibility; Vision limits, evidence guards, single Gateway transport and historical job pins remain enforced."
     },
     {
       "file": "server/model-routing.mjs",
       "sha256": "0e1f75d4fe5faf1041e74ae26f6227a07b3ead5c420b8c74cb7714ecfe7f6cc2",
-      "currentSha256": "518c954b730cf15d089983fd4a4b8d644c8037b58a43bb90b0fdbb1d910a022b",
-      "currentReview": "V5.0 reviewed explicit MAIN challenger and fixed approved job pin; original Vision limits, input and evidence guards retained"
+      "currentSha256": "8b973d264fef5608dd6652fd8f5017985be7da9f908e2828124b5509458fa674",
+      "currentReview": "M1.0 reviewed pipeline model configuration compatibility; Vision limits, evidence guards, single Gateway transport and historical job pins remain enforced."
     },
     {
       "file": "server/model-catalog.mjs",
       "sha256": "3ea706c39c0082008e62b5b08b2749483710951edc9e91c0caa262e22e3d2b03",
-      "currentSha256": "d7629c9fb0d866e5add9a5d60615e678f23b4a85320fda847dc7f6a53e452dc2",
-      "currentReview": "V5.0.6 explicit MAIN challenger; Vision limits and trust unchanged"
+      "currentSha256": "da17693001bfd4c2d7ffd2fd1e5f614f4e9852f69c3cb51f9457cdc373d69e37",
+      "currentReview": "M1.0 reviewed pipeline model configuration compatibility; Vision limits, evidence guards, single Gateway transport and historical job pins remain enforced."
     },
     {
       "file": "server/model-gateway.mjs",
       "sha256": "9a135b798f45b69c11de42e81396bfdd8b39b848e4a897e21342dc92101b966b",
-      "currentSha256": "02b70a493d2dca5956c2e63297f8986d131f784a5cd97309d2638e6d4f4c348c",
-      "currentReview": "V5.0 reviewed explicit MAIN challenger and fixed approved job pin; original Vision limits, input and evidence guards retained"
+      "currentSha256": "9690cec048806b0f4608f19474a89ff187d6d80f8a91da9f6d5cd8fcba080c90",
+      "currentReview": "M1.0 reviewed pipeline model configuration compatibility; Vision limits, evidence guards, single Gateway transport and historical job pins remain enforced."
     },
     {
       "file": "server/model-adapter.mjs",
       "sha256": "e2bfd01715acc6998b0dbff338b7bdc18f5186ab7af67bd1c691558c9dc3322e",
-      "currentSha256": "8fb1ca75f76a0d6a4b5708d1b7e306c0e71fe228b43b9b0d15078001f12c7b9c",
-      "currentReview": "V5.0.6 explicit MAIN challenger; Vision limits and trust unchanged"
+      "currentSha256": "63786ac0ebd32412599c2418a536f6c9323141c524e87fed95c0d939c41f0a76",
+      "currentReview": "M1.0 reviewed pipeline model configuration compatibility; Vision limits, evidence guards, single Gateway transport and historical job pins remain enforced."
     },
     {
       "file": "server/model-stream.mjs",
@@ -57,11 +58,15 @@
     },
     {
       "file": "server/model-gateway-result.mjs",
-      "sha256": "dbae853d45494f440d27d565d5d0b668e21b75514a2bbb80ef63086a37a1a3c2"
+      "sha256": "dbae853d45494f440d27d565d5d0b668e21b75514a2bbb80ef63086a37a1a3c2",
+      "currentSha256": "ccd64f9fc198a69968db8d9a1d7795e6c036b2733a79946e2dd9d80b7f1c261c",
+      "currentReview": "M1.0 reviewed pipeline model configuration compatibility; Vision limits, evidence guards, single Gateway transport and historical job pins remain enforced."
     },
     {
       "file": "server/visual-reading.mjs",
-      "sha256": "df6c812c08d53057df41518ce54b36b9090899330c308d92265f0fbd2941626c"
+      "sha256": "df6c812c08d53057df41518ce54b36b9090899330c308d92265f0fbd2941626c",
+      "currentSha256": "df6c812c08d53057df41518ce54b36b9090899330c308d92265f0fbd2941626c",
+      "currentReview": "M1.0 budget-configuration cleanup changed cost exposure only; Vision request limits, evidence guards and trust boundaries remain enforced."
     },
     {
       "file": "server/visual-render-worker.mjs",
@@ -85,20 +90,27 @@
     },
     {
       "file": "server/pdf-processing.mjs",
-      "sha256": "0c78e05103f2d31226d0a541b53a1cdf05345e72d22860003145d6d082ac26f1"
+      "sha256": "0c78e05103f2d31226d0a541b53a1cdf05345e72d22860003145d6d082ac26f1",
+      "currentSha256": "0c78e05103f2d31226d0a541b53a1cdf05345e72d22860003145d6d082ac26f1",
+      "currentReview": "M1.0 budget-configuration cleanup changed cost exposure only; Vision request limits, evidence guards and trust boundaries remain enforced."
     },
     {
       "file": "server/agent-page-reader.mjs",
-      "sha256": "ffd20e5e99cd22dd627ece5ac28722a1bece2a7ac9b74bfdbd3b5db158b56941"
+      "sha256": "ffd20e5e99cd22dd627ece5ac28722a1bece2a7ac9b74bfdbd3b5db158b56941",
+      "currentSha256": "ffd20e5e99cd22dd627ece5ac28722a1bece2a7ac9b74bfdbd3b5db158b56941",
+      "currentReview": "M1.0 budget-configuration cleanup changed cost exposure only; Vision request limits, evidence guards and trust boundaries remain enforced."
     },
     {
       "file": "server/agent.mjs",
-      "sha256": "297e24f0123ea88b10e87c4e69371173717666636d9225cd74ac09f479ecff8b"
+      "sha256": "297e24f0123ea88b10e87c4e69371173717666636d9225cd74ac09f479ecff8b",
+      "currentSha256": "8955b948cea7a13955729d2dd45bd6a11df54e9950581cc034a48665f0a6e2b0",
+      "currentReview": "M1.0 budget-configuration cleanup changed cost exposure only; Vision request limits, evidence guards and trust boundaries remain enforced."
     },
     {
       "file": "server/index.mjs",
       "sha256": "a04904c1497155ef54cfd1b159a027f07c504fb1be0137f70c6a0c14c7b548cb",
-      "currentSha256": "92b202729019136e8d0bbdcd74ff0e648868bf6d45374d006d360b772220d444"
+      "currentSha256": "cf13c77811d55fd9904ef8939d03cf337df3851133fadabc7608ec6a66a221dd",
+      "currentReview": "M1.0 budget-configuration cleanup changed cost exposure only; Vision request limits, evidence guards and trust boundaries remain enforced."
     },
     {
       "file": "scripts/vision-input-diagnostics.mjs",
@@ -111,14 +123,15 @@
     {
       "file": ".env.example",
       "sha256": "0822808113792ce25aab5c6779d30dc0dc8b4c8902b827cb388266a41708c962",
-      "currentSha256": "741b76f648ea04fd643fc2832cbd225f38fc7dedafee42f1d7525aea9ccc2492",
-      "currentReview": "V5.0 reviewed explicit MAIN challenger and fixed approved job pin; original Vision limits, input and evidence guards retained"
+      "currentSha256": "f55765758d6b116809a45bb1d9e385d92973418ee4d8c9d796d40effab3a9d1c",
+      "currentReview": "M1.0 budget-configuration cleanup changed cost exposure only; Vision request limits, evidence guards and trust boundaries remain enforced."
     },
     {
       "file": "server/model-config.mjs",
       "sha256": "dd73ecc724c95fa36805ee0082940f750b6d5a5c28181142239cb0b441a242f8",
-      "currentSha256": "dd73ecc724c95fa36805ee0082940f750b6d5a5c28181142239cb0b441a242f8",
-      "introducedIn": "V5.0 unified model configuration"
+      "currentSha256": "f0e18341e856f9f8b9cf631ff79c9c3b8ecac27574553632d588de61404d7393",
+      "introducedIn": "V5.0 unified model configuration",
+      "currentReview": "M1.0 reviewed pipeline model configuration compatibility; Vision limits, evidence guards, single Gateway transport and historical job pins remain enforced."
     }
   ],
   "limits": [
@@ -173,8 +186,8 @@
     {
       "id": "single-attempt",
       "file": "server/model-adapter.mjs",
-      "anchor": "request.purpose==='router'||request.purpose==='vision'?(fetchImpl??globalThis.fetch)",
-      "description": "Vision uses one fetch attempt, no research network retry or model cycling."
+      "anchor": "['router','input','vision','critical-review','judge'].includes(request.purpose)?(fetchImpl??globalThis.fetch)",
+      "description": "Input, Vision and exceptional review use one fetch attempt; Vision never cycles after a partial or uncertain response."
     },
     {
       "id": "research-pages",

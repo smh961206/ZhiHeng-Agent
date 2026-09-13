@@ -44,7 +44,7 @@
 
 ## 视觉批准与部署边界
 
-已核对正式批准文件 `artifacts/vision-acceptance-glm53-fields-20260911-approved.json`，comparison 哈希为 `8d0bf01699843e4d98664682e6590619ae3eefe917dcb7732acb53585afa0895`。本次直接使用实际配置校验，没有替换服务地址；准入 accepted=true、reasons=[]。当前配置指向的文件与正式文件字节一致。
+已核对当时的正式批准文件；该历史工件现归档为 `archive/vision-acceptance-glm53-fields-20260911-approved.json`，comparison 哈希为 `8d0bf01699843e4d98664682e6590619ae3eefe917dcb7732acb53585afa0895`。本次直接使用实际配置校验，没有替换服务地址；准入 accepted=true、reasons=[]。当时配置指向的文件与正式文件字节一致。
 
 仅在验证进程的内存配置中开启开关，正确选中 candidate；缺失批准文件或关闭开关回落 legacy。实际配置保持 legacy。本轮没有创建新批准、修改已批准 comparison、启用生产路由或新增付费模型调用。原用户批准出处见 [正式批准记录](vision-operator-approval-20260911.md)。
 

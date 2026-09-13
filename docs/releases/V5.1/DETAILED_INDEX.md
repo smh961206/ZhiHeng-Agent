@@ -1,5 +1,9 @@
 # V5.1 — Fully Normalized Detailed Index
 
+Authorized 2026-09-12. All fifteen engineering steps and offline acceptance are complete; see [completion report](completion-report.md), [validation results](validation-results.json), [execution evidence](execution-log.md), [operations](runbook.md), [schema](schema.md) and [rollback](rollback.md). Real-model quality and production savings are not inferred from offline tests. V5.0 live acceptance remains paused.
+
+Cross-version maintenance is recorded in the [V5.1/V5.2/M1.0 regression report](../M1.0/regression-optimization-report.md).
+
 Every subrelease below follows `docs/development/NORMALIZED_RELEASE_STANDARD.md`.
 
 Codex must execute them in order unless the user explicitly requests one specific subrelease.

@@ -5,6 +5,8 @@ dist
 .env
 .env.*
 config/models.*.json
+config/pricing.local.json
+config/pricing.production.json
 data
 artifacts
 outputs

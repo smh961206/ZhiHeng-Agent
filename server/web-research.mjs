@@ -3,6 +3,8 @@ import {readWebEvidence,sourceAuthority} from './web-evidence.mjs';
 import {publicWebURL} from './web-evidence-request.mjs';
 import {dataArchive} from './data-archive.mjs';
 import {sourceSummary,parsingWarnings} from './document-layout.mjs';
+import {withResearchResource} from './research-budget.mjs';
+import {createHash} from 'node:crypto';
 
 const compact=value=>String(value).replace(/\s+/g,' ').trim();
 const excluded=new Set(['filing-index','data-check','search-result','search-summary']);
@@ -58,7 +60,7 @@ export function createWebResearchSession({job,searchLocal,searchWeb=searchWebCan
   try{
    state.searchCount++;emit('web_search',`${record.id} 已查现有资料，正在按缺口定位原始网页`);
    let found;
-   try{found=await searchWeb(query,{signal:combined});}catch(error){combined.throwIfAborted();found={status:'failed',candidates:[],warnings:[error.message]};}
+   try{found=await withResearchResource('webRequest',1,()=>searchWeb(query,{signal:combined}),{id:'web-search:'+record.id});}catch(error){combined.throwIfAborted();found={status:'failed',candidates:[],warnings:[error.message]};}
    record.failures.push(...(found.warnings||[]));
    const discoveryKey=`web-discovery:v1:${receipt.security||'general'}:${query}`;
    if(!found.candidates?.length){
@@ -79,7 +81,7 @@ export function createWebResearchSession({job,searchLocal,searchWeb=searchWebCan
     if(state.documentAttempts>=limits.documents){record.limitations.push('达到全任务正文读取上限');continue;}
     state.documentAttempts++;
     try{
-     const source=await readDocument(candidate,{security:receipt.security,signal:combined});combined.throwIfAborted();
+     const source=await withResearchResource('webRequest',1,()=>readDocument(candidate,{security:receipt.security,signal:combined}),{id:'web-read:'+record.id+':'+createHash('sha256').update(candidate.url).digest('hex')});combined.throwIfAborted();
      if(source.type!=='web-evidence'||source.documentRead!==true||typeof source.text!=='string'||source.text.trim().length<200)throw new Error('未取得可验证的原始正文');
      let existing=job.input.sources.find(item=>item.url===source.url&&item.security===source.security&&item.documentRead);
      if(!existing){

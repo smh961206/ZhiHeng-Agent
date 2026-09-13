@@ -1,3 +1,6 @@
+import {effectiveTaskCost} from './model-telemetry.mjs';
+import {cacheEligibility} from './model-cache.mjs';
+import {researchBudgetConfiguration} from './research-budget.mjs';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import {modelTimeouts} from './model-deadline.mjs';
@@ -17,7 +20,7 @@ export function championCodeFiles(){
 export function championCodeHash(){return objectHash(championCodeFiles().map(name=>[name,createHash('sha256').update(fs.readFileSync(new URL('../'+name,import.meta.url))).digest('hex')]));}
 export function championExecutionSettings(env=process.env){
  const reviewFormat=env.LLM_REVIEW_FORMAT||'auto';requireBenchmark(['auto','json_schema','json_object','text'].includes(reviewFormat),'review format setting');
- return {reviewFormat,timeouts:modelTimeouts(env)};
+ return {reviewFormat,timeouts:modelTimeouts(env),researchBudget:researchBudgetConfiguration(env)};
 }
 export function championIntentHash({id,stage,percent,taskClasses,reasoningEffort,configuration,codeHash,executionSettings}){return objectHash({id,stage,percent,taskClasses,reasoningEffort,configuration,codeHash,executionSettings});}
 export function championConfiguration(env,baselineId='main',championId='main-challenger'){
@@ -67,4 +70,33 @@ export function validateChampionRegistry(input,env=process.env){
 export function taskChampion(registry,taskClass,env=process.env){
  const r=validateChampionRegistry(registry,env),policy=r.policies.find(p=>p.id===r.activePolicyId);
  return policy&&policy.taskClasses.includes(taskClass)&&!['disabled','dry-run'].includes(policy.stage)?policy:null;
+}
+// Read-only ranking output. Admission and existing job pins remain owned by
+// rollout/model-state; this function cannot select a dispatch profile.
+export function rankModelCosts({candidates,request,taskClass,env={},health,asOf=new Date().toISOString()}){
+ const eligible=[],rejected=[];
+ for(const candidate of candidates){
+  const p=candidate.profile,reasons=[];
+  const required=['textInput',...(request.stream?['streaming']:[]),...(request.tools?.length?['toolCalling']:[]),...(request.responseFormat?.type==='json_object'?['jsonObject']:request.responseFormat?.type==='json_schema'?['jsonSchema']:[]),...(request.messages?.some(m=>Array.isArray(m.content)&&m.content.some(p=>p.type==='image_url'))?['imageInput']:[]),...(request.requiredCapabilities??[])];
+  if(!p?.purposes?.includes(request.purpose)||required.some(k=>p?.capabilities?.[k]!==true))reasons.push('capability_required');
+  let policy;
+  if(!reasons.length)try{
+   policy=validateChampionPolicy(candidate.policy,env);
+   if(!policy.taskClasses.includes(taskClass)||!policy.configuration.some(c=>c.profile.id===p.id&&objectHash(c.profile)===objectHash(p))||policy.reasoningEffort!==(request.reasoningEffort??null))throw Error();
+  }catch{reasons.push('quality_approval_required');}
+  if(!reasons.length&&(!health||health.cooling(modelConnectionIdentity(p,env))))reasons.push('health_required');
+  let cost;
+  if(!reasons.length)try{
+   if(!candidate.tasks.every(t=>t.profileId===p.id&&t.taskClass===taskClass&&t.modelCalls.every(c=>!['research','review','followup'].includes(c.purpose)||c.profile===p.id)))throw Error();
+   cost=effectiveTaskCost(candidate.tasks);if(!cost.complete||cost.estimatedCostPerDelivery===null)throw Error();
+   if(cost.deliveryPassRate<0.95||candidate.tasks.some(t=>t.criticalErrors>0))reasons.push('observed_quality_regression');
+  }catch{reasons.push('complete_effective_cost_required');}
+  if(reasons.length){rejected.push({profile:p?.id??null,reasons});continue;}
+  const cache=cacheEligibility(candidate.cacheRecords??[],{request,profile:p,connectionIdentity:modelConnectionIdentity(p,env),asOf});
+  eligible.push({profile:p.id,policyId:policy.id,currency:cost.currency,effectiveTaskCost:cost.estimatedCostPerDelivery,cacheEligible:cache.eligible});
+ }
+ const currencies=[...new Set(eligible.map(c=>c.currency))];
+ // No exchange rate invention, nor speculative cache discounts to measured costs.
+ const rankings=currencies.sort().map(currency=>({currency,candidates:eligible.filter(c=>c.currency===currency).sort((a,b)=>a.effectiveTaskCost-b.effectiveTaskCost||a.profile.localeCompare(b.profile))}));
+ return {schemaVersion:1,policyVersion:'cost-ranking-1',mode:'disabled',rankings,rejected,changesProduction:false};
 }

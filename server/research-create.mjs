@@ -1,5 +1,5 @@
 import {createHash,randomUUID} from 'node:crypto';
-import {createConfiguredJobModelState} from './model-rollout.mjs';
+import {createConfiguredJobModelState,createFlagshipJobState} from './model-rollout.mjs';
 const failure=(status,message)=>Object.assign(new Error(message),{status});
 const canonical=value=>Array.isArray(value)?value.map(canonical):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonical(value[key])])):value;
 export function submissionIdentity(payload,key){
@@ -34,6 +34,7 @@ export function createResearchCreator({storage,jobs,controllers,pendingStarts,mu
    pendingStarts.add(id);
    const job=candidate??await prepare(structuredClone(payload),id);
    if(!candidate)job.modelState=createConfiguredJobModelState(process.env,{mode:job.mode,historyYears:job.plan?.historyYears},job);
+   if(!candidate){const flagshipState=createFlagshipJobState(job);if(flagshipState)job.flagshipState=flagshipState;}
    job.submission={fingerprint,attemptId:candidate?.submission.attemptId??randomUUID()};uncertain.set(id,job);
    try{await storage.createJob(job);}
    catch(error){

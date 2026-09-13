@@ -4,6 +4,7 @@ import {BookOpen,ChevronDown,RefreshCw,ShieldCheck} from 'lucide-react';
 import {Button} from './ui/button';
 import {Input} from './ui/input';
 import {Collapsible,CollapsibleTrigger,CollapsibleContent} from './ui/collapsible';
+import {ToggleGroup,ToggleGroupItem} from './ui/toggle-group';
 import {knowledgeAvailability,ruleUsage,knowledgeBenefits,depthGuidance} from '../../shared/research-knowledge.mjs';
 import './research-knowledge.css';
 import {api} from '../lib/api';
@@ -58,7 +59,7 @@ function RuleUsagePanel({job,currentConfig}){
   <CollapsibleTrigger asChild><Button type="button" variant="ghost" className="knowledge-usage-trigger"><BookOpen size={18}/><span><strong>本次规则依据{view.version?' · 规则 V'+view.version:''}</strong><small>{view.recorded?`${view.moduleCount} 项规则 · ${view.sectionCount} 条使用记录`:'此记录未保存实际读取明细'}</small></span><ChevronDown size={16}/></Button></CollapsibleTrigger>
   <CollapsibleContent className="knowledge-usage-body">
    <p>{view.snapshot?'本次研究固定创建时的规则，研究、补读与复核使用同一份依据。':'此记录未保存固定规则快照，不根据当前规则补写历史使用情况。'}{changed?' 当前已有更新，本报告仍保留原依据。':''}</p>
-   {view.recorded&&<><div className="knowledge-filters" role="group" aria-label="规则记录筛选">{[['all','全部'],['lookup','按需补读'],['audit','审计']].map(([id,label])=><Button type="button" size="sm" variant={filter===id?'secondary':'ghost'} aria-pressed={filter===id} key={id} onClick={()=>{setFilter(id);setLimit(20);}}>{label}</Button>)}</div>
+   {view.recorded&&<><ToggleGroup type="single" value={filter} onValueChange={value=>{if(value){setFilter(value);setLimit(20);}}} size="sm" className="knowledge-filters" aria-label="规则记录筛选">{[['all','全部'],['lookup','按需补读'],['audit','审计']].map(([id,label])=><ToggleGroupItem value={id} key={id}>{label}</ToggleGroupItem>)}</ToggleGroup>
    {view.records.length>0&&<div className="knowledge-search"><Input ref={searchInput} aria-label="搜索规则记录" placeholder="搜索标题、读取原因或文件名" value={query} onChange={event=>{setQuery(event.target.value);setLimit(20);}}/>{query&&<Button type="button" size="sm" variant="ghost" onClick={()=>{setQuery('');setLimit(20);searchInput.current?.focus();}}>清除搜索</Button>}</div>}
    <p role="status" className="knowledge-result-count">{rows.length?`显示 ${Math.min(limit,rows.length)} / ${rows.length} 条记录`:'没有匹配的记录'}</p>
    {rows.length?<ul className="knowledge-read-list">{rows.slice(0,limit).map((row,index)=><li key={row.key??index}><strong>{row.heading}</strong><p>{row.reason} · 第 {row.line}–{row.endLine} 行{row.truncated?' · 部分内容':''}</p><details><summary>核对文件与校验值</summary><code>{row.path}</code><code>文件：{row.sha256}</code><code>本次内容：{row.contentSha256}</code></details>{view.snapshot&&row.key&&<RuleExcerpt jobId={job.id} record={row}/>}</li>)}</ul>:<p className="knowledge-empty">{query?'尝试更短的关键词，或清除搜索条件。':view.records.length?'尚无此类读取记录。':'尚未记录规则正文的使用；目录中的文件不代表已经读取。'}</p>}

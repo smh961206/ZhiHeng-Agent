@@ -3,7 +3,8 @@ import {MongoClient,GridFSBucket} from 'mongodb';
 import {Readable} from 'node:stream';
 import {pipeline} from 'node:stream/promises';
 import {migrateSchema} from './schema-migrations.mjs';
-import {normalizeModelCall,summarizeModelCalls} from './model-telemetry.mjs';
+import {normalizeModelCall,summarizeModelCalls,publicModelCostSummary} from './model-telemetry.mjs';
+import {modelCacheAnalytics} from './model-cache.mjs';
 
 export async function createStorage({uri=process.env.MONGODB_URI||'mongodb://127.0.0.1:27017',database=process.env.MONGODB_DATABASE||'zhiheng_agent'}={}){
  const client=new MongoClient(uri,{serverSelectionTimeoutMS:5000,connectTimeoutMS:5000,writeConcern:{w:1,j:true}});
@@ -16,7 +17,7 @@ export async function createStorage({uri=process.env.MONGODB_URI||'mongodb://127
     // Serialize before awaiting: running jobs can continue emitting events.
     const {liveReport,...stored}=job;
     const bytes=Buffer.from(JSON.stringify(stored));
-    const {input,result,events,draft,marketData,checkpoint,knowledgeUsage,modelState,...summary}=stored;
+    const {input,result,events,draft,marketData,checkpoint,knowledgeUsage,modelState,budgetState,flagshipState,...summary}=stored;
     const upload=bucket.openUploadStream(job.id+'.json');
     await pipeline(Readable.from([bytes]),upload);
     try{
@@ -48,6 +49,13 @@ export async function createStorage({uri=process.env.MONGODB_URI||'mongodb://127
    async modelUsageSummary(jobId){
     if(typeof jobId!=='string'||!jobId)throw new Error('Invalid job ID');
     return summarizeModelCalls(await db.collection('model_calls').find({jobId},{projection:{_id:0}}).toArray());
+   },
+   async modelCostSummary(jobId){
+    if(typeof jobId!=='string'||!jobId)throw new Error('Invalid job ID');
+    const rows=await db.collection('model_calls').find({jobId},{projection:{_id:0}}).toArray();
+    const result=publicModelCostSummary(summarizeModelCalls(rows));
+    result.cacheObservations=modelCacheAnalytics(rows).map(g=>({samples:g.samples,unknownCalls:g.unknownCalls,observedHitRatio:g.observedHitRatio,observedTokenRatio:g.observedTokenRatio}));
+    return result;
    },
    saveJob:writeJob,
    createJob:job=>writeJob(job,undefined,false,true),

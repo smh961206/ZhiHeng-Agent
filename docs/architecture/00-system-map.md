@@ -1,8 +1,18 @@
 # ZhiHeng System Map
 
-V5.0 current engineering: the unified local benchmark platform is implemented through .13, with explicit MAIN challengers behind the existing Gateway, append-only operator-reviewed champion policies, immutable job A/B pins and read-only drift evaluation. Default production remains legacy; full-research measured quality/promotion remain unaccepted. See [V5.0 report](../releases/V5.0/completion-report.md). No distributed infrastructure or investment schema was added.
+M1.0 adds user-defined model connections and assigns them to Input, Vision, Researcher, Writer, Evidence Verifier, Auditor, Critical Reviewer and Judge. New schema-v2 jobs pin modelState v4. Every provider request still passes through the existing Model Gateway and adapter. V5.1 pricing/cost/cache and V5.2 exceptional review/Judge contracts remain owners; paid comparison, configurable research budgets, acceptance files, Champion/A-B controls and duplicated MAIN/PRO/Challenger credentials are no longer part of the normal activation path. Historical schema-v1 configuration, modelState v1-v3, old budget ledgers and authorization receipts remain read-compatible.
 
-Status: CURRENT + TARGET MAP
+V5.2 added independent critical review and advisory evidence adjudication alongside the existing research/review pipeline. M1.0 now activates these capabilities only when `criticalReviewer` or `judge` has a configured model; paid quality/cost acceptance artifacts are no longer runtime gates. The V5.2 eligibility, deterministic validation, private job storage, original cutoff, telemetry and recovery rules remain enforced. These roles never replace the active research session or become canonical Facts. [Current configuration](../configuration-guide.md).
+
+V5.1 originally added effective-dated costs, observed cache statistics, read-only quality-gated rankings and private durable resource budgets. The current path retains pricing, cost and cache summaries while retiring ranking and budget configuration. New jobs do not receive budget ledgers; historical ledgers remain private and readable so uncertain operations retain their original data/model pins and do not replay. See the current [configuration guide](../configuration-guide.md). No financial truth layer or distributed runtime was added.
+
+## Historical release records
+
+The V5.0 and V4.9 paragraphs below preserve the architecture state recorded by those releases. Their MAIN/PRO, Challenger, Champion, A/B, acceptance and activation statements do not define the current schema-v2 workflow.
+
+V5.0 engineering record: the unified local benchmark platform was implemented through .13, with explicit MAIN challengers behind the existing Gateway, append-only operator-reviewed champion policies, immutable job A/B pins and read-only drift evaluation. Default production remained legacy and full-research quality/promotion remained unaccepted at that release boundary. See [V5.0 report](../releases/V5.0/completion-report.md). No distributed infrastructure or investment schema was added.
+
+Status: historical architecture record
 
 V4.9 current acceptance update: all normalized V4.9.0–.8 engineering work is implemented; batch-nine live Vision quality is [operator-approved](../releases/V4.9/vision-operator-approval-20260911.md). Production routing remains disabled and activation still requires the approved code/configuration binding. Earlier release-stage statements below are historical snapshots, not the current acceptance status.
 

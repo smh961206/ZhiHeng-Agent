@@ -1,6 +1,12 @@
 import {basisFields,freeze,identifier,jsonData,requireBenchmark,timestamp,validateCase} from './case.mjs';
 import {canonical} from './fixtures.mjs';
 import {gradeVisionTable,visionGradeVersion} from '../server/vision-quality.mjs';
+import {buildJudgeInput,validateJudgeOutput} from '../server/model-judge.mjs';
+export function gradeJudgeCase(fixture,raw){
+ let packet;try{packet=buildJudgeInput(fixture.input);}catch{return {passed:fixture.expected==='no_dispatch'&&raw===null,criticalErrors:raw===null?0:1,outcome:'no_dispatch'};}
+ try{const output=validateJudgeOutput(raw,packet);return {passed:output.outcome===fixture.expected,criticalErrors:output.outcome!==fixture.expected&&output.outcome!=='insufficient_to_decide'?1:0,outcome:output.outcome};}
+ catch{return {passed:false,criticalErrors:1,outcome:'invalid'};}
+}
 export const graderVersions=Object.freeze({deterministic:'1.0.0',vision:visionGradeVersion});
 const same=(a,b)=>canonical(a)===canonical(b);
 // Only evaluation fields are retained; provider reasoning never enters artifacts.

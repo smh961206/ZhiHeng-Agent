@@ -1,6 +1,6 @@
 # V5.2 — Flagship Pool / Judge
 
-Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
+Implementation Status: CURRENT engineering through V5.2.10. Live quality/value and production activation remain unaccepted: the user explicitly continues pausing real-model verification. See [runbook](runbook.md), [execution evidence](execution-log.md), [acceptance](acceptance.md) and [completion report](completion-report.md).
 
 ## Goal
 

@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {ArrowUpRight,CircleAlert,ShieldCheck} from 'lucide-react';
 import {Button} from './ui/button';
+import {ToggleGroup,ToggleGroupItem} from './ui/toggle-group';
 import './execution-ui.css';
 
 const states={passed:'已检查',limited:'存在限制',not_applicable:'不适用',failed:'未通过'};
@@ -19,7 +20,7 @@ export default function ExecutionReview({items,onSource}){
    <div><strong>{attention?`${attention} 项需要关注`:'本次复核未标记限制项'}</strong><p>{attention?'限制与未通过事项优先展示，点击证据可回查原始资料。':'可逐项查看适用范围、复核说明与引用资料。'}</p></div>
   </div>
   <p className="execution-review-disclaimer">以下为模型基于本次证据的复核，不代表人工审计通过。</p>
-  <div className="execution-review-filters" role="group" aria-label="筛选执行复核">{filters.map(([id,label])=><Button key={id} type="button" variant="ghost" aria-pressed={filter===id} onClick={()=>setFilter(id)}>{label} <span className="execution-filter-count">{id==='all'?items.length:counts[id]||0}</span></Button>)}</div>
+  <ToggleGroup type="single" value={filter} onValueChange={value=>{if(value)setFilter(value);}} className="execution-review-filters" aria-label="筛选执行复核">{filters.map(([id,label])=><ToggleGroupItem key={id} value={id}>{label} <span className="execution-filter-count">{id==='all'?items.length:counts[id]||0}</span></ToggleGroupItem>)}</ToggleGroup>
   {visible.length>0?<div className="execution-review-items">{visible.map(item=><article key={item.id} className="execution-review-item" data-status={item.status}>
    <div><h4>{item.title}</h4><span className="execution-review-state">{states[item.status]||'未记录'}</span></div><p>{item.reason}</p>
    {item.sourceIds?.length>0&&<nav className="execution-review-sources" aria-label={item.title+'的证据'}>{item.sourceIds.map(id=><Button key={id} type="button" variant="link" onClick={()=>onSource(id)} aria-label={'查看执行复核证据 '+id}>查看证据 {id}<ArrowUpRight size={13}/></Button>)}</nav>}

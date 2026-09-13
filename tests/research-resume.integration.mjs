@@ -4,15 +4,18 @@ import {randomUUID} from 'node:crypto';
 import {spawn} from 'node:child_process';
 import {MongoClient} from 'mongodb';
 import {createStorage} from '../server/storage.mjs';
+import {createPipelineJobModelState} from '../server/model-state.mjs';
+import {pipelineApiEnv} from './fixtures/pipeline-api-env.mjs';
 test('real process exit preserves private checkpoint in MongoDB and next process resumes to reviewed completion',{timeout:30000},async()=>{
  const uri=process.env.MONGODB_URI||'mongodb://127.0.0.1:27017',database='zhiheng_resume_test_'+randomUUID().replaceAll('-','');
+ const modelEnv=pipelineApiEnv();
  const storage=await createStorage({uri,database});
  const run=phase=>new Promise((resolve,reject)=>{
-  const child=spawn(process.execPath,['tests/fixtures/resume-runtime.mjs'],{cwd:new URL('../',import.meta.url),env:{...process.env,MONGODB_URI:uri,MONGODB_DATABASE:database,RESUME_TEST_PHASE:phase},stdio:['ignore','pipe','pipe']});
+  const child=spawn(process.execPath,['tests/fixtures/resume-runtime.mjs'],{cwd:new URL('../',import.meta.url),env:pipelineApiEnv({MONGODB_URI:uri,MONGODB_DATABASE:database,RESUME_TEST_PHASE:phase}),stdio:['ignore','pipe','pipe']});
   let output='';child.stdout.on('data',b=>output+=b);child.stderr.on('data',b=>output+=b);child.on('error',reject);child.on('exit',code=>resolve({code,output}));
  });
  try{
-  await storage.saveJob({id:'resume-process',createdAt:new Date().toISOString(),status:'queued',mode:'B',input:{question:'合成进程恢复验证',mode:'B',depth:'Standard',historyYears:5,securities:[{market:'CN',symbol:'600519'}],sources:[]},events:[]});
+  await storage.saveJob({id:'resume-process',createdAt:new Date().toISOString(),status:'queued',mode:'B',modelState:createPipelineJobModelState(modelEnv),input:{question:'合成进程恢复验证',mode:'B',depth:'Standard',historyYears:5,securities:[{market:'CN',symbol:'600519'}],sources:[]},events:[]});
   const first=await run('first');assert.equal(first.code,73,first.output);
   const saved=await storage.getJob('resume-process');assert.equal(saved.status,'running');assert.equal(saved.checkpoint.toolRecords.length,1);
   assert.equal(saved.knowledgeUsage.snapshotId,saved.plan.knowledgeSnapshot.id);

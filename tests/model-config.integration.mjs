@@ -11,7 +11,7 @@ import {createServer} from 'node:net';
 import {MongoClient} from 'mongodb';
 import {createStorage} from '../server/storage.mjs';
 import {createJobModelState,createPolicyJobModelState} from '../server/model-state.mjs';
-import {previewModelConfig} from '../scripts/model-config.mjs';
+import {buildLegacyModelConfig} from '../scripts/model-config.mjs';
 
 for(const [label,createState] of [['legacy',createJobModelState],['policy',createPolicyJobModelState]])test(`${label} original pin resumes through file configuration across real process restart`,{timeout:30000},async()=>{
  const uri=process.env.MODEL_CONFIG_TEST_MONGODB_URI;
@@ -19,7 +19,7 @@ for(const [label,createState] of [['legacy',createJobModelState],['policy',creat
  const directory=fs.mkdtempSync(path.join(os.tmpdir(),'model-config-resume-'));
  const env={...process.env};for(const key of Object.keys(env))if(/^(LLM_|MODEL_|FEATURE_VISION_|VISION_ACCEPTANCE)/.test(key))delete env[key];
  Object.assign(env,{LLM_MODEL:'deepseek-flash',LLM_API_KEY:'synthetic-base',LLM_MAIN_API_KEY:'synthetic-main',LLM_VISION_INPUT:'off',MODEL_ROUTING_MODE:'legacy',FEATURE_VISION_ROUTING:'false',MODEL_TELEMETRY_ENABLED:'false'});
- const file=path.join(directory,'models.json');fs.writeFileSync(file,JSON.stringify(previewModelConfig(env)));
+ const file=path.join(directory,'models.json');fs.writeFileSync(file,JSON.stringify(buildLegacyModelConfig(env)));
  const database='zhiheng_resume_test_'+randomUUID().replaceAll('-','');
  const storage=await createStorage({uri,database});
  const run=(phase,extra={})=>new Promise((resolve,reject)=>{
@@ -45,7 +45,7 @@ test('File-only API readiness and invalid-file closure keep health and history a
  const uri=process.env.MODEL_CONFIG_TEST_MONGODB_URI;assert.match(uri??'',/^mongodb:\/\/127\.0\.0\.1:\d+$/);
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'model-config-api-'));
  const source={LLM_MODEL:'fixture-only',LLM_API_KEY:'fixture-only',LLM_VISION_INPUT:'off'};
- const file=path.join(dir,'models.json');fs.writeFileSync(file,JSON.stringify(previewModelConfig(source)));
+ const file=path.join(dir,'models.json');fs.writeFileSync(file,JSON.stringify(buildLegacyModelConfig(source)));
  for(const valid of [true,false]){
   const database='zhiheng_model_config_api_'+randomUUID().replaceAll('-',''),reservation=createServer();reservation.listen(0,'127.0.0.1');await once(reservation,'listening');const port=reservation.address().port;await new Promise(resolve=>reservation.close(resolve));
   const env={...process.env};for(const key of Object.keys(env))if(/^(LLM_|MODEL_|FEATURE_VISION_|VISION_ACCEPTANCE)/.test(key))delete env[key];

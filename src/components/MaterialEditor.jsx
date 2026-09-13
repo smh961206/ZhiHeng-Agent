@@ -3,6 +3,7 @@ import {Check} from 'lucide-react';
 import {Button} from './ui/button';
 import {Input} from './ui/input';
 import {Textarea} from './ui/textarea';
+import {Label} from './ui/label';
 import {materialLimits} from '../../shared/reference-materials.mjs';
 
 export default function MaterialEditor({item,draft,onDraftChange,remaining,disabled,onSave,onCancel}){
@@ -15,9 +16,9 @@ export default function MaterialEditor({item,draft,onDraftChange,remaining,disab
  return <div className="material-inline-editor" role="group" aria-label={`编辑资料：${item.title}`} onKeyDown={event=>{
   if(event.key==='Enter'&&(event.ctrlKey||event.metaKey)&&!event.nativeEvent.isComposing){event.preventDefault();event.stopPropagation();save();}
  }}>
-  <label htmlFor={`${id}-title`}>资料名称</label>
+  <Label htmlFor={`${id}-title`}>资料名称</Label>
   <Input autoFocus id={`${id}-title`} value={title} maxLength={200} disabled={disabled} onChange={event=>{onDraftChange({...draft,title:event.target.value});setError('');}}/>
-  <label htmlFor={`${id}-text`}>资料正文</label>
+  <Label htmlFor={`${id}-text`}>资料正文</Label>
   {item.visualAttachment&&<p className="material-reading-note">仅修改名称会保留原页关联；修改正文后将作为你的核对笔记使用。如需重新读取原页，请重新导入文件。</p>}
   <Textarea id={`${id}-text`} value={text} disabled={disabled} aria-invalid={over||undefined} aria-describedby={`${id}-count`} onChange={event=>{onDraftChange({...draft,text:event.target.value});setError('');}}/>
   <div className="material-edit-count" id={`${id}-count`}><span className={over?'materials-over-limit':''}>{text.trim().length.toLocaleString()} / {limit.toLocaleString()} 字</span><span>保存后用于本次研究</span></div>

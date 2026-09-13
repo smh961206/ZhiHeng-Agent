@@ -15,7 +15,7 @@ const manifest=()=>JSON.parse(read('MANIFEST.json'));
 test('Public deployment templates agree on model routing and never ship credentials or enabled promotion',()=>{
  const basic=[parseEnv(read('.env.example')),parseEnv(read('.env.production.example'))];
  for(const env of basic){
-  assert.equal(env.MODEL_ROUTING_MODE,'legacy');
+  assert.equal(Object.hasOwn(env,'MODEL_ROUTING_MODE'),false);
   assert.equal(env.MODEL_TELEMETRY_ENABLED,'true');
  }
  for(const file of ['.env.example','.env.production.example']){
@@ -28,15 +28,15 @@ test('Public deployment templates agree on model routing and never ship credenti
  assert.equal(production.MODEL_CONFIG_FILE,'./config/models.production.json');
  for(const env of [local,production]){
   for(const key of modelDefinitionKeys)assert.equal(Object.hasOwn(env,key),false,key+' must live in JSON');
-  for(const connection of Object.values(config.connections))assert.equal(env[connection.apiKeyEnv],'');
+  for(const model of Object.values(config.models))assert.equal(env[model.apiKeyEnv],'');
  }
- const keys=['MODEL_ROUTING_MODE','FEATURE_VISION_ROUTING','VISION_ACCEPTANCE_FILE','LLM_TIMEOUT_MS','LLM_MAX_DURATION_MS','MODEL_CHAMPION_ENABLED','MODEL_AB_ENABLED','MODEL_CHAMPION_REGISTRY_FILE','MODEL_CHAMPION_POLICY_VERSION','MODEL_CHAMPION_INVALIDATION_FILE'];
+ const keys=['LLM_TIMEOUT_MS','LLM_MAX_DURATION_MS','MODEL_TELEMETRY_ENABLED','LLM_REVIEW_FORMAT'];
  for(const key of keys){assert.ok(Object.hasOwn(local,key),key);assert.equal(production[key],local[key],key);}
  for(const env of [local,production]){
-  assert.equal(env.MODEL_ROUTING_MODE,'legacy');assert.equal(env.FEATURE_VISION_ROUTING,'false');
-  assert.equal(env.MODEL_CHAMPION_ENABLED,'false');assert.equal(env.MODEL_AB_ENABLED,'false');assert.equal(env.MODEL_CHAMPION_POLICY_VERSION,'');
+  for(const removed of ['MODEL_ROUTING_MODE','FEATURE_VISION_ROUTING','VISION_ACCEPTANCE_FILE','MODEL_CHAMPION_ENABLED','MODEL_AB_ENABLED','MODEL_CHAMPION_REGISTRY_FILE','MODEL_CHAMPION_POLICY_VERSION','MODEL_CHAMPION_INVALIDATION_FILE','FLAGSHIP_REVIEW_ACCEPTANCE_FILE','JUDGE_ACCEPTANCE_FILE'])assert.equal(Object.hasOwn(env,removed),false,removed);
   for(const key of Object.keys(env).filter(key=>key.endsWith('_API_KEY')))assert.equal(env[key],'',key+' must be an empty placeholder');
  }
+ assert.equal(config.schemaVersion,2);assert.deepEqual(Object.keys(config.pipeline),['input','vision','researcher','writer','evidenceVerifier','auditor','criticalReviewer','judge']);
 });
 
 test('Harness active release and H0 sequence navigate to real specifications',()=>{
@@ -47,6 +47,28 @@ test('Harness active release and H0 sequence navigate to real specifications',()
  const index=read('docs/releases/H0/DETAILED_INDEX.md');
  assert.deepEqual([...index.matchAll(/\[H0\.(\d) /g)].map(m=>m[1]),['0','1','2','3']);
  for(const [,target] of index.matchAll(/\]\(([^)]+)\)/g))assert.ok(exists(path.join('docs/releases/H0',target)),target);
+});
+
+test('Unified release gate includes current V5.1, V5.2 and M1.0 owners',()=>{
+ const command=JSON.parse(read('package.json')).scripts['test:release'],tokens=command.split(/\s+/);
+ const covered=owner=>tokens.some(token=>new RegExp('^'+token.replace(/[.+?^${}()|[\]\\]/g,'\\$&').replaceAll('*','.*')+'$').test(owner));
+ for(const owner of [
+  'tests/model-pricing.test.mjs',
+  'tests/research-budget.test.mjs',
+  'tests/model-flagship.test.mjs',
+  'tests/judge-contract.test.mjs',
+  'tests/model-config.test.mjs',
+  'tests/model-pipeline.test.mjs',
+ ])assert.equal(covered(owner),true,owner);
+});
+
+test('M1.0 release records are included in the packaged manifest',()=>{
+ const paths=new Set(manifest().files.map(file=>file.path));
+ for(const name of ['README.md','completion-report.md','frontend-completion-report.md','migration.md','rollback.md']){
+  const file='docs/releases/M1.0/'+name;
+  assert.ok(exists(file),file);
+  assert.ok(paths.has(file),file+' must be packaged');
+ }
 });
 
 test('Harness packaged markdown relative links resolve without requiring future runtime files',()=>{

@@ -2,15 +2,16 @@ import assert from 'node:assert/strict';
 import {platformVersion} from '../src/config/platform-release.mjs';
 
 export function registerPlatformV50Scenarios({test,makeJob,detail,openProcess,textIncludes,noOverflow,screenshot}){
- for(const width of [320,1440])for(const state of ['legacy','champion','missing']){
-  const selection=state==='legacy'?{mode:'legacy',analysisModel:'configured-analysis-'.repeat(8),visionModel:'configured-vision',candidatesEnabled:false}:state==='champion'?{mode:'champion',analysisModel:null,visionModel:'approved-vision',candidatesEnabled:true}:undefined;
+ for(const width of [320,1440])for(const state of ['pipeline','historical','missing']){
+  const selection=state==='pipeline'?{mode:'pipeline',analysisModel:'configured-researcher',visionModel:'configured-vision',stageModels:{input:'configured-input',writer:'configured-writer',auditor:'configured-auditor',criticalReviewer:null,judge:null}}:state==='historical'?{mode:'champion',analysisModel:null,visionModel:'saved-vision'}:undefined;
   test('platform-v50-model-settings-'+state+'-'+width,{viewport:{width,height:1000},configOverrides:{modelSelection:selection}},async({page,requests})=>{
    await page.goto('/');await page.getByRole('button',{name:'平台与模型说明',exact:true}).click();
    const panel=page.getByRole('dialog',{name:'知衡 · V'+platformVersion,exact:true}),settings=panel.getByRole('region',{name:'当前模型设置'});
-   await textIncludes(settings,state==='legacy'?'候选未启用':state==='champion'?'已采用验收策略':'状态待确认');
-   await textIncludes(settings,state==='legacy'?'固定模型':state==='champion'?'按任务选择，见研究记录':'未确认');
-   if(state==='missing')assert.doesNotMatch(await settings.innerText(),/候选未启用|固定模型|fixture-only/);
-   assert.doesNotMatch(await settings.innerText(),/REGISTRY|API_KEY|CHALLENGER/);
+   await textIncludes(settings,state==='pipeline'?'环节模型已就绪':state==='historical'?'仅供历史任务兼容':'状态待确认');
+   await textIncludes(settings,state==='pipeline'?'按研究环节配置':state==='historical'?'兼容历史模型配置':'未确认');
+   if(state==='pipeline'){await textIncludes(settings,'configured-input');await textIncludes(settings,'未启用');}
+   if(state==='missing')assert.doesNotMatch(await settings.innerText(),/fixture-only|configured-/);
+   assert.doesNotMatch(await settings.innerText(),/REGISTRY|API_KEY|CHALLENGER|Champion|A\/B|验收策略|候选/);
    await noOverflow(page,'model settings '+state+' '+width);await screenshot(page,'v50-settings-'+state+'-'+width,'.platform-status-panel');
    assert.equal(requests('POST','/api/jobs').length,0);
   });
@@ -18,7 +19,7 @@ export function registerPlatformV50Scenarios({test,makeJob,detail,openProcess,te
  async function qualityVisible(page){
   await page.waitForFunction(()=>document.activeElement?.id==='method-quality');
   const section=page.locator('#method-quality');
-  await textIncludes(section,'测试通过不等于已用于你的研究');
+  await textIncludes(section,'配置成功不表示结论已经核实');
   assert.equal(await section.locator('details,[data-slot="collapsible"]').count(),0);
   // History restoration and sticky layout may settle after focus is restored.
   // Measure both elements in one frame before keeping the exact geometry checks.
@@ -35,9 +36,9 @@ export function registerPlatformV50Scenarios({test,makeJob,detail,openProcess,te
  for(const width of [320,1440,2560]){
   test('platform-v50-quality-navigation-'+width,{viewport:{width,height:1000}},async({page,requests})=>{
    await page.goto('/');await textIncludes(page.locator('.fw-release-note'),'V'+platformVersion);
-   await textIncludes(page.locator('.fw-release-note'),'模型评估 · 质量优先');
+   await textIncludes(page.locator('.fw-release-note'),'环节分工 · 证据优先');
    await screenshot(page,'v50-home-'+width);
-   await page.getByRole('link',{name:'模型如何评估与使用',exact:true}).click();
+   await page.getByRole('link',{name:'模型怎样分工与记录',exact:true}).click();
    await qualityVisible(page);await noOverflow(page,'quality handbook '+width);
    await screenshot(page,'v50-quality-'+width,'#method-quality');
    await page.getByRole('link',{name:'查看报告核对指南',exact:true}).click();
@@ -52,10 +53,10 @@ export function registerPlatformV50Scenarios({test,makeJob,detail,openProcess,te
    await question.fill('核对公司的盈利质量，保留我的研究问题');
    await page.getByRole('button',{name:'平台与模型说明',exact:true}).click();
    const panel=page.getByRole('dialog',{name:'知衡 · V'+platformVersion,exact:true});
-   await textIncludes(panel,'质量优先');await textIncludes(panel,'完成验收后才可启用');
-   assert.doesNotMatch(await panel.innerText(),/已通过质量验收|当前已启用|实验组|API|Champion/);
+   await textIncludes(panel,'按环节分工');await textIncludes(panel,'配置模型不代表事实已经核验');
+   assert.doesNotMatch(await panel.innerText(),/质量验收|实验组|API|Champion|Challenger|A\/B/);
    await screenshot(page,'v50-platform-'+width);
-   const [help]=await Promise.all([page.waitForEvent('popup'),panel.getByRole('link',{name:'了解模型评估',exact:true}).click()]);
+   const [help]=await Promise.all([page.waitForEvent('popup'),panel.getByRole('link',{name:'了解研究质量',exact:true}).click()]);
    await qualityVisible(help);await help.close();
    assert.equal(new URL(page.url()).pathname,'/workbench');
    assert.equal(await question.inputValue(),'核对公司的盈利质量，保留我的研究问题');

@@ -3,8 +3,9 @@ import path from 'node:path';
 import {ModelGatewayError} from './model-gateway-result.mjs';
 
 // Configuration only: no transport, approvals, persisted job state or secret serialization.
-export const modelRoles=Object.freeze({defaultResearch:'legacy-analysis',router:'legacy-router',vision:'legacy-vision',policyMain:'main',policyPro:'pro',visionChallenger:'vision-challenger',mainChallenger:'main-challenger'});
-const prefixes={defaultResearch:'LLM',router:'LLM_ROUTER',vision:'LLM_VISION',policyMain:'LLM_MAIN',policyPro:'LLM_PRO',visionChallenger:'LLM_VISION_CHALLENGER',mainChallenger:'LLM_MAIN_CHALLENGER'};
+export const modelRoles=Object.freeze({defaultResearch:'legacy-analysis',router:'legacy-router',vision:'legacy-vision',policyMain:'main',policyPro:'pro',visionChallenger:'vision-challenger',mainChallenger:'main-challenger',flagshipReview:'flagship-review',flagshipJudge:'flagship-judge'});
+export const modelPipelineStages=Object.freeze({input:'input',vision:'vision',researcher:'researcher',writer:'writer',evidenceVerifier:'evidence-verifier',auditor:'auditor',criticalReviewer:'critical-review',judge:'judge'});
+const prefixes={defaultResearch:'LLM',router:'LLM_ROUTER',vision:'LLM_VISION',policyMain:'LLM_MAIN',policyPro:'LLM_PRO',visionChallenger:'LLM_VISION_CHALLENGER',mainChallenger:'LLM_MAIN_CHALLENGER',flagshipReview:'LLM_FLAGSHIP_REVIEW',flagshipJudge:'LLM_FLAGSHIP_JUDGE'};
 const caps=['textInput','imageInput','streaming','toolCalling','jsonObject','jsonSchema','reasoningControl'];
 // Preserve the existing legacy declaration; never infer arbitrary model capability.
 export function legacyVisionImageInput(model,inputMode){return inputMode!=='off'&&(model==='deepseek-flash'||inputMode==='images');}
@@ -28,6 +29,25 @@ export function parseModelConfigJSON(source){
 }
 export function validateModelConfig(input){
  try{
+  if(input?.schemaVersion===2){
+   exact(input,['schemaVersion','models','pipeline']);
+   if(!record(input.models)||!record(input.pipeline)||Object.keys(input.models).length<1||Object.keys(input.models).length>32)fail();
+   if(Object.keys(input.pipeline).length!==Object.keys(modelPipelineStages).length||Object.keys(modelPipelineStages).some(stage=>!Object.hasOwn(input.pipeline,stage)))fail();
+   for(const [id,model] of Object.entries(input.models)){
+    if(!/^[a-z][a-z0-9-]{0,51}$/.test(id))fail();
+    exact(model,['model','baseUrl','apiKeyEnv']);
+    if(!text(model.model)||!text(model.baseUrl)||!/^[A-Z][A-Z0-9_]*$/.test(model.apiKeyEnv)||model.apiKeyEnv.startsWith('VITE_'))fail();
+    const url=new URL(model.baseUrl);if(url.username||url.password||url.search||url.hash||url.protocol!=='https:'&&!(url.protocol==='http:'&&['localhost','127.0.0.1','[::1]'].includes(url.hostname)))fail();
+   }
+   const used=new Set();
+   for(const [stage,value] of Object.entries(input.pipeline)){
+    const pool=typeof value==='string'?[value]:value;
+    if(!Array.isArray(pool)||Object.getPrototypeOf(pool)!==Array.prototype||pool.length>(stage==='input'||stage==='vision'?1:8)||(!['criticalReviewer','judge'].includes(stage)&&pool.length===0)||new Set(pool).size!==pool.length)fail();
+    for(const id of pool)if(typeof id!=='string'||!Object.hasOwn(input.models,id))fail();else used.add(id);
+   }
+   if(used.size!==Object.keys(input.models).length)fail();
+   return freeze(input);
+  }
   exact(input,['schemaVersion','connections','profiles','roles']);if(input.schemaVersion!==1)fail();
   for(const field of ['connections','profiles','roles'])if(!record(input[field])||Object.keys(input[field]).length>32)fail();
   for(const [id,c] of Object.entries(input.connections)){
@@ -60,15 +80,16 @@ function source(env){
  }
  const config=files.get(file);if(!config)fail();return config;
 }
-const definitionKeys=Object.entries(prefixes).flatMap(([role,prefix])=>role==='router'?[prefix+'_MODEL']:[prefix+'_MODEL',prefix+'_BASE_URL',...(role.includes('Challenger')?[prefix+'_PROVIDER',prefix+'_THINKING',prefix+(role==='mainChallenger'?'_CAPABILITIES':'_INPUT')]:role==='vision'?[prefix+'_INPUT']:[])]);
+const definitionKeys=Object.entries(prefixes).flatMap(([role,prefix])=>role==='router'?[prefix+'_MODEL']:[prefix+'_MODEL',prefix+'_BASE_URL',...(role.includes('Challenger')||role.startsWith('flagship')?[prefix+'_PROVIDER',prefix+'_THINKING',prefix+(role==='visionChallenger'?'_INPUT':'_CAPABILITIES')]:role==='vision'?[prefix+'_INPUT']:[])]);
 export const modelDefinitionKeys=Object.freeze(definitionKeys);
 function projection(config,env){
+ if(config.schemaVersion===2)return {};
  const output={};
  for(const [role,id] of Object.entries(config.roles)){
   const p=config.profiles[id],c=config.connections[p.connectionRef],prefix=prefixes[role];output[prefix+'_MODEL']=p.model;
   if(role!=='router'){output[prefix+'_BASE_URL']=c.baseUrl;output[prefix+'_API_KEY']=env[c.apiKeyEnv]||'';}
   if(role==='vision')output.LLM_VISION_INPUT=p.capabilities.imageInput===true?'images':'off';
-  if(role.includes('Challenger')){output[prefix+'_PROVIDER']=p.provider??'';output[prefix+'_THINKING']=p.adapterOptions?.thinking??'omit';
+  if(role.includes('Challenger')||role.startsWith('flagship')){output[prefix+'_PROVIDER']=p.provider??'';output[prefix+'_THINKING']=p.adapterOptions?.thinking??'omit';
    if(role==='visionChallenger')output[prefix+'_INPUT']=p.capabilities.imageInput===true?'images':'off';
    else output[prefix+'_CAPABILITIES']=JSON.stringify(p.capabilities);
   }
@@ -84,6 +105,7 @@ function equivalent(key,a,b,env){
 export function modelConfig(env=process.env){
  env=env[secretSource]??env;
  const config=source(env);if(!config)return null;const projected=projection(config,env);
+ if(config.schemaVersion===2){for(const key of definitionKeys)if(env[key])fail(key);return config;}
  for(const key of definitionKeys)if(env[key]&&!equivalent(key,env[key],projected[key],{...projected,...env}))fail(key);
  return config;
 }
@@ -91,12 +113,14 @@ export function modelConfig(env=process.env){
 export function modelEnvironment(env=process.env){
  if(env[secretSource])return env;
  const config=modelConfig(env);if(!config)return env;
+ if(config.schemaVersion===2)return {...env,[secretSource]:Object.freeze({...env})};
  const effective={...env};for(const key of definitionKeys)delete effective[key];
  for(const [role,prefix] of Object.entries(prefixes))if(role!=='router')delete effective[prefix+'_API_KEY'];
  return {...effective,...projection(config,env),[secretSource]:Object.freeze({...env})};
 }
 export function configuredRoleMetadata(env,role,defaults){
  const config=modelConfig(env);if(!config)return defaults;
+ if(config.schemaVersion!==1)fail();
  const p=config.profiles[config.roles[role]];if(!p)fail();
  if((defaults.schemaVersion===1||defaults.schemaVersion===2)&&p.adapterOptions!==null)fail();
  return {...defaults,model:p.model,provider:p.provider,capabilities:p.capabilities,...(defaults.schemaVersion>=3?{adapterOptions:p.adapterOptions}:{} )};
@@ -104,6 +128,10 @@ export function configuredRoleMetadata(env,role,defaults){
 export function configuredConnection(profile,env){
  env=env[secretSource]??env;
  const config=modelConfig(env);if(!config)return null;
+ if(config.schemaVersion===2){
+  const c=config.models[profile.connectionRef];if(!c)fail();
+  return {base:c.baseUrl,key:env[c.apiKeyEnv]};
+ }
  const role=Object.keys(modelRoles).find(role=>modelRoles[role]===profile.id);const p=config.profiles[config.roles[role]];if(!p)fail();
  const c=config.connections[p.connectionRef];
  return {base:c.baseUrl,key:env[c.apiKeyEnv]};

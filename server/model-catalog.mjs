@@ -1,5 +1,6 @@
-import {modelEnvironment,configuredRoleMetadata,legacyVisionImageInput} from './model-config.mjs';
+import {modelEnvironment,modelConfig,modelPipelineStages,configuredRoleMetadata,legacyVisionImageInput} from './model-config.mjs';
 import {modelRouting} from './model-routing.mjs';
+import {createModelPricing} from './model-pricing.mjs';
 
 export {legacyVisionImageInput} from './model-config.mjs';
 
@@ -27,7 +28,7 @@ export {legacyVisionImageInput} from './model-config.mjs';
 
 const fields=['schemaVersion','id','source','model','provider','protocol','connectionRef','tier','purposes','capabilities','contextWindow','maxOutputTokens','pricing'];
 const capabilityFields=['textInput','imageInput','streaming','toolCalling','jsonObject','jsonSchema','reasoningControl'];
-const purposes=['research','review','followup','router','vision'];
+const purposes=['research','review','followup','router','input','vision','researcher','writer','evidence-verifier','auditor','critical-review','judge'];
 const invalid=()=>{throw new TypeError('Invalid ModelProfile metadata');};
 // Accept data-only records: spreading accessors after validation can read a
 // different value, and non-enumerable fields silently disappear from snapshots.
@@ -59,34 +60,79 @@ const tokenLimit=value=>value===null||Number.isSafeInteger(value)&&value>0;
 /** Validate, copy and deeply freeze a profile. Never attach an env or a secret. */
 export function createModelProfile(input){
  const version=Object.getOwnPropertyDescriptor(input??{},'schemaVersion')?.value;
- input=record(input,version===3||version===4?[...fields,'adapterOptions']:fields);
+ input=record(input,version===5?[...fields,'adapterOptions','allow']:version===3||version===4?[...fields,'adapterOptions']:fields);
  const legacy=input.schemaVersion===1&&input.source==='legacy-env'&&input.tier==='legacy'&&['legacy-analysis','legacy-vision'].includes(input.connectionRef);
  const policy=input.schemaVersion===2&&input.source==='policy-config'&&['MAIN','PRO'].includes(input.tier)&&input.connectionRef===input.tier.toLowerCase()&&['zai','deepseek'].includes(input.provider);
  const vision=input.schemaVersion===3&&input.source==='vision-config'&&input.tier==='VISION'&&input.connectionRef==='vision-challenger'&&input.id==='vision-challenger';
  const challenger=input.schemaVersion===4&&input.source==='challenger-config'&&input.tier==='MAIN'&&input.connectionRef==='main-challenger'&&input.id==='main-challenger';
- if(!(legacy||policy||vision||challenger)||!text(input.id)||!text(input.model)||
+ const flagship=input.schemaVersion===5&&input.source==='flagship-config'&&input.tier==='FLAGSHIP'&&['flagship-review','flagship-judge'].includes(input.id)&&input.connectionRef===input.id;
+ const pipeline=input.schemaVersion===6&&input.source==='pipeline-config'&&input.tier==='configured'&&input.id===`configured-${input.connectionRef}`&&/^[a-z][a-z0-9-]{0,51}$/.test(input.connectionRef);
+ if(!(legacy||policy||vision||challenger||flagship||pipeline)||!text(input.id)||!text(input.model)||
   !(input.provider===null||text(input.provider))||input.protocol!=='openai-chat-completions'||
   policy&&(input.tier==='MAIN'&&(input.model!=='glm-5.3-flash'||input.provider!=='zai')||input.tier==='PRO'&&(input.model!=='deepseek-flash'||input.provider!=='deepseek')))invalid();
  input.purposes=purposeList(input.purposes);
- if(vision||challenger){
+ if(!flagship&&!pipeline&&input.purposes.some(p=>['critical-review','judge'].includes(p)))invalid();
+ if(flagship){
+  const purpose=input.id==='flagship-review'?'critical-review':'judge';
+  if(input.purposes.length!==1||input.purposes[0]!==purpose)invalid();
+  input.allow=record(input.allow,['criticalReview','judge']);
+  if(Object.values(input.allow).some(v=>typeof v!=='boolean')||input.allow[purpose==='judge'?'criticalReview':'judge']!==false)invalid();
+  input.allow=Object.freeze({...input.allow});
+ }
+ if(vision||challenger||flagship){
   if(vision&&(input.purposes.length!==1||input.purposes[0]!=='vision')||challenger&&input.purposes.some(p=>!['research','review','followup'].includes(p)))invalid();
   input.adapterOptions=record(input.adapterOptions,['thinking']);
-  if(!(challenger?['omit','disabled','enabled']:['omit','disabled']).includes(input.adapterOptions.thinking))invalid();
+  if(!(challenger||flagship?['omit','disabled','enabled']:['omit','disabled']).includes(input.adapterOptions.thinking))invalid();
   input.adapterOptions=Object.freeze({...input.adapterOptions});
  }
  input.capabilities=record(input.capabilities,capabilityFields);
  if(capabilityFields.some(key=>input.capabilities[key]!==null&&typeof input.capabilities[key]!=='boolean'))invalid();
- if(challenger&&(input.capabilities.imageInput!==false||
+ if(flagship&&(input.capabilities.textInput!==true||input.capabilities.toolCalling!==false||input.capabilities.streaming!==false))invalid();
+ if((challenger||flagship)&&(input.capabilities.imageInput!==false||
   (input.adapterOptions.thinking==='enabled'?input.capabilities.reasoningControl!==true:input.capabilities.reasoningControl===true)))invalid();
  if(!tokenLimit(input.contextWindow)||!tokenLimit(input.maxOutputTokens))invalid();
  let pricing=null;
  if(input.pricing!==null){
-  input.pricing=record(input.pricing,['currency','unit','input','output','cacheRead']);
-  if(typeof input.pricing.currency!=='string'||!/^[A-Z]{3}$/.test(input.pricing.currency)||input.pricing.unit!=='per-million-tokens'||
-   ['input','output','cacheRead'].some(key=>input.pricing[key]!==null&&!(typeof input.pricing[key]==='number'&&Number.isFinite(input.pricing[key])&&input.pricing[key]>=0)))invalid();
-  pricing=Object.freeze({...input.pricing});
+  try{pricing=createModelPricing(input.pricing);}catch{invalid();}
  }
  return Object.freeze({...input,purposes:Object.freeze([...input.purposes]),capabilities:Object.freeze({...input.capabilities}),pricing});
+}
+
+const pipelinePurpose=stage=>modelPipelineStages[stage];
+const configuredCapabilities=assigned=>Object.freeze({
+ textInput:true,
+ imageInput:assigned.includes('vision'),
+ streaming:assigned.some(stage=>['researcher','writer','evidenceVerifier','auditor'].includes(stage)),
+ toolCalling:assigned.some(stage=>['researcher','auditor'].includes(stage)),
+ jsonObject:assigned.some(stage=>['evidenceVerifier','auditor'].includes(stage))?true:null,
+ jsonSchema:assigned.some(stage=>['criticalReviewer','judge'].includes(stage))?true:null,
+ reasoningControl:null,
+});
+export const configuredProfileId=alias=>`configured-${alias}`;
+export function pipelineStageProfiles(stage,env=process.env){
+ const config=modelConfig(env);if(config?.schemaVersion!==2||!Object.hasOwn(modelPipelineStages,stage))return Object.freeze([]);
+ const value=config.pipeline[stage],pool=typeof value==='string'?[value]:value;
+ return Object.freeze(pool.map(configuredProfileId));
+}
+export function createPipelineModelCatalog(env=process.env){
+ const config=modelConfig(env);if(config?.schemaVersion!==2)invalid();
+ const profiles=Object.entries(config.models).map(([alias,definition])=>{
+  const assigned=Object.keys(modelPipelineStages).filter(stage=>{const value=config.pipeline[stage];return (typeof value==='string'?[value]:value).includes(alias);});
+  return createModelProfile({schemaVersion:6,id:configuredProfileId(alias),source:'pipeline-config',model:definition.model,provider:null,protocol:'openai-chat-completions',connectionRef:alias,tier:'configured',purposes:assigned.map(pipelinePurpose),capabilities:configuredCapabilities(assigned),contextWindow:null,maxOutputTokens:null,pricing:null});
+ });
+ return Object.freeze({schemaVersion:6,profiles:Object.freeze(profiles)});
+}
+
+// Independent exceptional roles only; never included in default/research catalogs.
+export function createFlagshipModelCatalog(env=process.env){
+ env=modelEnvironment(env);
+ const profiles=[];
+ for(const [role,id,prefix,purpose] of [['flagshipReview','flagship-review','LLM_FLAGSHIP_REVIEW','critical-review'],['flagshipJudge','flagship-judge','LLM_FLAGSHIP_JUDGE','judge']]){
+  if(!env[prefix+'_MODEL'])continue;
+  let capabilities;try{capabilities=JSON.parse(env[prefix+'_CAPABILITIES']);}catch{invalid();}
+  profiles.push(createModelProfile(configuredRoleMetadata(env,role,{schemaVersion:5,source:'flagship-config',id,model:env[prefix+'_MODEL'],provider:env[prefix+'_PROVIDER']||null,protocol:'openai-chat-completions',connectionRef:id,tier:'FLAGSHIP',purposes:[purpose],capabilities,contextWindow:null,maxOutputTokens:null,pricing:null,adapterOptions:{thinking:env[prefix+'_THINKING']||'omit'},allow:{criticalReview:purpose==='critical-review'&&env.FEATURE_FLAGSHIP_REVIEW==='true',judge:purpose==='judge'&&env.FEATURE_JUDGE==='true'}})));
+ }
+ return Object.freeze({schemaVersion:5,profiles:Object.freeze(profiles)});
 }
 
 // Explicit operator-declared compatibility; never inferred from an opaque model name.

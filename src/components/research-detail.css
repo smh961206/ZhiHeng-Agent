@@ -56,6 +56,12 @@
 .research-detail .rd-overview-counts strong { font-size: 17px; font-weight: 600; color: var(--rd-ink); font-variant-numeric: tabular-nums; }
 .research-detail .rd-overview-failed { background: #fcf2ed; border-color: #eadbd2; }
 .research-detail .rd-overview-failed :is(.rd-overview-icon, .rd-overview-copy > strong) { color: #974c38; }
+.research-detail .rd-overview-failed { align-items: flex-start; border-color: #e8cfc1; background: linear-gradient(135deg,#fff8f3 0%,#fdf1eb 100%); box-shadow: inset 3px 0 #bd704c; }
+.research-detail .rd-overview-failed .rd-overview-icon { margin-top: 2px; border: 1px solid #eed8cc; background: #fffaf7; color: #a95738; }
+.research-detail .rd-progress-label { display: block; margin-bottom: 2px; color: #7a6b63; font-size: 11px; font-weight: 600; letter-spacing: .04em; }
+.research-detail .rd-failure-title { display: block; color: #813d2a; font-size: 14px; line-height: 1.7; }
+.research-detail .rd-failure-detail { display: block; max-width: 760px; margin-top: 3px; color: #74584d; font-size: 12px; line-height: 1.75; overflow-wrap: anywhere; }
+.research-detail .rd-overview-failed .rd-process-trigger { align-self: center; border-color: #dfcabc; background: #fffdfa; color: #65493e; }
 .research-detail .rd-overview-cancelled { background: #f0f3f1; }
 .research-detail .rd-connection { display: flex; gap: 9px; align-items: flex-start; padding: 10px 18px; border-inline: 1px solid var(--rd-line); background: #fff9eb; color: #78612f; font-size: 13px; overflow-wrap: anywhere; }
 .research-detail .rd-connection svg { margin-top: 3px; }
@@ -224,6 +230,8 @@
 .research-detail .rd-event::before { content: ''; position: absolute; top: 5px; left: -4px; width: 7px; height: 7px; border: 2px solid #a7bca6; border-radius: 50%; background: #f9fbf9; }
 .research-detail .rd-event:first-child::before { background: #4c815e; border-color: #4c815e; }
 .research-detail .rd-event.rd-event-issue::before { background: #b5744e; border-color: #b5744e; }
+.research-detail .rd-event.rd-event-issue { margin-bottom: 10px; padding: 11px 12px 13px 18px; border: 1px solid #ead9cf; border-left: 3px solid #c57b56; border-radius: 8px; background: #fff9f5; }
+.research-detail .rd-event.rd-event-issue::before { top: 17px; left: -6px; }
 .research-detail .rd-event-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; color: var(--rd-muted); font-size: 10px; font-variant-numeric: tabular-nums; }
 .research-detail .rd-event-issue .rd-event-meta > span:last-child { color: #9b5e39; }
 .research-detail .rd-event > p { margin: 6px 0 0; font-size: 12px; line-height: 1.9; color: #486044; overflow-wrap: anywhere; }

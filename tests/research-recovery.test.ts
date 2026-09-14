@@ -1,6 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {researchRecovery, researchDraftState} from '../src/domain/research-recovery.ts';
+import {researchRecovery, researchDraftState, researchFailurePresentation} from '../src/domain/research-recovery.ts';
+
+test('technical cutoff failures become actionable historical-record guidance',()=>{
+ const result=researchFailurePresentation("'researchCutoff'");
+ assert.match(result.title,/截止时间/);
+ assert.match(result.detail,/原创建时间/);
+ assert.doesNotMatch(result.detail,/researchCutoff/);
+ assert.doesNotMatch(result.trace,/["']researchCutoff["']/);
+ assert.match(researchFailurePresentation("'legacyField'").title,/兼容问题/);
+});
 
 test('recovery distinguishes research restart from saving either a report or a failed execution', () => {
   for (const status of ['failed', 'cancelled']) {

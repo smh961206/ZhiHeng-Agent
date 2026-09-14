@@ -3,6 +3,20 @@ import {deliveryProgress, isSavingResult, needsSaveRetry} from './research-deliv
 export const researchRetryNotice = '重试研究会优先从最近保存的执行进度继续，保留已采集资料、工具结果与执行记录。未完整返回的模型请求会重新发起；若尚无可恢复进度，则沿用原输入重新采集并研究。';
 export const saveRetryNotice = '重试保存仅保存当前服务暂存的原结果或执行记录，不重新采集资料、不调用模型，也不改变原研究结论。暂存内容仅保留在当前服务中，服务重启可能丢失。';
 
+export function researchFailurePresentation(value=''){
+ const message=typeof value==='string'?value.trim():'';
+ if(/^(?:KeyError\s*:\s*)?["']researchCutoff["']$/i.test(message))return {
+  title:'历史记录缺少明确的研究截止时间',
+  detail:'这条研究由旧版本创建。重试时会沿用原创建时间作为截止时间，避免使用创建之后的信息。',
+  trace:'旧版记录未单独保存研究截止时间；当前版本会在重试时沿用原创建时间。',
+ };
+ if(!message)return {title:'研究执行未完成',detail:'系统未保存具体原因，可查看执行轨迹，或修改输入后重新研究。',trace:'研究执行未完成，未保存具体原因。'};
+ if(/^(?:KeyError\s*:\s*)?["'][A-Za-z_][\w.-]*["']$/.test(message))return {
+  title:'研究记录存在兼容问题',detail:'当前版本无法直接读取旧记录中的一项必要信息。请重试；若仍未完成，可修改输入后新建研究。',trace:'旧版研究记录缺少当前流程需要的信息。',
+ };
+ return {title:'研究执行遇到问题',detail:message,trace:message};
+}
+
 export function researchContinuation(job = {}) {
   if (!job.resume?.available) return null;
   const phase = job.resume.phase === 'review' ? '复核' : '研究';

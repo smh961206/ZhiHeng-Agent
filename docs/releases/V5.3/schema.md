@@ -31,3 +31,7 @@ New jobs add private `promptState` version 1 with the release Inventory fingerpr
 New research context receipts write version 2 and add `requiredEvidenceBlocks` plus `requiredComplete`. The compiler rejects dispatch when a deterministic calculation references a missing or omitted evidence block. Version-1 receipts remain readable; missing fields mean unavailable, not complete.
 
 Vision document blocks may add `imageSha256` and `instructionVersion`. These fields support exact in-request page deduplication and do not change the block's unverified status.
+
+## Legacy cutoff provenance
+
+When a pre-Python task is explicitly retried or recovered and lacks `input.researchCutoff`, its input may add `researchCutoffSource: legacy-createdAt`. In that case `input.researchCutoff` and an absent `plan.researchCutoff` receive the task's immutable UTC-normalized `createdAt`. Absence of both a cutoff and valid creation time remains an error; the system does not infer a replacement from the current time or later evidence.

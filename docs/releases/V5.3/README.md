@@ -26,6 +26,8 @@ The user-authorized Prompt and context optimization route is implemented in the 
 
 The subsequent full UI regression, release gates, complete offline benchmark and isolated Docker deployment/rollback validation are recorded in the [Prompt governance full validation report](prompt-governance-full-validation-report.md). Every authorized gate passed; real-model validation was explicitly excluded.
 
+The legacy `researchCutoff` retry compatibility fix and redesigned failure presentation are recorded in the [research cutoff compatibility report](research-cutoff-compatibility-report.md). Legacy retries retain their original creation-time boundary and expose its provenance instead of refreshing the cutoff.
+
 ## Goal
 
 Evolve existing Knowledge/snapshot modules into a versioned, testable, scoped and eventually executable knowledge system without rewriting all content at once.

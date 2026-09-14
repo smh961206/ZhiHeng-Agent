@@ -86,6 +86,26 @@ def _job(status="running"):
 
 
 @pytest.mark.asyncio
+async def test_retry_materializes_legacy_cutoff_before_launching_current_pipeline():
+    job = _job(status="failed")
+    job["createdAt"] = "2026-09-09T16:33:14.409Z"
+    job["input"].pop("researchCutoff")
+    job["plan"].pop("researchCutoff")
+    storage = Storage([job])
+    service = ResearchService(storage, Gateway(), lambda *_: asyncio.sleep(0), pipeline=Pipeline())
+    launched = []
+    service._launch = launched.append  # type: ignore[method-assign]
+
+    retried = await service.retry(job["id"], 0)
+
+    assert retried["input"]["researchCutoff"] == "2026-09-09T16:33:14.409000Z"
+    assert retried["input"]["researchCutoffSource"] == "legacy-createdAt"
+    assert retried["plan"]["researchCutoff"] == retried["input"]["researchCutoff"]
+    assert storage.jobs[job["id"]]["input"]["researchCutoffSource"] == "legacy-createdAt"
+    assert launched == [retried]
+
+
+@pytest.mark.asyncio
 async def test_startup_resumes_review_checkpoint_without_replaying_researcher():
     job = _job()
     saved_pipeline = PipelineResult([], [], [], [], ["原检查点缺少证据"], [])

@@ -22,3 +22,7 @@ The synchronization is additive. Existing jobs without `budgetState` or `flagshi
 ## Prompt and context governance
 
 The migration is additive/new-write. All current Python model call sites now compile a registered Prompt plan and send body-free metadata to Model Gateway. New jobs pin `promptState`; historical jobs do not receive a synthetic pin. Historical model calls without `promptContext`, context receipts at version 1 and vision blocks without image digests remain valid and are not backfilled. Resume continues from saved checkpoints; it does not replay completed researcher/writer/independent stages to manufacture new metadata.
+
+## Legacy research cutoff compatibility
+
+The retired Node runtime used immutable `createdAt` as the task's point-in-time boundary but did not persist a separate `input.researchCutoff`. Current Python execution requires the explicit field. On retry or startup recovery only, a legacy record missing `researchCutoff` materializes that same `createdAt` value as `input.researchCutoff`, records `researchCutoffSource: legacy-createdAt`, and fills an absent plan cutoff. Existing explicit cutoffs are never overwritten, current time is never substituted, and records without a valid original creation time are rejected with guidance to start a new research task. This is lazy additive new-write behavior; no bulk backfill or destructive rewrite is performed.

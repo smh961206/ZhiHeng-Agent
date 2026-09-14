@@ -3,11 +3,41 @@ from __future__ import annotations
 import hashlib
 import json
 from copy import deepcopy
+from datetime import datetime, timezone
 from typing import Any
 
 from ..domain.evidence import evidence_blocks, usable_evidence
 
 EXECUTION_COMPATIBILITY = 1
+
+
+def restore_legacy_research_cutoff(job: dict[str, Any]) -> bool:
+    """Materialize the cutoff that the retired runtime represented as createdAt."""
+
+    input_data = job.get("input")
+    if not isinstance(input_data, dict):
+        raise ValueError("研究记录缺少原始输入，无法安全重试；请修改研究输入后新建研究")
+    if input_data.get("researchCutoff"):
+        return False
+    created_at = job.get("createdAt")
+    if not isinstance(created_at, str) or not created_at.strip():
+        raise ValueError("历史研究未保存截止时间，无法安全重试；请修改研究输入后新建研究")
+    try:
+        cutoff = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+    except ValueError as error:
+        raise ValueError("历史研究的创建时间无效，无法安全重试；请修改研究输入后新建研究") from error
+    if cutoff.tzinfo is None:
+        cutoff = cutoff.replace(tzinfo=timezone.utc)
+    cutoff = cutoff.astimezone(timezone.utc)
+    if cutoff > datetime.now(timezone.utc):
+        raise ValueError("历史研究的创建时间晚于当前时间，无法安全重试；请修改研究输入后新建研究")
+    value = cutoff.isoformat().replace("+00:00", "Z")
+    input_data["researchCutoff"] = value
+    input_data["researchCutoffSource"] = "legacy-createdAt"
+    plan = job.get("plan")
+    if isinstance(plan, dict):
+        plan.setdefault("researchCutoff", value)
+    return True
 
 
 def resume_scope(job: dict[str, Any]) -> str:

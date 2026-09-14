@@ -1,4 +1,27 @@
-from python_backend.application.recovery import calculation_recovery, make_checkpoint, research_resume
+from python_backend.application.recovery import calculation_recovery, make_checkpoint, research_resume, restore_legacy_research_cutoff
+
+
+def test_legacy_research_cutoff_uses_original_creation_time_without_refreshing_it():
+    job = {
+        "createdAt": "2026-09-09T16:33:14.409Z",
+        "input": {"question": "研究AAPL"},
+        "plan": {},
+    }
+    assert restore_legacy_research_cutoff(job) is True
+    assert job["input"]["researchCutoff"] == "2026-09-09T16:33:14.409000Z"
+    assert job["input"]["researchCutoffSource"] == "legacy-createdAt"
+    assert job["plan"]["researchCutoff"] == job["input"]["researchCutoff"]
+    assert restore_legacy_research_cutoff(job) is False
+
+
+def test_legacy_research_cutoff_rejects_missing_original_time():
+    job = {"input": {"question": "研究AAPL"}, "plan": {}}
+    try:
+        restore_legacy_research_cutoff(job)
+    except ValueError as error:
+        assert "无法安全重试" in str(error)
+    else:
+        raise AssertionError("missing original time must not be replaced with the current time")
 
 
 def test_checkpoint_is_bound_to_execution_input_and_snapshot():

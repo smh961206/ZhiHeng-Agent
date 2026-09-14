@@ -28,7 +28,7 @@ from .knowledge import KnowledgeSession, KnowledgeStore
 from .path_resolver import ResearchPathResolver
 from .ports import ModelGatewayPort, StoragePort
 from .prompt_governance import assert_prompt_compatible, build_prompt_plan, prompt_state, repair_messages
-from .recovery import make_checkpoint, research_resume
+from .recovery import make_checkpoint, research_resume, restore_legacy_research_cutoff
 from .research_pipeline import PipelineResult, ResearchPipeline
 from .workflow import initialize_workflow, interrupt_workflow, update_stage
 
@@ -269,6 +269,8 @@ class ResearchService:
                     job.update(status="cancelled", error="任务已取消", finishedAt=now())
                     await self.storage.save_job(job)
                     continue
+                if restore_legacy_research_cutoff(job):
+                    await self.storage.save_job(job)
                 self._assert_gateway_compatible(job)
                 if job.get("promptState") is not None:
                     assert_prompt_compatible(job["promptState"])
@@ -895,6 +897,10 @@ class ResearchService:
                 raise ApiError(429, f"已有{self.max_concurrent}个任务运行或准备中，请稍后再试")
             if int(job.get("retryCount", 0)) != expected:
                 raise ApiError(409, "研究版本已变化，请刷新详情页")
+            try:
+                restore_legacy_research_cutoff(job)
+            except ValueError as error:
+                raise ApiError(409, str(error)) from error
             self._assert_gateway_compatible(job)
             job["retryCount"] = expected + 1
             job["status"] = "queued"

@@ -47,7 +47,7 @@ import {reportPreview} from '../domain/report-preview.ts';
 import {deduplicateReportHeadings} from '../domain/report-headings.ts';
 import {auditCoverage,auditCoverageNotice} from '../domain/audit-coverage.ts';
 import {needsSaveRetry,isSavingResult} from '../domain/research-delivery.ts';
-import {researchRecovery,researchDraftState,researchRetryNotice,saveRetryNotice,retryNotice,researchContinuation} from '../domain/research-recovery.ts';
+import {researchRecovery,researchDraftState,researchRetryNotice,saveRetryNotice,retryNotice,researchContinuation,researchFailurePresentation} from '../domain/research-recovery.ts';
 import {modeOf} from '../lib/research-mode';
 import {webEvidenceProgress} from '../domain/web-evidence-progress.ts';
 import './research-recovery.css';
@@ -381,6 +381,7 @@ function SourcesPanel({sources, status, referenceMaterials=[],job,sourceTarget,a
 
 function isIssue(event) { return /error|fail|warn/i.test(event.type || '') || event.type==='audit_validation' || toolResultHasGap(event.result); }
 function isTool(event) { return /tool/i.test(event.type || '') || event.arguments != null || event.result != null; }
+function eventMessage(event){return isIssue(event)?researchFailurePresentation(event.message).trace:event.message||'执行记录';}
 
 function Trace({events, status, hidden,reveal=0,revealFilter='issues'}) {
   const [open, setOpen] = useState(true);
@@ -413,7 +414,7 @@ function Trace({events, status, hidden,reveal=0,revealFilter='issues'}) {
         <div ref={eventList} className="rd-events" tabIndex={filtered.length ? 0 : undefined} role="region" aria-label="执行事件列表，可滚动">
           {filtered.length ? <ol>{filtered.slice(0,limit).map(({event, key}) => <li className={`rd-event${isIssue(event) ? ' rd-event-issue' : ''}`} key={key}>
             <div className="rd-event-meta"><span>{formatDate(event.time, true)}</span>{event.call?<span className={'rd-call-status rd-call-'+event.call.status}>{{returned:'已返回',failed:'返回错误',pending:'等待返回',unrecorded:'未保存返回'}[event.call.status]}</span>:<span>{isIssue(event) ? '异常 / 提示' : isTool(event) ? '工具' : '进展'}</span>}</div>
-            <p>{event.call&&event.message?.includes(event.call.toolName)?event.message.replaceAll(event.call.toolName,event.call.label).replace(/\s*已返回\s*$/,''):event.message || '执行记录'}</p>
+            <p>{event.call&&event.message?.includes(event.call.toolName)?event.message.replaceAll(event.call.toolName,event.call.label).replace(/\s*已返回\s*$/,''):eventMessage(event)}</p>
             {event.type==='audit_validation' && <div className="rd-audit-issues">
               <p>{event.category==='format'?'报告格式需要修复': '交付内容需要修正'}{event.retryable===true?' · 正在自动修正':event.retryable===false?' · 自动修正已停止':''}</p>
               {event.issues?.length>0 ? <ul>{[...new Set(event.issues.map(issue=>issue.message).filter(Boolean))].map(message=><li key={message}>{message}</li>)}</ul> : event.reason && <p>{event.reason}</p>}
@@ -666,6 +667,7 @@ function DetailView({job, currentConfig, tab, onTabChange, streamConnection, onR
   const progressState=researchProgress(job);
   const progressFailed=job.status==='failed'||job.delivery?.status==='failed';
   const failureReason=progressFailed?(typeof job.error==='string'&&job.error.trim()||'未记录具体失败原因，可查看研究过程与执行轨迹。'):'';
+  const failure=progressFailed?researchFailurePresentation(failureReason):null;
   const executionReason=progressFailed&&typeof job.delivery?.executionError==='string'?job.delivery.executionError.trim():'';
   const compactFailure=recovery?.retryKind==='research'&&Boolean(failureReason);
   const ProgressIcon=progressState.busy?LoaderCircle:progressState.status==='queued'?Clock3:progressState.status==='completed'?Check:progressState.status==='cancelled'?Square:CircleAlert;
@@ -687,7 +689,7 @@ function DetailView({job, currentConfig, tab, onTabChange, streamConnection, onR
       <div className="rd-main-column">
         <div className={'rd-overview rd-context-strip rd-overview-'+job.status} data-progress-state={progressState.status} data-recovery={compactFailure||undefined} aria-label="研究进展">
           <span className="rd-overview-icon" aria-hidden="true"><ProgressIcon size={21} className={progressState.busy?'rd-spin':undefined}/></span>
-          <span className="rd-overview-copy" role="status" aria-atomic="true">{compactFailure?<><span className="rd-progress-label">未完成原因</span><strong><span className="rd-progress-error">{failureReason}</span></strong></>:<><span className="rd-progress-label">研究进展<span aria-hidden="true">·</span>{progressState.label}</span><strong>{screenState?.title||overview}{failureReason&&<span className="rd-progress-error">（{job.delivery?.status==='failed'?'保存问题：':'失败原因：'}{failureReason}{executionReason&&executionReason!==failureReason?`；原执行问题：${executionReason}`:''}）</span>}</strong></>}</span>
+          <span className="rd-overview-copy" role="status" aria-atomic="true">{compactFailure?<><span className="rd-progress-label">研究未完成</span><strong className="rd-failure-title">{failure?.title}</strong><span className="rd-failure-detail">{failure?.detail}</span></>:<><span className="rd-progress-label">研究进展<span aria-hidden="true">·</span>{progressState.label}</span><strong>{screenState?.title||overview}{failureReason&&<span className="rd-progress-error">（{job.delivery?.status==='failed'?'保存问题：':'失败原因：'}{failure?.detail}{executionReason&&executionReason!==failureReason?`；原执行问题：${researchFailurePresentation(executionReason).detail}`:''}）</span>}</strong></>}</span>
           <Sheet open={processOpen} onOpenChange={setProcessOpen}><SheetTrigger asChild><Button type="button" variant="outline" size="sm" className="rd-process-trigger" aria-label="研究过程"><Activity size={16} aria-hidden="true"/>查看研究过程<ArrowUpRight size={16} aria-hidden="true"/></Button></SheetTrigger><SheetContent side="right" className="research-detail rd-process-sheet" onCloseAutoFocus={closeProcess}><SheetHeader><SheetTitle>研究过程</SheetTitle><SheetDescription>查看本次研究的范围、进展、依据和资料覆盖。</SheetDescription></SheetHeader><div className="rd-process-body">
     <dl className="rd-meta">
       <div><dt>研究路径</dt><dd>{modes[job.mode]?.name||(job.mode==='auto'?'自动匹配':job.plan?.name||'研究路径未记录')}</dd></div>

@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "noCheck": false,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true
+  },
+  "include": [
+    "scripts/**/*.ts",
+    "src/generated/**/*.ts",
+    "src/lib/api.ts",
+    "src/lib/utils.ts",
+    "src/components/ui/button.tsx",
+    "src/components/DeleteResearchDialog.tsx",
+    "tests/delete-research-dialog.component.test.tsx",
+    "tests/setup.ts",
+    "vite.config.ts",
+    "vitest.config.ts"
+  ]
+}

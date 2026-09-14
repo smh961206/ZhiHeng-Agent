@@ -6,13 +6,13 @@
 
 ## 修改前必须检查
 
-- `server/evidence-search.mjs`
-- `server/evidence-followup.mjs`
-- `server/web-evidence.mjs`
-- `server/data-archive.mjs`
-- `server/document-reader.mjs`
-- `server/pdf-processing.mjs`
-- `server/research-context.mjs`
+- `server/evidence-search.ts`
+- `server/evidence-followup.ts`
+- `server/web-evidence.ts`
+- `server/data-archive.ts`
+- `server/document-reader.ts`
+- `server/pdf-processing.ts`
+- `server/research-context.ts`
 
 ## 本版本明确不做
 
@@ -121,6 +121,16 @@
 **完成判定：** 提升语义 recall 不得以显著损害财务 exact accuracy 为代价。
 
 **工程约束：** 先查现有实现；优先 additive/dual-read/feature flag；任何持久化变化同步更新 schema.md、migration.md、rollback.md；不得顺手实现下一子版本。
+
+## 基础设施与数据架构增量规划
+
+- 在现有知识与证据模块之上定义 `SearchIndex` 端口，统一精确检索、BM25、语义召回、过滤和索引版本读取；业务逻辑不得直接依赖具体向量数据库。
+- 索引清单必须记录语料快照、解析器版本、分块版本、嵌入模型版本、索引版本、租户/工作区、证券标识和研究截止时间；召回结果继续视为线索，不能直接成为财务事实。
+- 精确财务证据、结构化查询和 BM25 保持权威入口。语义检索只能补充召回，必须在工作区、证券、来源类型和 `published_at <= cutoff` 过滤后参与融合。
+- 默认复用当前数据库或可替换的本地索引实现。只有 V5.4.9 基准证明召回质量、延迟、容量或运维边界无法满足目标时，才为独立向量数据库形成 ADR 和后续实施项。
+- 所有外部文档和检索片段按不可信内容处理；提示注入检测、引用校验、来源追踪和访问控制必须贯穿摄取、索引和检索链路。
+
+跨版本背景见 [V5.3 至 V6.0 基础设施与数据架构演进方案](../../architecture/infrastructure-data-evolution-plan-v5.3-v6.0.md)。本节及本版本子规格是 V5.4 的执行依据。
 
 ## 大版本发布 Gate
 

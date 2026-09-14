@@ -12,8 +12,8 @@ Ticker is not a stable primary key.
 Must support over time:
 A/H, ADR/ADS, preferred shares, ticker changes, splits/mergers, listing validity, parent/subsidiary relations.
 
-## H0 implementation evidence
+## Current implementation evidence
 
-security-resolver, sec-directory, security-exchanges and shared/security-input provide directory-backed A/H/US resolution and display semantics. Stable canonical issuer/listing/share-class entities and validity history are not implemented. Tests: security-resolver, security-intent, security-display.
+`python_backend/domain/securities.py`、`python_backend/infrastructure/market.py` 与 `src/domain/` 提供 A/H/US 输入识别、交易所查询和显示语义。稳定的 issuer/listing/share-class 实体与有效期历史仍未实现。验证见 Python 证券测试和前端 security-display 测试。
 
-See [implementation map](../architecture/current-implementation-map.md) and [audit findings](../releases/H0/audit-findings.md). H0 changes no persisted object, field requirements, API, migration or financial meaning.
+See the [current implementation map](../architecture/current-implementation-map.md). This contract text alone changes no persisted object, field requirements, API, migration or financial meaning.

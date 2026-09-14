@@ -8,7 +8,7 @@
 - INV-FIN-006 [ENFORCED]: deterministic arithmetic belongs in tools/programs where available.
 - INV-FIN-007 [TARGET V5.5]: type/period/currency engines reject incompatible calculations before publication.
 
-## H0 enforcement evidence and limits
+## Current enforcement and limits
 
 Current gates: calculationBasis plus specialized tools/valuation-policy/data-basis validate selected currency/period/share/scope and FCFF/FCFE fields. Tests: calculations, cashflow-bridge, quick-screen, valuation-policy, data-completeness. Required declarations do not independently prove column/period/economic meaning. Preserve every ENFORCED rule; typed engines and complete coverage remain target work.
 

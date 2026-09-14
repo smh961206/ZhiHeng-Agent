@@ -6,8 +6,8 @@ A Calculation must eventually contain:
 
 A displayed number derived through math must be reproducible from lineage.
 
-## H0 implementation evidence
+## Current implementation evidence
 
 calculations and specialized valuation modules perform deterministic math; agent tool records retain inputs/results and calculationBasis checks source/block/basis. formulaId/formulaVersion and inputFactIds dependency records are not implemented. Tests: calculations, cashflow-bridge, deep-research.
 
-See [implementation map](../architecture/current-implementation-map.md) and [audit findings](../releases/H0/audit-findings.md). H0 changes no persisted object, field requirements, API, migration or financial meaning.
+See the [current implementation map](../architecture/current-implementation-map.md). This contract text alone changes no persisted object, field requirements, API, migration or financial meaning.

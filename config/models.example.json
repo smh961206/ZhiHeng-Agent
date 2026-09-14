@@ -5,17 +5,12 @@
       "model": "deepseek-flash",
       "baseUrl": "https://api.deepseek.com",
       "apiKeyEnv": "LLM_API_KEY"
-    },
-    "glm": {
-      "model": "glm-5.3-flash",
-      "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
-      "apiKeyEnv": "LLM_MAIN_API_KEY"
     }
   },
   "pipeline": {
-    "input": "glm",
-    "vision": "glm",
-    "researcher": ["deepseek", "glm"],
+    "input": "deepseek",
+    "vision": "deepseek",
+    "researcher": ["deepseek"],
     "writer": "deepseek",
     "evidenceVerifier": "deepseek",
     "auditor": "deepseek",

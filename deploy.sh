@@ -19,6 +19,12 @@ if [[ ! -f config/models.production.json ]]; then
 fi
 export APP_IMAGE="$(cat .deploy/current-image 2>/dev/null || echo zhiheng-agent:local)"
 compose_files=(-f compose.production.yaml -f compose.models.yaml)
+if [[ -f config/pricing.production.json ]]; then
+  compose_files+=(-f compose.pricing.yaml)
+fi
+if [[ -f config/research-budget.production.json ]]; then
+  compose_files+=(-f compose.budget.yaml)
+fi
 dc() { docker compose --env-file .env.production "${compose_files[@]}" "$@"; }
 maintenance=0
 on_error() {
@@ -60,7 +66,7 @@ case "${1:-up}" in
     dc build app
     dc up -d --wait mongodb
     backup
-    dc run --rm --no-deps app node scripts/migrate-mongodb.mjs
+    dc run --rm --no-deps app python -m python_backend.cli db-migrate
     dc up -d --no-deps --wait --wait-timeout 180 app
     printf '%s\n' "$APP_IMAGE" > .deploy/current-image
     maintenance=0

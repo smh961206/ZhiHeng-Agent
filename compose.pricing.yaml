@@ -1,0 +1,12 @@
+# Optional production overlay, loaded by deploy.sh only when the private price file exists.
+services:
+  app:
+    environment:
+      MODEL_PRICING_FILE: /app/config/pricing.production.json
+    volumes:
+      - type: bind
+        source: ./config/pricing.production.json
+        target: /app/config/pricing.production.json
+        read_only: true
+        bind:
+          create_host_path: false

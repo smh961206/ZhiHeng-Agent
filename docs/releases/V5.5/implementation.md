@@ -6,18 +6,18 @@
 
 ## 修改前必须检查
 
-- `server/security-resolver.mjs`
-- `server/security-intent.mjs`
-- `server/security-exchanges.mjs`
-- `server/sec-directory.mjs`
-- `server/financial-observations.mjs`
-- `server/financial-input-verification.mjs`
-- `server/data-basis.mjs`
-- `server/inline-xbrl.mjs`
-- `server/tushare-financials.mjs`
-- `server/longbridge-fundamentals.mjs`
-- `server/storage.mjs`
-- `server/schema-migrations.mjs`
+- `server/security-resolver.ts`
+- `server/security-intent.ts`
+- `server/security-exchanges.ts`
+- `server/sec-directory.ts`
+- `server/financial-observations.ts`
+- `server/financial-input-verification.ts`
+- `server/data-basis.ts`
+- `server/inline-xbrl.ts`
+- `server/tushare-financials.ts`
+- `server/longbridge-fundamentals.ts`
+- `server/storage.ts`
+- `server/schema-migrations.ts`
 
 ## 本版本明确不做
 
@@ -166,6 +166,16 @@
 **完成判定：** 核心 Fact 可脱离 report prose 解释来源。
 
 **工程约束：** 先查现有实现；优先 additive/dual-read/feature flag；任何持久化变化同步更新 schema.md、migration.md、rollback.md；不得顺手实现下一子版本。
+
+## 基础设施与数据架构增量规划
+
+- V5.5.0 完成持久化能力盘点和 ADR 验证：当前 MongoDB/GridFS 继续作为基线；PostgreSQL 只在身份约束、双时态查询、关系完整性、事务或审计需求经原型与基准证实后，才成为候选主库。
+- 领域服务通过仓储端口访问持久化层，禁止把 MongoDB、PostgreSQL 或供应商类型扩散到业务契约。任何主库变化都必须有兼容性分析、回滚方案和可观测的切换门槛。
+- 模式演进采用“加字段/加表 → 双读兼容 → 新写入 → 可验证回填 → 切换 → 后续清理”；禁止一次性重写或覆盖历史研究记录。
+- 金额、比率、每股值和汇率使用明确精度的 Decimal 语义；事实唯一性至少覆盖实体、指标、期间、币种、会计口径、股份口径、有效时间和来源版本。
+- 事实与实体变更必须保留双时态、字段级来源、解析器/规则版本、原始对象哈希、派生依赖和可逆的实体合并记录。GridFS 是否迁移到对象存储也必须通过规模、成本和灾备 Gate 决定。
+
+跨版本背景见 [V5.3 至 V6.0 基础设施与数据架构演进方案](../../architecture/infrastructure-data-evolution-plan-v5.3-v6.0.md)。本节及本版本子规格是 V5.5 的执行依据。
 
 ## 大版本发布 Gate
 

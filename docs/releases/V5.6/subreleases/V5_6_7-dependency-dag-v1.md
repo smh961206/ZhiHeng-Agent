@@ -1,7 +1,7 @@
 # V5.6.7 — Dependency DAG V1
 
 Release: `V5.6`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,20 +15,20 @@ Connect Fact→Calculation→Claim and mark stale downstream.
 
 Codex must inspect the real checkout before editing:
 
-- `server/calculations.mjs`
-- `server/cashflow-bridge.mjs`
-- `server/normalized-earnings.mjs`
-- `server/reinvestment.mjs`
-- `server/research-sensitivity.mjs`
-- `server/valuation-snapshot.mjs`
-- `server/valuation-history.mjs`
+- `server/calculations.ts`
+- `server/cashflow-bridge.ts`
+- `server/normalized-earnings.ts`
+- `server/reinvestment.ts`
+- `server/research-sensitivity.ts`
+- `server/valuation-snapshot.ts`
+- `server/valuation-history.ts`
 - `tests/`
-- `server/research-create.mjs`
-- `server/research-workflow.mjs`
-- `server/research-context.mjs`
-- `server/research-output.mjs`
-- `server/research-resume.mjs`
-- `server/storage.mjs`
+- `server/research-create.ts`
+- `server/research-workflow.ts`
+- `server/research-context.ts`
+- `server/research-output.ts`
+- `server/research-resume.ts`
+- `server/storage.ts`
 - `tests/`
 
 If paths or ownership changed, update `docs/architecture/current-implementation-map.md`; do not force the repository to match stale filenames.
@@ -185,5 +185,12 @@ Stop this subrelease when all are true:
 ## 26. Deferred Work
 
 - Auto recomputation
+
+## 27. Infrastructure and Data Acceptance Addendum
+
+- Persist nodes and edges with stable IDs, dependency type, input snapshot, formula/code version and cutoff; reject dangling edges, duplicates and cycles where the contract forbids them.
+- Use relational adjacency tables and recursive traversal first. A graph database requires a separate measured ADR.
+- Mark stale descendants idempotently and distinguish blocked, queued-for-recompute and warning-only states.
+- If dependency changes emit events, write them to a transactional outbox; this subrelease does not introduce an external broker.
 
 Do not proceed to the next subrelease unless the user explicitly authorizes continuation or explicitly asked Codex to execute the entire current core release.

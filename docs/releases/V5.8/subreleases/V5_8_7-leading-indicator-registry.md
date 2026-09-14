@@ -1,7 +1,7 @@
 # V5.8.7 — Leading Indicator Registry
 
 Release: `V5.8`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,18 +15,18 @@ Represent pre-report indicators with quality/source semantics.
 
 Codex must inspect the real checkout before editing:
 
-- `server/web-evidence.mjs`
-- `server/web-research.mjs`
-- `server/research-workflow.mjs`
-- `server/research-create.mjs`
-- `server/storage.mjs`
+- `server/web-evidence.ts`
+- `server/web-research.ts`
+- `server/research-workflow.ts`
+- `server/research-create.ts`
+- `server/storage.ts`
 - `tests/`
-- `server/research-create.mjs`
-- `server/research-workflow.mjs`
-- `server/research-context.mjs`
-- `server/research-output.mjs`
-- `server/research-resume.mjs`
-- `server/storage.mjs`
+- `server/research-create.ts`
+- `server/research-workflow.ts`
+- `server/research-context.ts`
+- `server/research-output.ts`
+- `server/research-resume.ts`
+- `server/storage.ts`
 - `tests/`
 
 If paths or ownership changed, update `docs/architecture/current-implementation-map.md`; do not force the repository to match stale filenames.

@@ -1,6 +1,6 @@
 # V5.3 — Fully Normalized Detailed Index
 
-Every subrelease below follows `docs/development/NORMALIZED_RELEASE_STANDARD.md`.
+The retained release record follows its original planning structure; current work is governed by `AGENTS.md` and `docs/releases/CURRENT`.
 
 Codex must execute them in order unless the user explicitly requests one specific subrelease.
 

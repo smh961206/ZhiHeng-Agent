@@ -1,6 +1,6 @@
 # V5.10 — Portfolio Intelligence
 
-Implementation Status: FUTURE at the H0 baseline. CURRENT selects the next authorized release; it does not establish implementation or acceptance.
+Implementation Status: FUTURE. CURRENT selects the only authorized platform release; this document does not establish implementation or acceptance.
 
 ## Goal
 

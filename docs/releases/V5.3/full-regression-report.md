@@ -41,7 +41,7 @@
 ## 工程交付清单
 
 1. **版本 / 子版本**：V5.3 回归维护。平台版本、Knowledge K1.0.0、执行兼容编号 1、输出契约编号 7 不变。
-2. **修改文件**：`src/components/research-detail.css`；`tests/valuation-policy.test.mjs`、`tests/routes.integration.mjs`、`tests/agent-capabilities-ui-scenarios.mjs`、`tests/platform-v49-ui-scenarios.mjs`、`tests/platform-experience-ui-scenarios.mjs`、`tests/fixtures/platform-status-ui.mjs`；本发布 README、当前实现图及 `MANIFEST.json`。
+2. **修改文件**：`src/components/research-detail.css`；`tests/valuation-policy.test.ts`、`tests/routes.integration.ts`、`tests/agent-capabilities-ui-scenarios.ts`、`tests/platform-v49-ui-scenarios.ts`、`tests/platform-experience-ui-scenarios.ts`、`tests/fixtures/platform-status-ui.ts`；本发布 README、当前实现图及 `MANIFEST.json`。
 3. **新增文件**：本报告。诊断、驱动脚本、日志、截图、基准 JSON 和最终独立 dist 位于忽略目录 `artifacts/v53-full-regression-20260913/`。
 4. **删除文件**：无仓库文件删除。
 5. **架构变化**：无新模块或第二套实现；现有详情样式和测试辅助函数内修复。
@@ -66,10 +66,10 @@
 - 单元：`node --test tests/*.test.mjs`（`unit-initial.log`、`unit-final.log`）。
 - 门禁：package.json 的 `test:release` 对应完整 Node 参数集（`release.log`、`release-final.log`）。
 - Mongo：`backend-run.mjs` 依次运行 15 组现有集成脚本，指向 `127.0.0.1:27029` 的独立实例；结果在 `mongodb-results.json` 和 `mongo-*.log`。
-- 路由：`node tests/routes.integration.mjs`（`routes-final.log`）。
+- 路由：`node tests/routes.integration.ts`（`routes-final.log`）。
 - UI：初始与最终使用分别固定的生产构建；`ui-full/ui-results.json` 与 `ui-final/ui-results.json` 记录 assetMode、每场景请求/错误和结果。最终驱动 `ui-final-run.mjs` 使用 4174 端口。定向复验见 `ui-fixes/`、`ui-fixes2/`。
-- 文本/Vision：`node scripts/benchmark.mjs --kind text|vision --repeats 2 --out <独立目录>`；输出 `benchmark-text/`、`benchmark-vision/`。
-- 费用/Judge：`scripts/cost-benchmark.mjs`、`scripts/judge-benchmark.mjs` 输出本次独立 JSON。Knowledge、lint、上下文分别见 `knowledge.log`、`knowledge-lint.log`、`context.log`。
+- 文本/Vision：`node scripts/benchmark.ts --kind text|vision --repeats 2 --out <独立目录>`；输出 `benchmark-text/`、`benchmark-vision/`。
+- 费用/Judge：`scripts/cost-benchmark.ts`、`scripts/judge-benchmark.ts` 输出本次独立 JSON。Knowledge、lint、上下文分别见 `knowledge.log`、`knowledge-lint.log`、`context.log`。
 - Docker：`deploy-runner.sh` 在 docker:cli 中安装 Bash，以只读源码和示例配置构造副本，再执行原 `tests/deploy.integration.sh`；只调整临时目录到 Docker daemon 可见的专用路径，不修改验收断言。
 
 Docker 验证先于最终 8px 详情留白修复完成，部署脚本、Dockerfile、数据库与服务端实现此后均未改变；最终界面使用重新构建的资源。
@@ -78,4 +78,4 @@ Docker 验证先于最终 8px 详情留白修复完成，部署脚本、Dockerfi
 
 提交前补充检查：完整 `git diff --cached --check` 提示首次纳入 Git 的 K1.0.0 规则快照保留了源文件末尾空行；为维持已发布快照的不可变指纹，不重新排版这些文件。该快照目录之外的暂存改动通过空白检查。私有环境配置、密钥和本地回归产物未纳入提交。
 
-提交阶段另修复 `scripts/update-manifest.mjs`：原来只合并 HEAD 基线与未跟踪文件，文件一旦暂存就会从未跟踪列表消失，导致清单漏项。现在同时纳入已暂存新增文件。新增 `tests/manifest-update.test.mjs` 在独立临时 Git 仓库验证暂存前、暂存后及提交后清单一致，并保留清单原有范围。新增测试与 harness 共 12/12 通过；最终清单增加为 636 项，暂存字节数与 SHA-256 全部核对一致。此补充只改变开发期清单生成及测试，无运行时、Schema、环境配置、恢复或功能开关变化；回滚只需撤回脚本这一合并增量和新测试，再重建清单。没有重跑不受影响的 UI、Docker 或真实模型验证。
+提交阶段另修复 `scripts/update-manifest.ts`：原来只合并 HEAD 基线与未跟踪文件，文件一旦暂存就会从未跟踪列表消失，导致清单漏项。现在同时纳入已暂存新增文件。新增 `tests/manifest-update.test.ts` 在独立临时 Git 仓库验证暂存前、暂存后及提交后清单一致，并保留清单原有范围。新增测试与 harness 共 12/12 通过；最终清单增加为 636 项，暂存字节数与 SHA-256 全部核对一致。此补充只改变开发期清单生成及测试，无运行时、Schema、环境配置、恢复或功能开关变化；回滚只需撤回脚本这一合并增量和新测试，再重建清单。没有重跑不受影响的 UI、Docker 或真实模型验证。

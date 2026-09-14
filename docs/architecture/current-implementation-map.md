@@ -1,350 +1,39 @@
 # Current Implementation Map
 
-## V5.3 platform frontend experience
+Status: current
+Release: Platform V5.3 / Knowledge K1.0.0
 
-Full offline regression follow-up: the existing detail header uses tighter vertical spacing to preserve first-viewport report visibility with shared platform headings. Test helpers follow current guide/search semantics and wait for popover/focus lifecycle state. No API, persistence, model or recovery boundary changes. See the [full regression report](../releases/V5.3/full-regression-report.md).
+## Runtime
 
-The existing React owners now align daily navigation, page hierarchy and recovery/help copy across home, workbench, history, detail and handbook. Home reuses `RecentResearch` ordering and saved delivery labels for its latest-record link. `ResearchUsageGuide` searches its existing local content and retains normal disclosure state when search clears. `ResearchHistory` removes individual URL filters without discarding other filters or sort order and restores keyboard focus. `ResearchWorkbench` collapses optional execution explanations and opens creation help in a separate tab to preserve editing. `platform.css` owns shared heading and unavailable-page presentation; domain styles retain report layout and status meanings. These changes add no API, persistence, model dispatch or release line. See the [platform experience report](../releases/V5.3/platform-experience-report.md).
+FastAPI owns port 3001, `/api`, SSE, research lifecycle, MongoDB/GridFS, model access, document reading and built frontend delivery. `server/` and all Node backend entrypoints have been removed. The production image contains Python only; its Node build stage compiles the React application.
 
-## M1.1 token-efficient stage contexts
+## Owners
 
-New schema-v2/modelState-v4 research tasks pin optional `contextVersion=1`, use path-scoped tool definitions and load detailed shareholder rules only when the selected path or question requires them. Dependent valuation tools are exposed only after their prerequisite calculation receipts exist. Researcher history is compacted at safe completed-tool boundaries using Quick, Standard and Deep profiles; pending tool calls are never compacted. Writer receives a separately rebuilt evidence/calculation packet with an additive integrity receipt and must remove or mark unsupported material as missing. Historical modelState v1–v3 tasks and pre-M1.1 v4 tasks without this pin retain their previous tool set, system rules, request wire and recovery behavior.
+| Area | Owner |
+|---|---|
+| HTTP, middleware, SSE | `python_backend/api/factory.py`, `api/middleware.py`, `api/security.py`, `api/events.py` |
+| Input contracts and plans | `api/schemas.py`, `domain/contracts.py`, `domain/models.py` |
+| Research and recovery | `application/research_service.py`, `application/recovery.py`, `application/workflow.py`, `application/baseline.py` |
+| Analysis planning, Prompt plans and context | `application/calculation_service.py`, `application/context_compiler.py`, `application/prompt_governance.py`, `domain/review.py` — registered Prompt IDs, safe execution metadata, bounded repair history and required calculation-evidence completeness |
+| Model boundary and governance | `infrastructure/model_gateway.py`, `infrastructure/model_adapter.py`, `infrastructure/model_pricing.py`, `domain/model_governance.py` |
+| Optional independent review and judge | `domain/independent_review.py`, `domain/judge.py`, `application/independent_review.py`, `application/research_service.py` — complete original-cutoff evidence, durable single-dispatch sessions, advisory judge and final audit; configured empty by default |
+| Knowledge snapshots and receipts | `application/knowledge.py`, `cli.py` |
+| Documents and evidence | `infrastructure/documents.py`, `infrastructure/official_evidence.py`, `infrastructure/web_research.py`, `infrastructure/data_archive.py`, `domain/evidence.py`, `domain/web_evidence.py` — identical rendered vision pages reuse transcription by image digest while retaining separate unverified page blocks |
+| Securities and market data | `domain/securities.py`, `infrastructure/market.py`, `infrastructure/data_providers.py` |
+| Company logo display assets | `infrastructure/company_logos.py` — keyless Wikidata listing lookup and Wikimedia thumbnails; bounded memory cache, no local company mapping or financial evidence writes |
+| Financial calculations | `domain/calculations.py`, `domain/financial.py`, `domain/analytics.py` |
+| Persistence and migration | `infrastructure/mongo_storage.py`, `cli.py` |
+| Browser UI | `src/` |
+| Client display and view-model rules | `src/domain/` |
 
-The existing cost endpoint now exposes whitelisted total and per-stage input/output/cache Token observations. Unknown provider usage remains unknown. `scripts/model-context-baseline.mjs` measures serialized tool-definition size without network calls, paid trials or manual validation. No Token budget, price routing, new evidence store or model acceptance gate was introduced. See the [M1.1 implementation record](../releases/M1.1/README.md).
+## Compatibility
 
-The M1.1 platform presentation stays in existing owners. `ResearchFramework` and `ResearchMethod` explain path-scoped preparation without exposing internal platform or model-track versions; `research-settings.js` owns the distinct user-visible execution preview for all six paths; `ResearchWorkbench` renders that preview without exposing model configuration; `PlatformStatusPanel` shows investor-facing research principles; `ResearchDetail` prioritizes research basis, progress and source reading, with saved model assignment and observed use retained in a collapsed advanced section; `ResearchModelSummary` keeps saved assignment separate from `ResearchCostSummary` actual calls and Token observations. No front-end control can select a model, change a saved task, authorize a review stage or impose a research budget.
+Public API paths and MongoDB/GridFS names remain stable. New tasks pin K1.0.0 and the Python execution compatibility scope. Historical records remain readable; no migration destructively rewrites originally reported data. Old Node module imports are intentionally unsupported.
 
-## M1.0 stage-oriented model configuration
+Model-call records may add body-free `promptContext` metadata. Research context receipts now write version 2 with calculation-evidence completeness. Absence and version-1 receipts remain readable and are not backfilled.
 
-`server/model-config.mjs` accepts schema v2 with a single model registry and eight stage assignments: Input, Vision, Researcher, Writer, Evidence Verifier, Auditor, Critical Reviewer and Judge. `server/model-catalog.mjs` compiles these assignments into internal ModelProfiles; business code declares only a stage purpose. `server/model-gateway.mjs` remains the sole dispatch boundary and `server/model-adapter.mjs` remains the sole provider transport.
+## Validation boundary
 
-New tasks save modelState v4 with the full stage pools and connection identities. Existing modelState v1-v3 jobs continue using their original purpose identities, cache keys and telemetry purposes. Configuration changes cannot silently rebind an existing task. Critical Reviewer and Judge resolve directly from optional configured pools while retaining V5.2 eligibility, independent context, one-call receipt, recovery and output validation. V5.1 price, usage and cache owners apply to every configured stage. New tasks do not create research budgets; historical budget resource identities remain readable for recovery. Normal activation no longer reads paid comparison or acceptance artifacts; the old policy/champion/experiment modules remain only for historical configuration and state compatibility.
+`python_tests/` owns backend tests. `tests/` owns focused frontend unit checks, Vitest/Testing Library component interactions and SSR routes. `tsconfig.strict.json` checks the first reviewed TypeScript boundary while Vite continues to parse and build the complete client. FastAPI OpenAPI generates `src/generated/api-schema.ts`, and CI rejects drift. Architecture checks reject recreated `server/` or `shared/` directories, JavaScript/TypeScript backend benchmarks, Node backend start commands, backend-only npm dependencies and unapproved global frontend state libraries. `benchmark/` contains the Python-only migration acceptance suite.
 
-Current user configuration uses `config/models.local.json` or `config/models.production.json`; secrets remain in `.env` or `.env.production`. Preview/rollback model copies and `.env.models` files are retired from the current workflow. See the [configuration guide](../configuration-guide.md) and [M1.0 release record](../releases/M1.0/README.md).
-
-## Historical implementation records
-
-The sections below preserve the architecture state and acceptance boundary recorded by V4.8–V5.2. Where they describe MAIN/PRO, Challenger, Champion, A/B, acceptance files, `.env.models`, preview or `start:legacy`, treat those statements as historical release evidence. They are not instructions for the current schema-v2 workflow.
-
-## V5.2 independent exceptional review
-
-V5.2.0–.10 extends the existing flat Catalog/config/connection/adapter/Gateway and rollout owners. `server/model-flagship.mjs` owns deterministic exceptional eligibility, private durable independent-session receipts and normalized isolated dispatch; `server/model-judge.mjs` owns local completed-conclusion comparisons and closed advisory decisions. Existing `server/research-context.mjs` resolves real source blocks and original-time complete context. These are not a second Gateway, provider transport, canonical Claim subsystem or agent swarm.
-
-Existing Agent performs critical review only after repeated validated structural failures and optionally exposes valuation conflict adjudication for prior completed comparison receipts. Existing final review validators remain mandatory. New job authorizations pin exact role/code/config/approval and original cutoff; existing storage/checkpoint owners retain private receipts. Uncertain operations pause before replay. Existing ModelCall/cost UI and drift owners handle rare-purpose metrics and read-only usage alerts. Existing benchmark graders/statistics own frozen comparison; live quality/value acceptance remains paused by explicit user instruction. Flags default off. See [V5.2 runbook](../releases/V5.2/runbook.md).
-
-## V5.1 cost/cache capability and retired budget compatibility
-
-The user activated V5.1 on 2026-09-12; V5.0 live acceptance remains paused. Existing flat Gateway modules (not the template's nonexistent directory) retain ownership. `server/model-pricing.mjs` validates optional dated Catalog pricing alongside legacy pricing. No price is inferred from model identity. Subsequent steps and validation are recorded in [execution evidence](../releases/V5.1/execution-log.md).
-
-V5.1.0–.14 now have scoped engineering implementations. The pricing owner resolves exact call-time version/history and timezone tiers; existing adapter/result/telemetry owners normalize observed usage, estimate costs and aggregate all attempts/purposes. Existing benchmark runner namespaces case-local receipt IDs only for aggregation, preserving original artifacts; statistics owns quality-gated effective task cost comparisons. `server/model-cache.mjs` owns text-prefix hashes and observed cache eligibility. Existing Champion owner emits read-only cost rankings after its existing capability/quality/health gates, never a new execution route.
-
-`server/research-budget.mjs` now serves historical compatibility only. New task creation does not load a budget file or create `budgetState`; saved historical ledgers remain private, validate before resume and preserve uncertain-request replay protection, but their limits never stop execution or reduce retrieval. Existing per-tool, web, Vision and transport safety limits remain. `src/components/ResearchCostSummary.jsx` displays the whitelist GET /api/jobs/:id/cost cost/cache summary inside the research process panel. It cannot pick a model, stop research or treat unknown fees as zero. [Current configuration](../configuration-guide.md).
-
-## V5.0 unified model configuration
-
-Existing routing/Catalog/connection/Gateway owners now consume server/model-config.mjs as a configuration-only adapter. It validates and freezes the explicit MODEL_CONFIG_FILE document, resolves credential references and preserves legacy internal IDs. server/index.mjs and model-rollout own safe readiness; model-comparison retains raw env when spawning workers while checking effective credentials. scripts/model-config.mjs provides preview/check and non-overwriting in-project output. compose.models.yaml is an opt-in read-only deployment overlay. No research schema, new provider transport or approval bypass was introduced. See [migration runbook](../releases/V5.0/model-config-migration-runbook.md).
-
-## V5.0 environment file loading
-
-Existing package commands and scripts/dev.mjs load .env followed by optional .env.models through Node native flags. compose.production.yaml injects required .env.production followed by optional .env.production.models (Compose >=2.24.0). Old single-file configurations remain supported; no new environment key, custom loader, model policy or saved identity is introduced. See [split configuration report](../releases/V5.0/environment-split-report.md).
-
-## V5.0 configuration presentation
-
-Daily and advanced examples have separate ownership; no new configuration loader or environment key was introduced. Existing server/model-rollout.mjs owns the whitelist-only publicModelSelection snapshot using current admission and Vision owners; server/index.mjs adds it to the existing config endpoint. PlatformStatus and PlatformStatusPanel show current new-work settings, preserve unknown old-server state and never rewrite saved models. See [completion report](../releases/V5.0/configuration-cleanup-report.md).
-
-## V5.0 frontend alignment
-
-Existing PlatformStatusPanel and ResearchMethod explain quality-before-cost model evaluation without asserting live acceptance or production activation. ResearchHandbook owns sticky-tab-aware method anchors; ResearchUsageGuide retains local history restoration. Homepage, workbench, history and DocumentReadingSummary distinguish platform features from saved research configuration and evidence. Help from the platform panel opens separately to preserve work in progress. No API, persistent schema, model policy or research recovery change. See [frontend report](../releases/V5.0/frontend-completion-report.md).
-
-## V5.0 current owners
-
-Regression maintenance: benchmark/runner retains the exclusive writer lock while invoking executor-owned preparation; benchmark/executor validates live budgets even for completed resumes. scripts/benchmark validates CLI intent before any file or execution action. Existing result schemas, graders, provider adapters and job pins are unchanged. See [regression report](../releases/V5.0/regression-optimization-report.md).
-
-`benchmark/runner.mjs` owns durable evaluation and strict regrading; `benchmark/baseline.mjs` owns immutable snapshots; `benchmark/executor.mjs` reuses Gateway and existing Vision rendering/grading; `benchmark/statistics.mjs` owns quality-before-cost comparison. `server/model-task-class.mjs`, `server/model-champion.mjs`, `server/model-experiment.mjs` and `server/model-drift.mjs` own task classification, approved policy, immutable assignment and alert evaluation. Existing Catalog/adapter/Gateway, model-state/rollout and research-create remain runtime owners. Job admission and every v3 Gateway call recheck policy; original pins and checkpoints remain intact after rollback. No production candidate is enabled. [Report and acceptance limits](../releases/V5.0/completion-report.md).
-
-## V5.0 authorized iteration — CURRENT engineering progress
-
-CURRENT now selects V5.0 under the user's full-release authorization. Normalized subrelease order applies. `benchmark/case.mjs`, `benchmark/fixtures.mjs` and `benchmark/graders.mjs` own the new unified evaluation contract, frozen loader and deterministic graders; the existing `server/vision-quality.mjs` remains the Vision grading owner. These local benchmark records are separate from investment research state. Existing text/Vision executors, Gateway, model pins and rollout owners remain; no production candidate is activated. See [execution evidence](../releases/V5.0/execution-log.md). Historical FUTURE statements below describe earlier releases.
-
-Current V4.9 acceptance: batch-nine live Vision quality is [operator-approved](../releases/V4.9/vision-operator-approval-20260911.md), with both models passing 48/48. Production activation remains pending; the admission owner still validates the exact code/configuration and file. Earlier unaccepted-quality statements below record implementation-stage evidence.
-
-V4.9 output constraints: existing server/vision-model.mjs strengthens shared source-reading instructions while scripts/vision-benchmark.mjs clarifies the table schema. No new normalization subsystem or grader relaxation; current prompts are included in the existing comparison code binding. See [review](../releases/V4.9/vision-output-constraints-review-20260911.md).
-
-## V4.9 frontend alignment — CURRENT presentation
-
-The existing home, workbench, history, handbook and detail components now explain document/image reading without promoting extraction into verified facts. `src/config/platform-release.mjs` owns the public feature label; framework and saved job versions remain separate. Existing ResearchUsageGuide owns hash-linked topic expansion, focus and sticky-tab-aware positioning. DocumentReadingSummary only renders saved model/audit records and explicitly preserves missing historical coverage. No API, persistent schema, routing or research recovery change. See the [frontend completion report](../releases/V4.9/V4_9-frontend-completion-report.md) for 301 UI scenarios and compatibility evidence.
-
-## V4.9.1–.8 — CURRENT implementation; live promotion unaccepted
-
-Authorized review fixes: the existing Vision benchmark now owns an additive atomic progress ledger and conservative resume; uncertain reserved requests cannot replay. vision-model capability status resolves the selected context/profile; vision-policy caches validation while checking file/config/code identity and credentials on use. Existing index/research-retry coordinate cancelled execution finalization through an in-memory completion promise, preserving mutation locks and durable acknowledgement. See [fix report](../releases/V4.9/V4_9-review-fixes-report.md).
-
-Existing `server/vision-model.mjs` owns canonical requests/results and bounded independent fallback, retaining the text facade. Gateway validates explicit capabilities; Catalog/connection/adapter accept explicit image-only v3 challenger metadata. `server/vision-quality.mjs` owns deterministic extraction grading; `server/vision-policy.mjs` owns Vision-specific admission without importing job state. Existing model-state consumes approved selection for new jobs, preserves legacy/absent historical identities and pauses candidate pins after rollback. No Mongo/schema migration or archive rewrite.
-
-`scripts/vision-benchmark.mjs` and `scripts/build-vision-fixtures.py` own the scoped 48-original corpus, simulation/live opt-in comparison and regeneration. They do not implement the future V5.0 unified benchmark platform. New response metadata is in memory; old production readers still get strings, so archived extraction identity remains unavailable for old records. Independent admitted reads can fallback once; pinned research does not cross models. See [complete report](../releases/V4.9/V4_9-completion-report.md) and [runbook](../releases/V4.9/vision-comparison-runbook.md). Earlier unimplemented V4.9 statements below retain historical context.
-
-## V4.9.0 Vision inventory — CURRENT
-
-The user activated V4.9 on 2026-09-11; CURRENT now selects V4.9. The [Vision inventory](../releases/V4.9/vision-call-inventory.md) records four semantic readers, one existing Vision wrapper and the existing Gateway adapter, with current rendering/upload/page/audit/model limits and evidence semantics. `scripts/check-model-call-inventory.mjs` adds optional Vision inspection; `tests/vision-call-inventory.test.mjs` detects call/owner/guard drift. Runtime owners remain unchanged. V4.9.1–.8 are unimplemented; V4.8.11 live acceptance and its paid pilot remain deferred. Earlier release activation statements below describe their historical boundary, not the current authorization.
-
-## V4.8 regression and loading optimization — CURRENT
-
-Existing src/components/ResearchPages.jsx now also owns the lazy workbench boundary; App retains form/draft state and requests focus only after an explicit start action. Existing shared/research-export is loaded on download. Existing research-decision.css owns the compact summary-to-report gap. No model/research/schema boundary changes. See [regression report](../releases/V4.8/V4_8-regression-optimization-report.md) for all 289 UI scenarios, isolated recovery/deployment evidence and offline/live acceptance distinction.
-
-## V4.8 frontend alignment — CURRENT presentation
-
-Screenshot follow-up: normal ready/loading KnowledgeStatus banners are removed from home/workbench/handbook; actionable errors and pending-revision notices retain their existing owner and creation gates. The global platform control provides version explanation and refresh. Handbook headings no longer present framework 4.7 as the current platform release; saved report/rule version metadata remains historical and is explicitly labeled. Existing workbench-layout styles own balanced step padding and icon alignment. See [follow-up report](../releases/V4.8/V4_8-frontend-review2-report.md). No framework version, Knowledge content, model routing or recovery rule is changed by this presentation work.
-
-The user authorized platform copy, styling and interaction updates after the model foundation work. Existing React pages and research flows remain the owners. src/components/PlatformStatus.jsx consumes the existing public config hook, distinguishes configured/unknown/unconfigured state and exposes no health, cost or policy activation assertion. src/components/DocumentReadingSummary.jsx labels analysis/visual roles generically and shows only model names already saved in public job.modelRouting; configuration is not proof of a call. src/platform.css owns shared presentation, while existing domain layouts remain intact. The existing use-tab-autoplay hook now supports explicit pause/resume, alongside reduced-motion, focus and visibility guards. No server/shared/Knowledge behavior or schema changes. Tests: tests/platform-v48-ui-scenarios.mjs registered by the full UI runner. See [frontend report](../releases/V4.8/V4_8-frontend-completion-report.md).
-
-V4.8.11 comparison executor review: existing scripts/model-comparison.mjs and scripts/model-comparison-worker.mjs own frozen input preparation, run/arm/input checkpoint binding and archived coverage replay. They reuse researchResume and Agent validation. Archived official report text and US XBRL core facts remain distinct; quotes, directories and shareholder-action disclosures cannot satisfy primary financial report coverage. See [second review](../releases/V4.8/V4_8_8-11-review2-report.md). This is CURRENT local executor safety, not live quality acceptance or production policy activation.
-
-Status: CURRENT — calibrated during H0 against checkout `b7592abc4b888e218bbdfca958230366919ea3bb`.
-
-## V4.8.11 isolated comparison executor — CURRENT; live acceptance pending
-
-V4.8.8–.11 review: Agent attaches refreshed Vision material after restoring/rebuilding the active review messages, and updates the existing normalized material for subsequent transitions. The executor rejects non-string or case-insensitive colliding case IDs, binds each result to its run/corpus/input/arm, verifies the stored corpus during export, and checks the execution day before each new arm. See [review report](../releases/V4.8/V4_8_8-11-review-report.md). Paid pilot work remains deferred by the user; no live quality acceptance is claimed.
-
-Owners: `scripts/model-comparison.mjs`, `scripts/model-comparison-worker.mjs`; tests: `tests/model-comparison.test.mjs`, `tests/fixtures/model-comparison-offline.json`. The CLI runs the existing Agent/Gateway/review path twice on identical frozen text material, with existing initial policy recommendations and private compatible checkpoints. It adds no provider endpoint, app API or production policy activation. Each HTTP attempt reserves an operator-estimated amount before dispatch, under a durable request-count limit; unknown actual cost remains null. Isolated processes use local artifacts, no MongoDB, no fresh acquisition/web sources. Missing original pages stay missing. Offline results cannot export acceptance; real results require a separate artifact-bound human review and the unchanged >=50-case rollout validator. Visual assets, dynamic collection and automatic semantic grading are outside this executor's scope. See [runbook](../releases/V4.8/model-comparison-runbook.md).
-
-Runtime: React 19 / Vite 6, Node >=22.13, MongoDB / GridFS. `shared/research-framework.mjs` declares internal execution compatibility 1 and contract 7; execution and model capabilities ship with the platform. M1.x denotes engineering milestones, not an independent runtime release. `research-resume.mjs` validates K identity before execution compatibility and preserves exact pre-rename scope for compatible K-pinned framework-4.7 tasks. `knowledge/current.json` activates K1.0.0 and `server/knowledge-snapshots.mjs` accepts only K-Series snapshots. Platform V and Knowledge K are the two active release lines. See [ADR-017](../adr/ADR-017-platform-execution-compatibility.md). V4.8.4 completes Gateway migration for router and Vision as well as the synthetic diagnostic.
-
-V4.8.1 added Catalog; V4.8.2 added Gateway; V4.8.3 integrated text research; V4.8.4 integrates the remaining callers. H0 and V4.8.0 inventories remain historical baselines, not current endpoint ownership.
-
-## Status and evidence
-
-CURRENT describes an implemented behavior; PARTIAL describes an existing predecessor of an incomplete target contract; FUTURE is a design reservation. DEPRECATED requires an approved migration. Archived V4.x Knowledge remains a byte-identical audit asset; the active runtime has no V4.x reader or resume path.
-
-The complete tracked code/test/active-Knowledge file inventory, hashes and lexical import/export index is [repository-inventory.json](../releases/H0/repository-inventory.json). It includes remaining frontend, shared, provider, worker and diagnostic files beyond the major owners below. This is an inventory, not a proof of every semantic property. [Audit findings](../releases/H0/audit-findings.md) records gaps and overlaps.
-
-## Model calls and transport — CURRENT
-
-Owners: `server/model-routing.mjs`, `server/model-request.mjs`, `server/model-deadline.mjs`, `server/model-stream.mjs`, `server/vision-model.mjs`.
-
-Call sites: `server/agent.mjs` (research/review and followup assessment), `server/research-path.mjs` (path classification), `server/security-intent.mjs` (mention extraction), and Vision. `server/router.mjs` validates research input/modes; it is not a provider Gateway.
-
-Environment-configured routing still selects fixed legacy models. Gateway's adapter owns all provider requests: research retains bounded pre-response retry; router/Vision retain one attempt, their own budgets and strict completion. Private reasoning remains in existing private messages/checkpoints. Path/intent still own caching, concurrency and rule fallback; Vision's wrapper retains image assembly, readiness and safe error translation, while Catalog/adapter own capability/wire guards.
-
-Tests: `tests/model-request.test.mjs`, `tests/model-deadline.test.mjs`, `tests/streaming.test.mjs`, `tests/research-path.test.mjs`, `tests/security-intent.test.mjs`, `tests/visual-reading.test.mjs`.
-
-CURRENT: internal health selection, new-job pins and safe escalation; PARTIAL: policy rollout with live quality gate still closed. FUTURE: V4.9 canonical Vision. Dry-run policy and V4.8.7 usage persistence are implemented below; .7 deployment acceptance has passed. Reuse existing transport protections, not a second stream parser. Cross-provider continuation is limited to the explicit acknowledged context-rebuild boundary; arbitrary private history cannot transfer.
-
-V4.8.0 recorded [four production transports and ten purpose/caller entries](../releases/V4.8/model-call-inventory.md), including both router purposes, forced draft, supplementary review, four Vision readers and diagnostics. V4.8.3 replaces its Agent transport with model-adapter while retaining all ten caller anchors and the historical inventory/hash evidence.
-
-## Model Catalog and Legacy Profiles — CURRENT; Gateway contract PARTIAL
-
-Owner: `server/model-catalog.mjs` adds a pure internal metadata API and validated, immutable ModelProfile v1. It reuses `server/model-routing.mjs` for model defaults and, since V4.8.4, owns the shared legacy image capability predicate re-exported by `server/vision-model.mjs`. Gateway resolves all migrated calls through this Catalog. No parallel provider client, request parser or routing policy was added.
-
-Three stable legacy identities describe analysis (research/review/followup), router (path and security intent, including its model override), and Vision. Router and analysis reference the same existing connection owner. Catalog serialization excludes credentials, connection URLs and unrelated environment fields. Capabilities describe configured usage; provider identity, optional structured/reasoning support, pricing and provider token limits remain unknown where not established. Vision readiness still separately requires credentials.
-
-Tests: `tests/model-catalog.test.mjs`, `tests/visual-reading.test.mjs`, and the existing model/router/stream regressions. Catalog metadata is not a provider certification, health signal, job pin or working Gateway. Schema version 1 belongs to configuration; no research/checkpoint schema or runtime/framework version changes.
-
-V4.8.1 review tightened metadata validation: dense purpose lists and enumerable data-only records prevent accepted values from changing or disappearing during copying/serialization. Accessor properties and array overrides are rejected; normal legacy profiles and transport behavior remain compatible.
-
-CURRENT V4.8.2 normalizes requests/responses; V4.8.3 migrates text research; V4.8.4 migrates router/Vision; V4.8.7 implements telemetry persistence as detailed below. Credential resolution remains with `modelRouting`; future adapters must reuse these owners. V4.8.8–.10 add internal health selection, new-job model-state compatibility and explicit MAIN/PRO profiles. Production policy quality acceptance remains pending.
-
-## Model Gateway — CURRENT; production policy quality acceptance pending
-
-Owners: `server/model-gateway.mjs` exposes complete/explicit private continuation APIs; `server/model-adapter.mjs` owns the one new standalone provider endpoint and legacy wire compatibility; `server/model-gateway-result.mjs` normalizes safe errors, usage, nullable billing and public messages. Existing `server/model-stream.mjs` adds opt-in strict validation and metadata callbacks; its legacy defaults remain. The adapter reuses `model-request`, `model-deadline`, `modelRouting` and the existing review-format unsupported-format predicate.
-
-Canonical responses exclude reasoning; a same-instance WeakMap-backed method returns private continuation messages only when explicitly requested. New-job model-state pins and internal health/escalation are implemented in .8–.10; no new public route is added. Production policy remains disabled by the .11 live-quality gate. V4.8.7 adds independent database ModelCall records below; V4.8.6 adds shadow observation. V4.8.4 has one provider endpoint in `model-adapter.mjs`; Agent, path, security intent and Vision delegate to Gateway, as does the diagnostic script. Ten production semantic callers remain, and historical baseline hashes are not rewritten.
-
-Tests: `tests/model-gateway.test.mjs`, `tests/model-call-inventory.test.mjs`, `tests/router-vision-migration.test.mjs`, and existing streaming/request/deadline/router/Vision tests. Unknown optional capabilities/prices remain unknown; legacy explicit efforts remain restricted; v2 profiles require documented low/high/max. Non-stream TTFT is a receipt approximation; safe switches require acknowledged context rebuild. Durable telemetry now exists in V4.8.7 below. All callers now use Gateway's bounded reads/URL guards. See [contract](../contracts/model-gateway.contract.md) and [V4.8.4 report](../releases/V4.8/V4_8_4-completion-report.md).
-
-V4.8.2 review closes the fetch-to-reader cancellation gap, rejects multiple/unexpected choice indexes in opt-in strict parsing, and enforces synchronous preview callbacks without unhandled promise failures. `model-request.mjs` exports a shared network-error classifier for body failures; existing retry behavior is unchanged. These corrections affect standalone Gateway execution, not current business callers.
-
-A further V4.8.2 request-boundary review rejects invalid explicit profile selection, sparse tool lists, and null stream/token options before dispatch. Valid omitted-option defaults and explicit compatible profiles remain unchanged.
-
-V4.8.3: `agent.completion()` calls Gateway with explicit research/review/followup purposes and returns private continuation only to the existing execution/checkpoint path. It retains format negotiation, waiting/retry notices, one logical-call deadline and existing recovery error codes. The adapter still owns provider configuration and strict parsing. A factory-only legacy-text compatibility option accepts missing JSON finish metadata without inventing it; SSE and standard Gateway guards stay strict. Missing credentials/unsafe URLs/malformed completed responses fail closed. `tests/model-migration.test.mjs` compares six modes against pinned pre-migration requests/results/events/checkpoints. Review, followup, valuation, financial/Evidence and resume business owners are unchanged. See [V4.8.3 report](../releases/V4.8/V4_8_3-completion-report.md) for acceptance and test limits.
-
-V4.8.3 review preserves waiting callback error handling across the Agent bridge and stops buffered Gateway notifications immediately on cancellation. The existing wrapper/adapter remain the owners; no new subsystem or routing behavior is introduced. Regression evidence: `tests/model-migration.test.mjs` and `tests/model-gateway.test.mjs`.
-
-A second V4.8.3 review consumes read rejections when cancellation happens synchronously inside reader.read(), and applies the shared synchronous callback guard to format-fallback notifications. `model-gateway-result.mjs` now owns that reused guard. Error normalization and cancellation handling change only in these failure paths; policy, parsing and business validation remain with their existing owners.
-
-V4.8.4 keeps path/intent cache keys (question/model/base), TTLs (semantic 10 minutes, rules 30 seconds), manual choices, concurrency and exact security parsing in their existing modules. Vision keeps page/crop assembly, 12-image/16 MiB request and 512,000-byte/18,000-character response limits, 60-second deadline, visual budgets and source validation. Catalog owns the exact legacy image predicate; vision-model re-exports it for compatibility and consults the capability field. The scoped legacy-router-vision option only permits an omitted JSON assistant role; finish_reason=stop remains required by these callers. Six before/after wire/result comparisons and offline diagnostic coverage verify compatibility. No future policy/state/feature flags are introduced.
-
-## Research complexity scoring — CURRENT utility with dry-run integration
-
-`server/research-complexity.mjs` exports pure `evaluateResearchComplexity()` over explicit structured mode/company/market/currency/history/material/valuation/evidence/runtime/review signals. It returns versioned 0–100 score, descriptive level, ordered contribution codes, normalized signals and unknown paths. Weights are V1 engineering heuristics, not validated model-routing thresholds. Missing-data, provider-failure and format-failure counts retain zero-point reasons and never become reasoning failures. At V4.8.5 acceptance no production module imported the evaluator. V4.8.6 authorizes only the dry-run consumer below; create/workflow, execution budgets and review gates remain unchanged.
-
-Existing data owners remain `shared/research-framework.mjs` (mode/plan/history), `server/agent-execution.mjs` (execution receipts/status), Agent review validation and existing Evidence/calculation/visual modules. No job-to-signal collector is built in V4.8.5: distinct company versus listing counts, workload and classified reasoning failures must be established by a future caller; unknowns stay null. `tests/research-complexity.test.mjs` covers six fixtures, A–F, normalization, thresholds, missingness, failure separation and an executable no-integration boundary. Policy decisions belong to V4.8.6 and persistent telemetry/modelState to later releases.
-
-## V4.8.6 dry-run policy — CURRENT; production selection gated in .11
-
-Second review hardens the existing evaluator's internal record copies against inherited field values/getters. Omitted fields and null nested groups remain unknown even if Object.prototype has been extended elsewhere in the process. No scoring weights or public result shape change; `tests/research-complexity.test.mjs` and `tests/model-policy.test.mjs` reproduce and cover this input-isolation boundary. No such prototype write path was identified in this review. See the [second review report](../releases/V4.8/V4_8_4-6-review2-report.md).
-
-`server/model-policy.mjs` consumes the unchanged pure evaluator and computes MAIN/PRO effort candidates. `server/model-gateway.mjs` observes these only when MODEL_ROUTING_MODE=dry-run; default/unknown values retain legacy without observations. In dry-run, actual profile/effort remain legacy and separate from recommendations. V4.8.10 binds explicit MAIN/PRO Catalog profiles; .11 permits new-job selection only after a matching real quality report. No adapter, transport or parallel routing system is added.
-
-Agent forwards only known job mode and plan historyYears for research/review/followup. Remaining signals stay unknown; router/Vision are not tier scored. The V4.8.5 no-caller boundary above describes its acceptance baseline; authorized consumption now occurs only in policy, with executable dependency checks. `tests/model-policy.test.mjs` verifies thresholds, Main/low Mode A cap, missing/provider/format invariance, observer failure isolation and all six pinned research wire/delivery/event/checkpoint hashes with dry-run enabled. Existing model migration and router/Vision suites remain.
-
-Limits at V4.8.6 acceptance: raw 0–100 complexity is compared directly to 0–3/4–7/8–10/≥11 policy bands, with no undocumented conversion or weight change. B plus five years already recommends PRO/max. These remain uncalibrated recommendations, not quality evidence. V4.8.7 subsequently added persistent telemetry, .8 health observation, .9 modelState, and .10 explicit failure classification/internal escalation. Full job signal collection and cost selection remain absent; .11 production policy stays gated on real quality acceptance.
-
-Review of V4.8.4–V4.8.6: Gateway now snapshots env once per complete() before policy observation; Catalog and adapter reuse this snapshot so logger-triggered configuration reload cannot mix an old model with a new connection/key/budget. Later calls still see new configuration. This is in-memory per-call consistency, not V4.8.9 modelState. Router/Vision now have six dry-run golden/cache comparisons in addition to legacy comparisons. See the [review report](../releases/V4.8/V4_8_4-6-review-report.md).
-
-## Research orchestration — CURRENT
-
-Owners: `server/index.mjs`, `server/router.mjs`, `server/research-create.mjs`, `server/research-path.mjs`, `server/agent.mjs`, `server/agent-execution.mjs`, `server/research-workflow.mjs`, `server/research-context.mjs`, `server/research-baseline.mjs`.
-
-Shared rules: `shared/research-framework.mjs`, `shared/research-approach.mjs`, `shared/deep-research.mjs`, `shared/earnings-update.mjs`, `shared/company-comparison.mjs`, `shared/execution-discipline.mjs`.
-
-Six A–F paths cover quick screen, company research, earnings update, comparison, portfolio/execution review and shareholder return. One orchestrator uses evidence/tools and independent review. Creation has submission identity, duplicate and concurrency guards. Public plans require real returned tool references for completed steps; this does not independently verify facts. Context compaction waits for pending tool calls. Current portfolio inputs/action output are not canonical Mandate/Decision/Portfolio engines.
-
-Tests: `tests/agent.test.mjs`, `tests/research-create.test.mjs`, `tests/research-pipeline.test.mjs`, `tests/research-framework.test.mjs`, `tests/earnings-update.test.mjs`, `tests/company-comparison.test.mjs`, `tests/execution-discipline.test.mjs`, `tests/jobs-create.integration.mjs`.
-
-FUTURE: V5.7 Research State/IR builds on jobs, context and public receipts; it must not silently replace them.
-
-## Checkpoint, retry and recovery — CURRENT
-
-Owners: `server/job-checkpoints.mjs`, `server/research-resume.mjs`, `server/research-retry.mjs`, `server/calculation-recovery.mjs`, `shared/research-recovery.mjs`, `shared/calculation-progress.mjs`.
-
-Private version-1 checkpoints retain messages, evidence, tool results, review and web/followup state. Compatible resume reuses saved sources/marketData and runs only pending calls. Legacy recovery may reconstruct context from saved tool receipts. Current retry rejects unsafe restarts of model-pinned tasks. When public resume metadata reports Knowledge, execution or model-configuration incompatibility, the detail page offers input reuse through the workbench; a new job starts only after submission and the old record remains unchanged. The existing no-checkpoint legacy retry branch remains separate. Preserving initially collected market data does not establish a universal publishedAt filter for later followup.
-
-Tests: `tests/research-resume.test.mjs`, `tests/research-retry.test.mjs`, `tests/research-recovery.test.mjs`, `tests/review-recovery.test.mjs`, `tests/input-checkpoints.test.mjs`, `tests/research-resume.integration.mjs`, `tests/jobs-retry.integration.mjs`.
-
-FUTURE: V5.11 complete replay/version pinning; V4.8 model-state compatibility. H0 changes none of these branches.
-
-## Knowledge, excerpts and snapshots — CURRENT
-
-Owners: `server/knowledge.mjs`, `server/knowledge-excerpt.mjs`, `server/knowledge-snapshots.mjs`, `shared/knowledge-engineering.mjs`, `shared/knowledge-index.mjs`, `shared/knowledge-search.mjs`, `shared/knowledge-loading.mjs`, `shared/research-knowledge.mjs`.
-
-Active source: `knowledge/ENTRY.md`, `knowledge/modules.json` (schema 3, K1.0.0), `knowledge/modules/rules/`. The catalog additively owns 26 high-impact Rule IDs, ordered constitution, ontology, regression IDs, enforcement metadata, temporal validity and impact maps. `scripts/backup-knowledge.mjs`, `scripts/index-knowledge.mjs`, `scripts/knowledge-lint.mjs` and `scripts/seed-knowledge-governance.mjs` preserve/check it. Historical publishing/splitting/deduplication scripts are maintenance history; `knowledge/versions/` remains preserved. Do not recreate CORE/FULL dual runtime content.
-
-New jobs pin complete validated snapshots plus K version/fingerprint; valid revisions apply to new jobs while queued/running/restored sessions keep original snapshots. Invalid updates or critical lint errors retain the last valid snapshot and disclose pending validation. Delivered rule sections have hash/line/truncation provenance. Saved excerpt API checks receipts and rejects arbitrary paths. Resolver/compiler support deterministic minimal packs and dry-run legacy comparison without changing the production prompt. KCP/debt, runtime basis validation and impact/decay analysis are deterministic domain functions.
-
-Tests: `tests/knowledge-engineering.test.mjs`, `tests/knowledge-modules.test.mjs`, `tests/knowledge-snapshots.test.mjs`, `tests/knowledge-backup.test.mjs`, `tests/research-knowledge.test.mjs`, `tests/knowledge-api.integration.mjs`. Release benchmark: `scripts/knowledge-benchmark.mjs`.
-
-CURRENT V5.3: structured Rule IDs, ontology, K-Series governance, lint/regression, proposal gate, runtime promotion metadata and impact/decay are implemented over the existing indexed modules and immutable snapshots. Physical layer directories, persistence for proposal/debt workflows, broad runtime promotion and automatic learning remain future work.
-
-V5.3 frontend alignment: `ResearchKnowledge` displays the saved Knowledge version and distinguishes historical or unrecorded identity. Historical V4.x reports and read receipts remain visible; unsupported excerpt reads have no action. `ResearchMethod` explains platform/Knowledge releases and continuation versus new research versus save retry. Existing components, drawer layout and design tokens remain the owners. See the [frontend version sync report](../releases/V5.3/frontend-version-sync-report.md).
-
-## Evidence search, page read, followup and web — CURRENT
-
-Owners: `server/evidence-search.mjs`, `server/evidence-followup.mjs`, `server/agent-page-reader.mjs`, `server/agent-disclosures.mjs`, `server/web-research.mjs`, `server/web-search-provider.mjs`, `server/web-evidence.mjs`, `server/web-evidence-request.mjs`, `server/research-references.mjs`.
-
-Source-filtered, alias-expanded lexical/page retrieval shares block identity with calculation gates, including vendor rows and XBRL. Duplicate/poor-quality references remain ambiguous. Page/disclosure followup retains limits and receipts. Web candidates require body/authority checks; snippets are not authoritative evidence. Public URL/DNS/redirect/size checks protect fetching. Budgets and web receipts survive checkpoints. Lexical scoring is not BM25, vectors or learned reranking.
-
-Tests: `tests/evidence-integrity.test.mjs`, `tests/evidence-followup.test.mjs`, `tests/web-research.test.mjs`, `tests/web-evidence-reuse.test.mjs`, `tests/research-references.test.mjs`.
-
-PARTIAL: Source/Evidence canonical contracts. FUTURE V5.4: normalization, hybrid retrieval and Evidence Pack, preserving exact financial evidence and fetch restrictions.
-
-## Document / OCR / Vision — CURRENT
-
-Owners: `server/document-reader.mjs`, `server/document-layout.mjs`, `server/document-integrity.mjs`, `server/filing-text.mjs`, `server/pdf-extractor.mjs`, `server/pdf-processing.mjs`, `server/pdf-options.mjs`, `server/pdf-ocr.mjs`, `server/ocr-image.mjs`, `server/material-vision.mjs`, `server/visual-assets.mjs`, `server/visual-reading.mjs`.
-
-Worker boundaries: `server/pdf-worker.mjs`, `server/report-page-worker.mjs`, `server/visual-render-worker.mjs`. Shared text/material handling: `shared/document-text.mjs`, `shared/reference-materials.mjs`.
-
-Extraction preserves page/table/cell metadata, quality and truncation. PDF text/OCR, targeted original-page reading and Vision complement each other. Visual assets have integrity/size/budget controls. OCR alternatives and Vision readings are observations requiring review; alignment never supplies missing values. Parser version: evidence-10. Local workers are not a distributed queue.
-
-Tests: `tests/document-parsing.test.mjs`, `tests/document-routing.test.mjs`, `tests/pdf-extractor.test.mjs`, `tests/pdf-ocr.test.mjs`, `tests/pdf-recovery.test.mjs`, `tests/ocr-image.test.mjs`, `tests/material-processing.test.mjs`, `tests/visual-reading.test.mjs`.
-
-## Security and data acquisition — CURRENT
-
-Identity owners: `server/security-resolver.mjs`, `server/security-intent.mjs`, `server/security-exchanges.mjs`, `server/sec-directory.mjs`, `shared/security-input.mjs`, `shared/security-display.mjs`.
-
-Acquisition owners: `server/market-data.mjs`, `server/market-request.mjs`, `server/market-cache.mjs`, `server/bounded-reads.mjs`, `server/data-provider-config.mjs`, `server/official-reports.mjs`, `server/report-periods.mjs`, `server/hkex-disclosures.mjs`, `server/capital-evidence.mjs`, `server/shareholder-data.mjs`.
-
-Adapters/workers: `server/tushare-client.mjs`, `server/tushare-financials.mjs`, `server/longbridge-quotes.mjs`, `server/longbridge-worker.mjs`, `server/longbridge-fundamentals.mjs`, `server/longbridge-fundamental-worker.mjs`.
-
-A/H/US directories verify mentions and market hints. Semantic extraction must use user text and cannot invent identity. Quotes, official reports/attachments, capital/shareholder events and vendor financials disclose missing coverage. Structured provider fields are not filing body coverage. SEC lookup and exchange lookup share upstream provider territory but return distinct information.
-
-Tests: `tests/security-resolver.test.mjs`, `tests/security-intent.test.mjs`, `tests/security-display.test.mjs`, `tests/market-data.test.mjs`, `tests/market-resilience.test.mjs`, `tests/data-providers.test.mjs`, `tests/data-completeness.test.mjs`, `tests/shareholder-data.test.mjs`.
-
-PARTIAL: stable identity contract. FUTURE V5.5: canonical Issuer/Security/Listing/ShareClass and corporate-action history. Extend existing resolvers rather than building disconnected security masters.
-
-## Financial observations and verification — CURRENT; Fact contract PARTIAL
-
-Owners: `server/financial-observations.mjs`, `server/financial-input-verification.mjs`, `server/data-basis.mjs`, `server/inline-xbrl.mjs`, `shared/financial-coverage.mjs`, plus provider adapters above.
-
-Observations preserve source/period/unit context. Original-number verification checks unique usable source/block, continuous quote/label, signed/scaled numeric tokens and bounded alternative location recovery. Success is `matched-needs-review`, not a verified Fact: column, period, currency, scope and authenticity still need review. Data-basis checks disclose coverage/currency/share/period limitations. The XBRL parser is bounded, not a complete taxonomy validator. Canonical factId/issuerId/metricId verification/revision machinery does not exist.
-
-Tests: `tests/evidence-integrity.test.mjs`, `tests/data-completeness.test.mjs`, `tests/data-providers.test.mjs`, `tests/byd-agent-alignment.test.mjs`, `tests/calculations.test.mjs`.
-
-FUTURE V5.5: typed facts and restatement history. Preserve current missing-data and verification boundaries.
-
-## Calculations and valuation — CURRENT; formal lineage PARTIAL
-
-Owners: `server/calculations.mjs`, `server/quick-screen.mjs`, `server/cashflow-bridge.mjs`, `server/normalized-earnings.mjs`, `server/reinvestment.mjs`, `server/research-sensitivity.mjs`, `server/valuation-snapshot.mjs`, `server/valuation-history.mjs`, `server/valuation-review.mjs`, `server/shareholder-return.mjs`, `server/company-comparison.mjs`, `shared/valuation-policy.mjs`, `shared/screen-evidence-rules.mjs`.
-
-DCF/dividend/normalized earnings, snapshots, sensitivity, cashflow bridge, reinvestment and shareholder-return arithmetic are implemented. Agent calculation gates retain basis/source/block/tool references; direct math exports are not a universal Fact type system. FCFF/FCFE, scope, A/H market-cap interpretation, period/currency/share basis and missing data remain explicit constraints. Valuation history acquires vendor history; valuation review compares returned models. Sensitivity/dividend scenarios reuse calculations, not a canonical Scenario Engine.
-
-Tests: `tests/calculations.test.mjs`, `tests/cashflow-bridge.test.mjs`, `tests/quick-screen.test.mjs`, `tests/valuation-policy.test.mjs`, `tests/deep-research.test.mjs`, `tests/deep-cash-return-alignment.test.mjs`, `tests/company-comparison.test.mjs`, `tests/shareholder-data.test.mjs`.
-
-FUTURE V5.6: formula registry/versioned records/dependency DAG. FUTURE V5.7: canonical forecast/scenario. Reuse arithmetic without redefining financial meaning.
-
-## Storage, migration and archives — CURRENT
-
-Owners: `server/storage.mjs`, `server/schema-migrations.mjs`, `server/migrate.mjs`, `scripts/migrate-mongodb.mjs`, `server/data-archive.mjs`.
-
-MongoDB job summaries point to private GridFS payloads. Old payloads remain for concurrent readers; this is not a Fact revision ledger. Tombstones prevent deleted-job resurrection. Cache TTL and hashed parsed archives support reuse/integrity, not immutable historical replay. Schema v1 adds indexes; migration locking/sequential versions reject downgrades. Legacy JSON import differs from schema migration. MongoDB failure has no file-storage fallback.
-
-Tests: `tests/storage.integration.mjs`, `tests/schema.integration.mjs`, `tests/jobs-delete.integration.mjs`, `tests/jobs-retry.integration.mjs`, `tests/web-evidence-reuse.test.mjs`.
-
-H0 has no schema/migration change. Future persistent objects must evolve these owners additively.
-
-## Review, validation, delivery and public views — CURRENT
-
-Owners: `server/review-format.mjs`, `server/research-output.mjs`, `server/research-references.mjs`, `server/research-delivery.mjs`, `server/job-stream.mjs`, `server/access.mjs`, `shared/research-delivery.mjs`, `shared/research-record.mjs`, `shared/report-warnings.mjs`, `shared/research-export.mjs`.
-
-JSON-schema review negotiation/fallback, deterministic contract/reference validation and repair precede formal output. Terminal delivery waits for durable storage; save retries do not rerun models/data. Unsaved results stay private, but pending delivery is in-memory and is not promised across process loss. SSE reconnects with snapshots, not replayed events. Public projection excludes checkpoint/draft/submission. Current records contain reports plus structured review/job fields; canonical Research State is FUTURE.
-
-Tests: `tests/review-format.test.mjs`, `tests/research-contract.test.mjs`, `tests/research-references.test.mjs`, `tests/report-citations.test.mjs`, `tests/review-recovery.test.mjs`, `tests/research-delivery.test.mjs`, `tests/jobs-delivery.integration.mjs`, `tests/streaming.test.mjs`, `tests/access.test.mjs`.
-
-## Frontend/shared views — CURRENT
-
-Entrypoints: `src/main.jsx`, `src/App.jsx`, `src/components/ResearchDetail.jsx`, `src/components/ResearchKnowledge.jsx`, `src/components/ResearchExecutionChecks.jsx`, `src/components/ExecutionReview.jsx`. Other components/styles/helpers are in the inventory.
-
-Routes show workbench/history/detail/handbook, inputs, coverage, public receipts, saved rule excerpts, reports/exports and recovery. Similar server/shared filenames often separate orchestration from client-safe presentation; they are not automatically competing systems. Current portfolio/execution UI is not an autonomous allocation/trading engine.
-
-Tests: `tests/routes.integration.mjs`, `tests/workspace-ui.integration.mjs` and imported UI scenario modules; `tests/research-record.test.mjs`, `tests/research-knowledge.test.mjs`, `tests/research-preparation.test.mjs`, `tests/report-preview.test.mjs`.
-
-## Tests, fixtures, diagnostics and benchmarks
-
-CURRENT pre-H0 baseline: 69 unit-test files / 505 cases, eight MongoDB integration files, five route-render checks, Playwright/Edge UI with imported scenario modules, Linux/Docker `tests/deploy.integration.sh`. `package.json` test:mongodb covers only six files; also run `tests/knowledge-api.integration.mjs` and `tests/research-resume.integration.mjs`. Final counts including Harness tests belong in the completion report.
-
-`tests/fixtures/` contains synthetic document/review/provider/runtime fixtures. `scripts/` includes explicit diagnostic and smoke probes, some with live model/data calls. They are not automatically offline regressions or frozen quality benchmarks.
-
-FUTURE: `benchmark/README.md`, `benchmark/contracts/case-schema.md`, `benchmark/RED_TEAM_PLAN.md` are design materials only. No unified runner/graders/champion-challenger platform exists; V5.0 owns that system. Preserve existing fixtures when adding it.
-
-See [testing](../development/testing.md) and [architecture fitness](../development/architecture-fitness.md). Full acceptance requires every existing suite, not just pnpm test.
-
-## V4.8.7 ModelCall telemetry — CURRENT implementation
-
-V4.8.7 adds ModelCall started/terminal records through the existing Gateway, a process-local AsyncLocalStorage job attribution scope in the existing server execution path, and MongoDB model_calls storage with an on-demand internal job usage summary. No prompts, messages, source bodies, hidden reasoning, endpoint URLs or credentials are retained. Default production telemetry is enabled; MODEL_TELEMETRY_ENABLED=false disables the writer without changing routing. Standalone Gateway/CLI consumers need an injected onModelCall sink or configured writer; no database is opened implicitly by the Gateway. Acceptance is tracked in the V4.8.7 completion report.
-
-Owners: `server/model-telemetry.mjs`, `server/model-gateway.mjs`, `server/index.mjs`, `server/storage.mjs`, `server/schema-migrations.mjs`. Tests: `tests/model-telemetry.test.mjs`, `tests/model-telemetry.integration.mjs` and existing storage/schema/API/resume suites. Per-call metadata is separate from canonical research, public events and checkpoint modelState. Health and persistent profile pinning remain V4.8.8/.9.
-
-The historical V4.8.7 review added `tests/model-telemetry-migration.test.mjs` for twelve existing golden scenarios with asynchronous telemetry enabled. Known preflight attribution and deadline cancellation classification were corrected in the existing Gateway/recorder owners; no second transport or state store was introduced. See the [V4.8.7–.9 review report](../releases/V4.8/V4_8_7-9-review-report.md) for checks at that time. Deployment acceptance and V4.8.8/.9 implementation were pending then and have since been completed as recorded below.
-
-The [second review](../releases/V4.8/V4_8_7-9-review2-report.md) fixes terminal cancellation checking to reuse the dispatched signal instead of rereading a mutable caller request after telemetry awaits. Three regression cases exercise removed/replaced signals and getter errors; existing async-telemetry golden coverage remains. No health/state implementation, schema, public API or investment rule change.
-
-V4.8.7 [deployment acceptance](../releases/V4.8/V4_8_7-deployment-acceptance.md) is now complete: the unchanged Linux integration script passes deployment, upgrade, data preservation, backup/rollback, health/stopped-backup and injected build/migration failure checks. The .7 status is accepted; earlier review reports retain their historical pending status. No .8/.9 capability is implied.
-
-The [post-deployment review](../releases/V4.8/V4_8_7-review3-report.md) adds four test cases for duplicate/concurrent ModelCall writes, job deletion/isolation, late writer rejection and zero/unknown multi-currency summaries. Existing telemetry/storage owners pass without runtime changes; V4.8.7 acceptance is retained and .8/.9 remain unimplemented.
-
-## V4.8.8 accepted health boundary
-
-CURRENT internal: server/model-health.mjs owns bounded recent availability outcomes and cooldown; server/model-gateway.mjs selects only explicitly quality-approved same-tier candidates after request capability checks; server/model-adapter.mjs remains the sole endpoint/identity owner. Default legacy/dry-run routing stays unchanged. Tests: tests/model-health.test.mjs plus legacy migration goldens. Explicit pins and any assistant/tool/private continuation block switching; failures/partial responses are not replayed. Availability never becomes reasoning escalation. No accepted ADR or Evidence/research rule changes. Production fallback and measured candidate quality remain unavailable until explicitly configured and accepted; no tier is inferred from names. Full modelState enforcement remains .9.
-
-## V4.8.9 modelState — CURRENT
-
-Owners: server/model-state.mjs, server/model-connection.mjs, existing research-create/resume/retry, Agent/Gateway and private storage/public filters. New jobs/checkpoints pin mode/policy, profile/model/opaque endpoint identity and effort with empty escalation history. Absence alone retains historical legacy reads; corrupt or incompatible present state throws before dispatch/tool/retry acquisition. Key rotation does not change identity. Gateway verifies custom Catalog dispatch against pins; process-local job scopes isolate concurrent calls. No cross-provider escalation or canonical ResearchState is introduced. New jobs with unusable checkpoints refuse automatic reacquisition. Tests: tests/model-state.test.mjs and tests/model-state.integration.mjs, including actual process exit/restart with MongoDB and public-list exclusion. Current profile metadata is not hidden reasoning and is nevertheless private. Historical TARGET gaps remain distinguished from these local enforced pin guards.
-
-## V4.8.10 internal safe escalation — CURRENT
-
-ModelProfile v2 binds main/zai/glm-5.3-flash and pro/deepseek/deepseek-flash explicitly; v1 remains legacy. server/model-state.mjs validates private policy state v2 and pins actual connection identity/effort, while server/model-escalation.mjs coordinates acknowledged checkpoint transitions. Existing Catalog/Gateway/adapter/context and Agent owners remain. MAIN low→high→PRO high→max only follows two explicit model-format/JSON-argument failures, with all pending tools completed. Mode A/data gaps/health/financial validation do not escalate. Raw assistant reasoning is never transferred; actual evidence/tool context is rebuilt with existing window/omission semantics. Strict checkpoint persistence precedes the next call. Existing budgets/validation/cutoff remain unchanged. Production default stays legacy and paid quality acceptance is deferred by user; offline tests are not permission to activate policy. Tests: tests/model-escalation.test.mjs and tests/model-state.integration.mjs. Full target rollout remains .11.
-
-## V4.8.11 rollout gate — PARTIAL release acceptance
-
-CURRENT code: server/model-rollout.mjs validates an operator-owned live-model-comparison report against exact model/connection/configuration and model-owner code fingerprints. At least 50 unique live cases, all six modes, passing candidate delivery/citations, zero critical fact errors, dry-run and rollback acceptance are required. Offline fixtures, missing credentials/report, changed model/code, duplicate or incomplete cases fail closed to legacy. A trusted local report is operator attestation, not cryptographic proof of honest evaluation.
-
-Only an accepted new policy job consumes existing complexity recommendations; Mode A stays MAIN/low, unknown complexity stays legacy. An optional initial field in modelState v2 pins the initial step; absence retains .10 MAIN/low. Escalation receipts must be contiguous from that step. Business callers still do not select provider names, and all endpoint traffic stays in the single Gateway adapter. Existing policy checkpoints pause after production rollback; they are not rewritten or resumed on a different model. Public routing labels reflect the actual active analysis profile without exposing private state.
-
-Offline validation: tests/model-rollout.test.mjs and tests/fixtures/model-routing-offline-cases.json run 60 baseline/candidate transport safety comparisons plus gate/rollback tests. They are not research-quality evidence. User deferred all paid comparison and required legacy; live acceptance and production rollout therefore remain pending. A one-command legacy server entry exists: pnpm start:legacy after stopping the previous server instance. It overrides inherited mode without editing .env or deleting records. No V4.9 or unified V5 benchmark platform is implemented.
-V4.8 第二轮回归补充：App 继续拥有异步下载请求，以浏览器内存状态及同步锁防止资源加载期间重复导出；ResearchDetail 与 ResearchExecutionChecks 共享等待反馈，手机操作面板在下载准备期间保持可见。原 shared/research-export.mjs、持久化对象、模型策略及恢复语义不变。证据见 [第二轮回归报告](../releases/V4.8/V4_8-regression-review2-report.md)。
-
-## 2026-09-11 模型名称配置更新
-
-按用户明确要求，当前分析、PRO 档及默认视觉模型统一使用 `deepseek-flash`；MAIN 绑定与路由、升级和验收门槛不变。以上 CURRENT 绑定名称反映本次更新，不代表历史付费质量验证已完成。历史任务模型身份及验收记录不回写；详见 [变更报告](../releases/V4.9/model-name-unification-20260911.md).
-
-## V4.9 回归维护：页面加载与发布检查
-
-既有 ResearchPages 扩展到研究记录页；PlatformStatus 保留即时状态与触发入口，PlatformStatusPanel 在用户打开说明时加载，复用原 Popover 内容及焦点行为。测试拦截同时识别开发和正式构建模块，测试工件标记 assetMode。package.json 的 test:release 汇集既有清单检查，harness 增加公开模板一致性/空密钥/禁用晋升校验。无业务、持久化或模型执行架构变化。详见 [报告](../releases/V4.9/V4_9-regression-optimization-report.md)。
+Completed pre-V5.3 release maps have been removed. This document and executable code define current runtime ownership.

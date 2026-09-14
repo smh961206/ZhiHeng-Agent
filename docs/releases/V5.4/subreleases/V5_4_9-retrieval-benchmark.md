@@ -1,7 +1,7 @@
 # V5.4.9 — Retrieval benchmark
 
 Release: `V5.4`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,11 +15,11 @@ Create 100+ frozen queries and channel ablations.
 
 Codex must inspect the real checkout before editing:
 
-- `server/evidence-search.mjs`
-- `server/evidence-followup.mjs`
-- `server/agent-page-reader.mjs`
-- `server/web-evidence.mjs`
-- `server/research-context.mjs`
+- `server/evidence-search.ts`
+- `server/evidence-followup.ts`
+- `server/agent-page-reader.ts`
+- `server/web-evidence.ts`
+- `server/research-context.ts`
 - `tests/`
 
 If paths or ownership changed, update `docs/architecture/current-implementation-map.md`; do not force the repository to match stale filenames.
@@ -173,5 +173,12 @@ Stop this subrelease when all are true:
 ## 26. Deferred Work
 
 - Online learning
+
+## 27. Infrastructure and Data Acceptance Addendum
+
+- Compare the baseline store/embedded index with any proposed independent vector service on recall, citation accuracy, cutoff leakage, tenant leakage, p95 latency, rebuild time, cost and operational recovery.
+- The benchmark corpus must include exact financial queries, semantic queries, contradictory evidence and post-cutoff distractors.
+- Approve an independent vector database only when a documented threshold is missed by the simpler implementation and the candidate passes recovery and access-control tests.
+- Record the decision, rejected alternatives, measured results and rollback boundary in an ADR; “RAG support” alone is not sufficient evidence.
 
 Do not proceed to the next subrelease unless the user explicitly authorizes continuation or explicitly asked Codex to execute the entire current core release.

@@ -1,7 +1,7 @@
 # V5.10.10 — Capital Allocation V1
 
 Release: `V5.10`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,19 +15,19 @@ Recommend target weights using expected return/downside/confidence/liquidity/man
 
 Codex must inspect the real checkout before editing:
 
-- `server/storage.mjs`
-- `server/schema-migrations.mjs`
-- `server/research-workflow.mjs`
+- `server/storage.ts`
+- `server/schema-migrations.ts`
+- `server/research-workflow.ts`
 - `src/`
 - `shared/`
 - `tests/`
-- `server/security-resolver.mjs`
-- `server/security-intent.mjs`
-- `server/security-exchanges.mjs`
-- `server/financial-observations.mjs`
-- `server/financial-input-verification.mjs`
-- `server/data-basis.mjs`
-- `server/storage.mjs`
+- `server/security-resolver.ts`
+- `server/security-intent.ts`
+- `server/security-exchanges.ts`
+- `server/financial-observations.ts`
+- `server/financial-input-verification.ts`
+- `server/data-basis.ts`
+- `server/storage.ts`
 - `tests/`
 
 If paths or ownership changed, update `docs/architecture/current-implementation-map.md`; do not force the repository to match stale filenames.
@@ -179,5 +179,12 @@ Stop this subrelease when all are true:
 ## 26. Deferred Work
 
 - Trading
+
+## 27. Infrastructure and Data Acceptance Addendum
+
+- Persist allocation outputs with stable portfolio/security/decision IDs, Decimal values, currency basis, solver version, objective and constraint versions.
+- Store source Research State and market/data cutoff for every allocation; preserve dependency lineage through risk and attribution inputs.
+- Use normalized relations and rebuildable projections before considering graph or analytical databases.
+- Keep this result advisory and auditable; no queue or integration may convert it into an external trade in V5.10.
 
 Do not proceed to the next subrelease unless the user explicitly authorizes continuation or explicitly asked Codex to execute the entire current core release.

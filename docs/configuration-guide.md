@@ -6,9 +6,9 @@
 
 | 环境 | 环境文件 | 模型文件 | 可选价格文件 |
 | --- | --- | --- | --- |
-| 本地 | `.env` | `config/models.local.json` | `config/pricing.local.json` |
-| 生产 | `.env.production` | `config/models.production.json` | `config/pricing.production.json` |
-| 公共模板 | `.env.example` / `.env.production.example` | `config/models.example.json` | `config/pricing.example.json` |
+| 本地 | `.env` | `config/models.local.json` | `config/pricing.local.json` | `config/research-budget.local.json`（可选） |
+| 生产 | `.env.production` | `config/models.production.json` | `config/pricing.production.json` | `config/research-budget.production.json`（可选） |
+| 公共模板 | `.env.example` / `.env.production.example` | `config/models.example.json` | `config/pricing.example.json` | `config/research-budget.example.json` |
 
 环境文件保存服务参数和密钥；模型文件保存模型、接口和环节分配；价格文件只用于费用估算。三者职责不能互相替代。
 
@@ -34,7 +34,6 @@ LLM_MAIN_API_KEY=
 MODEL_TELEMETRY_ENABLED=true
 LLM_TIMEOUT_MS=300000
 LLM_MAX_DURATION_MS=1800000
-LLM_REVIEW_FORMAT=auto
 ```
 
 可以新增 `LLM_AUDIT_API_KEY` 等自定义后端变量，只要模型 JSON 的 `apiKeyEnv` 使用完全相同的名称。不要使用 `VITE_` 前缀，也不要把密钥值放进 JSON、文档或前端代码。
@@ -149,7 +148,7 @@ pnpm models:check config/models.local.json
 生产：
 
 ```bash
-node --env-file-if-exists=.env.production scripts/model-config.mjs --check config/models.production.json
+python -m python_backend.cli models-check config/models.production.json
 ```
 
 成功结果包括：
@@ -185,13 +184,33 @@ cp config/models.example.json config/models.production.json
 编辑两个生产文件后运行：
 
 ```bash
-node --env-file-if-exists=.env.production scripts/model-config.mjs --check config/models.production.json
+python -m python_backend.cli models-check config/models.production.json
+python -m python_backend.cli pricing-check config/pricing.production.json
 bash deploy.sh up
 ```
 
-`deploy.sh` 通过 `compose.models.yaml` 将生产模型文件只读挂载到容器。`.env.production`、`models.production.json` 和可选 `pricing.production.json` 都属于私有配置，不提交 Git、不写入镜像。
+`deploy.sh` 通过 `compose.models.yaml` 将生产模型文件只读挂载到容器；检测到价格或预算生产文件时分别加入 `compose.pricing.yaml`、`compose.budget.yaml`。`.env.production`、模型、价格和预算生产文件都属于私有配置，不提交 Git、不写入镜像。
 
-## 9. 费用与缓存记录
+## 9. 外部数据与网页正文
+
+后端可按环境启用 Tushare、LongPort 以及 Tavily/Brave 搜索发现：
+
+```dotenv
+TUSHARE_TOKEN=
+LONGBRIDGE_APP_KEY=
+LONGBRIDGE_APP_SECRET=
+LONGBRIDGE_ACCESS_TOKEN=
+WEB_SEARCH_ENABLED=false
+TAVILY_API_KEY=
+BRAVE_SEARCH_API_KEY=
+WEB_RESEARCH_ISSUER_DOMAINS={"US:AAPL":["investor.apple.com"]}
+```
+
+Tushare 与 LongPort 记录只作为未核验的数据商补充，不能替代正式披露。主动网页研究仅把搜索结果用于发现候选 URL，模型摘要和搜索摘要不会进入证据；正文仅从监管/披露域名或按 `市场:代码` 显式绑定的发行人域名读取。读取后的公共正文进入带大小、期限和摘要校验的 MongoDB 归档。未配置凭证时对应数据源保持不可用并记录缺口，平台不会编造替代值。
+
+Linux 生产镜像使用锁定的 LongPort 3.x SDK：行情和当前估值指标可用；该 SDK 未提供的历史估值、分红明细、回购和公司行动接口会明确形成缺口，并由正式披露来源补证。配置生产凭证后仍须验证账户行情权限、站点配额和网络策略。
+
+## 10. 费用与缓存记录
 
 费用估算是可选功能：
 
@@ -212,13 +231,13 @@ FEATURE_COST_ROUTER=false
 
 新任务不会创建统一预算，也不会因为金额、工具轮次、网页请求、Vision 页数或持续时间达到预算而停止。网页、文件、并发、超时和上下文仍受代码中的安全边界约束。
 
-## 10. 历史兼容
+## 11. 历史兼容
 
 服务继续读取 schema v1 模型文件、modelState v1–v3 和旧任务已经保存的预算账本。历史预算记录只用于恢复、审计和防止不确定请求被重复执行；预算额度不再阻断后续研究，也不会修改历史记录。
 
 V4.8–V5.2 的 Gateway、多模态、调用元数据、费用、缓存、关键复核和 Judge 业务能力继续保留。日常配置不再要求 MAIN/PRO、Challenger、Champion、A/B、策略注册表、策略版本、失效记录、acceptance 文件、preview 或 rollback 模型副本。
 
-## 11. 常见错误
+## 12. 常见错误
 
 | 现象 | 处理 |
 | --- | --- |
@@ -230,7 +249,7 @@ V4.8–V5.2 的 Gateway、多模态、调用元数据、费用、缓存、关键
 | 费用一直未知 | 按费用教程配置匹配当前模型身份的真实价格 |
 | 旧预算变量仍在 | 从私人 `.env` 删除 `RESEARCH_BUDGET_FILE` 与 `FEATURE_RESEARCH_BUDGET` |
 
-## 12. 修改与回滚清单
+## 13. 修改与回滚清单
 
 修改前一起备份环境文件、模型 JSON 和可选价格文件。修改后依次完成：
 

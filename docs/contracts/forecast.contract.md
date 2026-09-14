@@ -13,8 +13,8 @@ Forecasts must record:
 
 Initial engine scope: Revenue, Margin, FCF driver chains.
 
-## H0 implementation evidence
+## Current implementation evidence
 
 dcf projects cash flows arithmetically from supplied growth/discount assumptions. This does not implement the canonical driver-based Forecast entity described here.
 
-See [implementation map](../architecture/current-implementation-map.md) and [audit findings](../releases/H0/audit-findings.md). H0 changes no persisted object, field requirements, API, migration or financial meaning.
+See the [current implementation map](../architecture/current-implementation-map.md). This contract text alone changes no persisted object, field requirements, API, migration or financial meaning.

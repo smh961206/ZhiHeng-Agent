@@ -531,14 +531,28 @@
 .rd-cost-breakdown>li{display:grid;gap:3px;min-width:0;margin:0!important;padding:10px 12px;border:1px solid #e3eae4;border-radius:8px;background:#f8faf8;font-size:12px;line-height:1.7;overflow-wrap:anywhere}
 .rd-cost-breakdown strong{color:#395e4b;font-weight:600}.rd-cost-breakdown span{color:#65786c}
 .rd-reading :is(.rd-document-reading,.rd-model-assignment,.rd-cost-summary){display:none}
-.rd-service-records-body>:is(.rd-model-assignment,.rd-cost-summary){margin:0;border:0;border-radius:0;background:#fff}
-.rd-service-records-body>:is(.rd-model-assignment,.rd-cost-summary)+:is(.rd-model-assignment,.rd-cost-summary){border-top:1px solid #e2e9e4}
+.rd-service-records>.rd-service-records-heading{background:#f4f8f5}
+.rd-service-records>.rd-service-records-heading[data-state=open]{background:#edf4ef}
+.rd-service-records-body{display:block;padding:0;background:#fff}
+.rd-service-records-body>:is(.rd-model-assignment,.rd-cost-summary){margin:0;border:0;border-radius:0;background:#fff;overflow:visible}
+.rd-service-records-body>:is(.rd-model-assignment,.rd-cost-summary)+:is(.rd-model-assignment,.rd-cost-summary){border-top:1px solid #dce6df}
+.rd-service-records-body .rd-document-summary{position:relative;align-items:flex-start;padding:16px 16px 12px;border:0;background:#fff}
+.rd-service-records-body .rd-document-body{padding:0 16px 18px}
+.rd-service-records-body .rd-model-assignment .rd-document-body{padding-bottom:0}
+.rd-service-records-body .rd-model-assignment .rd-model-records{margin-bottom:0}
+.rd-service-records-body .rd-model-record-note{margin:0!important;padding:14px 0;line-height:1.7}
+.rd-service-records-body .rd-document-icon{width:32px;height:32px}
+.rd-service-records-body .rd-document-heading>strong{font-size:14px;color:#214f39}
+.rd-service-records-body .rd-document-label{margin-top:5px}
 @media(max-width:639px){
  .research-detail .rd-process-disclosure-trigger{padding:12px;gap:8px;flex-wrap:wrap}
  .rd-document-summary{padding:12px;gap:8px;flex-wrap:wrap}
  .rd-document-heading{flex-basis:calc(100% - 66px)}
  .rd-document-label{margin-left:42px;order:2}
  .rd-document-chevron{margin-left:auto}
+ .rd-service-records-body{padding:0}
+ .rd-service-records-body .rd-document-heading{flex-basis:calc(100% - 66px)}
+ .rd-service-records-body .rd-document-label{margin-left:42px}
  .rd-document-body{padding:12px}
  .rd-document-coverage{grid-template-columns:minmax(0,1fr)}
  .rd-stage-models,.rd-cost-breakdown{grid-template-columns:minmax(0,1fr)}

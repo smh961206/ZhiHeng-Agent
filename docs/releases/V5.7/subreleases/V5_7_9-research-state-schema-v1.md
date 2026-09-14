@@ -1,7 +1,7 @@
 # V5.7.9 — Research State Schema V1
 
 Release: `V5.7`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,20 +15,20 @@ Store thesis/claims/beliefs/facts/assumptions/valuation/risks/catalysts/gaps/ver
 
 Codex must inspect the real checkout before editing:
 
-- `server/research-create.mjs`
-- `server/research-workflow.mjs`
-- `server/research-context.mjs`
-- `server/research-output.mjs`
-- `server/research-resume.mjs`
-- `server/storage.mjs`
+- `server/research-create.ts`
+- `server/research-workflow.ts`
+- `server/research-context.ts`
+- `server/research-output.ts`
+- `server/research-resume.ts`
+- `server/storage.ts`
 - `tests/`
-- `server/calculations.mjs`
-- `server/cashflow-bridge.mjs`
-- `server/normalized-earnings.mjs`
-- `server/reinvestment.mjs`
-- `server/research-sensitivity.mjs`
-- `server/valuation-snapshot.mjs`
-- `server/valuation-history.mjs`
+- `server/calculations.ts`
+- `server/cashflow-bridge.ts`
+- `server/normalized-earnings.ts`
+- `server/reinvestment.ts`
+- `server/research-sensitivity.ts`
+- `server/valuation-snapshot.ts`
+- `server/valuation-history.ts`
 - `tests/`
 
 If paths or ownership changed, update `docs/architecture/current-implementation-map.md`; do not force the repository to match stale filenames.
@@ -185,5 +185,12 @@ Stop this subrelease when all are true:
 ## 26. Deferred Work
 
 - Decision
+
+## 27. Infrastructure and Data Acceptance Addendum
+
+- Store Research State as immutable versions with a parent/version relation and optimistic concurrency token.
+- Each version pins the research cutoff, evidence/fact snapshots, assumptions, forecasts, configuration and generator versions.
+- Reports and query projections reference the source state version and expose staleness; they remain rebuildable views rather than canonical state.
+- Cache or index loss must not lose a published Research State, and background work must not silently replace human overrides.
 
 Do not proceed to the next subrelease unless the user explicitly authorizes continuation or explicitly asked Codex to execute the entire current core release.

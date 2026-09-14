@@ -1,7 +1,7 @@
 # V5.5.0 — Security identity inventory
 
 Release: `V5.5`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -16,13 +16,13 @@ Map current resolver semantics/ambiguities before stable schema.
 
 Codex must inspect the real checkout before editing:
 
-- `server/security-resolver.mjs`
-- `server/security-intent.mjs`
-- `server/security-exchanges.mjs`
-- `server/financial-observations.mjs`
-- `server/financial-input-verification.mjs`
-- `server/data-basis.mjs`
-- `server/storage.mjs`
+- `server/security-resolver.ts`
+- `server/security-intent.ts`
+- `server/security-exchanges.ts`
+- `server/financial-observations.ts`
+- `server/financial-input-verification.ts`
+- `server/data-basis.ts`
+- `server/storage.ts`
 - `tests/`
 
 If paths or ownership changed, update `docs/architecture/current-implementation-map.md`; do not force the repository to match stale filenames.
@@ -180,5 +180,12 @@ Stop this subrelease when all are true:
 ## 26. Deferred Work
 
 - New collections
+
+## 27. Infrastructure and Data Acceptance Addendum
+
+- Inventory current MongoDB/GridFS collections, indexes, identity keys, transaction boundaries, object references, backup/restore behavior and repository call sites before proposing a new store.
+- Prototype the hardest identity, uniqueness, bitemporal, lineage and audit queries against the current baseline and PostgreSQL; measure correctness, migration cost, latency and recovery.
+- Produce a storage ADR with explicit keep-MongoDB and migrate-to-PostgreSQL options, exit criteria and rollback. This subrelease does not authorize a production cutover.
+- Identify repository ports needed to prevent storage-specific types from entering domain contracts.
 
 Do not proceed to the next subrelease unless the user explicitly authorizes continuation or explicitly asked Codex to execute the entire current core release.

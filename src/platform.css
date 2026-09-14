@@ -8,7 +8,7 @@
 .app-shell .page-content>.empty-state>:is(h1,h2,p){flex-basis:100%;margin:0}.app-shell .page-content>.empty-state>svg{flex-basis:100%;margin-bottom:6px}
 .app-shell .page-content>.empty-state>:is(h1,h2){font-size:20px;font-weight:600;line-height:1.5;color:var(--platform-ink)}
 .app-shell .page-content>.empty-state>:is(button,a){min-height:44px}
-.app-shell .page-content :is(.home-workspace a,.usage-shortcuts button,.rh-query):focus-visible{outline:2px solid var(--ring);outline-offset:3px}
+.app-shell .page-content .rh-query:focus-visible{outline:2px solid var(--ring);outline-offset:3px}
 @media(max-width:639px){.app-shell .page-content :is(input,textarea),.app-shell .page-content .research-workbench :is(input,textarea){font-size:16px}.app-shell .page-content>.empty-state{padding:24px 16px}}
 :root{--background:#f5f7f5;--border:#dce5df;--ring:#39705c;--radius:0.75rem}
 .app-shell .topbar{background:#ffffffed;border-bottom:1px solid var(--border);gap:12px}
@@ -30,12 +30,9 @@
 .platform-status-panel dt{font-size:13px;font-weight:650;margin-bottom:3px}
 .platform-status-panel dd{font-size:13px;line-height:1.8;color:#52665b}
 .platform-status-panel .platform-policy-note{padding-top:14px;margin:16px 0;border-top:1px solid var(--border);font-size:12px}
-.method-version-note summary{cursor:pointer;font-weight:600;line-height:1.7}
 .research-handbook .handbook-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:0;padding-bottom:24px;border-bottom:0}
 .research-handbook .handbook-heading p{max-width:720px;line-height:1.9}
 .research-handbook .handbook-heading>[data-slot=button]{flex:0 0 auto;min-height:42px}
-.method-version-note{padding:14px 18px;margin:0 0 22px;border:1px solid #dce5df;border-radius:10px;background:#f6f8f6;color:#405e4c}
-.method-version-note p{font-size:14px;line-height:1.9;margin-top:10px}
 .research-detail .rd-provenance{flex-wrap:wrap;gap:8px 16px;padding-block:10px}
 .history-page .rh-heading p{max-width:640px}
 .app-shell .page-heading h1,.rh-heading h1{letter-spacing:-.7px}
@@ -108,13 +105,13 @@
 .platform-m11-highlights li{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1px solid #e0e8e2;border-radius:9px;background:#fbfcfb;color:#53695d;font-size:12px;line-height:1.65}
 .platform-m11-highlights svg{flex-shrink:0;margin-top:2px;color:#4c765e}
 .platform-m11-highlights strong{display:block;color:#315748;font-size:12px}
-.rd-usage-overview{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px!important;margin:12px 0 16px}
+.rd-usage-overview{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px!important;margin:12px 0}
 .rd-usage-overview>div{display:block!important;padding:11px 12px!important;border:1px solid #dfe8e1!important;border-radius:9px;background:#f5f8f6}
 .rd-usage-overview dt{font-size:11px!important;color:#687c70!important}
 .rd-usage-overview dd{margin-top:5px;font-size:17px!important;font-weight:650;color:#285440!important;font-variant-numeric:tabular-nums}
-.rd-cost-billing{margin:0 0 14px}
-.rd-cost-billing>strong{display:block;font-size:12px;color:#425f50}
-.rd-cost-billing .rd-model-records{margin:8px 0 0}
+.rd-cost-billing{display:grid;gap:8px;margin:12px 0 14px}
+.rd-cost-billing>strong{display:block;font-size:12px;line-height:1.5;color:#425f50}
+.rd-cost-billing .rd-model-records{margin:0}
 .rd-cost-state{margin-left:auto}
 .rd-cost-state.is-error{background:#fcf0ed;color:#9a5748}
 @media(max-width:420px){

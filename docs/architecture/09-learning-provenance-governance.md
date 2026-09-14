@@ -31,6 +31,6 @@ Store structured:
 
 Do not turn this into free-form chat memory.
 
-## H0 calibration
+## Current calibration
 
 CURRENT: job/checkpoint payloads, public receipts, saved rule provenance and Knowledge snapshots. FUTURE: complete frozen research manifests, calibrated learning, canonical audit ledger and human-override records. No online self-modifying learning platform exists.

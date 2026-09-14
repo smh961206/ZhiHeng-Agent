@@ -16,8 +16,8 @@
 ## 工程交付
 
 1. **版本**：平台 V5.3 前端后续优化。Knowledge K1.0.0、执行兼容编号和契约编号不变。
-2. **修改文件**：`src/App.jsx`；`src/components/RecentResearch.jsx`、`ResearchFramework.jsx`、`ResearchWorkbench.jsx`、`ResearchHandbook.jsx`、`ResearchHistory.jsx`、`ResearchUsageGuide.jsx`；`src/components/research-home.css`、`research-history.css`、`research-usage.css`、`research-workbench.css`、`workbench-layout.css`；`src/platform.css`；`tests/workspace-ui.integration.mjs`；`docs/architecture/current-implementation-map.md`、`docs/releases/V5.3/README.md`、`MANIFEST.json`。这些文件中的先前交付内容保留。
-3. **新增文件**：`tests/platform-experience-ui-scenarios.mjs` 和本报告。
+2. **修改文件**：`src/App.tsx`；`src/components/RecentResearch.tsx`、`ResearchFramework.tsx`、`ResearchWorkbench.tsx`、`ResearchHandbook.tsx`、`ResearchHistory.tsx`、`ResearchUsageGuide.tsx`；`src/components/research-home.css`、`research-history.css`、`research-usage.css`、`research-workbench.css`、`workbench-layout.css`；`src/platform.css`；`tests/workspace-ui.integration.ts`；`docs/architecture/current-implementation-map.md`、`docs/releases/V5.3/README.md`、`MANIFEST.json`。这些文件中的先前交付内容保留。
+3. **新增文件**：`tests/platform-experience-ui-scenarios.ts` 和本报告。
 4. **删除文件**：无。
 5. **架构变化**：扩展现有页面与共享样式，复用现有 Button、Collapsible、Input、Link、记录排序及 delivery 状态；不创建第二套页面、搜索服务或设计系统。
 6. **Schema 变化**：无。搜索、展开和焦点状态仅属于当前界面；历史筛选继续使用已有 URL 参数。
@@ -26,7 +26,7 @@
 9. **兼容影响**：保留现有路径、URL 筛选键和分页语义；用户可见“模式”统一为“路径”，对应测试选择器同步更新。最近研究与侧栏使用相同排序规则。已有无版本/无资料数量记录不补造信息。
 10. **恢复影响**：没有修改研究恢复、提交、保存重试或模型恢复逻辑。帮助入口不离开正在编辑的工作台；新快捷入口只导航或准备输入，不直接调用创建/重试接口。
 11. **功能开关**：无新增开关。
-12. **执行验证**：仅运行改动直接相关的场景。使用既有 `tests/workspace-ui.integration.mjs` 名称过滤器验证新增交互、历史筛选/分页、详情布局、手册操作、首页锚点/减少动态效果、页面加载恢复及移动端研究设置。请求全部使用本地内存夹具。执行 `node --test tests/research-preparation.test.mjs tests/composer-draft.test.mjs` 与 Vite 生产构建。
+12. **执行验证**：仅运行改动直接相关的场景。使用既有 `tests/workspace-ui.integration.ts` 名称过滤器验证新增交互、历史筛选/分页、详情布局、手册操作、首页锚点/减少动态效果、页面加载恢复及移动端研究设置。请求全部使用本地内存夹具。执行 `node --test tests/research-preparation.test.ts tests/composer-draft.test.mjs` 与 Vite 生产构建。
 13. **验证结果**：定向单元检查 7/7 通过。首轮界面 26/26；第二轮 13/14，发现移动端旧 `!important` 字号覆盖后修复；后续相关 10/10 通过。累计 35 个不同界面场景的最新结果均通过，覆盖 320、768、1440 和 2560 宽度。生产构建通过，主 JS 约 485.00 kB / gzip 160.46 kB；既有依赖 `use client` 与 sourcemap 警告保留。最终版式和清单复验在下方记录。
 14. **基准**：未运行完整基准、全量 UI、发布门禁或真实模型验收；没有修改黄金数据或金融定义。
 15. **安全与隐私**：本地指南搜索不向外发送关键词。新标签页帮助使用 `noopener noreferrer`。无真实模型调用、敏感信息持久化或隐藏推理展示。原研究和证据不会因筛选、搜索或导航而重写。
@@ -36,4 +36,4 @@
 
 本地验证证据位于 `artifacts/platform-experience/`、`artifacts/platform-experience-final/`、`artifacts/platform-experience-verified/` 和 `artifacts/platform-experience-layout/` 下的 `ui-results.json` 与截图，均为忽略的验证产物。已检查桌面首页与历史筛选、移动端工作台/手册搜索/异常页面截图。
 
-最终复验：移动端步骤排列与错误页标题修正后，相关场景 5/5 通过；`node --test tests/harness.test.mjs` 11/11 通过。MANIFEST 更新为 634 个文件；`git diff --check` 通过。
+最终复验：移动端步骤排列与错误页标题修正后，相关场景 5/5 通过；`node --test tests/harness.test.ts` 11/11 通过。MANIFEST 更新为 634 个文件；`git diff --check` 通过。

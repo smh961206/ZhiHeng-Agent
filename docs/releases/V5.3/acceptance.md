@@ -12,7 +12,7 @@ Status: ACCEPTED by deterministic repository tests and the pinned V53-KNOWLEDGE-
 
 ### V53-02 — V5.3.1 Rule ID 基础
 
-- **Then:** 没有重复 ID；旧快照仍能回放。
+- **Then:** 没有重复 ID；当前 K-Series 快照能够精确回放。
 - **Evidence:** Rule ID 唯一性；旧 section→Rule 映射；snapshot 兼容。
 - **And:** 不得通过弱化 Evidence / Validation / PIT / Provenance 来满足。
 
@@ -55,7 +55,7 @@ Status: ACCEPTED by deterministic repository tests and the pinned V53-KNOWLEDGE-
 ### V53-09 — V5.3.8 K-Series & Pinning
 
 - **Then:** 任务全程固定 K 版本；未固定 K-Series 的旧任务必须重新开始。
-- **Evidence:** 活动指针解析；K checkpoint 精确恢复；V4.x 引用拒绝；运行中不切换 K 版本。
+- **Evidence:** 活动指针解析；K checkpoint 精确恢复；非 K 引用拒绝；运行中不切换 K 版本。
 - **And:** 不得通过弱化 Evidence / Validation / PIT / Provenance 来满足。
 
 ### V53-10 — V5.3.9 Knowledge Change Proposal

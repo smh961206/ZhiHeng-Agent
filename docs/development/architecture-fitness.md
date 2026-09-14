@@ -1,29 +1,22 @@
-# Architecture fitness baseline
+# Architecture Fitness
 
-Status: CURRENT — H0 checks existing boundaries without implementing future engines.
+Status: current for Platform V5.3 / Knowledge K1.0.0.
 
-## Executable current checks
+## Executable boundaries
 
-| Boundary | Existing evidence |
+| Boundary | Current evidence |
 |---|---|
-| Private checkpoint/reasoning versus public report/event output | streaming.test.mjs, research-resume.test.mjs |
-| Source/block identity, snippets and numeric evidence quality | evidence-integrity.test.mjs, calculations.test.mjs, research-references.test.mjs |
-| Missing data and incompatible financial bases | data-completeness.test.mjs, calculations.test.mjs, cashflow-bridge.test.mjs, valuation-policy.test.mjs |
-| Current review contract and durable delivery | research-contract.test.mjs, review-format.test.mjs, research-delivery.test.mjs, jobs-delivery.integration.mjs |
-| Compatible checkpoint and pending tool continuation | research-resume.test.mjs, research-resume.integration.mjs, review-recovery.test.mjs |
-| Knowledge pinning, integrity, exact receipts and safe excerpts | knowledge-snapshots.test.mjs, knowledge-backup.test.mjs, knowledge-api.integration.mjs |
-| Additive migration discipline and downgrade rejection | schema.integration.mjs, storage.integration.mjs |
-| Public URL/authority restrictions | web-research.test.mjs, access.test.mjs |
-| Harness navigation, statuses, current paths, manifest and deployment fixture inputs | harness.test.mjs |
+| Python is the only backend runtime; retired Node dependencies and imports stay absent | `python_tests/test_no_node_backend_runtime.py`, `tests/typescript-migration.test.ts` |
+| FastAPI owns application routes and built frontend delivery | `python_tests/test_fastapi_entrypoint.py`, `tests/routes.integration.ts` |
+| Model behavior remains behind the provider-neutral gateway and governance layer | `python_tests/test_config_and_contracts.py`, `python_tests/test_model_governance.py` |
+| Knowledge snapshots remain immutable, pinned and integrity checked | `python_tests/test_knowledge.py` |
+| Evidence, documents and web acquisition preserve source boundaries | `python_tests/test_evidence.py`, `python_tests/test_documents.py`, `python_tests/test_web_evidence.py` |
+| Financial and derived calculations remain deterministic | `python_tests/test_financial.py`, `python_tests/test_calculations.py`, `python_tests/test_analytics.py` |
+| Recovery preserves compatibility and does not invent progress | `python_tests/test_recovery.py`, `tests/research-recovery.test.ts`, `tests/research-progress.test.ts` |
+| Client presentation does not fabricate securities, citations, report state or warnings | focused tests under `tests/*.test.ts` |
 
-These tests cover concrete cases. They do not establish universal semantic truth, full prompt-injection resistance, complete publication-time filtering or proof that all material counter-evidence was discovered. Mandatory rules retain their strength; gaps are in [audit findings](../releases/H0/audit-findings.md).
+These checks prove their concrete cases. They do not prove that every relevant source was discovered, every model response is correct or every future contract is implemented. Missing coverage remains a gap rather than permission to weaken evidence, point-in-time, provenance, financial or recovery rules.
 
-## Future checks, not H0 failures
+## Future planning
 
-- V4.8/V4.9: provider endpoints/model-name branching isolated behind Gateway adapters; provider switches safe at model/tool boundaries.
-- V5.3: Rule IDs/ontology/governed K-Series publication in addition to existing snapshot pinning.
-- V5.4/V5.5: canonical Source/Evidence/Fact lineage, restatement/time/entity validation.
-- V5.6/V5.7: formula identity, dependency invalidation, canonical Claim/Belief/ResearchState and renderer boundaries.
-- V5.11/V6.0: complete point-in-time replay, governance, human override and immutable audit boundaries.
-
-Do not create empty future modules or impose these rules on unimplemented features to make H0 green. H0's zero-runtime-change audit compares tracked runtime hashes to its starting checkout; this one-release audit is not a permanent ban on future authorized edits.
+Future V5.4–V6.0 specifications and the Master Roadmap remain planning material. They become executable scope only when `docs/releases/CURRENT` and explicit user authorization activate them. Architecture tests must not create empty future modules merely to make planning documents appear implemented.

@@ -12,8 +12,8 @@ Use structured/exact retrieval, BM25, semantic retrieval and page/table retrieva
 - Codex must not “simplify” the architecture by violating this decision.
 - If a current implementation cannot yet satisfy the decision, mark it PARTIAL/FUTURE and implement only in the owning release.
 
-## H0 implementation assessment
+## Current implementation assessment
 
 Implementation Status: PARTIAL. Exact/alias/page retrieval exists; BM25/semantic fusion remains V5.4.
 
-The ACCEPTED decision above is unchanged. Implementation status describes evidence, not permission to reverse the decision. See [implementation map](../architecture/current-implementation-map.md) and [gap register](../releases/H0/audit-findings.md).
+The ACCEPTED decision above is unchanged. Implementation status describes evidence, not permission to reverse the decision. See the [current implementation map](../architecture/current-implementation-map.md).

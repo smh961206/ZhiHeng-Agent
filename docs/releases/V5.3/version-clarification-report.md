@@ -3,7 +3,7 @@
 实施前置条件：用户已确认方案；任务「完成平台迭代至 V5.3」于 2026-09-13 正常结束。本次已读取其最终交付报告，并在完成后的工作区继续修改。
 
 1. **版本范围**：V5.3 后续整理，平台 V 与 Knowledge K 两条发布线。M1.x 保留为随平台交付的模型工程里程碑；执行框架随平台发布。
-2. **修改文件**：`shared/research-framework.mjs`、`server/research-resume.mjs`、`server/agent.mjs`、`server/research-baseline.mjs`、`server/research-retry.mjs`、`shared/research-recovery.mjs`、`src/config/platform-release.mjs`；测试目录下的 `research-resume.test.mjs`、`research-recovery.test.mjs`、`research-contract.test.mjs`、`model-migration.test.mjs`、`fixtures/model-migration-scenario.mjs`、`framework-v43.test.mjs`、`execution-discipline.test.mjs`、`valuation-policy.test.mjs`、`workspace-ui.integration.mjs`；版本架构、系统图、实现图、研究契约与不变量、ADR-016、M1.0/M1.1 README、V5.3 README/schema/migration/rollback、AGENTS 历史校准说明、Vision 调用清单当前复核指纹与 MANIFEST。
+2. **修改文件**：本报告最初覆盖旧 Node/shared 实现及模型里程碑文档；这些路径随后在 FastAPI 迁移和仓库清理中退役。当前有效修改范围以 V5.3 README、ADR-016/017、系统图、当前实现图、研究契约与不变量为准。
 3. **新增文件**：`docs/adr/ADR-017-platform-execution-compatibility.md` 与本报告。
 4. **删除文件**：无。旧 `frameworkVersion` 导出和未使用的 `modelTrackVersion` 常量退出当前运行时；旧字段只在精确历史兼容路径保留。
 5. **架构**：扩展现有研究计划与恢复模块，不创建独立框架版本系统。平台版本仍为 V5.3，Knowledge 激活身份仍为 K1.0.0。
@@ -13,7 +13,7 @@
 9. **兼容性**：新字段存在但为空、类型错误、未知编号、新旧字段混用或契约不兼容时拒绝执行；不从 K 版本推断执行兼容性。历史记录与知识文件不改写。
 10. **恢复**：先检查 K 固定信息，再检查执行兼容性。兼容任务保留原截止时间、来源、工具结果与私有模型消息。原模型状态/预算/关键复核恢复限制不变；不能恢复的已固定模型任务要求新建研究，不静默重新采集。
 11. **开关**：无新开关。内部编号仅在对应不兼容变更时更新，不随普通平台或 K 发布自动递增。
-12. **测试执行**：按先前用户确认方案执行相关回归、单元测试与发布门禁，另验证构建和相关恢复界面。模型响应使用合成夹具。用户随后再次明确默认仅运行改动直接相关的定向测试；全量 UI、发布门禁、完整基准、Docker 部署回滚和真实模型验收均须明确发起，遵循现有 AGENTS.md 与 CODEX_EXECUTION_PROTOCOL.md。
+12. **测试执行**：按先前用户确认方案执行相关回归、单元测试与发布门禁，另验证构建和相关恢复界面。模型响应使用合成夹具。用户随后再次明确默认仅运行改动直接相关的定向测试；全量 UI、发布门禁、完整基准、Docker 部署回滚和真实模型验收均须明确发起，遵循现有 `AGENTS.md`。
 13. **测试结果**：单元测试 968/968、发布门禁 179/179、跨进程 Mongo 恢复与 Knowledge 原文 API 3/3、恢复提示界面 320/1440 两个视口 2/2；生产构建通过（主包约 482.24 kB，gzip 159.68 kB）。最后补充将旧 4.7 兼容映射明确限制在执行编号 1/契约 7 后，定向复验研究恢复、六模式迁移、新旧对照及清单检查共 47/47。无跳过、取消或真实模型调用。首次全量检查发现旧黄金夹具未固定旧计划格式和入口文件的复核指纹待同步，修正后上述测试全部通过；黄金哈希未重录。此次没有重跑全量 UI 或 Docker 部署/回滚套件。
 14. **基准**：保留原六模式迁移黄金文件，旧 K 任务请求/结果/事件/检查点哈希全部一致。增加六模式新格式元数据断言，不重录黄金哈希。此次未运行真实模型基准。
 15. **安全与隐私**：无外部模型调用；公开记录不含隐藏推理。金融、证据、时点及来源校验保持原责任边界。

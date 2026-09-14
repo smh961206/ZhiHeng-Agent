@@ -1,6 +1,6 @@
 # V5.9 — Fully Normalized Detailed Index
 
-Every subrelease below follows `docs/development/NORMALIZED_RELEASE_STANDARD.md`.
+This is retained future planning. It does not authorize implementation beyond `AGENTS.md` and `docs/releases/CURRENT`.
 
 Codex must execute them in order unless the user explicitly requests one specific subrelease.
 

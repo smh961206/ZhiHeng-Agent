@@ -8,8 +8,8 @@
 - INV-KNW-006 [ENFORCED]: active Knowledge uses only K-Series identity; one published K version has one immutable snapshot fingerprint.
 - INV-KNW-007 [ENFORCED]: a task without a valid K-Series pin cannot resume old execution state and must restart on the active K release.
 
-## H0 enforcement evidence and limits
+## Current enforcement and limits
 
-Current evidence: `knowledge/current.json` selects one verified K-Series snapshot; knowledge-snapshots rejects V4.x and knowledge pinning binds K version/fingerprint per new job. Same-version byte changes are rejected after activation. Knowledge excerpt checks saved receipt/hash identity. Schema-v3 governance assigns Rule IDs, regression ownership, temporal scope and impact. The linter blocks invalid K snapshots and KCP validation rejects non-Knowledge root causes. Tests: knowledge-engineering, knowledge-snapshots, knowledge-backup, research-resume, research-knowledge and knowledge-api integration.
+Current evidence: `knowledge/current.json` selects one verified K-Series snapshot; the loader rejects non-K versions and new jobs bind the K version/fingerprint. Same-version byte changes are rejected after activation. Knowledge reads check saved receipt/hash identity. Schema-v3 governance assigns Rule IDs, regression ownership, temporal scope and impact. The linter blocks invalid K snapshots and KCP validation rejects non-Knowledge root causes.
 
 See [fitness baseline](../development/architecture-fitness.md). No ENFORCED obligation is weakened; unproven coverage is recorded separately.

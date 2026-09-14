@@ -1,7 +1,7 @@
 # V5.3.3 — Ontology foundation
 
 Release: `V5.3`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: IMPLEMENTED AND ACCEPTED under V5.3.
 
 ## 1. Why
 
@@ -15,10 +15,10 @@ Define canonical Period/Currency/Metric/Security/ShareBasis/Scope/Valuation conc
 
 Codex must inspect the real checkout before editing:
 
-- `server/knowledge.mjs`
-- `server/knowledge-excerpt.mjs`
-- `server/knowledge-snapshots.mjs`
-- `server/research-context.mjs`
+- `server/knowledge.ts`
+- `server/knowledge-excerpt.ts`
+- `server/knowledge-snapshots.ts`
+- `server/research-context.ts`
 - `knowledge/`
 - `tests/`
 

@@ -1,7 +1,7 @@
 # V5.4.7 — Evidence Pack
 
 Release: `V5.4`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,11 +15,11 @@ Build primary/counter/gap/source structured context.
 
 Codex must inspect the real checkout before editing:
 
-- `server/evidence-search.mjs`
-- `server/evidence-followup.mjs`
-- `server/agent-page-reader.mjs`
-- `server/web-evidence.mjs`
-- `server/research-context.mjs`
+- `server/evidence-search.ts`
+- `server/evidence-followup.ts`
+- `server/agent-page-reader.ts`
+- `server/web-evidence.ts`
+- `server/research-context.ts`
 - `tests/`
 
 If paths or ownership changed, update `docs/architecture/current-implementation-map.md`; do not force the repository to match stale filenames.

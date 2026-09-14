@@ -1,0 +1,12 @@
+# Optional production overlay, loaded only when the private research budget exists.
+services:
+  app:
+    environment:
+      RESEARCH_BUDGET_FILE: /app/config/research-budget.production.json
+    volumes:
+      - type: bind
+        source: ./config/research-budget.production.json
+        target: /app/config/research-budget.production.json
+        read_only: true
+        bind:
+          create_host_path: false

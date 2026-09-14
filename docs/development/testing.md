@@ -1,56 +1,41 @@
 # Testing Strategy
 
-## CURRENT executable baseline (H0)
+Status: current for Platform V5.3 / Knowledge K1.0.0.
 
-The pre-H0 checkout has 69 node:test unit files / 505 tests, eight MongoDB integration files, five route-render assertions, a Playwright/Edge UI runner with imported scenario modules, and a Linux deployment integration script. H0 adds seven Harness static tests. Counts from actual runs, rather than source estimates, are authoritative in the H0 completion report.
+## Default validation
 
-Run every entry below from the repository root:
+Run tests directly related to the change. Broad UI regression, complete Docker deployment and rollback, real-model acceptance and model benchmarks require an explicit request.
+
+Current commands:
 
 ```text
+pnpm lint
+pnpm typecheck
+pnpm api:types:check
 pnpm test
-pnpm test:mongodb
-node --test tests/knowledge-api.integration.mjs tests/research-resume.integration.mjs
+pnpm test:components
+pnpm test:frontend
 pnpm test:routes
-pnpm test:ui
-bash tests/deploy.integration.sh
+pnpm test:python
+pnpm build
 ```
 
-`pnpm test` discovers only `tests/*.test.mjs`. `test:mongodb` lists six files; the two extra integration files above are required. The UI runner imports its scenario modules, so they are not separate node:test runners. Do not set UI_TEST_FILTER for full acceptance. Deployment is a separate existing Linux test, not included in package scripts.
+- `tests/` owns focused browser-domain unit tests, TypeScript architecture checks and SSR route rendering.
+- `tests/*.component.test.tsx` uses Vitest, Testing Library and jsdom for React interaction behavior.
+- `tsconfig.strict.json` is the reviewed semantic type boundary; `tsconfig.json` remains the complete source-migration/build boundary while strict coverage expands by domain.
+- `src/generated/api-schema.ts` is generated from FastAPI OpenAPI. `pnpm api:types:check` fails when the committed client contract is stale.
+- `python_tests/` owns FastAPI, research, evidence, Knowledge, calculation, recovery and backend architecture tests.
+- `tests/deploy.integration.sh` owns the isolated Linux deployment path and is run only when deployment validation is requested.
+- Python tests that use `tmp_path` may need `--basetemp` on hosts whose system temporary directory is not writable.
 
-### Isolated test environment
+## Architecture checks
 
-- Set MONGODB_URI explicitly to a disposable loopback MongoDB. Integration tests create UUID-named temporary databases and clean up only those databases. Do not run against the production database/service or invoke the application migration command on real data.
-- Start a loopback Vite frontend using the existing local Vite binary. UI_BASE_URL chooses the port; UI_ARTIFACT_SUBDIR separates results; PLAYWRIGHT_MODULE may reference an existing external Playwright installation. The runner uses Edge and intercepts synthetic APIs, without a real research backend.
-- Run deployment in Linux with Docker Compose. Its script copies the runtime into mktemp, names an isolated Compose project and exercises deployment/upgrade/backup/rollback/failure handling. H0's approved preparation fix includes shared/ in this copy. All original assertions remain intact. Never use production Compose project/volumes for this test.
-- Environment-only helpers, logs and screenshots belong in ignored artifacts or isolated test containers; no dependency/lockfile/production configuration changes are needed.
+Executable checks reject recreation of the retired `server/`, `shared/`, JavaScript/TypeScript backend benchmark and legacy Harness manifest boundaries. They also reject owned JavaScript source and imports into retired runtime roots. The retained `benchmark/` is Python-only migration acceptance code.
 
-### Harness checks and evidence
+Tests must not pass by deleting assertions, weakening evidence or financial definitions, hiding missing data, bypassing point-in-time/provenance checks, or disabling resume and recovery guarantees.
 
-`tests/harness.test.mjs` checks navigation, current paths, status declarations, normalized H0 section order, manifest hashes and the deployment fixture COPY boundary. It does not require future Gateway/Fact/ResearchState runtime modules. MANIFEST.json excludes itself and records packaged file byte sizes and SHA-256; refresh its entries after any packaged Harness edit. The inventory hashes preserve the pre-H0 runtime baseline, not a permanent prohibition on later authorized evolution.
+## Test data safety
 
-Record each command, environment, exit code, test counts and failures. Missing services/browser dependencies are not passes. A product defect discovered in H0 is diagnosed and reported without changing runtime; unresolved failures prevent CURRENT handoff. See [fitness baseline](architecture-fitness.md) and [audit findings](../releases/H0/audit-findings.md).
+Use disposable loopback databases and synthetic fixtures. Never run tests against production databases, volumes, credentials or model services. Logs, screenshots and temporary test output belong in ignored artifact or temporary directories.
 
-The user's follow-up authorization permits the three UI test alignment repairs detailed in [failure analysis](../releases/H0/test-failure-analysis.md). Preserve all registered scenarios, business/Evidence/recovery checks and the original test timeout. Mobile directory checks establish report scrolling; asynchronous retry checks await state settlement. Delivery scope and metadata assertions follow current accessible UI controls. Exclude test/document/artifact edits from the temporary test server's file watching to avoid reload interference; final acceptance must unset UI_TEST_FILTER.
-
-## TARGET test architecture
-
-Layers:
-1. Unit tests
-2. Contract tests
-3. Architecture fitness tests
-4. Integration/resume tests
-5. Golden fixtures
-6. Release benchmark
-7. Red-team/adversarial tests
-
-High-priority adversarial cases:
-- wrong year/unit/currency;
-- A/H/ADR identity confusion;
-- restated historical financials;
-- prompt injection in web/PDF/image;
-- user-supplied wrong premise;
-- missing data;
-- conflicting sources;
-- one-off profit;
-- cycle-peak earnings;
-- pending tool calls during model/provider failure.
+Git history may be used when an older test topology must be investigated. Only the commands above define the current executable test surface.

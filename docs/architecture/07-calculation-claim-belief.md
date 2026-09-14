@@ -28,6 +28,6 @@ Source → Evidence → Fact → Derived Fact → Calculation → Claim → Beli
 
 When upstream data changes, downstream objects become stale/needs_revalidation before they are trusted again.
 
-## H0 calibration
+## Current calibration
 
 CURRENT: deterministic calculations and tool records. PARTIAL: canonical Calculation contract. FUTURE: formula registry, canonical Claim/Hypothesis/Belief entities, dependency DAG and automatic stale propagation. The formula/input IDs described above are target fields, not current storage fields.

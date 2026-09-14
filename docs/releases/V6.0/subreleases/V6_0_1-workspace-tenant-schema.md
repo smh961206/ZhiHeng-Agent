@@ -1,7 +1,7 @@
 # V6.0.1 — Workspace/Tenant Schema
 
 Release: `V6.0`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,9 +15,9 @@ Add workspace/tenant objects and default single-user workspace.
 
 Codex must inspect the real checkout before editing:
 
-- `server/storage.mjs`
-- `server/schema-migrations.mjs`
-- `server/research-workflow.mjs`
+- `server/storage.ts`
+- `server/schema-migrations.ts`
+- `server/research-workflow.ts`
 - `src/`
 - `shared/`
 - `tests/`
@@ -176,5 +176,12 @@ Stop this subrelease when all are true:
 ## 26. Deferred Work
 
 - RBAC
+
+## 27. Infrastructure and Data Acceptance Addendum
+
+- Carry `tenant_id` and `workspace_id` through canonical records, blob paths, cache keys, search indexes, queue envelopes, SSE channels, audit events and exports.
+- Enforce tenant scope in repository contracts and authorization tests; if PostgreSQL is selected, add row-level security as a second boundary.
+- Define tenant-aware uniqueness, retention, deletion, export and restore rules before data migration.
+- Cross-tenant leakage tests must cover exact search, semantic search, cache hits, background jobs, retries, logs and disaster recovery.
 
 Do not proceed to the next subrelease unless the user explicitly authorizes continuation or explicitly asked Codex to execute the entire current core release.

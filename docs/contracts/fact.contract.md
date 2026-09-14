@@ -14,8 +14,8 @@ Invalid:
 - verified fact without lineage;
 - destructive overwrite of originally reported value.
 
-## H0 implementation evidence
+## Current implementation evidence
 
 financial-observations, inline-xbrl and vendor rows contain observations; financial-input-verification returns matched-needs-review, never independent verification. Mature fields listed above are target requirements, not current persistence fields. Tests: evidence-integrity, data-completeness, calculations.
 
-See [implementation map](../architecture/current-implementation-map.md) and [audit findings](../releases/H0/audit-findings.md). H0 changes no persisted object, field requirements, API, migration or financial meaning.
+See the [current implementation map](../architecture/current-implementation-map.md). This contract text alone changes no persisted object, field requirements, API, migration or financial meaning.

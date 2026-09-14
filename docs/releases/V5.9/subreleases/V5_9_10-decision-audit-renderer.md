@@ -1,7 +1,7 @@
 # V5.9.10 — Decision Audit Renderer
 
 Release: `V5.9`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,14 +15,14 @@ Explain decision via structured mandate/state/opportunity/calculation/gaps.
 
 Codex must inspect the real checkout before editing:
 
-- `server/research-create.mjs`
-- `server/research-workflow.mjs`
-- `server/research-context.mjs`
-- `server/research-output.mjs`
-- `server/research-resume.mjs`
-- `server/storage.mjs`
+- `server/research-create.ts`
+- `server/research-workflow.ts`
+- `server/research-context.ts`
+- `server/research-output.ts`
+- `server/research-resume.ts`
+- `server/storage.ts`
 - `tests/`
-- `server/storage.mjs`
+- `server/storage.ts`
 - `src/`
 
 If paths or ownership changed, update `docs/architecture/current-implementation-map.md`; do not force the repository to match stale filenames.
@@ -174,5 +174,12 @@ Stop this subrelease when all are true:
 ## 26. Deferred Work
 
 - Chain-of-thought
+
+## 27. Infrastructure and Data Acceptance Addendum
+
+- Render only from immutable Decision Journal records that pin mandate, policy, Research State, cutoff, evidence package and model/rule versions.
+- Treat approval, rejection, withdrawal, supersession and human override as append-only audit events.
+- Verify Decimal and currency/basis rendering against canonical values and make derived figures reproducible.
+- Never render or persist hidden model reasoning; show public evidence, assumptions, calculations and review outcomes only.
 
 Do not proceed to the next subrelease unless the user explicitly authorizes continuation or explicitly asked Codex to execute the entire current core release.

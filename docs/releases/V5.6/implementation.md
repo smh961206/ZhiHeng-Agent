@@ -6,17 +6,17 @@
 
 ## 修改前必须检查
 
-- `server/calculations.mjs`
-- `server/cashflow-bridge.mjs`
-- `server/normalized-earnings.mjs`
-- `server/reinvestment.mjs`
-- `server/research-sensitivity.mjs`
-- `server/valuation-snapshot.mjs`
-- `server/valuation-history.mjs`
-- `server/valuation-review.mjs`
-- `server/shareholder-return.mjs`
-- `server/agent-execution.mjs`
-- `server/research-output.mjs`
+- `server/calculations.ts`
+- `server/cashflow-bridge.ts`
+- `server/normalized-earnings.ts`
+- `server/reinvestment.ts`
+- `server/research-sensitivity.ts`
+- `server/valuation-snapshot.ts`
+- `server/valuation-history.ts`
+- `server/valuation-review.ts`
+- `server/shareholder-return.ts`
+- `server/agent-execution.ts`
+- `server/research-output.ts`
 
 ## 本版本明确不做
 
@@ -155,6 +155,16 @@
 **完成判定：** unsupported high-confidence claim 不增加。
 
 **工程约束：** 先查现有实现；优先 additive/dual-read/feature flag；任何持久化变化同步更新 schema.md、migration.md、rollback.md；不得顺手实现下一子版本。
+
+## 基础设施与数据架构增量规划
+
+- 计算节点、依赖边、公式版本、输入快照和失效传播采用结构化持久化；数据库约束负责防止悬空依赖、重复边和非法状态，确定性财务计算仍由程序执行。
+- 依赖图优先使用关系表、递归查询和可重建读模型实现，不因“图”这一概念直接引入图数据库。
+- 所有计算输出保留 Decimal 精度、数据口径、研究截止时间、代码/公式版本及完整输入血缘；缓存结果必须能由规范状态重建。
+- 长计算拆成短事务和幂等步骤。若需要发布领域事件，先定义事务内 outbox 记录和消费者幂等键；V5.6 不据此引入外部消息队列。
+- 失效传播区分同步强校验、异步重算和仅提示陈旧三类，任何降级都不得让旧结果伪装成最新已验证结果。
+
+跨版本背景见 [V5.3 至 V6.0 基础设施与数据架构演进方案](../../architecture/infrastructure-data-evolution-plan-v5.3-v6.0.md)。本节及本版本子规格是 V5.6 的执行依据。
 
 ## 大版本发布 Gate
 

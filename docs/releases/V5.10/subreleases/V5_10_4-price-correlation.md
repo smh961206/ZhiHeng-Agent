@@ -1,7 +1,7 @@
 # V5.10.4 — Price Correlation
 
 Release: `V5.10`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,19 +15,19 @@ Add explicit-window return correlation as one risk lens.
 
 Codex must inspect the real checkout before editing:
 
-- `server/storage.mjs`
-- `server/schema-migrations.mjs`
-- `server/research-workflow.mjs`
+- `server/storage.ts`
+- `server/schema-migrations.ts`
+- `server/research-workflow.ts`
 - `src/`
 - `shared/`
 - `tests/`
-- `server/security-resolver.mjs`
-- `server/security-intent.mjs`
-- `server/security-exchanges.mjs`
-- `server/financial-observations.mjs`
-- `server/financial-input-verification.mjs`
-- `server/data-basis.mjs`
-- `server/storage.mjs`
+- `server/security-resolver.ts`
+- `server/security-intent.ts`
+- `server/security-exchanges.ts`
+- `server/financial-observations.ts`
+- `server/financial-input-verification.ts`
+- `server/data-basis.ts`
+- `server/storage.ts`
 - `tests/`
 
 If paths or ownership changed, update `docs/architecture/current-implementation-map.md`; do not force the repository to match stale filenames.

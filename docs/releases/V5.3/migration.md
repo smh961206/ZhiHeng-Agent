@@ -1,10 +1,10 @@
 # V5.3 Migration
 
-Cut active Knowledge control from framework/V4.7 identity to K1.0.0 while preserving old snapshots and exact historical hashes.
+Establish K1.0.0 as the first retained Knowledge release and the only active snapshot identity.
 
-Migration is explicit and idempotent: run `npm run knowledge:seed-governance`, `npm run knowledge:lint`, `npm run benchmark:knowledge`, the release gate, `npm run knowledge:backup`, then `npm run knowledge:activate`. The seed maps 26 existing high-impact sections without rewriting their Markdown. The active snapshot is stored under `auto/K1.0.0/<snapshot-id>/`; `current.json` selects it. Existing V4.x archives remain byte-for-byte unchanged. No historical job is backfilled or relabelled.
+The active snapshot is stored under `auto/K1.0.0/<snapshot-id>/`; `current.json` selects it. Publication uses the current Python lint, backup and activation commands. No saved research job is backfilled or relabelled. Pre-K release files were removed later by explicit user authorization and are available only through Git history.
 
-Compatibility: new code reads schema-v3 K-Series snapshots only. Completed V4.x reports remain viewable, but old unfinished tasks and V4.x rule excerpts are not executed by the active runtime. Retrying an unfinished old task creates a fresh K1.0.0 plan and discards old execution progress while preserving the historical record.
+Compatibility: current code reads schema-v3 K-Series snapshots only. Tasks without a valid retained K snapshot cannot resume their old execution state; a new research task starts on the active K1.0.0 snapshot without rewriting the saved record.
 
 ## Migration rules
 
@@ -14,3 +14,11 @@ Execution field migration is dual-read/new-write with no backfill. New jobs pin 
 - Backup/recovery path must be stated before destructive operations.
 - Backfill quality must be measurable.
 - If historic information was never stored, record it as unavailable rather than reconstructing it from future information.
+
+## Python model-support synchronization
+
+The synchronization is additive. Existing jobs without `budgetState` or `flagshipState` retain disabled behavior. New budget state is created only when `RESEARCH_BUDGET_MODE` is `dry-run` or `enforce`. Optional Critical Reviewer and Judge execute only when their schema-v2 pipeline stages have assignments and deterministic admission succeeds. No historical record is backfilled, no saved conclusion is replaced, and no legacy Champion/Challenger, A/B, drift, complexity-routing or escalation subsystem is restored.
+
+## Prompt and context governance
+
+The migration is additive/new-write. All current Python model call sites now compile a registered Prompt plan and send body-free metadata to Model Gateway. New jobs pin `promptState`; historical jobs do not receive a synthetic pin. Historical model calls without `promptContext`, context receipts at version 1 and vision blocks without image digests remain valid and are not backfilled. Resume continues from saved checkpoints; it does not replay completed researcher/writer/independent stages to manufacture new metadata.

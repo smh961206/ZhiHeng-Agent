@@ -1,0 +1,404 @@
+{
+  "schemaVersion": 1,
+  "releaseLines": {
+    "platform": "V5.3",
+    "knowledge": "K1.0.0"
+  },
+  "generatedFrom": "main@fe184c2d2a6ea76773ff28324b34a5eff045f303",
+  "sourceModuleCount": 113,
+  "policy": "Every main-branch Node backend module is assigned exactly once. Production-reachable behavior under the checked-in/local schema-v2 pipeline must have a Python owner; code with no active runtime path is excluded only with concrete reachability evidence.",
+  "entries": [
+    {
+      "capability": "knowledge",
+      "status": "migrated-and-consolidated",
+      "sourceModules": [
+        "server/knowledge-excerpt.mjs",
+        "server/knowledge-snapshots.mjs",
+        "server/knowledge.mjs"
+      ],
+      "pythonOwners": [
+        "python_backend/application/knowledge.py",
+        "python_backend/cli.py"
+      ],
+      "verification": "python_tests and architecture boundary checks"
+    },
+    {
+      "capability": "model-runtime",
+      "status": "migrated-and-consolidated",
+      "sourceModules": [
+        "server/model-adapter.mjs",
+        "server/model-catalog.mjs",
+        "server/model-config.mjs",
+        "server/model-connection.mjs",
+        "server/model-deadline.mjs",
+        "server/model-gateway-result.mjs",
+        "server/model-gateway.mjs",
+        "server/model-health.mjs",
+        "server/model-judge.mjs",
+        "server/model-pricing.mjs",
+        "server/model-request.mjs",
+        "server/model-routing.mjs",
+        "server/model-state.mjs",
+        "server/model-stream.mjs",
+        "server/model-telemetry.mjs",
+        "server/vision-model.mjs",
+        "server/vision-policy.mjs",
+        "server/vision-quality.mjs"
+      ],
+      "pythonOwners": [
+        "python_backend/infrastructure/model_gateway.py",
+        "python_backend/infrastructure/model_adapter.py",
+        "python_backend/infrastructure/model_pricing.py",
+        "python_backend/domain/model_governance.py",
+        "python_backend/domain/judge.py",
+        "python_backend/application/independent_review.py",
+        "python_backend/domain/independent_review.py",
+        "python_backend/domain/vision_quality.py"
+      ],
+      "verification": "python_tests model gateway, independent review, judge, Vision quality and architecture boundary checks"
+    },
+    {
+      "capability": "web-research",
+      "status": "migrated-and-consolidated",
+      "sourceModules": [
+        "server/web-evidence-request.mjs",
+        "server/web-evidence.mjs",
+        "server/web-research.mjs",
+        "server/web-search-provider.mjs"
+      ],
+      "pythonOwners": [
+        "python_backend/infrastructure/web_research.py",
+        "python_backend/infrastructure/web_evidence.py",
+        "python_backend/domain/web_evidence.py"
+      ],
+      "verification": "python_tests and architecture boundary checks"
+    },
+    {
+      "capability": "documents",
+      "status": "migrated-and-consolidated",
+      "sourceModules": [
+        "server/document-integrity.mjs",
+        "server/document-layout.mjs",
+        "server/document-reader.mjs",
+        "server/filing-text.mjs",
+        "server/inline-xbrl.mjs",
+        "server/ocr-image.mjs",
+        "server/pdf-extractor.mjs",
+        "server/pdf-ocr.mjs",
+        "server/pdf-options.mjs",
+        "server/pdf-processing.mjs",
+        "server/pdf-worker.mjs",
+        "server/report-page-worker.mjs",
+        "server/report-periods.mjs",
+        "server/visual-reading.mjs"
+      ],
+      "pythonOwners": [
+        "python_backend/infrastructure/documents.py",
+        "python_backend/infrastructure/official_evidence.py",
+        "python_backend/domain/evidence.py"
+      ],
+      "verification": "python_tests and architecture boundary checks"
+    },
+    {
+      "capability": "data-providers",
+      "status": "migrated-and-consolidated",
+      "sourceModules": [
+        "server/data-provider-config.mjs",
+        "server/hkex-disclosures.mjs",
+        "server/longbridge-fundamental-worker.mjs",
+        "server/longbridge-fundamentals.mjs",
+        "server/longbridge-quotes.mjs",
+        "server/longbridge-worker.mjs",
+        "server/official-reports.mjs",
+        "server/sec-directory.mjs",
+        "server/tushare-client.mjs",
+        "server/tushare-financials.mjs"
+      ],
+      "pythonOwners": [
+        "python_backend/infrastructure/data_providers.py",
+        "python_backend/infrastructure/official_evidence.py"
+      ],
+      "verification": "python_tests and architecture boundary checks"
+    },
+    {
+      "capability": "market-security",
+      "status": "migrated-and-consolidated",
+      "sourceModules": [
+        "server/market-cache.mjs",
+        "server/market-data.mjs",
+        "server/market-request.mjs",
+        "server/security-exchanges.mjs",
+        "server/security-intent.mjs",
+        "server/security-resolver.mjs"
+      ],
+      "pythonOwners": [
+        "python_backend/infrastructure/market.py",
+        "python_backend/domain/securities.py"
+      ],
+      "verification": "python_tests and architecture boundary checks"
+    },
+    {
+      "capability": "storage-recovery",
+      "status": "migrated-and-consolidated",
+      "sourceModules": [
+        "server/data-archive.mjs",
+        "server/job-checkpoints.mjs",
+        "server/migrate.mjs",
+        "server/research-baseline.mjs",
+        "server/research-resume.mjs",
+        "server/schema-migrations.mjs",
+        "server/storage.mjs"
+      ],
+      "pythonOwners": [
+        "python_backend/infrastructure/mongo_storage.py",
+        "python_backend/infrastructure/data_archive.py",
+        "python_backend/application/recovery.py",
+        "python_backend/application/baseline.py",
+        "python_backend/cli.py"
+      ],
+      "verification": "python_tests and architecture boundary checks"
+    },
+    {
+      "capability": "calculations",
+      "status": "migrated-and-consolidated",
+      "sourceModules": [
+        "server/calculation-recovery.mjs",
+        "server/calculations.mjs",
+        "server/capital-evidence.mjs",
+        "server/cashflow-bridge.mjs",
+        "server/data-basis.mjs",
+        "server/evidence-search.mjs",
+        "server/financial-input-verification.mjs",
+        "server/financial-observations.mjs",
+        "server/normalized-earnings.mjs",
+        "server/quick-screen.mjs",
+        "server/reinvestment.mjs",
+        "server/research-sensitivity.mjs",
+        "server/shareholder-data.mjs",
+        "server/shareholder-return.mjs",
+        "server/valuation-history.mjs",
+        "server/valuation-review.mjs",
+        "server/valuation-snapshot.mjs"
+      ],
+      "pythonOwners": [
+        "python_backend/application/calculation_service.py",
+        "python_backend/domain/calculations.py",
+        "python_backend/domain/financial.py",
+        "python_backend/domain/analytics.py",
+        "python_backend/domain/evidence.py"
+      ],
+      "verification": "python_tests and architecture boundary checks"
+    },
+    {
+      "capability": "visual-assets",
+      "status": "migrated-and-consolidated",
+      "sourceModules": [
+        "server/material-vision.mjs",
+        "server/visual-assets.mjs"
+      ],
+      "pythonOwners": [
+        "python_backend/infrastructure/documents.py",
+        "python_backend/infrastructure/company_logos.py",
+        "python_backend/api/factory.py"
+      ],
+      "verification": "python_tests and architecture boundary checks"
+    },
+    {
+      "capability": "research-http",
+      "status": "migrated-and-consolidated",
+      "sourceModules": [
+        "server/access.mjs",
+        "server/agent-disclosures.mjs",
+        "server/agent-execution.mjs",
+        "server/agent-page-reader.mjs",
+        "server/agent.mjs",
+        "server/bounded-reads.mjs",
+        "server/company-comparison.mjs",
+        "server/evidence-followup.mjs",
+        "server/index.mjs",
+        "server/job-stream.mjs",
+        "server/research-context.mjs",
+        "server/research-create.mjs",
+        "server/research-delivery.mjs",
+        "server/research-output.mjs",
+        "server/research-path.mjs",
+        "server/research-references.mjs",
+        "server/research-retry.mjs",
+        "server/research-workflow.mjs",
+        "server/review-format.mjs",
+        "server/router.mjs",
+        "server/visual-render-worker.mjs"
+      ],
+      "pythonOwners": [
+        "python_backend/api/factory.py",
+        "python_backend/api/events.py",
+        "python_backend/api/security.py",
+        "python_backend/application/research_service.py",
+        "python_backend/application/research_pipeline.py",
+        "python_backend/domain/review.py"
+      ],
+      "verification": "python_tests and architecture boundary checks"
+    },
+    {
+      "capability": "model-cache",
+      "status": "migrated-and-consolidated",
+      "sourceModules": [
+        "server/model-cache.mjs"
+      ],
+      "pythonOwners": [
+        "python_backend/domain/model_cache.py",
+        "python_backend/infrastructure/model_gateway.py",
+        "python_backend/infrastructure/mongo_storage.py"
+      ],
+      "verification": "python_tests/test_model_cache.py plus gateway and Mongo cost-summary tests"
+    },
+    {
+      "capability": "model-champion",
+      "status": "excluded-unused-current-runtime",
+      "sourceModules": [
+        "server/model-champion.mjs"
+      ],
+      "pythonOwners": [],
+      "rationale": "Explicitly retired by user decision during the Python cutover; this legacy automatic model-governance stack must not be recreated.",
+      "runtimeEvidence": [
+        "Python uses the schema-v2 purpose pipeline with quality/health candidate safety only",
+        "No Champion/Challenger, A/B, drift, complexity routing or checkpoint escalation entrypoint exists"
+      ]
+    },
+    {
+      "capability": "model-drift",
+      "status": "excluded-unused-current-runtime",
+      "sourceModules": [
+        "server/model-drift.mjs"
+      ],
+      "pythonOwners": [],
+      "rationale": "Explicitly retired by user decision during the Python cutover; this legacy automatic model-governance stack must not be recreated.",
+      "runtimeEvidence": [
+        "Python uses the schema-v2 purpose pipeline with quality/health candidate safety only",
+        "No Champion/Challenger, A/B, drift, complexity routing or checkpoint escalation entrypoint exists"
+      ]
+    },
+    {
+      "capability": "model-escalation",
+      "status": "excluded-unused-current-runtime",
+      "sourceModules": [
+        "server/model-escalation.mjs"
+      ],
+      "pythonOwners": [],
+      "rationale": "Explicitly retired by user decision during the Python cutover; this legacy automatic model-governance stack must not be recreated.",
+      "runtimeEvidence": [
+        "Python uses the schema-v2 purpose pipeline with quality/health candidate safety only",
+        "No Champion/Challenger, A/B, drift, complexity routing or checkpoint escalation entrypoint exists"
+      ]
+    },
+    {
+      "capability": "model-experiment",
+      "status": "excluded-unused-current-runtime",
+      "sourceModules": [
+        "server/model-experiment.mjs"
+      ],
+      "pythonOwners": [],
+      "rationale": "Explicitly retired by user decision during the Python cutover; this legacy automatic model-governance stack must not be recreated.",
+      "runtimeEvidence": [
+        "Python uses the schema-v2 purpose pipeline with quality/health candidate safety only",
+        "No Champion/Challenger, A/B, drift, complexity routing or checkpoint escalation entrypoint exists"
+      ]
+    },
+    {
+      "capability": "model-flagship",
+      "status": "migrated-and-consolidated",
+      "sourceModules": [
+        "server/model-flagship.mjs"
+      ],
+      "pythonOwners": [
+        "python_backend/domain/independent_review.py",
+        "python_backend/application/independent_review.py",
+        "python_backend/application/research_service.py"
+      ],
+      "verification": "python_tests/test_independent_review.py and research service recovery tests"
+    },
+    {
+      "capability": "model-policy",
+      "status": "excluded-unused-current-runtime",
+      "sourceModules": [
+        "server/model-policy.mjs"
+      ],
+      "pythonOwners": [],
+      "rationale": "Explicitly retired by user decision during the Python cutover; this legacy automatic model-governance stack must not be recreated.",
+      "runtimeEvidence": [
+        "Python uses the schema-v2 purpose pipeline with quality/health candidate safety only",
+        "No Champion/Challenger, A/B, drift, complexity routing or checkpoint escalation entrypoint exists"
+      ]
+    },
+    {
+      "capability": "model-rollout",
+      "status": "migrated-and-consolidated",
+      "sourceModules": [
+        "server/model-rollout.mjs"
+      ],
+      "pythonOwners": [
+        "python_backend/infrastructure/model_gateway.py",
+        "python_backend/application/research_service.py"
+      ],
+      "verification": "schema-v2 configuration validation, public stage selection, immutable job pins and dual-read recovery tests"
+    },
+    {
+      "capability": "model-task-class",
+      "status": "excluded-unused-current-runtime",
+      "sourceModules": [
+        "server/model-task-class.mjs"
+      ],
+      "pythonOwners": [],
+      "rationale": "Explicitly retired by user decision during the Python cutover; this legacy automatic model-governance stack must not be recreated.",
+      "runtimeEvidence": [
+        "Python uses the schema-v2 purpose pipeline with quality/health candidate safety only",
+        "No Champion/Challenger, A/B, drift, complexity routing or checkpoint escalation entrypoint exists"
+      ]
+    },
+    {
+      "capability": "research-budget",
+      "status": "migrated-and-consolidated",
+      "sourceModules": [
+        "server/research-budget.mjs"
+      ],
+      "pythonOwners": [
+        "python_backend/domain/research_budget.py",
+        "python_backend/infrastructure/model_gateway.py",
+        "python_backend/application/research_service.py",
+        "python_backend/api/factory.py"
+      ],
+      "verification": "python_tests/test_research_budget.py and model gateway tests"
+    },
+    {
+      "capability": "research-complexity",
+      "status": "excluded-unused-current-runtime",
+      "sourceModules": [
+        "server/research-complexity.mjs"
+      ],
+      "pythonOwners": [],
+      "rationale": "Explicitly retired by user decision during the Python cutover; this legacy automatic model-governance stack must not be recreated.",
+      "runtimeEvidence": [
+        "Python uses the schema-v2 purpose pipeline with quality/health candidate safety only",
+        "No Champion/Challenger, A/B, drift, complexity routing or checkpoint escalation entrypoint exists"
+      ]
+    }
+  ],
+  "sourceInventorySha256": "b48f11f1250d393dd91f98498c0422879163816fb0814e3c7677ca62411d54ee",
+  "activeRuntimeBaseline": {
+    "modelConfig": "config/models.example.json",
+    "modelConfigSha256": "9261e9b5590c0ae64c81567316b3c61a5828e7371b1c771b6870521c86d5dccb",
+    "schemaVersion": 2,
+    "enabledStages": [
+      "input",
+      "vision",
+      "researcher",
+      "writer",
+      "evidenceVerifier",
+      "auditor"
+    ],
+    "disabledOptionalStages": [
+      "criticalReviewer",
+      "judge"
+    ]
+  }
+}

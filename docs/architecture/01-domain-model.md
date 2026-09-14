@@ -1,8 +1,8 @@
 # Investment Domain Object Model
 
-Status: CURRENT — H0 classification of target objects, not a claim that all canonical contracts exist.
+Status: CURRENT classification of target objects; this is not a claim that all canonical contracts exist.
 
-CURRENT = implemented named behavior; PARTIAL = existing predecessor with incomplete target contract; FUTURE = design reservation; DEPRECATED = approved migration away. No new deprecations in H0.
+CURRENT = implemented named behavior; PARTIAL = existing predecessor with incomplete target contract; FUTURE = design reservation; DEPRECATED = approved migration away.
 
 | Object | Implementation status | Current boundary |
 |---|---|---|

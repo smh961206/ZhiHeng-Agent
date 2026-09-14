@@ -1,7 +1,7 @@
 # V5.4.3 — Embedding provider/index
 
 Release: `V5.4`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,11 +15,11 @@ Add versioned embeddings for eligible qualitative evidence.
 
 Codex must inspect the real checkout before editing:
 
-- `server/evidence-search.mjs`
-- `server/evidence-followup.mjs`
-- `server/agent-page-reader.mjs`
-- `server/web-evidence.mjs`
-- `server/research-context.mjs`
+- `server/evidence-search.ts`
+- `server/evidence-followup.ts`
+- `server/agent-page-reader.ts`
+- `server/web-evidence.ts`
+- `server/research-context.ts`
 - `tests/`
 
 If paths or ownership changed, update `docs/architecture/current-implementation-map.md`; do not force the repository to match stale filenames.
@@ -173,5 +173,12 @@ Stop this subrelease when all are true:
 ## 26. Deferred Work
 
 - Fact verification via vector
+
+## 27. Infrastructure and Data Acceptance Addendum
+
+- Expose indexing through a provider-neutral `SearchIndex` contract; domain code must not import a vector-database SDK.
+- Persist an index manifest containing corpus snapshot, parser/chunking/embedding versions, workspace, security identity, cutoff policy and index version.
+- Apply authorization and point-in-time filters before fusion, and keep exact/structured financial retrieval available when semantic retrieval is disabled.
+- Use the current storage or an embedded implementation by default. An independent vector database requires the V5.4.9 benchmark and an accepted ADR.
 
 Do not proceed to the next subrelease unless the user explicitly authorizes continuation or explicitly asked Codex to execute the entire current core release.

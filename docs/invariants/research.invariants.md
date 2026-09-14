@@ -1,6 +1,6 @@
 # Research Invariants
 
-V5.2 independently validates known publication times and actual block identities against the original job cutoff for exceptional review/Judge packets. Missing/ambiguous/omitted/counter evidence cannot be silently removed to gain eligibility. Judge outcomes remain advisory, and the original final review contract is required. Private reservations survive storage/restart; uncertain entry pauses. These scoped tests do not establish global canonical Research State or complete historical replay.
+Current research validation checks known publication times and actual block identities against the original job cutoff. Missing, ambiguous, omitted and counter-evidence cannot be silently removed. Optional Judge outcomes remain advisory, and final validation is still required. These checks do not establish a global canonical Research State or complete historical replay.
 
 - INV-RES-001 [ENFORCED]: formal delivery must pass the current review/validation path.
 - INV-RES-002 [ENFORCED]: missing material data is disclosed, not fabricated.
@@ -10,8 +10,8 @@ V5.2 independently validates known publication times and actual block identities
 - INV-RES-006 [TARGET]: a research job pins its behaviorally relevant versions/snapshots.
 - INV-RES-007 [ENFORCED]: execution compatibility and output contract counters validate before continuation; K-pinned legacy 4.7 plans retain their exact saved scope. Unknown/mixed counters cannot downgrade to legacy, and checkpoints cannot silently cross formats. Tests: research-resume, model-migration, research-contract. This scoped guarantee does not claim complete historical code replay.
 
-## H0 enforcement evidence and limits
+## Current enforcement and limits
 
-Current execution: agent/research-output/research-references enforce the review path and structured gates; research-resume/research-retry preserve compatible resume data. Tests: research-contract, research-resume, research-retry, review-recovery. Missing-data and counter-evidence requirements remain mandatory, but arbitrary semantic completeness is not mechanically proven. Rejected-checkpoint restart is a separate current branch; see H0-G02/G05.
+The Python research, output, reference and recovery owners enforce the review path, structured gates and compatible resume data. Missing-data and counter-evidence requirements remain mandatory, but arbitrary semantic completeness is not mechanically proven.
 
 See [fitness baseline](../development/architecture-fitness.md). No ENFORCED obligation is weakened; unproven coverage is recorded separately.

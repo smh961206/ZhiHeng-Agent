@@ -1,6 +1,8 @@
 # 模型费用与缓存记录配置教程
 
-当前平台保留 V5.1 的模型用量、费用估算与缓存统计，已经取消可配置研究预算、预算阻断和预算压力下的检索缩减。费用数据只用于记录与展示，不选择模型，也不会因为价格高低改变研究环节。
+> 运行时归属更新（2026-09-14）：费用与模型治理由 `python_backend/infrastructure/model_gateway.py`、`python_backend/infrastructure/model_pricing.py`、`python_backend/domain/model_governance.py` 和 `python_backend/infrastructure/mongo_storage.py` 承担。
+
+当前平台保留模型用量、费用估算与缓存统计，并提供可选的单项研究资源预算。预算只控制是否允许开始新的资源调用，不选择模型，也不减少已要求的证据范围。
 
 ## 1. 当前配置入口
 
@@ -18,15 +20,14 @@ MODEL_PRICING_FILE=
 
 `MODEL_TELEMETRY_ENABLED=true` 控制调用元数据记录。记录只包含模型身份、环节、时间、状态、用量和费用等安全字段，不保存提示词、资料正文、图片、密钥或隐藏推理。
 
-以下入口已经退出当前配置：
+可选预算入口：
 
 ```dotenv
 RESEARCH_BUDGET_FILE=
-FEATURE_RESEARCH_BUDGET=false
-FEATURE_COST_ROUTER=false
+RESEARCH_BUDGET_MODE=disabled
 ```
 
-新任务不再创建统一 `budgetState`，不会因模型金额、工具轮次、网页请求、Vision 页数或研究时长达到预算而停止。历史任务中已保存的预算账本继续保留并校验，用于恢复与审计，但额度不再阻断执行，也不会触发预算压力检索复用。
+`disabled` 不创建账本；`dry-run` 记录假设超限；`enforce` 在模型、工具轮次、网页请求或 Vision 页面处理前保存预留并检查限制。进程中断留下的预留状态会阻止自动重放。模型费用上限要求模型配置提供 `contextWindow`，并且价格注册表能解析输入和输出价格；未知价格不会被当作零成本授权。
 
 网页读取次数、文件大小、请求超时、并发和模型总时限仍是平台的运行安全边界，它们不是研究预算配置。
 
@@ -93,7 +94,7 @@ MODEL_PRICING_FILE=./config/pricing.local.json
 | 字段 | 说明 |
 | --- | --- |
 | 外层 `schemaVersion` | 价格注册表格式，当前为 `1` |
-| `profileId` | schema v2 模型别名加 `configured-` 前缀，例如别名 `deepseek` 对应 `configured-deepseek` |
+| `profileId` | schema v2 模型别名；兼容读取历史 `configured-` 前缀，例如 `deepseek` 与 `configured-deepseek` 均绑定同一别名 |
 | `connectionIdentity` | 由协议、规范化接口地址和模型名生成的 SHA-256，不包含密钥 |
 | `recordedAt` | 实际获知并录入价格的时间 |
 | `pricing.schemaVersion` | 普通价格为 `1`，分时价格为 `2` |
@@ -112,17 +113,7 @@ MODEL_PRICING_FILE=./config/pricing.local.json
 在项目根目录运行以下只读命令。它不会请求模型，也不会输出接口地址或密钥：
 
 ```powershell
-@'
-import {modelEnvironment} from './server/model-config.mjs';
-import {createPipelineModelCatalog} from './server/model-catalog.mjs';
-import {modelConnectionIdentity} from './server/model-connection.mjs';
-const env = modelEnvironment(process.env);
-console.log(JSON.stringify(createPipelineModelCatalog(env).profiles.map(profile => ({
-  profileId: profile.id,
-  model: profile.model,
-  connectionIdentity: modelConnectionIdentity(profile, env)
-})), null, 2));
-'@ | node --env-file-if-exists=.env --input-type=module
+pnpm models:identities
 ```
 
 把输出的 `profileId` 和 `connectionIdentity` 原样写入价格记录。修改模型名、接口地址或协议后身份会变化；只轮换同一个 `apiKeyEnv` 对应的密钥不会改变身份。
@@ -160,11 +151,8 @@ pnpm models:check config/models.local.json
 检查价格文件格式：
 
 ```powershell
-@'
-import {loadPricingRegistry} from './server/model-pricing.mjs';
-const registry = loadPricingRegistry('./config/pricing.local.json');
-console.log(JSON.stringify({valid: true, entries: registry.entries.length, modelRequests: 0}));
-'@ | node --input-type=module
+python -m python_backend.cli pricing-check config/pricing.local.json
+python -m python_backend.cli budget-check config/research-budget.local.json
 ```
 
 这些检查不会调用模型，不检查账户余额，也不能证明填入的费率真实。`entries: 0` 只表示空文件格式有效。
@@ -201,7 +189,7 @@ MODEL_PRICING_FILE=/app/config/pricing.production.json
 - 缓存输入 Token 与缺少用量记录的调用数；
 - 已知费用和费用未知的调用数。
 
-这些数据来自正常研究时供应商返回的调用用量，不需要人工验收或单独付费试跑。它们只用于观察和优化，不会限制研究、自动降级模型或减少证据。
+这些数据来自正常研究时供应商返回的调用用量。预算关闭或仅记录时不限制研究；强制模式只按明确配置阻断新的资源调用，不自动降级模型或减少证据。
 
 `GET /api/jobs/:id/cost` 返回同一份白名单数据，不返回价格文件路径、连接哈希、提示词、资料正文、密钥或隐藏推理。不同币种不会相加；用量缺失或费率未知时，金额继续显示为未知。
 
@@ -220,4 +208,4 @@ MODEL_PRICING_FILE=/app/config/pricing.production.json
 | 缓存 token 为未知 | 供应商没有返回可验证的缓存用量；平台不会推测 |
 | 同一任务出现多种币种 | 各币种分别展示，不自动换汇 |
 | 修改文件后没有生效 | 重启后端或重建生产应用容器 |
-| 旧预算字段仍存在于私人环境 | 删除 `RESEARCH_BUDGET_FILE` 和 `FEATURE_RESEARCH_BUDGET`；当前运行时不会再为新任务创建预算 |
+| 预算没有生效 | 同时设置预算文件和 `RESEARCH_BUDGET_MODE=dry-run` 或 `enforce`，修改后重启服务 |

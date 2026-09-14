@@ -6,13 +6,13 @@
 
 ## 修改前必须检查
 
-- `server/research-create.mjs`
-- `server/research-workflow.mjs`
-- `server/research-context.mjs`
-- `server/research-output.mjs`
-- `server/job-checkpoints.mjs`
-- `server/research-resume.mjs`
-- `server/research-sensitivity.mjs`
+- `server/research-create.ts`
+- `server/research-workflow.ts`
+- `server/research-context.ts`
+- `server/research-output.ts`
+- `server/job-checkpoints.ts`
+- `server/research-resume.ts`
+- `server/research-sensitivity.ts`
 - `valuation modules`
 - `Fact/Claim/Assumption modules added by V5.5–V5.6`
 
@@ -183,6 +183,16 @@
 **完成判定：** 不越级做高级情景模拟。
 
 **工程约束：** 先查现有实现；优先 additive/dual-read/feature flag；任何持久化变化同步更新 schema.md、migration.md、rollback.md；不得顺手实现下一子版本。
+
+## 基础设施与数据架构增量规划
+
+- Research State 采用不可变版本和显式父版本关系；每个版本固定研究截止时间、数据/证据快照、假设、模型、配置和生成器版本。
+- 写入使用对象版本或乐观并发控制，冲突必须显式返回并保留人工覆盖；禁止后台任务静默覆盖已发布研究状态。
+- 报告、摘要和界面投影是可重建视图，不能成为长期规范状态。读模型可按性能需要异步生成，但必须携带源状态版本和陈旧标识。
+- 大对象继续通过内容哈希和清单引用管理；Redis、搜索索引和分析投影只能保存可重建数据，不能成为 Research State 的唯一副本。
+- 分支、合并和发布操作必须形成可审计事件，并验证事实、预测、假设、观点和决策语义没有混存。
+
+跨版本背景见 [V5.3 至 V6.0 基础设施与数据架构演进方案](../../architecture/infrastructure-data-evolution-plan-v5.3-v6.0.md)。本节及本版本子规格是 V5.7 的执行依据。
 
 ## 大版本发布 Gate
 

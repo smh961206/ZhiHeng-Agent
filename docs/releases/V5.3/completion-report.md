@@ -1,5 +1,7 @@
 # V5.3 engineering completion report
 
+> Post-release update (2026-09-14): the backend was subsequently migrated to Python FastAPI. The file lists and Node tooling below are historical V5.3 Knowledge acceptance evidence. Current ownership, removals and validation are recorded in the [FastAPI migration report](fastapi-backend-migration-report.md).
+
 V5.3.0–V5.3.11 were implemented in order on 2026-09-13. CURRENT and the public platform version now select V5.3. The release uses deterministic offline validation and makes no live model calls; the user's existing pause on real-model acceptance remains unchanged and does not block this Knowledge Engineering release.
 
 ## 1. Release / subrelease implemented
@@ -8,15 +10,15 @@ All 12 subreleases are complete: inventory, Rule IDs, constitution, ontology, re
 
 ## 2. Modified files
 
-Core edits: `knowledge/modules.json`, `server/knowledge.mjs`, `server/knowledge-snapshots.mjs`, `server/research-resume.mjs`, `scripts/backup-knowledge.mjs`, `package.json`, `src/config/platform-release.mjs`, `tests/knowledge-modules.test.mjs`, `tests/fixtures/model-migration-baseline.json`, CURRENT, Knowledge architecture/invariant documents, and V5.3 release specifications.
+Core edits: `knowledge/modules.json`, `server/knowledge.ts`, `server/knowledge-snapshots.ts`, `server/research-resume.ts`, `scripts/backup-knowledge.ts`, `package.json`, `src/config/platform-release.ts`, `tests/knowledge-modules.test.ts`, `tests/fixtures/model-migration-baseline.json`, CURRENT, Knowledge architecture/invariant documents, and V5.3 release specifications.
 
 ## 3. New files
 
-`shared/knowledge-engineering.mjs`; Knowledge seed/lint/benchmark, activation and manifest scripts; `knowledge/current.json`; ADR-016; `tests/knowledge-engineering.test.mjs`; final immutable snapshot under `knowledge/versions/auto/K1.0.0/be00f682a571ac07eb399c0f80be166a9cc945cb25dc1ed5d3915f62e155dfa1/`; this report, execution log, runbook and validation results.
+`shared/knowledge-engineering.ts`; Knowledge seed/lint/benchmark, activation and manifest scripts; `knowledge/current.json`; ADR-016; `tests/knowledge-engineering.test.ts`; final immutable snapshot under `knowledge/versions/auto/K1.0.0/be00f682a571ac07eb399c0f80be166a9cc945cb25dc1ed5d3915f62e155dfa1/`; this report, execution log, runbook and validation results.
 
 ## 4. Removed files
 
-No published or historical file was removed. Unpublished intermediate K snapshots created before the final cutover were deleted after path verification. Historical V4.x archives remain read-only.
+The original V5.3 cutover did not remove published files. A later user-authorized repository cleanup removed all pre-K release directories, automatic V4 snapshots and their archive metadata. K1.0.0 remains unchanged and active.
 
 ## 5. Architecture changes
 
@@ -36,7 +38,7 @@ None. No dependency, lockfile, secret, model configuration, production service o
 
 ## 9. Compatibility impact
 
-Knowledge Markdown and loading behavior remain intact. K identity changes full serialized job/checkpoint hashes for new tasks, so six full-payload frozen migration samples were re-recorded after confirming unchanged request counts, paths and rule bytes. Completed historical reports are not rewritten; V4.x snapshots remain archives outside active execution.
+Knowledge Markdown and loading behavior remain intact. K identity changes full serialized job/checkpoint hashes for new tasks. Pre-K Knowledge files are no longer retained; saved research records are not rewritten, but continuation requires an available compatible K-Series snapshot.
 
 ## 10. Resume / recovery impact
 
@@ -64,7 +66,7 @@ Governance data contains methods and identifiers only, with no company thesis, p
 
 ## 16. Rollback path
 
-Retain V5.3 code for active K1.0.0 tasks or pause them. For new work, explicitly activate a separately validated K-Series rollback or forward-fix release. V4.x cannot be reactivated in the current runtime. No database rewrite or historical deletion is needed. See [rollback](rollback.md) and [runbook](runbook.md).
+Retain V5.3 code and the exact K1.0.0 snapshot for active tasks or pause them. For new work, explicitly publish and activate a separately validated K-Series rollback or forward-fix release. Pre-K Knowledge cannot be reactivated. No database rewrite is needed. See [rollback](rollback.md) and [runbook](runbook.md).
 
 ## 17. Known limitations
 

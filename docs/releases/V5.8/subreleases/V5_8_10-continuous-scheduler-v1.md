@@ -1,7 +1,7 @@
 # V5.8.10 — Continuous Scheduler V1
 
 Release: `V5.8`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,18 +15,18 @@ Run idempotent governed refresh after prior semantics are stable.
 
 Codex must inspect the real checkout before editing:
 
-- `server/web-evidence.mjs`
-- `server/web-research.mjs`
-- `server/research-workflow.mjs`
-- `server/research-create.mjs`
-- `server/storage.mjs`
+- `server/web-evidence.ts`
+- `server/web-research.ts`
+- `server/research-workflow.ts`
+- `server/research-create.ts`
+- `server/storage.ts`
 - `tests/`
-- `server/research-create.mjs`
-- `server/research-workflow.mjs`
-- `server/research-context.mjs`
-- `server/research-output.mjs`
-- `server/research-resume.mjs`
-- `server/storage.mjs`
+- `server/research-create.ts`
+- `server/research-workflow.ts`
+- `server/research-context.ts`
+- `server/research-output.ts`
+- `server/research-resume.ts`
+- `server/storage.ts`
 - `tests/`
 
 If paths or ownership changed, update `docs/architecture/current-implementation-map.md`; do not force the repository to match stale filenames.
@@ -181,5 +181,12 @@ Stop this subrelease when all are true:
 ## 26. Deferred Work
 
 - Distributed workers
+
+## 27. Infrastructure and Data Acceptance Addendum
+
+- Implement durable scheduling with database-backed jobs, steps, checkpoints, leases, heartbeats, retries, cancellation and dead-letter state.
+- Protect multi-runner execution with fencing tokens, atomic transitions and idempotency keys; recovery retains the original research cutoff.
+- Couple domain writes and event intent through a transactional outbox, and record consumer idempotency before applying side effects.
+- Keep the external broker feature flag off in V5.8. Escalate broker selection to V6.0.13 only when measured backlog, throughput, isolation or availability thresholds are exceeded.
 
 Do not proceed to the next subrelease unless the user explicitly authorizes continuation or explicitly asked Codex to execute the entire current core release.

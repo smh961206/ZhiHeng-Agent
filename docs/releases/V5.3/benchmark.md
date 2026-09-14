@@ -1,8 +1,8 @@
 # V5.3 Benchmark
 
-Knowledge rule compliance, false trigger, missed trigger, ontology mapping, domain regressions.
+The original V5.3 Knowledge benchmark results are retained in `validation-results.json`; its Node runner was removed with the backend cutover and is no longer an executable repository command.
 
-Executable command: `npm run benchmark:knowledge`. It uses only the repository-pinned K1.0.0 catalog and immutable snapshot, makes zero model/network calls, and fails on linter errors, any A–F hard-rule omission, bank-FCF missed trigger, commodity bank-rule false trigger, ontology mapping loss or unstable compiler fingerprint.
+Current executable command: `python -m benchmark.runner`. It uses frozen fixtures, makes zero model/network calls, and checks point-in-time exclusion, missing-value preservation, calculation lineage, visual-review boundaries and the absence of Node backend entrypoints. Knowledge catalog, pointer and immutable-snapshot integrity are additionally enforced by `python -m pytest python_tests/test_knowledge.py`.
 
 ## Benchmark principles
 - Prefer frozen fixtures.

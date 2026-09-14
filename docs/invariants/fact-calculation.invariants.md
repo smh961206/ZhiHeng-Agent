@@ -6,7 +6,7 @@
 - INV-CALC-001 [TARGET V5.6]: material calculation results require formula/version and input lineage.
 - INV-CALC-002 [TARGET V5.6]: stale upstream input marks dependent calculation stale before publication.
 
-## H0 enforcement evidence and limits
+## Current enforcement and limits
 
 Current original-number checks return matched-needs-review; tools retain basis/source/block and records. No canonical Fact revision store/formula registry/dependency DAG exists. All TARGET labels above remain future; use current evidence/calculation tests as bounded predecessors only.
 

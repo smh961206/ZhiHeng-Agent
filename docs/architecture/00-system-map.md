@@ -1,124 +1,42 @@
 # ZhiHeng System Map
 
-M1.1 phase 1 reduces repeated model input for new modelState-v4 tasks pinned with `contextVersion=1`. The Researcher receives path-scoped and prerequisite-aware tools, detailed shareholder rules load only for applicable paths, safe tool-boundary compaction starts earlier by research depth, and Writer uses a separately checked evidence/calculation context. Historical task wires, including pre-M1.1 v4 tasks without the pin, remain compatible. Token totals are read-only observations from normal calls; no manual model acceptance, paid trial or research budget is required.
-
-M1.0 adds user-defined model connections and assigns them to Input, Vision, Researcher, Writer, Evidence Verifier, Auditor, Critical Reviewer and Judge. New schema-v2 jobs pin modelState v4. Every provider request still passes through the existing Model Gateway and adapter. V5.1 pricing/cost/cache and V5.2 exceptional review/Judge contracts remain owners; paid comparison, configurable research budgets, acceptance files, Champion/A-B controls and duplicated MAIN/PRO/Challenger credentials are no longer part of the normal activation path. Historical schema-v1 configuration, modelState v1-v3, old budget ledgers and authorization receipts remain read-compatible.
-
-V5.2 added independent critical review and advisory evidence adjudication alongside the existing research/review pipeline. M1.0 now activates these capabilities only when `criticalReviewer` or `judge` has a configured model; paid quality/cost acceptance artifacts are no longer runtime gates. The V5.2 eligibility, deterministic validation, private job storage, original cutoff, telemetry and recovery rules remain enforced. These roles never replace the active research session or become canonical Facts. [Current configuration](../configuration-guide.md).
-
-V5.1 originally added effective-dated costs, observed cache statistics, read-only quality-gated rankings and private durable resource budgets. The current path retains pricing, cost and cache summaries while retiring ranking and budget configuration. New jobs do not receive budget ledgers; historical ledgers remain private and readable so uncertain operations retain their original data/model pins and do not replay. See the current [configuration guide](../configuration-guide.md). No financial truth layer or distributed runtime was added.
-
-## Historical release records
-
-The V5.0 and V4.9 paragraphs below preserve the architecture state recorded by those releases. Their MAIN/PRO, Challenger, Champion, A/B, acceptance and activation statements do not define the current schema-v2 workflow.
-
-V5.0 engineering record: the unified local benchmark platform was implemented through .13, with explicit MAIN challengers behind the existing Gateway, append-only operator-reviewed champion policies, immutable job A/B pins and read-only drift evaluation. Default production remained legacy and full-research quality/promotion remained unaccepted at that release boundary. See [V5.0 report](../releases/V5.0/completion-report.md). No distributed infrastructure or investment schema was added.
-
-Status: historical architecture record
-
-V4.9 current acceptance update: all normalized V4.9.0–.8 engineering work is implemented; batch-nine live Vision quality is [operator-approved](../releases/V4.9/vision-operator-approval-20260911.md). Production routing remains disabled and activation still requires the approved code/configuration binding. Earlier release-stage statements below are historical snapshots, not the current acceptance status.
-
-V4.9 review fixes retain the diagram and owners below: durable local Vision comparison progress/resume, selected-profile status, admission cache invalidation, and coordinated cancel/retry finalization. No distributed infrastructure or Mongo schema change. See [fix report](../releases/V4.9/V4_9-review-fixes-report.md).
-
-V4.9 full implementation: canonical image requests/results and explicit challenger profiles now reuse the existing Gateway/adapter; bounded independent fallback and a separate Vision admission owner preserve job pins. A 48-original visual corpus and deterministic graders support comparison. Offline implementation is validated; actual candidate quality and production promotion are not accepted. See [report](../releases/V4.9/V4_9-completion-report.md). The earlier .0 activation paragraph below is historical.
-
-Release activation 2026-09-11: the user explicitly selected V4.9. V4.9.0 adds a [reviewed Vision inventory](../releases/V4.9/vision-call-inventory.md) and development checks without changing the runtime diagram. V4.9.1–.8 remain future work; V4.8.11 live text-policy quality acceptance remains deferred and legacy stays the production default. References below to V4.9 not having started retain their earlier V4.8 historical context.
+Status: current architecture
+Release: Platform V5.3 / Knowledge K1.0.0
 
 ## Current product baseline
 
-The current repository is a React + Node.js evidence-first investment research Agent. The public repository currently exposes:
-
-- six research task paths;
-- automatic market / filing / structured-data acquisition;
-- document parsing, PDF text extraction, OCR and Vision reading;
-- Evidence retrieval and original-page reading;
-- deterministic financial and valuation tools;
-- model-based research and independent review;
-- checkpoint/resume with original market cutoff preservation;
-- Knowledge modules and automatic snapshots;
-- A/H/US security resolution support;
-- official web evidence supplementation.
-
-## Current high-level runtime
+ZhiHeng is an evidence-first investment research application with a React/TypeScript browser client and a Python FastAPI backend. Python owns all HTTP, research, evidence, financial, model and persistence behavior. Node is a frontend build and test dependency only.
 
 ```text
-User
-  ↓
-Research Path / Input Validation
-  ↓
-Research Create / Plan
-  ↓
-Data Acquisition
-  ├─ Market
-  ├─ Official Reports
-  ├─ XBRL / Provider Financials
-  ├─ User Materials
-  └─ Web Supplement
-  ↓
-Document / Evidence Processing
-  ├─ Text
-  ├─ PDF Layout
-  ├─ OCR
-  ├─ Vision
-  └─ Evidence Blocks
-  ↓
-Research Agent
-  ├─ Evidence Search
-  ├─ Original Page Read
-  ├─ Deterministic Tools
-  ├─ Follow-up Retrieval
-  └─ Valuation Tools
-  ↓
-Draft
-  ↓
-Review / Validation
-  ↓
-Storage / Delivery / Resume
+User → React client → FastAPI
+                       ├─ input contract / six research modes
+                       ├─ security and market adapters
+                       ├─ official/vendor/web evidence + integrity archive
+                       ├─ immutable Knowledge snapshot
+                       ├─ bounded context compiler + deterministic analytics
+                       ├─ provider-neutral Model Gateway
+                       ├─ research lifecycle / checkpoint / SSE
+                       └─ MongoDB + GridFS
 ```
 
-V4.8.4 completes Gateway migration for research, review, followup, path classification, security intent and Vision, including the synthetic diagnostic. Business orchestration, evidence validation, router caches/fallback and visual processing remain in the owners shown above. Later .8–.11 now add health, persistent pins and gated internal policy; production still uses legacy.
+## Permanent research boundary
 
-V4.8.5 added a pure complexity evaluator over structured signals, initially without runtime callers. V4.8.6's shadow observer below now consumes it. It does not choose execution models, alter research budgets, persist state or change validation. See the [implementation map](current-implementation-map.md) for known-signal scoring and integration boundaries.
+Evidence precedes conclusions. Missing data stays missing. Facts, calculations, claims, assumptions, forecasts, decisions and outcomes retain distinct semantics. Period, currency, share basis, accounting scope, valuation basis, publication time and provenance travel with the value. Resume preserves the original cutoff and only accepts compatible execution and Knowledge snapshots.
 
-V4.8.6 adds opt-in dry-run policy observation at Gateway. Agent supplies known mode and planned history years; the unchanged complexity evaluator yields a candidate slot/effort recorded separately from the actual legacy execution profile. Server logs are best effort, not public history or persistent ModelCall records. Requests, review/delivery, financial/Evidence rules and checkpoints remain unchanged. Production policy acceptance remains pending; .11 has an executable closed gate.
+## Runtime boundary
 
-## Target long-term runtime
+- Browser: `src/`, including client-only display/domain rules under `src/domain/`, plus Vite and frontend tests.
+- Backend: `python_backend/` only.
+- Knowledge source: `knowledge/`, with active K-Series pointer and immutable snapshots.
+- Persistence: MongoDB collections and GridFS; reports are views rather than canonical facts.
+
+Completed pre-V5.3 release archives have been removed. Current behavior is documented here, in executable code, contracts, invariants, accepted ADRs and the V5.3 release specification.
+
+## Long-term direction
 
 ```text
-Reality
-  Source / Event / Raw Data
-          ↓
-Truth
-  Evidence → Verified Fact → Derived Fact
-          ↓
-Belief
-  Hypothesis → Claim → Probability / Uncertainty
-          ↓
-Future
-  Assumption → Forecast → Scenario → Valuation
-          ↓
-Decision
-  Mandate → Opportunity Cost → Position → Portfolio
-          ↓
-Outcome
-  Return / Event / Attribution
-          ↓
-Learning
-  Calibration → Failure → Knowledge / Policy Upgrade
+Evidence → Verified fact → Derived fact → Claim/belief
+         → Assumption/forecast/scenario → Decision → Outcome → Learning
 ```
 
-## Permanent boundary
-
-Each target layer must be introduced incrementally. A FUTURE object must not be implemented merely because it appears on this map.
-
-## H0 calibration
-
-Research execution ships with the platform; new plans pin internal execution compatibility 1 and contract 7. Active Knowledge is independently pinned at K1.0.0 through `knowledge/current.json`. K-pinned pre-rename framework-4.7 plans retain exact saved scope compatibility, while V4.x Knowledge is read-only history and cannot start or resume current execution. Acquisition is bounded and may be partial. Compatible resume preserves saved initial market data; rejected checkpoints cannot silently reacquire for model-pinned tasks. Full historical publishedAt enforcement/replay is not implemented. See [implementation map](current-implementation-map.md) and [ADR-017](../adr/ADR-017-platform-execution-compatibility.md).
-
-## V4.8.7 telemetry integration
-
-V4.8.7 adds ModelCall started/terminal records through the existing Gateway, a process-local AsyncLocalStorage job attribution scope in the existing server execution path, and MongoDB model_calls storage with an on-demand internal job usage summary. No prompts, messages, source bodies, hidden reasoning, endpoint URLs or credentials are retained. Default production telemetry is enabled; MODEL_TELEMETRY_ENABLED=false disables the writer without changing routing. Standalone Gateway/CLI consumers need an injected onModelCall sink or configured writer; no database is opened implicitly by the Gateway. Acceptance is tracked in the V4.8.7 completion report.
-
-## V4.8.8–.11 current model boundary
-
-Recent health outcomes/cooldown are process-local; model-state pins live privately in new jobs/checkpoints. Internal MAIN/PRO profiles and acknowledged context rebuild support safe escalation. The rollout owner accepts only a matching operator-approved real model comparison with at least 50 unique cases across six modes, no critical fact errors, and passing delivery/citation/rollback checks. No such live report was produced: the user explicitly chose offline validation and legacy default. Existing research, Evidence, financial math, Knowledge and acquisition owners remain; V4.9 is not started.
+Future objects require an active release specification; this map does not authorize opportunistic implementation.

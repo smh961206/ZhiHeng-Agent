@@ -1,7 +1,0 @@
-{
-  "currency": "CNY",
-  "maxRequests": 120,
-  "budgetMinor": 120,
-  "reservePerRequestMinor": 1,
-  "timeoutMs": 20000
-}

@@ -27,27 +27,13 @@ Learning
  Attribution / Calibration / Failure / Knowledge & Policy Upgrade
 ```
 
-## Core release sequence
+## Current foundation
 
-### H0 — Harness Bootstrap
-Install/validate the repository engineering control plane. Zero runtime behavior change.
+The active baseline is Platform V5.3 with Knowledge K1.0.0. It includes the provider-neutral Model Gateway, multimodal handling, model usage/cost metadata, bounded review escalation, checkpoint compatibility and the current React/TypeScript plus FastAPI runtime. Removed historical release packages are not implementation authorities; current behavior is defined by executable code, contracts, invariants, accepted ADRs and the V5.3 specification.
 
-### V4.8 — Model Gateway Foundation
-Unify LLM calls, legacy compatibility, capability profiles, dry-run policy, Main/Pro escalation, telemetry.
+## Active and future release sequence
 
-### V4.9 — Unified Multimodal
-Move Vision behind capability-based Gateway, benchmark vision, primary/fallback without changing evidence semantics.
-
-### V5.0 — Model Benchmark / Challenger
-Create repeatable benchmark platform and task champions. Production model changes require quality gates.
-
-### V5.1 — Cost / Cache / Research Budget
-Effective task cost, cache analytics, budget management; cost optimization occurs only after quality/health.
-
-### V5.2 — Flagship / Judge
-Flagship models become exceptional escalation/review/judge resources, not default research.
-
-### V5.3 — Knowledge Engineering
+### V5.3 — Knowledge Engineering — CURRENT
 Rule IDs, metadata, Constitution/Ontology split, resolver, linter, regression, K-Series, KCP/Knowledge Debt.
 
 ### V5.4 — Data Contracts / Hybrid Retrieval
@@ -77,7 +63,9 @@ Research snapshots/replay/provenance, failure registry, decision journal/outcome
 ### V6.0 — Investment Intelligence OS Platform
 Workspace/tenant/RBAC, audit ledger, human workflow, distributed execution when needed, Research Workbench, machine-verifiable Research Package and ZRP protocol.
 
-## Cross-cutting capability tracks
+## Internal capability domains
+
+These labels group long-term capabilities. They are not additional release lines; externally the repository maintains Platform V and Knowledge K only.
 
 - M: Model platform
 - K: Knowledge
@@ -107,15 +95,9 @@ A release cannot ship if it introduces:
 
 ## Deletion rule
 
-Legacy paths are removed only after:
-1. replacement is stable;
-2. regression/benchmark is clean;
-3. rollback no longer depends on old path;
-4. at least one subsequent stable release has validated migration, unless explicitly approved otherwise.
+Legacy paths may be removed after their replacement is stable, focused regression is clean, rollback no longer depends on them and the removal is explicitly authorized. Current contracts and migration safety take priority over obsolete release archives.
 
 
 ## Engineering detail
 
-- `docs/roadmap/RELEASE-DEPENDENCY-MATRIX.md`
-- `docs/roadmap/LATE_RELEASE_ENGINEERING_RULES.md`
-- For V5.3–V6.0 read each release `implementation.md` and `DETAILED_INDEX.md`.
+For V5.3–V6.0, current and future planning is recorded in each release's `implementation.md` and `DETAILED_INDEX.md`. Implementation authority still comes from `docs/releases/CURRENT` and `AGENTS.md`.

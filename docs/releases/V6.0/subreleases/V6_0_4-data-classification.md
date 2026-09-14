@@ -1,7 +1,7 @@
 # V6.0.4 — Data Classification
 
 Release: `V6.0`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,9 +15,9 @@ Add PUBLIC/PRIVATE/CONFIDENTIAL/RESTRICTED policies.
 
 Codex must inspect the real checkout before editing:
 
-- `server/storage.mjs`
-- `server/schema-migrations.mjs`
-- `server/research-workflow.mjs`
+- `server/storage.ts`
+- `server/schema-migrations.ts`
+- `server/research-workflow.ts`
 - `src/`
 - `shared/`
 - `tests/`

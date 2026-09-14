@@ -31,6 +31,6 @@ Structured + Exact + BM25 + Semantic + Page/Table → Fusion/Rerank → Evidence
 
 Embedding increases semantic recall. It does not replace exact financial retrieval.
 
-## H0 calibration
+## Current calibration
 
 CURRENT: exact/alias/page/block retrieval and original-number verification. PARTIAL: Source/Evidence/Fact target contracts. matched-needs-review is not verified. FUTURE: canonical normalized Fact engine and hybrid retrieval/fusion. Tests establish specific evidence gates, not arbitrary semantic truth.

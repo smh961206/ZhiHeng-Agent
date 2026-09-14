@@ -1,7 +1,7 @@
 # V5.3.0 — Knowledge inventory & ownership map
 
 Release: `V5.3`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: IMPLEMENTED AND ACCEPTED under V5.3.
 
 ## 1. Why
 
@@ -16,10 +16,10 @@ Build machine-readable inventory of current Knowledge without changing research 
 
 Codex must inspect the real checkout before editing:
 
-- `server/knowledge.mjs`
-- `server/knowledge-excerpt.mjs`
-- `server/knowledge-snapshots.mjs`
-- `server/research-context.mjs`
+- `server/knowledge.ts`
+- `server/knowledge-excerpt.ts`
+- `server/knowledge-snapshots.ts`
+- `server/research-context.ts`
 - `knowledge/`
 - `tests/`
 

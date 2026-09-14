@@ -8,7 +8,7 @@
 
 - `ResearchState`
 - `Claim/Belief/Forecast/Valuation modules`
-- `server/research-sensitivity.mjs`
+- `server/research-sensitivity.ts`
 - `market/security data`
 - `new Mandate/Decision modules`
 
@@ -139,6 +139,16 @@
 **完成判定：** 质量 gate 优先于“更积极/更便宜”建议。
 
 **工程约束：** 先查现有实现；优先 additive/dual-read/feature flag；任何持久化变化同步更新 schema.md、migration.md、rollback.md；不得顺手实现下一子版本。
+
+## 基础设施与数据架构增量规划
+
+- Decision Journal 采用追加式、不可变记录，固定 mandate、策略版本、Research State、市场/数据截止时间、证据包、模型/规则版本和人工审批信息。
+- 目标价格、仓位、风险预算和约束值使用 Decimal 与显式币种/估值口径；任何派生值必须能从固定输入复算。
+- 草稿更新使用乐观并发控制；批准、拒绝、撤销、替代和人工覆盖形成独立审计事件，不能原地擦除历史决定。
+- 决策查询可使用投影和缓存加速，但规范决策及其证据链必须保存在主存储中；缓存失效不能改变决策语义。
+- 本版本只形成决策与审计对象，不执行交易或向外部交易系统写入指令。
+
+跨版本背景见 [V5.3 至 V6.0 基础设施与数据架构演进方案](../../architecture/infrastructure-data-evolution-plan-v5.3-v6.0.md)。本节及本版本子规格是 V5.9 的执行依据。
 
 ## 大版本发布 Gate
 

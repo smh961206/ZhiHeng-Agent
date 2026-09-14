@@ -1,4 +1,4 @@
-# Preserve runtime fingerprints across checkout; historical bytes live in versions/.
+# Preserve K-Series runtime fingerprints across checkout.
 ENTRY.md -text
 modules.json -text
 modules/** -text

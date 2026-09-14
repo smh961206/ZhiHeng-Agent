@@ -1,34 +1,9 @@
-# ZhiHeng Benchmark
+# Python 后端迁移基准
 
-## V5.0 current implementation
+`runner.py` 是离线、确定性的迁移验收入口。它检查点时截止、缺值语义、计算血缘、视觉转录边界和唯一 Python 后端运行时，不调用真实模型或第三方服务。
 
-The unified case contract, frozen loader, deterministic/semantic grading policy, durable runner, baseline, challenger executor and statistical comparison are implemented. See [V5.0 operations](../docs/releases/V5.0/runbook.md). The bootstrap corpus exercises component extraction; it is not a full-research quality baseline. Promotion is disabled and unaccepted. The H0 paragraph below records historical scope.
+```bash
+python -m benchmark.runner
+```
 
-Benchmark is an executable definition of acceptable research quality.
-
-Initial categories:
-- Quick Screen
-- Earnings Update
-- Deep Research
-- Company Comparison
-- Vision/Table
-- Complex Valuation
-- Missing/Conflict
-
-Later categories:
-- Retrieval
-- Fact normalization
-- Knowledge applicability
-- Claim/counter-evidence
-- Forecast
-- Belief calibration
-- Decision
-- Portfolio
-- Replay
-- Red Team
-
-Quality gates dominate cost scores.
-
-## H0 implementation status
-
-Status: FUTURE — design reservation. This directory has no executable unified benchmark runner/graders. Current synthetic fixtures, regression runners and explicit live diagnostics are mapped in [the implementation map](../docs/architecture/current-implementation-map.md). V5.0 owns the unified benchmark platform; H0 does not implement it.
+新增能力必须先增加失败用例，再修改实现。真实模型质量评估另行运行，不得用离线基准冒充真实模型效果。

@@ -6,11 +6,11 @@
 
 ## 修改前必须检查
 
-- `server/web-evidence.mjs`
+- `server/web-evidence.ts`
 - `filing/data acquisition modules`
-- `server/research-workflow.mjs`
-- `server/research-create.mjs`
-- `server/job-checkpoints.mjs`
+- `server/research-workflow.ts`
+- `server/research-create.ts`
+- `server/job-checkpoints.ts`
 - `ResearchState/DAG modules from V5.7`
 
 ## 本版本明确不做
@@ -140,6 +140,16 @@
 **完成判定：** 不得因省成本漏掉 critical Claim。
 
 **工程约束：** 先查现有实现；优先 additive/dual-read/feature flag；任何持久化变化同步更新 schema.md、migration.md、rollback.md；不得顺手实现下一子版本。
+
+## 基础设施与数据架构增量规划
+
+- 连续研究作业先采用数据库持久化队列：作业、步骤、检查点、租约、心跳、重试、取消和死信状态全部可查询、可恢复、可审计。
+- 多执行器安全依赖租约、fencing token、幂等键和原子状态转换；恢复必须沿用原研究截止时间，除非显式创建新研究任务。
+- 领域状态与待投递事件同事务写入 outbox，消费者使用 inbox/幂等记录防止重复副作用；“至少一次”交付不得产生重复事实或重复决策。
+- V5.8 默认保持单实例或有限多执行器形态，不引入外部消息代理。只有积压、吞吐、隔离或可用性指标持续越过门槛，才把代理选型提交 V6.0.13。
+- 调度、取消和重放的错误语义必须稳定；系统降级时可暂停非关键重算，但不得跳过来源、截止时间、权限和人工覆盖校验。
+
+跨版本背景见 [V5.3 至 V6.0 基础设施与数据架构演进方案](../../architecture/infrastructure-data-evolution-plan-v5.3-v6.0.md)。本节及本版本子规格是 V5.8 的执行依据。
 
 ## 大版本发布 Gate
 

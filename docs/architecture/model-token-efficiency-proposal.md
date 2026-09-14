@@ -1,7 +1,7 @@
-# M1.1 模型 Token 效率优化具体方案
+# 模型 Token 效率优化具体方案
 
-状态：M1.1.0–M1.1.3 已实施；M1.1.4–M1.1.7 待后续迭代
-适用基线：V5.2 核心能力 + M1.0 按研究环节配置模型
+状态：基础上下文投影能力已实施；其余阶段待后续平台版本授权
+适用基线：V5.3 / K1.0.0 与当前按研究环节配置的模型管线
 计划轨道：M-Series，不占用已经分配给 Knowledge Engineering 的 V5.3 版本
 
 ## 1. 目标
@@ -28,11 +28,11 @@
 
 当前系统已经具备以下基础：
 
-- `server/evidence-search.mjs` 按稳定的 `sourceId + blockId` 返回完整证据块；
-- `server/research-context.mjs` 按引用、计算依据和来源均衡顺序打包完整记录；
-- `server/agent-execution.mjs` 在消息约 220000 字符后压缩研究上下文；
-- `server/model-cache.mjs` 记录稳定系统前缀的缓存指纹；
-- `server/model-telemetry.mjs` 按 Input、Vision、Researcher、Writer、Evidence Verifier、Auditor、Critical Reviewer 和 Judge 记录供应商实际 Token；
+- `server/evidence-search.ts` 按稳定的 `sourceId + blockId` 返回完整证据块；
+- `server/research-context.ts` 按引用、计算依据和来源均衡顺序打包完整记录；
+- `server/agent-execution.ts` 在消息约 220000 字符后压缩研究上下文；
+- `server/model-cache.ts` 记录稳定系统前缀的缓存指纹；
+- `server/model-telemetry.ts` 按 Input、Vision、Researcher、Writer、Evidence Verifier、Auditor、Critical Reviewer 和 Judge 记录供应商实际 Token；
 - Writer、Auditor、关键复核和 Judge 已有独立上下文及恢复边界。
 
 主要问题：
@@ -55,7 +55,7 @@
 5. 未读取、未纳入窗口、失败和冲突内容继续作为缺口，不得自动变成已核实。
 6. 反证和失败记录不能因为排序或压缩被静默删除。
 7. Auditor 继续独立检查完整最终报告，不能只看 Writer 的修改摘要。
-8. Critical Reviewer 和 Judge 仍只由 V5.2 的业务条件触发，不能为了节省 Token 跳过，也不能因为上下文较短而更频繁触发。
+8. Critical Reviewer 和 Judge 仍只由确定性的业务条件触发，不能为了节省 Token 跳过，也不能因为上下文较短而更频繁触发。
 9. 恢复任务沿用原研究截止日期、模型身份、证据和已完成工具收据。
 10. 隐藏推理、提示词正文、密钥和原始图片不进入公开执行轨迹或 Token 统计记录。
 
@@ -279,52 +279,52 @@ Auditor 不重复接收 Researcher 的对话历史。修正轮只附加：验证
 
 ## 9. 实施分段
 
-### M1.1.0：建立基线
+### 阶段 0：建立基线
 
 - 固定当前按环节 Token 汇总口径；
 - 将失败调用、重试和未知用量纳入分母；
 - 记录同一路径、深度和模型的历史中位数；
 - 不改变任何模型请求。
 
-### M1.1.1：统一上下文投影
+### 阶段 1：统一上下文投影
 
 - 扩展 `buildResearchContext` 支持环节和 R0–R3 选择；
 - 保持完整记录打包、来源均衡和计算依据校验；
 - 增加必需记录缺失时的关闭式失败。
 
-### M1.1.2：Researcher 增量上下文
+### 阶段 2：Researcher 增量上下文
 
 - 工具轮结束后将旧消息替换为任务状态和精简收据；
 - 从“达到 220000 字符才整理”调整为每个安全工具边界都可整理；
 - 未返回的工具调用存在时禁止整理；
 - 检查点继续保存恢复所需的完整私有状态。
 
-### M1.1.3：Writer 专用上下文
+### 阶段 3：Writer 专用上下文
 
 - 只提供初稿引用、计算依据、反证和缺口；
 - 加入 Writer 请求前完整性检查；
 - 保留完整 Markdown 草稿和原有交付结构。
 
-### M1.1.4：Auditor 与修正轮增量化
+### 阶段 4：Auditor 与修正轮增量化
 
 - 首轮审计接收完整报告和定向证据；
 - 修正轮发送错误、变更章节和新增证据；
 - 每轮仍运行完整确定性校验；
 - 最终审计仍检查完整最终报告。
 
-### M1.1.5：稳定前缀与缓存整理
+### 阶段 5：稳定前缀与缓存整理
 
 - 固定规则、工具和 Schema 顺序；
 - 将动态内容移至后缀；
 - 验证请求语义、Gateway 身份和恢复哈希没有意外变化。
 
-### M1.1.6：Vision 定向读取复核
+### 阶段 6：Vision 定向读取复核
 
 - 检查选择页是否只覆盖扫描、版面歧义、图表和指定核对；
 - 对重复页和相同原件哈希去重；
 - 不改变 Vision 的证据等级及页数安全边界。
 
-### M1.1.7：效率页面与发布验收
+### 阶段 7：效率页面与发布验收
 
 - 页面增加按环节 Token 和缓存统计；
 - 使用正常研究产生的供应商用量做版本前后顺序比较，不建立 A/B、Champion 或付费试跑配置；
@@ -334,15 +334,15 @@ Auditor 不重复接收 Researcher 的对话历史。修正轮只附加：验证
 
 | 文件 | 计划调整 |
 | --- | --- |
-| `server/research-context.mjs` | 增加环节投影、R0 必需记录和完整性收据 |
-| `server/agent-execution.mjs` | 在安全工具边界增量整理上下文，保留未完成调用保护 |
-| `server/agent.mjs` | 为 Researcher、Writer、Evidence Verifier、Auditor 使用不同投影 |
-| `server/evidence-search.mjs` | 复用稳定证据块身份，补充批量按编号加载入口时仍使用现有检索 owner |
-| `server/model-cache.mjs` | 固定前缀维度并继续记录安全指纹 |
-| `server/model-telemetry.mjs` | 可选增加不含正文的 `contextStats`，补充每份交付效率统计 |
-| `server/storage.mjs` | 只读聚合 Token 效率，不改变证据或报告存储 |
+| `server/research-context.ts` | 增加环节投影、R0 必需记录和完整性收据 |
+| `python_backend/application/context_compiler.py`、`calculation_service.py` | 在安全工具边界编译有界上下文，保留完整调用结果与省略回执 |
+| `server/agent.ts` | 为 Researcher、Writer、Evidence Verifier、Auditor 使用不同投影 |
+| `server/evidence-search.ts` | 复用稳定证据块身份，补充批量按编号加载入口时仍使用现有检索 owner |
+| `server/model-cache.ts` | 固定前缀维度并继续记录安全指纹 |
+| `server/model-telemetry.ts` | 可选增加不含正文的 `contextStats`，补充每份交付效率统计 |
+| `server/storage.ts` | 只读聚合 Token 效率，不改变证据或报告存储 |
 | `server/index.mjs` | 在现有费用接口返回白名单效率摘要 |
-| `src/components/ResearchCostSummary.jsx` | 展示按环节 Token、缓存和历史中位数 |
+| `src/components/ResearchCostSummary.tsx` | 展示按环节 Token、缓存和历史中位数 |
 | `tests/*` | 增加上下文完整性、恢复、缓存、质量和 Token 体积回归 |
 
 不创建新的 Evidence、Claim、缓存、模型路由或研究预算子系统。
@@ -454,7 +454,7 @@ Auditor 不重复接收 Researcher 的对话历史。修正轮只附加：验证
 
 ## 16. 回滚
 
-每个 M1.1 子版本独立提交。回滚时：
+每个优化阶段独立提交。回滚时：
 
 1. 恢复上一个上下文投影版本；
 2. 保留全部任务、证据、计算、报告、ModelCall 和可选 `contextStats`；
@@ -465,8 +465,8 @@ Auditor 不重复接收 Researcher 的对话历史。修正轮只附加：验证
 
 ## 17. 推荐实施顺序
 
-先完成 M1.1.0 基线与 M1.1.1 上下文完整性，再实施 Researcher、Writer 和 Auditor。缓存与页面统计放在上下文稳定之后，避免把尚未稳定的请求指纹当作长期基线。Vision 最后单独复核，因为它的图片、页码和证据等级约束与文本上下文不同。
+先完成阶段 0 基线与阶段 1 上下文完整性，再实施 Researcher、Writer 和 Auditor。缓存与页面统计放在上下文稳定之后，避免把尚未稳定的请求指纹当作长期基线。Vision 最后单独复核，因为它的图片、页码和证据等级约束与文本上下文不同。
 
-第一批实际开发建议只做 M1.1.0–M1.1.3。通过所有硬性门槛后，再进入 Auditor、缓存与 Vision 优化。
+第一批实际开发范围为阶段 0–3。通过所有硬性门槛后，再进入 Auditor、缓存与 Vision 优化。
 
-跨任务、跨期间和财报更新的安全复用不属于 M1.1，后续由 [M1.2 增量研究与依赖图方案](model-incremental-research-proposal.md) 负责。
+跨任务、跨期间和财报更新的安全复用不属于本方案，后续由[增量研究与依赖图方案](model-incremental-research-proposal.md)负责。

@@ -78,14 +78,13 @@ When an out-of-scope improvement is discovered:
 Before creating a new subsystem, inspect current modules.
 
 Examples:
-- Model: `model-routing.mjs`, `model-stream.mjs`, `vision-model.mjs`
-- Knowledge: `knowledge.mjs`, `knowledge-excerpt.mjs`, `knowledge-snapshots.mjs`
-- Evidence: `evidence-search.mjs`, `evidence-followup.mjs`
-- Security: `security-resolver.mjs`, `security-intent.mjs`, `security-exchanges.mjs`, `sec-directory.mjs`
-- Financial: `financial-observations.mjs`, `financial-input-verification.mjs`, `data-basis.mjs`, `inline-xbrl.mjs`
-- Calculations: `calculations.mjs`, `cashflow-bridge.mjs`, `normalized-earnings.mjs`, `research-sensitivity.mjs`, valuation modules
-- Research lifecycle: `research-context.mjs`, `research-workflow.mjs`, `research-resume.mjs`, `research-output.mjs`
-- Recovery: `job-checkpoints.mjs`, `calculation-recovery.mjs`
+- Model: `python_backend/infrastructure/model_gateway.py`, `python_backend/domain/model_governance.py`
+- Knowledge: `python_backend/application/knowledge.py`
+- Evidence: `python_backend/domain/evidence.py`, `python_backend/domain/web_evidence.py`, `python_backend/infrastructure/official_evidence.py`
+- Security and market: `python_backend/domain/securities.py`, `python_backend/infrastructure/market.py`
+- Financial and calculations: `python_backend/domain/financial.py`, `python_backend/domain/calculations.py`, `python_backend/domain/analytics.py`
+- Research lifecycle and recovery: `python_backend/application/research_service.py`, `python_backend/application/recovery.py`
+- Client display rules: `src/domain/`
 
 Do not create a second parallel implementation without an approved migration plan.
 
@@ -163,6 +162,6 @@ Every implementation must report:
 
 Do not report only “done”.
 
-## H0 calibration notes
+## Current release lines
 
-Use `CODEX_EXECUTION_PROTOCOL.md` and `docs/releases/H0/DETAILED_INDEX.md` for H0 order. The Model Gateway rule is an accepted target boundary: current direct call sites are mapped, not migrated in H0. The H0 framework/Knowledge 4.7 label is historical. Current release lines are platform V and Knowledge K; execution/model capabilities ship with the platform and use internal compatibility counters (ADR-017). See `docs/releases/H0/audit-findings.md` for H0 enforcement gaps; permanent rules above are unchanged.
+Maintain exactly two external release lines: Platform V and Knowledge K. Execution compatibility and output contract numbers are internal serialization markers governed by ADR-017. Historical milestones and release records are evidence, not current implementation instructions.

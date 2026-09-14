@@ -1,7 +1,7 @@
 # V5.11.1 — Point-in-Time Replay
 
 Release: `V5.11`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,16 +15,16 @@ Rebuild historical context using only eligible historical artifacts.
 
 Codex must inspect the real checkout before editing:
 
-- `server/research-create.mjs`
-- `server/research-workflow.mjs`
-- `server/research-context.mjs`
-- `server/research-output.mjs`
-- `server/research-resume.mjs`
-- `server/storage.mjs`
+- `server/research-create.ts`
+- `server/research-workflow.ts`
+- `server/research-context.ts`
+- `server/research-output.ts`
+- `server/research-resume.ts`
+- `server/storage.ts`
 - `tests/`
 - `benchmark/`
 - `docs/`
-- `server/storage.mjs`
+- `server/storage.ts`
 
 If paths or ownership changed, update `docs/architecture/current-implementation-map.md`; do not force the repository to match stale filenames.
 

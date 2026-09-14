@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "maxModelCost": null,
+  "maxToolRounds": 20,
+  "maxWebRequests": 40,
+  "maxVisionPages": 80,
+  "maxDurationMs": 1800000
+}

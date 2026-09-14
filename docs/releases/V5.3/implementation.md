@@ -1,6 +1,8 @@
 # V5.3 — Detailed Engineering Implementation Plan
 
-Post-acceptance cutover: ADR-016 records the user's decision to make K1.0.0 the sole active Knowledge version. References below to legacy comparison describe the implementation-stage dry run; references to legacy runtime compatibility are superseded. V4.x remains read-only history and cannot start or resume current execution.
+> Current implementation note (2026-09-14): the Knowledge capabilities described below are now owned by `python_backend/application/knowledge.py`, `python_backend/application/research_service.py` and Python tests. References to `server/*` and removed TypeScript backend tests preserve the original implementation sequence only; they are not current runtime owners. See the [FastAPI migration report](fastapi-backend-migration-report.md).
+
+Post-acceptance cutover: ADR-016 records the user's decision to make K1.0.0 the sole active Knowledge version. K1.0.0 is now also the first retained Knowledge release; earlier release artifacts are available only through Git history and cannot start or resume current execution.
 
 ## 使用规则
 
@@ -8,11 +10,11 @@ Post-acceptance cutover: ADR-016 records the user's decision to make K1.0.0 the 
 
 ## 修改前必须检查
 
-- `server/knowledge.mjs`
-- `server/knowledge-excerpt.mjs`
-- `server/knowledge-snapshots.mjs`
+- `server/knowledge.ts`
+- `server/knowledge-excerpt.ts`
+- `server/knowledge-snapshots.ts`
 - `knowledge/`
-- `server/research-context.mjs`
+- `server/research-context.ts`
 - `tests/`
 
 ## 本版本明确不做
@@ -26,7 +28,7 @@ Post-acceptance cutover: ADR-016 records the user's decision to make K1.0.0 the 
 
 ### V5.3.0 — Knowledge 现状盘点
 
-**目标/改造：** 扫描 knowledge/、knowledge.mjs、knowledge-excerpt.mjs、knowledge-snapshots.mjs；建立 module/section/hash/加载关系清单；只记录，不改变运行行为。
+**目标/改造：** 扫描 knowledge/、knowledge.ts、knowledge-excerpt.ts、knowledge-snapshots.ts；建立 module/section/hash/加载关系清单；只记录，不改变运行行为。
 
 **必须测试：** 现有 Knowledge 全测试；manifest 完整性；同输入输出快照不变。
 
@@ -40,7 +42,7 @@ Post-acceptance cutover: ADR-016 records the user's decision to make K1.0.0 the 
 
 **必须测试：** Rule ID 唯一性；旧 section→Rule 映射；snapshot 兼容。
 
-**完成判定：** 没有重复 ID；旧快照仍能回放。
+**完成判定：** 没有重复 ID；当前 K-Series 快照可精确回放。
 
 **工程约束：** 先查现有实现；优先 additive/dual-read/feature flag；任何持久化变化同步更新 schema.md、migration.md、rollback.md；不得顺手实现下一子版本。
 

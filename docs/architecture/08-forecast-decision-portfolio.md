@@ -27,6 +27,6 @@ Portfolio intelligence eventually includes:
 - thesis/assumption correlation;
 - hidden business/macro exposure.
 
-## H0 calibration
+## Current calibration
 
 CURRENT: sensitivity/dividend scenarios, arithmetic DCF projections, portfolio constraints and research action/review output. FUTURE: driver Forecast engine, canonical mandate/decision/portfolio allocation and scenario trees. Do not confuse mode E with autonomous portfolio execution.

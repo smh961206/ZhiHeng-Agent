@@ -22,6 +22,6 @@ Connector → Raw Record → Source Contract → Evidence → Fact Normalization
 - Historical replay uses information available at the historical cutoff.
 - New parser versions may produce new parsed representation, but original source identity/hash remains traceable.
 
-## H0 calibration
+## Current calibration
 
 PARTIAL: source date/fetchedAt and selected publication/report fields, parser/content hashes and TTL archives exist. The mature time vocabulary and restatement/replay guarantees above are target semantics; there is no universal historical cutoff engine. Existing observations/cache/job payloads are not immutable Fact revision history.

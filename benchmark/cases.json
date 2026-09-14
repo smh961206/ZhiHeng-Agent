@@ -1,0 +1,7 @@
+[
+  {"id":"PIT-001","rule":"post-cutoff facts are excluded"},
+  {"id":"MISS-001","rule":"missing financial values remain null"},
+  {"id":"CALC-001","rule":"derived financial values retain evidence references"},
+  {"id":"VISION-001","rule":"vision transcripts require review"},
+  {"id":"RUNTIME-001","rule":"Node backend entrypoints remain absent"}
+]

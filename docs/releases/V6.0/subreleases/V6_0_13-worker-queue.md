@@ -1,7 +1,7 @@
 # V6.0.13 — Worker/Queue
 
 Release: `V6.0`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,9 +15,9 @@ Introduce idempotent distributed execution only if measured need exists.
 
 Codex must inspect the real checkout before editing:
 
-- `server/storage.mjs`
-- `server/schema-migrations.mjs`
-- `server/research-workflow.mjs`
+- `server/storage.ts`
+- `server/schema-migrations.ts`
+- `server/research-workflow.ts`
 - `src/`
 - `shared/`
 - `tests/`
@@ -176,5 +176,13 @@ Stop this subrelease when all are true:
 ## 26. Deferred Work
 
 - Premature microservices
+
+## 27. Infrastructure and Data Acceptance Addendum
+
+- First prove that the V5.8 database queue misses documented backlog, throughput, isolation or availability targets under representative load.
+- When the gate is met, prefer RabbitMQ for bounded work queues and routing. Select Kafka only for a separately approved high-throughput replayable event/log platform, or RocketMQ for an established ecosystem and required transaction-message semantics.
+- Require transactional outbox publishing, inbox/idempotent consumption, finite retries, dead-letter handling, payload versioning, tenant scope and cutoff propagation.
+- Redis may coordinate short-lived leases or rate limits only when its loss is recoverable; locks require fencing tokens and cannot replace canonical job state.
+- Keep an operational switch back to database-backed execution until migration, drain and recovery drills pass.
 
 Do not proceed to the next subrelease unless the user explicitly authorizes continuation or explicitly asked Codex to execute the entire current core release.

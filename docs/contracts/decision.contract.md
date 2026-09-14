@@ -9,8 +9,8 @@ Reject | Watch | Starter | Normal | HighConviction | Reduce | Exit
 
 V5.9 produces recommendations/state only; it does not execute trades.
 
-## H0 implementation evidence
+## Current implementation evidence
 
-research-output and shared/research-framework already produce structured research action/confidence and portfolio-readiness checks. They are not the canonical mandate-linked decision-policy engine.
+`python_backend/domain/review.py`、`python_backend/application/research_service.py` 与 `src/domain/research-record.ts` 已生成并校验结构化 action/confidence。它们尚不是与 mandate 绑定的未来决策策略引擎。
 
-See [implementation map](../architecture/current-implementation-map.md) and [audit findings](../releases/H0/audit-findings.md). H0 changes no persisted object, field requirements, API, migration or financial meaning.
+See the [current implementation map](../architecture/current-implementation-map.md). This contract text alone changes no persisted object, field requirements, API, migration or financial meaning.

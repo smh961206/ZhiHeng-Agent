@@ -1,21 +1,56 @@
+# Node dependencies and build output
 node_modules/
 .pnpm-store/
 dist/
-.env
-.env.production
-backups/
-.deploy/
-data/
-outputs/
-output/
-*.log
+coverage/
+.eslintcache
+.vitest/
+playwright-report/
+test-results/
+*.tsbuildinfo
 
+# Python environments, caches and test output
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest[_-]cache*/
+.pytest[_-]tmp*/
+.mypy_cache/
+.ruff_cache/
+.pyright/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+*.egg-info/
+
+# Local environment files; keep distributable templates
+.env
 .env.*
 !.env.example
 !.env.production.example
-artifacts/
 
+# Runtime data, generated artifacts and deployment state
+.debug/
+artifacts/
+backups/
+.deploy/
+data/
+output/
+outputs/
+*.log
+
+# Machine-specific model and pricing configuration
 config/models.*.json
 !config/models.example.json
-config/pricing.local.json
-config/pricing.production.json
+config/pricing.*.json
+!config/pricing.example.json
+config/research-budget.*.json
+!config/research-budget.example.json
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db

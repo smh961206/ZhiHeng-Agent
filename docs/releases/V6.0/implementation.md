@@ -6,8 +6,8 @@
 
 ## 修改前必须检查
 
-- `server/storage.mjs`
-- `server/schema-migrations.mjs`
+- `server/storage.ts`
+- `server/schema-migrations.ts`
 - `API routes`
 - `frontend`
 - `all canonical domain collections`
@@ -180,6 +180,18 @@
 **完成判定：** Research State+Provenance 可恢复。
 
 **工程约束：** 先查现有实现；优先 additive/dual-read/feature flag；任何持久化变化同步更新 schema.md、migration.md、rollback.md；不得顺手实现下一子版本。
+
+## 基础设施与数据架构增量规划
+
+- 租户边界必须同时覆盖主数据库、对象存储、缓存键、搜索索引、队列消息、SSE 通道、审计日志和导出物；若采用 PostgreSQL，应用层隔离与 RLS 形成双层防护。
+- PostgreSQL 切换只在 V5.5 接受的 ADR、双读/新写/回填验证和回滚演练全部通过后实施。若证据不足，V6.0 继续使用加固后的 MongoDB/GridFS。
+- Redis 是可选的派生基础设施，仅用于经测量需要的热点缓存、限流、短期协调或多实例会话；规范状态不得只存在 Redis，分布式锁必须使用 fencing token、超时和幂等保护。
+- V6.0.13 只有在真实多执行器、积压或隔离指标触发后才引入消息代理。默认候选为 RabbitMQ；Kafka 仅用于明确的高吞吐事件流/日志平台需求，RocketMQ 仅用于既有生态和事务消息需求。
+- 消息发布采用事务 outbox，消费采用 inbox/幂等键、有限重试和死信处理；代理不得替代数据库事务或研究生命周期状态机。
+- 独立向量数据库、对象存储、分析存储和读副本分别受容量、延迟、成本、恢复目标和运维成熟度 Gate 约束；所有派生系统都必须支持从规范状态重建。
+- 生产化必须覆盖租户审计、密钥与最小权限、备份恢复、跨存储一致性校验、OpenTelemetry 追踪、指标/日志脱敏、依赖清单和供应链扫描。微服务、Kubernetes 和多地域部署只在明确组织与可用性需求下另行立项。
+
+跨版本背景见 [V5.3 至 V6.0 基础设施与数据架构演进方案](../../architecture/infrastructure-data-evolution-plan-v5.3-v6.0.md)。本节及本版本子规格是 V6.0 的执行依据。
 
 ## 大版本发布 Gate
 

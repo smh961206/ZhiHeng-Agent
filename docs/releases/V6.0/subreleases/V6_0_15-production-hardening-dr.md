@@ -1,7 +1,7 @@
 # V6.0.15 — Production Hardening / DR
 
 Release: `V6.0`
-Implementation Status: FUTURE at the H0 baseline. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
+Implementation Status: FUTURE. Activation under `docs/releases/CURRENT` authorizes scoped work only; status changes require implementation and acceptance evidence.
 
 ## 1. Why
 
@@ -15,9 +15,9 @@ Add backup/restore/SLO/retention/incidents/provider outage drills.
 
 Codex must inspect the real checkout before editing:
 
-- `server/storage.mjs`
-- `server/schema-migrations.mjs`
-- `server/research-workflow.mjs`
+- `server/storage.ts`
+- `server/schema-migrations.ts`
+- `server/research-workflow.ts`
 - `src/`
 - `shared/`
 - `tests/`
@@ -176,5 +176,13 @@ Stop this subrelease when all are true:
 ## 26. Deferred Work
 
 - New product features
+
+## 27. Infrastructure and Data Acceptance Addendum
+
+- Test backup and restore for canonical data, object blobs, audit history, schema versions, tenant boundaries and the manifests needed to rebuild indexes and caches.
+- Define and measure RPO/RTO, restore ordering, point-in-time recovery, cross-store reconciliation and rollback for every enabled infrastructure component.
+- Instrument request, job, model, database, cache, search and queue paths with correlated traces, metrics and redacted structured logs.
+- Verify least privilege, secret rotation, encryption, dependency/SBOM scanning, image signing where applicable and restore access controls.
+- Production Gate fails if a derived store cannot be rebuilt, a canonical record exists only in cache/search/queue, or a recovery drill changes cutoff/provenance semantics.
 
 Do not proceed to the next subrelease unless the user explicitly authorizes continuation or explicitly asked Codex to execute the entire current core release.
